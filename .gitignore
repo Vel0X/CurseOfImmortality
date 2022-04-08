@@ -44,6 +44,9 @@
 # Blender backup files
 *.blend1
 
+# JetBrains files
+.idea/
+
 # Precompiled Assets
 SourceArt/**/*.png
 SourceArt/**/*.tga
