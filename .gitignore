@@ -46,6 +46,7 @@
 
 # JetBrains files
 .idea/
+Plugins/Developer/RiderLink/*
 
 # Precompiled Assets
 SourceArt/**/*.png
