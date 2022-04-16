@@ -26,7 +26,21 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* StaticMesh;
+	virtual void TakeDamage(float Damage);
+
+	virtual void DoDamage(float Damage, ABaseCharacter EnemyCharacter);
+
+	virtual void OnDeath();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float Health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float MovementSpeed;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+		bool Died;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+		bool Immune;
 };

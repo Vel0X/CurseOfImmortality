@@ -11,10 +11,6 @@ ABaseCharacter::ABaseCharacter()
 
 	//Setup RootComponent
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-
-	//Setup VisibleComponent and attach to RootComponent
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
-	StaticMesh->SetupAttachment(RootComponent);
 	
 }
 
@@ -39,3 +35,17 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+void ABaseCharacter::TakeDamage(float Damage)
+{
+	Health -= Damage;
+}
+
+void ABaseCharacter::DoDamage(float Damage, ABaseCharacter EnemyCharacter)
+{
+	EnemyCharacter.TakeDamage(Damage);
+}
+
+void ABaseCharacter::OnDeath()
+{
+	//Do stuff
+}

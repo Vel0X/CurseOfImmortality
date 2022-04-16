@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "PlayerCharacter.generated.h"
 
@@ -20,6 +23,25 @@ public:
 	// Sets default values for this pawn's properties
 	APlayerCharacter();
 
+protected:
+
+//	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent);
+
+
+public:
+
+	virtual void Tick(float DeltaTime) override;
+
+//	virtual void TakeDamage(float Damage) override;
+
+//	virtual void DoDamage(float Damage, ABaseCharacter EnemyCharacter) override;
+
+//	virtual void OnDeath() override;
+
+	UPROPERTY(EditAnywhere)
+		UCapsuleComponent* CapsuleComponent;
+	UPROPERTY(EditAnywhere)
+		USkeletalMeshComponent* SkeletalMesh;
 	UPROPERTY(EditAnywhere)
 		USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere)
