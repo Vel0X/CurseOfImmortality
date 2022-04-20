@@ -15,13 +15,21 @@ ABaseAbility::ABaseAbility()
 void ABaseAbility::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	RemainingAbilityLifetime = AbilityLifetime;
+	UE_LOG(LogTemp, Warning, TEXT("AbilityInstance was spawned (Base)"));
+
 }
 
 // Called every frame
 void ABaseAbility::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	RemainingAbilityLifetime -= DeltaTime;
+	if(RemainingAbilityLifetime <= 0.0f)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AbilityIstance was destroyed (Base)"));
+		Destroy();
+	}
 
 }
 

@@ -3,18 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "BaseAbility.generated.h"
+#include "BaseAbility.h"
+#include "SwordStrike.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class CURSEOFIMMORTALITY_API ABaseAbility : public AActor
+class CURSEOFIMMORTALITY_API ASwordStrike : public ABaseAbility
 {
 	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
-	ABaseAbility();
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -22,12 +21,4 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-public:
-	UPROPERTY(EditAnywhere)
-	float AbilityLifetime = 3.0f;
-private:
-	float RemainingAbilityLifetime;
-
-	
 };

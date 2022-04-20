@@ -4,6 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "BaseAbility.h"
+
+
+
 #include "AttackManager.generated.h"
 
 /// <summary>
@@ -34,10 +38,17 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	void OnKeyPressed();
+	void BindToInput(); 
+	
 public:
 	ActiveAbility activeAbility;
 
+	UPROPERTY(EditAnywhere)
+	ABaseAbility* meleeAbility;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class ABaseAbility>  abilityClassType;
 private:
 
 };
