@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "BaseAbility.h"
-
+#include "BaseUpgrade.h"
 
 
 #include "AttackManager.generated.h"
@@ -49,7 +49,11 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class ABaseAbility>  abilityClassType;
+
+	UPROPERTY(EditAnywhere)
+	ABaseUpgrade* sealOfCongruenceUpgrade;
 private:
+	ABaseAbility* abilityInstance;
 
 };
 

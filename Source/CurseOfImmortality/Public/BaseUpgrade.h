@@ -3,31 +3,30 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseAbility.h"
 #include "GameFramework/Actor.h"
-#include "BaseAbility.generated.h"
+#include "BaseUpgrade.generated.h"
 
 UCLASS()
-class CURSEOFIMMORTALITY_API ABaseAbility : public AActor
+class CURSEOFIMMORTALITY_API ABaseUpgrade : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABaseAbility();
+	ABaseUpgrade();
+	
+	void InitializeUpgrade(ABaseAbility* abilityInstance);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	void OnAbilityStart();
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-public:
-	UPROPERTY(EditAnywhere)
-	float AbilityLifetime = 3.0f;
-	TScriptDelegate<> OnAbilityStartDelegate;
-private:
-	float RemainingAbilityLifetime;
+
 
 };

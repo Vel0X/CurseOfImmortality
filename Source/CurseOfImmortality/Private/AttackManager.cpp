@@ -15,7 +15,9 @@ void AAttackManager::BeginPlay()
 {
 	Super::BeginPlay();
 	BindToInput();
-	
+
+	sealOfCongruenceUpgrade->InitializeUpgrade(abilityInstance);
+	abilityInstance->OnAbilityStartDelegate;
 }
 
 // Called every frame
@@ -52,7 +54,7 @@ void AAttackManager::OnKeyPressed()
 {
 	
 	//ABaseAbility* baseAbilityInstance = (ABaseAbility*) GetWorld()->SpawnActor(ABaseAbility::StaticClass());
-	ABaseAbility* baseAbilityInstance = (ABaseAbility*) GetWorld()->SpawnActor(abilityClassType);
+	abilityInstance = (ABaseAbility*) GetWorld()->SpawnActor(abilityClassType);
 	//UWorld::SpawnActor(abilityClassType);
 	//UE_LOG(LogTemp, Warning, TEXT("Keypress was registered"));
 }
