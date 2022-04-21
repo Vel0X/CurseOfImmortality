@@ -13,12 +13,13 @@
 /// <summary>
 /// A currently active Ability with a stack of upgrades attached to it 
 /// </summary>
-class ActiveAbility
+
+struct FActiveAbility
 {
-public:
-	float x;
-private:
-	float y;
+	FActiveAbility(ABaseAbility* _AbilityInstance, TArray<ABaseUpgrade*> _ActiveUpgrades) : AbilityInstance(_AbilityInstance), ActiveUpgrades(_ActiveUpgrades) {}
+
+	ABaseAbility* AbilityInstance;
+	TArray<ABaseUpgrade*> ActiveUpgrades;
 };
 
 
@@ -34,26 +35,26 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	void CleanupAbility(int AbilityHandle);
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void OnKeyPressed();
-	void BindToInput(); 
+	void BindToInput();
+	void SpawnFromTemplate(FActiveAbility Template);
 	
 public:
-	ActiveAbility activeAbility;
-
-	UPROPERTY(EditAnywhere)
-	ABaseAbility* meleeAbility;
+	//ActiveAbility activeAbility;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class ABaseAbility>  abilityClassType;
 
 	UPROPERTY(EditAnywhere)
-	ABaseUpgrade* sealOfCongruenceUpgrade;
-private:
-	ABaseAbility* abilityInstance;
+	TArray<TSubclassOf<ABaseUpgrade>> Upgrades;
 
+private:
+	int AbilityMapHandle;
+	TMap<int, FActiveAbility> ActiveAbilities;
 };
 

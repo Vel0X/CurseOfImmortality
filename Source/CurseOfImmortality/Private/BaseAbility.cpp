@@ -8,6 +8,8 @@ ABaseAbility::ABaseAbility()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	//UE_LOG(LogTemp, Warning, TEXT("????"));
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), &OnAbilityStartDelegate);
 
 }
 
@@ -27,9 +29,20 @@ void ABaseAbility::Tick(float DeltaTime)
 	RemainingAbilityLifetime -= DeltaTime;
 	if(RemainingAbilityLifetime <= 0.0f)
 	{
+		OnAbilityEnd.Broadcast(AbilityHandle);
 		UE_LOG(LogTemp, Warning, TEXT("AbilityIstance was destroyed (Base)"));
 		Destroy();
 	}
 
+}
+
+void ABaseAbility::InitializeAbility(int _AbilityHandle)
+{
+	AbilityHandle = _AbilityHandle;
+}
+
+void ABaseAbility::AfterInitialization() const
+{
+		OnAbilityStart.Broadcast(AbilityHandle);
 }
 

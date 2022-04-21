@@ -16,17 +16,27 @@ public:
 	// Sets default values for this actor's properties
 	ABaseUpgrade();
 	
-	void InitializeUpgrade(ABaseAbility* abilityInstance);
+	void InitializeUpgrade(ABaseAbility* _AbilityInstance);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	void OnAbilityStart();
+
+	UFUNCTION()
+	virtual void OnAbilityStart(int AbilityHandle);
+
+	UFUNCTION()
+	virtual void OnAbilityEnd(int AbilityHandle);
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	TEnumAsByte<EAbilityType> RestrictedTo;
+
+protected:
+	UPROPERTY(EditAnywhere)
+	ABaseAbility* AbilityInstance;
 
 
 };

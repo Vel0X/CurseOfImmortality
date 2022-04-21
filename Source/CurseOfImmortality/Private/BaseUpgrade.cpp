@@ -11,9 +11,18 @@ ABaseUpgrade::ABaseUpgrade()
 
 }
 
-void ABaseUpgrade::InitializeUpgrade(ABaseAbility* abilityInstance)
+void ABaseUpgrade::InitializeUpgrade(ABaseAbility* _AbilityInstance)
 {
-	abilityInstance->OnAbilityStartDelegate.BindUFunction(this, "OnAbilityStart");
+	
+	if(_AbilityInstance)
+	{
+		_AbilityInstance->OnAbilityStart.AddUObject(this, &ABaseUpgrade::OnAbilityStart);
+		_AbilityInstance->OnAbilityEnd.AddUObject(this, &ABaseUpgrade::OnAbilityEnd);
+		AbilityInstance = _AbilityInstance;
+		//auto s = abilityInstance->OnAbilityStartDelegate.ToString<>();
+		//UE_LOG(LogTemp, Warning, TEXT("On Abilitystart was called in Base Upgrade"));
+	}
+	
 }
 
 // Called when the game starts or when spawned
@@ -23,9 +32,14 @@ void ABaseUpgrade::BeginPlay()
 	
 }
 
-void ABaseUpgrade::OnAbilityStart()
+void ABaseUpgrade::OnAbilityStart(int AbilityHandle)
 {
 	UE_LOG(LogTemp, Warning, TEXT("On Abilitystart was called in Base Upgrade"));
+}
+
+void ABaseUpgrade::OnAbilityEnd(int AbilityHandle)
+{
+	UE_LOG(LogTemp, Warning, TEXT("On Abilityend was called in Base Upgrade"));
 }
 
 
