@@ -2,6 +2,7 @@
 
 
 #include "GameController.h"
+#include "AttackManager.h"
 
 void UGameController::OnStart()
 {
@@ -10,8 +11,13 @@ void UGameController::OnStart()
 
 }
 
-void UGameController::BindAbilityController()
+void UGameController::BindAbilityController(AAttackManager* _AttackManager)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Bind AbilityController was called"));
+	AttackManager = _AttackManager;
+}
 
+AAttackManager* UGameController::GetAttackManager() const
+{
+	return AttackManager;
 }

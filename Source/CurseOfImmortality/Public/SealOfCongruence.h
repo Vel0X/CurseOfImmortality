@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "BaseUpgrade.h"
-#include "RangedOnlyUpgrade.h"
+#include "RangedOnlyUpgradeComponent.h"
 #include "SealOfCongruence.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API ASealOfCongruence : public ARangedOnlyUpgrade
+class CURSEOFIMMORTALITY_API USealOfCongruence final: public URangedOnlyUpgradeComponent
 {
 	GENERATED_BODY()
 
@@ -19,5 +19,9 @@ class CURSEOFIMMORTALITY_API ASealOfCongruence : public ARangedOnlyUpgrade
 protected:
 	virtual void OnAbilityStart(int AbilityHandle) override;
 	virtual void OnAbilityEnd(int AbilityHandle) override;
-	
+private:
+	UPROPERTY(EditAnywhere)
+	int ChargesLeft = 1;
+	UPROPERTY(EditAnywhere)
+	int Projectiles = 5;
 };

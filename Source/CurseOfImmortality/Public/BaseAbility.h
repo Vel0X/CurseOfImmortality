@@ -6,9 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "BaseAbility.generated.h"
 
-DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityStart, int);
-DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityEnd, int);
+//DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityStart, int);
+//DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityEnd, int);
 
+class UBaseUpgrade;
 UENUM()
 enum EAbilityType
 {
@@ -41,10 +42,16 @@ public:
 public:
 	UPROPERTY(EditAnywhere)
 	float AbilityLifetime = 3.0f;
-	FOnAbilityStart OnAbilityStart;
-	FOnAbilityEnd OnAbilityEnd;
+	//FOnAbilityStart OnAbilityStart;
+	//FOnAbilityEnd OnAbilityEnd;
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EAbilityType> AbilityType;
+	void AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class);
+	void ResetLifetime();
+
+protected:
+	UPROPERTY(EditAnywhere)
+	TArray<UBaseUpgrade*> UpgradeStack;
 private:
 	float RemainingAbilityLifetime;
 	int AbilityHandle;

@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "AttackManager.h"
 #include "GameController.h"
 
-#include "AttackManager.h"
+//#define GAME_INSTANCE static_cast<UGameController*>(GetGameInstance())
 
 // Sets default values
 AAttackManager::AAttackManager()
@@ -17,7 +17,7 @@ void AAttackManager::BeginPlay()
 {
 	Super::BeginPlay();
 	BindToInput();
-	//((UGameController*)GetGameInstance())->BindAbilityController();
+	static_cast<UGameController*>(GetGameInstance())->BindAbilityController(this);
 
 }
 
@@ -58,26 +58,26 @@ void AAttackManager::BindToInput()
 	}
 }
 
-void AAttackManager::SpawnFromTemplate(FActiveAbility Template)
+void AAttackManager::SpawnFromTemplate(ABaseAbility* Template) const
 {
-	TArray<ABaseUpgrade*> ActiveUpgrades;
-	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Template.AbilityInstance->GetClass()));
-	AbilityInstance->InitializeAbility(AbilityMapHandle);
-
-	for (const auto Upgrade : Template.ActiveUpgrades)
-	{
-		ABaseUpgrade* UpgradeInstance = static_cast<ABaseUpgrade*>(GetWorld()->SpawnActor(Upgrade->GetClass()));
-		UpgradeInstance->InitializeUpgrade(AbilityInstance);
-		ActiveUpgrades.Add(UpgradeInstance);
-	}
-
-	AbilityInstance->OnAbilityEnd.AddUObject(this, &AAttackManager::CleanupAbility);
-	
+	const FVector Location = Template->GetActorLocation();
+	const FRotator Rotation = Template->GetActorRotation();
+	FActorSpawnParameters Parameters = FActorSpawnParameters();
+	Parameters.Template = Template;
+	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Template->GetClass(), &Location, &Rotation, Parameters));
+	AbilityInstance->ResetLifetime();
 	AbilityInstance->AfterInitialization();
+}
 
-	const FActiveAbility ActiveAbility = FActiveAbility(AbilityInstance, ActiveUpgrades);
-	ActiveAbilities.Add(AbilityMapHandle, ActiveAbility);
-	AbilityMapHandle++;
+void AAttackManager::SpawnFromTemplate(ABaseAbility* Template, const FRotator Rotator) const
+{
+	const FVector Location = Template->GetActorLocation();
+	FActorSpawnParameters Parameters = FActorSpawnParameters();
+	Parameters.Template = Template;
+	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Template->GetClass(), &Location, &Rotator, Parameters));
+	AbilityInstance->ResetLifetime();
+	AbilityInstance->AfterInitialization();
+	UE_LOG(LogTemp, Warning, TEXT("templated Spawn was triggered"));
 }
 
 
@@ -86,12 +86,13 @@ void AAttackManager::OnKeyPressed()
 	//ABaseAbility* baseAbilityInstance = (ABaseAbility*) GetWorld()->SpawnActor(ABaseAbility::StaticClass());
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(abilityClassType));
 	AbilityInstance->InitializeAbility(AbilityMapHandle);
-	TArray<ABaseUpgrade*> ActiveUpgrades;
+	//TArray<UBaseUpgrade*> ActiveUpgrades;
 	
 	for (const auto Upgrade : Upgrades)
 	{
-
-		ABaseUpgrade* UpgradeInstance = static_cast<ABaseUpgrade*>(GetWorld()->SpawnActor(Upgrade));
+		AbilityInstance->AddUpgrade(Upgrade);
+		/*
+		UBaseUpgradeComponent* UpgradeInstance = static_cast<UBaseUpgradeComponent*>(GetWorld()->SpawnActor(Upgrade));
 		if(UpgradeInstance == nullptr)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Upgrade couldnt be instantiated"));
@@ -101,7 +102,7 @@ void AAttackManager::OnKeyPressed()
 			UpgradeInstance->InitializeUpgrade(AbilityInstance);
 			ActiveUpgrades.Add(UpgradeInstance);
 		}
-
+		*/
 
 		/*
 		if(AbilityInstance->AbilityType == Upgrade->RestrictedTo)
@@ -116,12 +117,12 @@ void AAttackManager::OnKeyPressed()
 		*/
 	}
 
-	AbilityInstance->OnAbilityEnd.AddUObject(this, &AAttackManager::CleanupAbility);
+	//AbilityInstance->OnAbilityEnd.AddUObject(this, &AAttackManager::CleanupAbility);
 	
 	AbilityInstance->AfterInitialization();
 
-	const FActiveAbility ActiveAbility = FActiveAbility(AbilityInstance, ActiveUpgrades);
-	ActiveAbilities.Add(AbilityMapHandle, ActiveAbility);
+	//const FActiveAbility ActiveAbility = FActiveAbility(AbilityInstance, ActiveUpgrades);
+	//ActiveAbilities.Add(AbilityMapHandle, ActiveAbility);
 	AbilityMapHandle++;
 	//UWorld::SpawnActor(abilityClassType);
 }

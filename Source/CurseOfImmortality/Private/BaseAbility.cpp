@@ -2,6 +2,7 @@
 
 
 #include "BaseAbility.h"
+#include "BaseUpgrade.h"
 
 // Sets default values
 ABaseAbility::ABaseAbility()
@@ -29,7 +30,17 @@ void ABaseAbility::Tick(float DeltaTime)
 	RemainingAbilityLifetime -= DeltaTime;
 	if(RemainingAbilityLifetime <= 0.0f)
 	{
-		OnAbilityEnd.Broadcast(AbilityHandle);
+		//OnAbilityEnd.Broadcast(AbilityHandle);
+		for (const auto Upgrade : UpgradeStack)
+		{
+			if(Upgrade == nullptr)
+			{
+				UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL in list"));
+			}
+			else
+			{
+				Upgrade->OnAbilityEnd(AbilityHandle);
+			}		}
 		UE_LOG(LogTemp, Warning, TEXT("AbilityIstance was destroyed (Base)"));
 		Destroy();
 	}
@@ -43,6 +54,46 @@ void ABaseAbility::InitializeAbility(int _AbilityHandle)
 
 void ABaseAbility::AfterInitialization() const
 {
-		OnAbilityStart.Broadcast(AbilityHandle);
+	for (const auto Upgrade : UpgradeStack)
+	{
+		if(Upgrade == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL in list"));
+		}
+		else
+		{
+			Upgrade->OnAbilityStart(AbilityHandle);
+		}
+			
+	}
+		//OnAbilityStart.Broadcast(AbilityHandle);
+}
+
+void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class)
+{
+	/*
+	auto Upgrade = AddComponentByClass(Class, false, GetTransform(), false);
+
+	if(Upgrade == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL after cast"));
+	}
+	*/
+	
+	UBaseUpgrade* Upgrade = static_cast<UBaseUpgrade*>(AddComponentByClass(Class, false, GetTransform(), false));
+	if(Upgrade == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL after cast"));
+	}
+	else
+	{
+		UpgradeStack.Add(Upgrade);
+	}
+	
+}
+
+void ABaseAbility::ResetLifetime()
+{
+	RemainingAbilityLifetime = AbilityLifetime;
 }
 

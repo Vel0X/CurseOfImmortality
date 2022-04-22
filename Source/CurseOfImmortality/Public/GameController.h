@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "GameController.generated.h"
 
+class AAttackManager;
 /**
  * 
  */
@@ -17,6 +18,10 @@ class CURSEOFIMMORTALITY_API UGameController : public UGameInstance
 protected:
 	virtual void OnStart() override;
 public:
-	void BindAbilityController();
+	void BindAbilityController(AAttackManager* _AttackManager);
+	AAttackManager* GetAttackManager() const;
 	
+private:
+	UPROPERTY(EditAnywhere)
+	AAttackManager* AttackManager;
 };

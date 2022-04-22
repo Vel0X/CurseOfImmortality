@@ -4,17 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "BaseUpgrade.h"
-#include "RangedOnlyUpgrade.generated.h"
+#include "RangedOnlyUpgradeComponent.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API ARangedOnlyUpgrade : public ABaseUpgrade
+class CURSEOFIMMORTALITY_API URangedOnlyUpgradeComponent : public UBaseUpgrade
 {
 	GENERATED_BODY()
 
 protected:
+	// Called when the game starts
 	virtual void BeginPlay() override;
 	
 };

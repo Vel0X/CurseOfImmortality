@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "BaseAbility.h"
 #include "BaseUpgrade.h"
+#include "BaseAbility.h"
 
 
 #include "AttackManager.generated.h"
@@ -16,10 +16,10 @@
 
 struct FActiveAbility
 {
-	FActiveAbility(ABaseAbility* _AbilityInstance, TArray<ABaseUpgrade*> _ActiveUpgrades) : AbilityInstance(_AbilityInstance), ActiveUpgrades(_ActiveUpgrades) {}
+	FActiveAbility(ABaseAbility* _AbilityInstance, TArray<UBaseUpgrade*> _ActiveUpgrades) : AbilityInstance(_AbilityInstance), ActiveUpgrades(_ActiveUpgrades) {}
 
 	ABaseAbility* AbilityInstance;
-	TArray<ABaseUpgrade*> ActiveUpgrades;
+	TArray<UBaseUpgrade*> ActiveUpgrades;
 };
 
 
@@ -42,7 +42,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void OnKeyPressed();
 	void BindToInput();
-	void SpawnFromTemplate(FActiveAbility Template);
+	void SpawnFromTemplate(ABaseAbility* Template) const;
+	void SpawnFromTemplate(ABaseAbility* Template, FRotator Rotator) const;
+
 	
 public:
 	//ActiveAbility activeAbility;
@@ -51,7 +53,7 @@ public:
 	TSubclassOf<class ABaseAbility>  abilityClassType;
 
 	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<ABaseUpgrade>> Upgrades;
+	TArray<TSubclassOf<UBaseUpgrade>> Upgrades;
 
 private:
 	int AbilityMapHandle;
