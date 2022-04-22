@@ -40,3 +40,23 @@ void UShatteredImpact::OnEnemyHit()
 		}
 	}
 }
+
+void UShatteredImpact::InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel)
+{
+	Super::InitializeUpgrade(_AbilityInstance, UpgradeLevel);
+	switch(UpgradeLevel)
+	{
+	case 1:
+		AmountOfFragments = 3;
+		break;
+	case 2:
+		AmountOfFragments = 4;
+		break;
+	case 3:
+		AmountOfFragments = 5;
+		break;
+	default:
+		UE_LOG(LogTemp, Error, TEXT("Invalid Upgradelevel for Seal of Congruence"));
+		break;
+	}
+}

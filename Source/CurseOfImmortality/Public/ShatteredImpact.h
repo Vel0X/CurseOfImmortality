@@ -16,6 +16,8 @@ class CURSEOFIMMORTALITY_API UShatteredImpact : public URangedOnlyUpgradeCompone
 
 public:
 	virtual void OnEnemyHit() override;
+	virtual void InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel) override;
+
 private:
 	UPROPERTY()
 	int SplitsRemaining = 1;

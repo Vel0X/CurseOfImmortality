@@ -17,7 +17,7 @@ public:
 	// Sets default values for this component's properties
 	UBaseUpgrade();
 
-	void InitializeUpgrade(ABaseAbility* _AbilityInstance);
+	virtual void InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel);
 	
 	UFUNCTION()
 	virtual void OnAbilityStart(int AbilityHandle);
@@ -27,7 +27,7 @@ public:
 
 	UFUNCTION()
 	virtual void OnEnemyHit();
-
+	
 	TEnumAsByte<EAbilityType> RestrictedTo;
 
 protected:

@@ -13,6 +13,7 @@ class UBaseUpgrade;
 UENUM()
 enum EAbilityType
 {
+	None, 
 	Melee,
 	Ranged,
 	Skill
@@ -49,7 +50,7 @@ public:
 	float AbilityLifetime = 3.0f;
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EAbilityType> AbilityType;
-	void AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class);
+	void AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel);
 	void ResetLifetime();
 	bool DestroyOnEnemyHit = false;
 	bool CanInteract = false;

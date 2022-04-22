@@ -19,12 +19,7 @@ void AAttackManager::BeginPlay()
 	BindToInput();
 	static_cast<UGameController*>(GetGameInstance())->BindAbilityController(this);
 
-}
-
-void AAttackManager::CleanupAbility(int AbilityHandle)
-{
-	ActiveAbilities.Remove(AbilityHandle);
-	UE_LOG(LogTemp, Warning, TEXT("Removed AbilityInstance from List. Remaining are %d abilities"), ActiveAbilities.Num());
+	UpdateAbilityPool();
 
 }
 
@@ -86,6 +81,98 @@ void AAttackManager::SpawnFromTemplate(ABaseAbility* Template, const FRotator Ro
 	UE_LOG(LogTemp, Warning, TEXT("templated Spawn was triggered"));
 }
 
+void AAttackManager::UpdateAbilityPool()
+{
+	//initial weight per entry = 100
+	//some entries start with lower weights, that can be boosted by obtaining other upgrades
+	for (const UAbilitySpecification* Ability : PossibleAbilities)
+	{
+		int Weight = 100;
+		bool TypeFound = false; //does the player already have an ability of that type?
+		bool AbilityPresent = false; //is the ability already present at it's max level?
+		for (const FActiveAbility ActiveAbility : ActiveAbilities)
+		{
+			if(ActiveAbility.AbilityName == Ability->AbilityName && ActiveAbility.Level == Ability->MaxLevel)
+			{
+				AbilityPresent = true;
+				break;
+			}
+			if(ActiveAbility.AbilityType == Ability->AbilityType)
+			{
+				TypeFound = true;
+			}
+		}
+
+		if(AbilityPresent)
+		{
+			continue;
+		}
+		if(TypeFound)
+		{
+			Weight = 20;
+		}
+		Pool.Add(FPooledEntry(Ability->AbilityName, false, Weight));
+		//pool the ability with the appropriate weight
+	}
+
+	for (const UUpgradeSpecification* Upgrade : PossibleUpgrades)
+	{
+		int Weight = 100;
+		bool PrerequisitesMet = false;
+
+		if(Upgrade->Application == EAbilityType::None) //if Type is None, then the Upgrade doesn't require any prerequisites to function
+		{
+			PrerequisitesMet = true;	
+		}
+		else
+		{
+			for (const FActiveAbility ActiveAbility : ActiveAbilities)
+			{
+				if(ActiveAbility.AbilityType == Upgrade->Application)
+				{
+					PrerequisitesMet = true;
+					break;
+				}
+
+			}
+		}
+
+		if(!PrerequisitesMet)
+		{
+			continue;
+		}
+		
+		bool Restricted = false;
+		bool UpgradePresent = false;
+		for (const FActiveUpgrade ActiveUpgrade : ActiveUpgrades)
+		{
+			if(ActiveUpgrade.UpgradeName == Upgrade->UpgradeName && ActiveUpgrade.Level == Upgrade->MaxLevel)
+			{
+				UpgradePresent = true;
+				break;
+			}
+			if(Upgrade->Restrictions.Contains(ActiveUpgrade.UpgradeName))
+			{
+				Restricted = true;
+				break;
+			}
+		}
+
+		if(Restricted || UpgradePresent)
+		{
+			continue;
+		}
+
+		Pool.Add(FPooledEntry(Upgrade->UpgradeName, true, 100));
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("PoolSize %d"), Pool.Num());
+
+}
+
+void AAttackManager::PickThreeFromPool()
+{
+}
 
 void AAttackManager::OnKeyPressed()
 {
@@ -95,7 +182,7 @@ void AAttackManager::OnKeyPressed()
 	
 	for (const auto Upgrade : Upgrades)
 	{
-		AbilityInstance->AddUpgrade(Upgrade);
+		AbilityInstance->AddUpgrade(Upgrade, 1);
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Spawn was triggered"));
 	AbilityInstance->AfterInitialization();

@@ -15,7 +15,8 @@ class CURSEOFIMMORTALITY_API USealOfCongruence final: public URangedOnlyUpgradeC
 {
 	GENERATED_BODY()
 
-
+public:
+	virtual void InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel) override;
 protected:
 	virtual void OnAbilityStart(int AbilityHandle) override;
 	virtual void OnAbilityEnd(int AbilityHandle) override;

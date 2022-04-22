@@ -102,7 +102,7 @@ void ABaseAbility::DestroyAbility()
 	Destroy();
 }
 
-void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class)
+void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel)
 {
 	/*
 	auto Upgrade = AddComponentByClass(Class, false, GetTransform(), false);
@@ -120,6 +120,7 @@ void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class)
 	}
 	else
 	{
+		Upgrade->InitializeUpgrade(this, UpgradeLevel);
 		UpgradeStack.Add(Upgrade);
 	}
 	

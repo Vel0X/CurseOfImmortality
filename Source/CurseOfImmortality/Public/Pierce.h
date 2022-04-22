@@ -16,6 +16,7 @@ class CURSEOFIMMORTALITY_API UPierce final: public URangedOnlyUpgradeComponent
 
 public:
 	virtual void OnEnemyHit() override;
+	virtual void InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel) override;
 
 private:
 	UPROPERTY(EditAnywhere)

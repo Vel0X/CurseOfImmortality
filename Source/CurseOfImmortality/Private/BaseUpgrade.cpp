@@ -14,7 +14,7 @@ UBaseUpgrade::UBaseUpgrade()
 }
 
 
-void UBaseUpgrade::InitializeUpgrade(ABaseAbility* _AbilityInstance)
+void UBaseUpgrade::InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel)
 {
 	if(_AbilityInstance)
 	{
