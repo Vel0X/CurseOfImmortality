@@ -17,5 +17,6 @@ class CURSEOFIMMORTALITY_API URangedOnlyUpgradeComponent : public UBaseUpgrade
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
 	
 };

@@ -23,7 +23,6 @@ UCLASS()
 class CURSEOFIMMORTALITY_API ABaseAbility : public AActor
 {
 	GENERATED_BODY()
-	
 
 public:	
 	// Sets default values for this actor's properties
@@ -33,21 +32,27 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+	UFUNCTION()
+	virtual void OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor);
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void DestroyAbility();
+
 	void InitializeAbility(int _AbilityHandle);
 	void AfterInitialization() const;
 
 public:
 	UPROPERTY(EditAnywhere)
 	float AbilityLifetime = 3.0f;
-	//FOnAbilityStart OnAbilityStart;
-	//FOnAbilityEnd OnAbilityEnd;
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EAbilityType> AbilityType;
 	void AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class);
 	void ResetLifetime();
+	bool DestroyOnEnemyHit = false;
+	bool CanInteract = false;
 
 protected:
 	UPROPERTY(EditAnywhere)
@@ -55,5 +60,6 @@ protected:
 private:
 	float RemainingAbilityLifetime;
 	int AbilityHandle;
+	FScriptDelegate OverlapDelegate;
 
 };

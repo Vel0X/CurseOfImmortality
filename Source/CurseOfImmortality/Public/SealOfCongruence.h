@@ -23,5 +23,5 @@ private:
 	UPROPERTY(EditAnywhere)
 	int ChargesLeft = 1;
 	UPROPERTY(EditAnywhere)
-	int Projectiles = 5;
+	int Projectiles = 3;
 };

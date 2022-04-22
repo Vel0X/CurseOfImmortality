@@ -13,10 +13,10 @@ void USealOfCongruence::OnAbilityStart(int AbilityHandle)
 	Super::OnAbilityStart(AbilityHandle);
 	if(ChargesLeft == 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Charges left (Seal of Congruence) %d"), ChargesLeft);
+		//UE_LOG(LogTemp, Warning, TEXT("No Charges left (Seal of Congruence) %d"), ChargesLeft);
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Instantiating new projectiles (Seal of Congruence) %d"), ChargesLeft);
+	//UE_LOG(LogTemp, Warning, TEXT("Instantiating new projectiles (Seal of Congruence) %d"), ChargesLeft);
 	ChargesLeft--;
 	
 	const AAttackManager* AttackManager = static_cast<UGameController*>(GetOwner()->GetGameInstance())->GetAttackManager();
@@ -43,20 +43,16 @@ void USealOfCongruence::OnAbilityStart(int AbilityHandle)
 				Direction = OngoingRotator.RotateVector(Direction);
 			}
 		}
-		
-
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Owner couldn't be cast (Seal of Congruence) %d"), ChargesLeft);
 	}
-	
-	
 }
 
 void USealOfCongruence::OnAbilityEnd(int AbilityHandle)
 {
 	Super::OnAbilityEnd(AbilityHandle);
-	UE_LOG(LogTemp, Warning, TEXT("On Abilityend was called in Seal of Congruence Upgrade"));
+	//UE_LOG(LogTemp, Warning, TEXT("On Abilityend was called in Seal of Congruence Upgrade"));
  
 }

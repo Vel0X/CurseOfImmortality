@@ -34,16 +34,20 @@ void UBaseUpgrade::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
 void UBaseUpgrade::OnAbilityStart(int AbilityHandle)
 {
-	UE_LOG(LogTemp, Warning, TEXT("On Abilitystart was called in Base Upgrade"));
+	//UE_LOG(LogTemp, Warning, TEXT("On Abilitystart was called in Base Upgrade"));
 }
 
 void UBaseUpgrade::OnAbilityEnd(int AbilityHandle)
 {
-	UE_LOG(LogTemp, Warning, TEXT("On Abilityend was called in Base Upgrade"));
+	//UE_LOG(LogTemp, Warning, TEXT("On Abilityend was called in Base Upgrade"));
+}
+
+void UBaseUpgrade::OnEnemyHit()
+{
+	
 }
 

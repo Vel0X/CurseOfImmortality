@@ -15,6 +15,5 @@ class CURSEOFIMMORTALITY_API ARangedAbility : public ABaseAbility
 	GENERATED_BODY()
 
 protected:
-	virtual void Tick(float DeltaSeconds) override;
-	
+	virtual void BeginPlay() override;
 };

@@ -3,7 +3,8 @@
 
 #include "RangedAbility.h"
 
-void ARangedAbility::Tick(float DeltaSeconds)
+void ARangedAbility::BeginPlay()
 {
-	Super::Tick(DeltaSeconds);
+	Super::BeginPlay();
+	DestroyOnEnemyHit = true;
 }
