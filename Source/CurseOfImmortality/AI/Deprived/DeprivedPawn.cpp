@@ -33,14 +33,14 @@ void ADeprivedPawn::SetHitPlayer(const bool bHitPlayer)
 	HitPlayer = bHitPlayer;
 }
 
-bool ADeprivedPawn::IsStandUp() const
+bool ADeprivedPawn::IsRecover() const
 {
-	return StandUp;
+	return Recover;
 }
 
-void ADeprivedPawn::SetStandUp(const bool bStandUp)
+void ADeprivedPawn::SetRecover(const bool bStandUp)
 {
-	StandUp = bStandUp;
+	Recover = bStandUp;
 }
 
 bool ADeprivedPawn::IsIdle() const
@@ -53,14 +53,14 @@ void ADeprivedPawn::SetIdle(const bool bIdle)
 	Idle = bIdle;
 }
 
-bool ADeprivedPawn::IsMoving() const
+bool ADeprivedPawn::IsRunning() const
 {
-	return Moving;
+	return Running;
 }
 
-void ADeprivedPawn::SetMoving(const bool bMoving)
+void ADeprivedPawn::SetRunning(const bool bMoving)
 {
-	Moving = bMoving;
+	Running = bMoving;
 }
 
 bool ADeprivedPawn::IsJump() const

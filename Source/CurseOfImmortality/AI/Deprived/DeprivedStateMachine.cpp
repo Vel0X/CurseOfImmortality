@@ -8,7 +8,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/State.h"
+#include "States/DeprivedHitPlayer.h"
 #include "States/DeprivedIdle.h"
+#include "States/DeprivedJumpAttack.h"
+#include "States/DeprivedRecover.h"
 #include "States/DeprivedRunning.h"
 
 UDeprivedStateMachine::UDeprivedStateMachine()
@@ -27,14 +30,18 @@ void UDeprivedStateMachine::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Initialise References
 	SelfRef = Cast<ADeprivedPawn>(GetOwner());
 	Player = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetPawn());
 
 	//Initialise States
 	Idle = NewObject<UDeprivedIdle>();
 	Running = NewObject<UDeprivedRunning>();
-
-	CurrentState = Running;
+	JumpAttack = NewObject<UDeprivedJumpAttack>();
+	HitPlayer = NewObject<UDeprivedHitPlayer>();
+	Recover = NewObject<UDeprivedRecover>();
+	
+	CurrentState = Idle;
 	CurrentState->OnStateEnter(this);
 }
 
@@ -42,7 +49,7 @@ void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float Delt
 {
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
 	Target.Normalize();
-	FVector MoveDir(SelfRef->GetActorLocation() + Target * DeltaTime * Speed);
+	const FVector MoveDir(SelfRef->GetActorLocation() + Target * DeltaTime * Speed);
 	SelfRef->SetActorLocation(MoveDir, true);
 }
 
@@ -57,6 +64,7 @@ void UDeprivedStateMachine::FocusOnPlayer()
 	SelfRef->GetCollisionCapsule()->SetWorldRotation(LookAtRotation);
 }
 
+//Getter and Setter
 ADeprivedPawn* UDeprivedStateMachine::GetSelfRef() const
 {
 	return SelfRef;
@@ -64,5 +72,34 @@ ADeprivedPawn* UDeprivedStateMachine::GetSelfRef() const
 
 ABaseCharacter* UDeprivedStateMachine::GetPlayer() const
 {
+	if (!Player)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Player in Deprived StateMachine"))
+	}
 	return Player;
+}
+
+UState* UDeprivedStateMachine::GetIdle() const
+{
+	return Idle;
+}
+
+UState* UDeprivedStateMachine::GetRunning() const
+{
+	return Running;
+}
+
+UState* UDeprivedStateMachine::GetJumpAttack() const
+{
+	return JumpAttack;
+}
+
+UState* UDeprivedStateMachine::GetRecover() const
+{
+	return Recover;
+}
+
+UState* UDeprivedStateMachine::GetHitPlayer() const
+{
+	return HitPlayer;
 }

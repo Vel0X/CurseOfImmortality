@@ -14,12 +14,13 @@ class CURSEOFIMMORTALITY_API UStateMachine : public UActorComponent
 public:
 	// Sets default values for this component's properties
 	UStateMachine();
+	
+	virtual void Transition(UState* NewState, UStateMachine* Controller);
+
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-	virtual void Transition(UStateMachine* Controller);
 
 public:
 	// Called every frame

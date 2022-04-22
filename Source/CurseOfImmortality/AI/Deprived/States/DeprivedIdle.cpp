@@ -3,6 +3,7 @@
 
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedIdle.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
+#include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 
 void UDeprivedIdle::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -30,11 +31,11 @@ void UDeprivedIdle::OnStateUpdate(float DeltaTime)
 		return;
 	}
 
+	Controller->FocusOnPlayer();
 	const FVector PlayerLocation = Controller->GetPlayer()->GetActorLocation();
 
 	if (FVector::Dist(PlayerLocation, Controller->GetSelfRef()->GetActorLocation()) < 1000)
 	{
-		Transition Transition;
-		Transition.MakeTransition(new StateMoving(SelfRef, Player, Controller), Controller);
+		Controller->Transition(Controller->GetRunning(), Controller);
 	}
 }

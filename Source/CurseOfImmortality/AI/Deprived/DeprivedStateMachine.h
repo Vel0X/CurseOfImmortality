@@ -27,9 +27,15 @@ public:
 
 	void FocusOnPlayer();
 
+	//Getter and Setter
 	ADeprivedPawn* GetSelfRef() const;
 	ABaseCharacter* GetPlayer() const;
-
+	UState* GetIdle() const;
+	UState* GetRunning() const;
+	UState* GetJumpAttack() const;
+	UState* GetRecover() const;
+	UState* GetHitPlayer() const;
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -42,7 +48,13 @@ private:
 
 	//States
 	UPROPERTY()
-	UDeprivedIdle* Idle;
+	UState* Idle;
 	UPROPERTY()
-	UDeprivedRunning* Running;
+	UState* Running;
+	UPROPERTY()
+	UState* JumpAttack;
+	UPROPERTY()
+	UState* Recover;
+	UPROPERTY()
+	UState* HitPlayer;
 };

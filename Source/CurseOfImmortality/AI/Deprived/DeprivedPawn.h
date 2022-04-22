@@ -27,13 +27,13 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool Idle = false;
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
-	bool Moving = false;
+	bool Running = false;
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool Jump = false;
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool Stunned = false;
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
-	bool StandUp = false;
+	bool Recover = false;
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool HitPlayer = false;
 	
@@ -48,12 +48,12 @@ private:
 public:
 	bool IsHitPlayer() const;
 	void SetHitPlayer(const bool bHitPlayer);
-	bool IsStandUp() const;
-	void SetStandUp(const bool bStandUp);
+	bool IsRecover() const;
+	void SetRecover(const bool bStandUp);
 	bool IsIdle() const;
 	void SetIdle(const bool bIdle);
-	bool IsMoving() const;
-	void SetMoving(const bool bMoving);
+	bool IsRunning() const;
+	void SetRunning(const bool bMoving);
 	bool IsJump() const;
 	void SetJump(const bool bJump);
 	bool IsStunned() const;
