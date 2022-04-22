@@ -36,9 +36,7 @@ private:
 	bool StandUp = false;
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool HitPlayer = false;
-
-	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* CollisionCapsule;
+	
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere)
@@ -48,7 +46,6 @@ private:
 	
 
 public:
-	UCapsuleComponent* GetCollisionCapsule() const;
 	bool IsHitPlayer() const;
 	void SetHitPlayer(const bool bHitPlayer);
 	bool IsStandUp() const;

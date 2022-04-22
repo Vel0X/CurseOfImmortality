@@ -3,6 +3,8 @@
 
 #include "StateMachine.h"
 
+#include "State.h"
+
 
 // Sets default values for this component's properties
 UStateMachine::UStateMachine()
@@ -22,6 +24,13 @@ void UStateMachine::BeginPlay()
 
 	// ...
 	
+}
+
+void UStateMachine::Transition(UState* NewState, UStateMachine* Controller)
+{
+	CurrentState->OnStateExit();
+	CurrentState = NewState;
+	CurrentState->OnStateEnter(Controller);
 }
 
 

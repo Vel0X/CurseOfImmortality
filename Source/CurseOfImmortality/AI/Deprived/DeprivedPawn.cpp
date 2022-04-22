@@ -3,18 +3,14 @@
 
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 
-#include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 
 ADeprivedPawn::ADeprivedPawn()
 {
-	CollisionCapsule = CreateDefaultSubobject<UCapsuleComponent>("CollisionCapsule");
-	CollisionCapsule->SetupAttachment(RootComponent);
-
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh");
-	Mesh->SetupAttachment(CollisionCapsule);
+	Mesh->SetupAttachment(RootComponent);
 
 	AttackSphere = CreateDefaultSubobject<USphereComponent>("AttackSphere");
 	AttackSphere->SetupAttachment(RootComponent);
@@ -25,11 +21,6 @@ ADeprivedPawn::ADeprivedPawn()
 USphereComponent* ADeprivedPawn::GetAttackSphere() const
 {
 	return AttackSphere;
-}
-
-UCapsuleComponent* ADeprivedPawn::GetCollisionCapsule() const
-{
-	return CollisionCapsule;
 }
 
 bool ADeprivedPawn::IsHitPlayer() const

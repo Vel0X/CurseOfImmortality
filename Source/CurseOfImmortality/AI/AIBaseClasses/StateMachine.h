@@ -3,9 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseCharacter.h"
-#include "BaseEnemyPawn.h"
-#include "Components/ActorComponent.h"
 #include "StateMachine.generated.h"
 
 class UState;
@@ -21,6 +18,8 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	virtual void Transition(UStateMachine* Controller);
 
 public:
 	// Called every frame

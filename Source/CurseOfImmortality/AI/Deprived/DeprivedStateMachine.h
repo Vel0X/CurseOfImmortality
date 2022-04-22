@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DeprivedPawn.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/StateMachine.h"
 #include "DeprivedStateMachine.generated.h"
 
+class ABaseCharacter;
+class ADeprivedPawn;
 class UDeprivedRunning;
 class UDeprivedIdle;
 /**
@@ -18,13 +19,14 @@ class CURSEOFIMMORTALITY_API UDeprivedStateMachine : public UStateMachine
 	GENERATED_BODY()
 public:
 	UDeprivedStateMachine();
-	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	void MoveToTarget(FVector Target, float Speed, float DeltaTime);
 
 	void FocusOnPlayer();
-	
+
 	ADeprivedPawn* GetSelfRef() const;
 	ABaseCharacter* GetPlayer() const;
 
@@ -32,14 +34,15 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	//References
 	UPROPERTY()
 	ADeprivedPawn* SelfRef;
-
 	UPROPERTY()
 	ABaseCharacter* Player;
 
+	//States
 	UPROPERTY()
-	TSubclassOf<UDeprivedIdle> Idle;
+	UDeprivedIdle* Idle;
 	UPROPERTY()
 	UDeprivedRunning* Running;
 };

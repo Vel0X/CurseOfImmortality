@@ -7,6 +7,8 @@
 #include "CharacterMovement.h"
 #include "BaseCharacter.generated.h"
 
+class UCapsuleComponent;
+
 UCLASS()
 class CURSEOFIMMORTALITY_API ABaseCharacter : public APawn
 {
@@ -20,7 +22,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -42,8 +44,16 @@ public:
 	float MovementSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		bool Died;
+	bool Died;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		bool Immune;
+	bool Immune;
+
+private:
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* CollisionCapsule;
+
+//Getter and Setter
+public:
+	UCapsuleComponent* GetCollisionCapsule() const;
 };

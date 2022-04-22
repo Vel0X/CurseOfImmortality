@@ -6,7 +6,7 @@
 
 void UDeprivedRunning::OnStateEnter(UStateMachine* StateMachine)
 {
-	this->Controller = Cast<UDeprivedStateMachine>(StateMachine);
+	Controller = Cast<UDeprivedStateMachine>(StateMachine);
 	Controller->GetSelfRef()->SetMoving(true);
 	UE_LOG(LogTemp, Warning, TEXT("Running State Entered"))
 }
@@ -31,12 +31,11 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	if (FVector::Dist(PlayerLocation, Controller->GetSelfRef()->GetActorLocation()) < 800)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Jump Attack"))
-		
 	}
 	else
 	{
 		const FVector Target = PlayerLocation - Controller->GetSelfRef()->GetActorLocation();
-		
+
 		Controller->MoveToTarget(Target, 400.f, DeltaTime);
 	}
 }
