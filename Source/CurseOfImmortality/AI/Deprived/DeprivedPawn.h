@@ -8,6 +8,7 @@
 
 class UDeprivedStateMachine;
 class USphereComponent;
+class UCapsuleComponent;
 /**
  * 
  */
@@ -15,21 +16,12 @@ UCLASS()
 class CURSEOFIMMORTALITY_API ADeprivedPawn : public ABaseEnemyPawn
 {
 	GENERATED_BODY()
-// public:
-// 	ADeprivedPawn();
-// 	virtual void Tick(float DeltaSeconds) override;
-//
-// protected:
-// 	virtual void BeginPlay() override;
-
-private:
-	UPROPERTY()
-	UDeprivedStateMachine* StateMachine;
-
-	UPROPERTY(EditAnywhere)
-	USphereComponent* AttackSphere;
 public:
+	ADeprivedPawn();
+
 	USphereComponent* GetAttackSphere() const;
+	
+	
 private:
 	//States
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
@@ -44,7 +36,17 @@ private:
 	bool StandUp = false;
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool HitPlayer = false;
+
+	UPROPERTY()
+	UDeprivedStateMachine* StateMachine;
+
+	UPROPERTY(EditAnywhere)
+	USphereComponent* AttackSphere;
+
+	UPROPERTY()
+	UCapsuleComponent* CollisionCapsule;
 public:
+	UCapsuleComponent* GetCollisionCapsule() const;
 	bool IsHitPlayer() const;
 	void SetHitPlayer(const bool bHitPlayer);
 	bool IsStandUp() const;

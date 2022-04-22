@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
 #include "State.generated.h"
-
+class UStateMachine;
 /**
  * 
  */
@@ -15,8 +15,8 @@ class CURSEOFIMMORTALITY_API UState : public UObject
 {
 	GENERATED_BODY()
 
-protected:
-	virtual void OnStateEnter();
+public:
+	virtual void OnStateEnter(UStateMachine* StateMachine);
 
 	virtual void OnStateExit();
 

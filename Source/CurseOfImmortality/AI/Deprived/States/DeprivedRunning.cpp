@@ -4,13 +4,9 @@
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedRunning.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 
-UDeprivedRunning::UDeprivedRunning(UDeprivedStateMachine* Controller)
+void UDeprivedRunning::OnStateEnter(UStateMachine* StateMachine)
 {
-	this->Controller = Controller;
-}
-
-void UDeprivedRunning::OnStateEnter()
-{
+	this->Controller = Cast<UDeprivedStateMachine>(StateMachine);
 	Controller->GetSelfRef()->SetMoving(true);
 	UE_LOG(LogTemp, Warning, TEXT("Moving State Entered"))
 }

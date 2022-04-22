@@ -7,8 +7,8 @@
 #include "CurseOfImmortality/AI/AIBaseClasses/StateMachine.h"
 #include "DeprivedStateMachine.generated.h"
 
-class StateMoving;
-class StateIdle;
+class UDeprivedRunning;
+class UDeprivedIdle;
 /**
  * 
  */
@@ -17,6 +17,8 @@ class CURSEOFIMMORTALITY_API UDeprivedStateMachine : public UStateMachine
 {
 	GENERATED_BODY()
 public:
+	UDeprivedStateMachine();
+	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void MoveToTarget(FVector Target, float Speed, float DeltaTime);
@@ -32,8 +34,12 @@ protected:
 private:
 	UPROPERTY()
 	ADeprivedPawn* SelfRef;
+
 	UPROPERTY()
 	ABaseCharacter* Player;
-	StateIdle* Idle;
-	StateMoving* Moving;
+
+	UPROPERTY()
+	TSubclassOf<UDeprivedIdle> Idle;
+	UPROPERTY()
+	UDeprivedRunning* Running;
 };

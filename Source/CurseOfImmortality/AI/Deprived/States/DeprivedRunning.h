@@ -16,9 +16,7 @@ class CURSEOFIMMORTALITY_API UDeprivedRunning : public UState
 	GENERATED_BODY()
 
 public:
-	UDeprivedRunning(UDeprivedStateMachine* Controller);
-
-	virtual void OnStateEnter() override;
+	virtual void OnStateEnter(UStateMachine* StateMachine) override;
 
 	virtual void OnStateExit() override;
 
