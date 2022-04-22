@@ -10,13 +10,16 @@
 
 ADeprivedPawn::ADeprivedPawn()
 {
-	StateMachine = CreateDefaultSubobject<UDeprivedStateMachine>("StateMachine");
-
 	CollisionCapsule = CreateDefaultSubobject<UCapsuleComponent>("CollisionCapsule");
-	SetRootComponent(CollisionCapsule);
+	CollisionCapsule->SetupAttachment(RootComponent);
+
+	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh");
+	Mesh->SetupAttachment(CollisionCapsule);
 
 	AttackSphere = CreateDefaultSubobject<USphereComponent>("AttackSphere");
 	AttackSphere->SetupAttachment(RootComponent);
+
+	StateMachine = CreateDefaultSubobject<UDeprivedStateMachine>("StateMachine");
 }
 
 USphereComponent* ADeprivedPawn::GetAttackSphere() const

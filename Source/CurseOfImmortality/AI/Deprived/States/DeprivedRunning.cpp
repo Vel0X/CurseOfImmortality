@@ -8,20 +8,20 @@ void UDeprivedRunning::OnStateEnter(UStateMachine* StateMachine)
 {
 	this->Controller = Cast<UDeprivedStateMachine>(StateMachine);
 	Controller->GetSelfRef()->SetMoving(true);
-	UE_LOG(LogTemp, Warning, TEXT("Moving State Entered"))
+	UE_LOG(LogTemp, Warning, TEXT("Running State Entered"))
 }
 
 void UDeprivedRunning::OnStateExit()
 {
 	Controller->GetSelfRef()->SetMoving(false);
-	UE_LOG(LogTemp, Warning, TEXT("Moving State Exit"))
+	UE_LOG(LogTemp, Warning, TEXT("Running State Exit"))
 }
 
 void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 {
 	if (!Controller)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Refrence Missing in StateMovin: 32"));
+		UE_LOG(LogTemp, Error, TEXT("Refrence Missing in State Running"));
 		return;
 	}
 	Controller->FocusOnPlayer();

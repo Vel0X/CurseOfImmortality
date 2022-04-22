@@ -37,14 +37,16 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool HitPlayer = false;
 
-	UPROPERTY()
-	UDeprivedStateMachine* StateMachine;
-
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* CollisionCapsule;
+	UPROPERTY(EditAnywhere)
+	USkeletalMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere)
 	USphereComponent* AttackSphere;
-
 	UPROPERTY()
-	UCapsuleComponent* CollisionCapsule;
+	UDeprivedStateMachine* StateMachine;
+	
+
 public:
 	UCapsuleComponent* GetCollisionCapsule() const;
 	bool IsHitPlayer() const;

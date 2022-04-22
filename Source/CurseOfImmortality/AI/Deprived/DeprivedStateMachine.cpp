@@ -38,11 +38,13 @@ void UDeprivedStateMachine::BeginPlay()
 	SelfRef = Cast<ADeprivedPawn>(GetOwner());
 	Player = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
-	CurrentState = NewObject<UDeprivedRunning>(Running);
+	CurrentState = NewObject<UDeprivedRunning>();
+	CurrentState->OnStateEnter(this);
 }
 
 void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float DeltaTime)
 {
+	if(!SelfRef){ UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine"));}
 	Target.Normalize();
 	FVector MoveDir(SelfRef->GetActorLocation() + Target * DeltaTime * Speed);
 	SelfRef->SetActorLocation(MoveDir, true);
@@ -50,6 +52,8 @@ void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float Delt
 
 void UDeprivedStateMachine::FocusOnPlayer()
 {
+	if(!SelfRef){ UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine"));}
+	if(!Player){ UE_LOG(LogTemp, Error, TEXT("No Player in Deprived StateMachine"));}
 	const FVector PlayerLocation = Player->GetActorLocation();
 	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 
