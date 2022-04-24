@@ -178,7 +178,7 @@ void AAttackManager::OnKeyPressed()
 {
 	//ABaseAbility* baseAbilityInstance = (ABaseAbility*) GetWorld()->SpawnActor(ABaseAbility::StaticClass());
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(abilityClassType));
-	AbilityInstance->InitializeAbility(AbilityMapHandle);
+	AbilityInstance->InitializeAbility(AbilityMapHandle, this);
 	
 	for (const auto Upgrade : Upgrades)
 	{

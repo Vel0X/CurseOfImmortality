@@ -42,8 +42,8 @@ public:
 
 	virtual void DestroyAbility();
 
-	void InitializeAbility(int _AbilityHandle);
-	void AfterInitialization() const;
+	virtual void InitializeAbility(int _AbilityHandle, AActor* Caster);
+	void AfterInitialization();
 
 public:
 	UPROPERTY(EditAnywhere)
@@ -54,6 +54,8 @@ public:
 	void ResetLifetime();
 	bool DestroyOnEnemyHit = false;
 	bool CanInteract = false;
+	UPROPERTY(EditAnywhere)
+	float RelativeSize = 1.0f;
 
 protected:
 	UPROPERTY(EditAnywhere)

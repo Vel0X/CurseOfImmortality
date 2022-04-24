@@ -3,14 +3,14 @@
 
 #include "BaseAbility.h"
 #include "BaseUpgrade.h"
+#include "NiagaraCommon.h"
+#include "Niagara/Public/NiagaraComponent.h"
 
 // Sets default values
 ABaseAbility::ABaseAbility()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	//UE_LOG(LogTemp, Warning, TEXT("????"));
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), &OnAbilityStartDelegate);
 }
 
 // Called when the game starts or when spawned
@@ -63,12 +63,12 @@ void ABaseAbility::Tick(float DeltaTime)
 	CanInteract = true;
 }
 
-void ABaseAbility::InitializeAbility(int _AbilityHandle)
+void ABaseAbility::InitializeAbility(const int _AbilityHandle, AActor* Caster)
 {
 	AbilityHandle = _AbilityHandle;
 }
 
-void ABaseAbility::AfterInitialization() const
+void ABaseAbility::AfterInitialization()
 {
 	for (const auto Upgrade : UpgradeStack)
 	{
@@ -80,9 +80,11 @@ void ABaseAbility::AfterInitialization() const
 		{
 			Upgrade->OnAbilityStart(AbilityHandle);
 		}
-			
 	}
-		//OnAbilityStart.Broadcast(AbilityHandle);
+
+	//set params of ability
+	const FVector newScale = FVector(RelativeSize, RelativeSize, RelativeSize);
+	SetActorScale3D(newScale);
 }
 
 void ABaseAbility::DestroyAbility()
@@ -98,6 +100,18 @@ void ABaseAbility::DestroyAbility()
 		{
 			Upgrade->OnAbilityEnd(AbilityHandle);
 		}
+	}
+	const UNiagaraComponent* vfx = FindComponentByClass<UNiagaraComponent>();
+	if(vfx == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Found no vfx"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("found vfx"));
+
+		//vfx->GetAsset()->Destro
+
 	}
 	Destroy();
 }

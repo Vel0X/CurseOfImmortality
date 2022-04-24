@@ -11,9 +11,19 @@ UENUM()
 enum EUpgradeName
 {
 	Fireball,
+	Behemoth,
+	Hemorrhage,
+	CursemarkOfDoom, //does this need to be on an ability
+	SharpendReflexes,
+	Spellblade,
+	BattleFrenzy,
+	FierceDetermination,
 	SealOfCongruence, 
 	Pierce,            
-	ShatteredImpact    
+	ShatteredImpact,
+	SustainedFocus,
+	BerserkerFury,
+	ArcaneReplicator
 };
 
 /**

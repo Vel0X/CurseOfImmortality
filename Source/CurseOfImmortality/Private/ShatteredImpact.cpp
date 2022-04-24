@@ -47,16 +47,16 @@ void UShatteredImpact::InitializeUpgrade(ABaseAbility* _AbilityInstance, int Upg
 	switch(UpgradeLevel)
 	{
 	case 1:
-		AmountOfFragments = 3;
+		AmountOfFragments = 2;
 		break;
 	case 2:
-		AmountOfFragments = 4;
+		AmountOfFragments = 3;
 		break;
 	case 3:
-		AmountOfFragments = 5;
+		AmountOfFragments = 4;
 		break;
 	default:
-		UE_LOG(LogTemp, Error, TEXT("Invalid Upgradelevel for Seal of Congruence"));
+		UE_LOG(LogTemp, Error, TEXT("Invalid Upgradelevel for Shattered Impact"));
 		break;
 	}
 }

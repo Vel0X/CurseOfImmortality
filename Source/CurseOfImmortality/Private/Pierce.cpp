@@ -18,7 +18,7 @@ void UPierce::InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel
 		PiercesLeft = 5;
 		break;
 	default:
-		UE_LOG(LogTemp, Error, TEXT("Invalid Upgradelevel for Seal of Congruence"));
+		UE_LOG(LogTemp, Error, TEXT("Invalid Upgradelevel for Pierce"));
 		break;
 	}
 }
