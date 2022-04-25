@@ -24,14 +24,19 @@ public:
 	APlayerCharacter();
 
 protected:
+	
+	virtual void Setup() override;
+	
+	void SetupPlayerInputComponent();
 
-//	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent);
+	void MoveForward(float Value);
 
+	void MoveRight(float Value);
 
 public:
 
 	virtual void Tick(float DeltaTime) override;
-
+	
 //	virtual void TakeDamage(float Damage) override;
 
 //	virtual void DoDamage(float Damage, ABaseCharacter EnemyCharacter) override;
@@ -47,4 +52,5 @@ public:
 	UPROPERTY(EditAnywhere)
 		UCameraComponent* PlayerCamera;
 
+	FVector MoveInput;
 };

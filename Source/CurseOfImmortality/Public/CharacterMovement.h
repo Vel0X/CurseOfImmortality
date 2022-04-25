@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Components/PrimitiveComponent.h"
 #include "CharacterMovement.generated.h"
 
 
@@ -25,7 +24,15 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void AddVelocity(float Speed, AActor Actor, FVector Direction);
+	void SetDirection(FVector MoveInput, float MovementSpeedInput);
+	
+	float MovementSpeed;
+	FVector Direction;
+	AActor* Owner;
+	
+	USceneComponent* RootComponent;
+	bool DirectionSet;
 
+	
 		
 };

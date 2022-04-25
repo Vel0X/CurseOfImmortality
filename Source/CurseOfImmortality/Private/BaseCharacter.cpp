@@ -9,8 +9,7 @@ ABaseCharacter::ABaseCharacter()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//Setup RootComponent
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	MovementComponent = CreateDefaultSubobject<UCharacterMovement>(TEXT("CharacterMovement"));
 	
 }
 
@@ -18,7 +17,7 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Setup();
 }
 
 // Called every frame
@@ -28,16 +27,14 @@ void ABaseCharacter::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
 void ABaseCharacter::TakeDamage(float Damage)
 {
 	Health -= Damage;
+}
+
+void ABaseCharacter::Setup()
+{
+	
 }
 
 void ABaseCharacter::DoDamage(float Damage, ABaseCharacter EnemyCharacter)

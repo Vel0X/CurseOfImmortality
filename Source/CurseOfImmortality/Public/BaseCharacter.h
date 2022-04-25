@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "CharacterMovement.h"
 #include "BaseCharacter.generated.h"
 
 UCLASS()
@@ -23,8 +24,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void Setup();
 
 	virtual void TakeDamage(float Damage);
 
@@ -32,12 +32,15 @@ public:
 
 	virtual void OnDeath();
 
+	UPROPERTY(EditAnywhere)
+	UCharacterMovement* MovementComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float Health;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float MovementSpeed;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 		bool Died;
 

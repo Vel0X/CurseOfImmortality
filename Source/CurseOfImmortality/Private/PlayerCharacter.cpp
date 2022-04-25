@@ -9,21 +9,25 @@ APlayerCharacter::APlayerCharacter()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-   /* InputComponent = CreateDefaultSubobject<UInputComponent>("Input Component");
-    SetupPlayerInputComponent(InputComponent);*/
-
+	
 	//Setup Components and attach to RootComponent
     CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
-    CapsuleComponent->SetupAttachment(RootComponent);
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
 	SkeletalMesh->SetupAttachment(CapsuleComponent);
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(CapsuleComponent);
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	PlayerCamera->SetupAttachment(SpringArm);
-
 }
+
+
+// Called when the game starts or when spawned
+void APlayerCharacter::Setup()
+{
+	Super::Setup();
+	SetupPlayerInputComponent();
+}
+
 
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
@@ -32,17 +36,34 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 }
 
-/*
+
 //Called to bind functionality to input
-void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void APlayerCharacter::SetupPlayerInputComponent()
 {
-    Super::SetupPlayerInputComponent(PlayerInputComponent);
+	InputComponent = NewObject<UInputComponent>(this);
+	InputComponent->RegisterComponent();
+	if (InputComponent)
+	{
+		InputComponent->BindAxis("MoveForward", this, &APlayerCharacter::MoveForward);
+		InputComponent->BindAxis("MoveRight", this, &APlayerCharacter::MoveRight);
 
-    PlayerInputComponent->BindAxis("MoveForward", this, &APlayerCharacter::MoveForward);
-    PlayerInputComponent->BindAxis("MoveRight", this, &APlayerCharacter::MoveRight);
-
+		// Now hook up our InputComponent to one in a Player
+		// Controller, so that input flows down to us
+		EnableInput(GetWorld()->GetFirstPlayerController());
+	}
 }
-*/
+
+void APlayerCharacter::MoveForward(float Value)
+{
+	MoveInput.X = Value;
+	MovementComponent->SetDirection(MoveInput, MovementSpeed);
+}
+
+void APlayerCharacter::MoveRight(float Value)
+{
+	MoveInput.Y = Value;
+	MovementComponent->SetDirection(MoveInput, MovementSpeed);
+}
 
 /*void APlayerCharacter::TakeDamage(float Damage)
 {
