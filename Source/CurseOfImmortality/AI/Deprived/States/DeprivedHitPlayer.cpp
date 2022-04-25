@@ -21,6 +21,8 @@ void UDeprivedHitPlayer::OnStateExit()
 	Controller->GetSelfRef()->SetHitPlayer(false);
 	UE_LOG(LogTemp, Warning, TEXT("Exit State Hit Player"))
 
+	UE_LOG(LogTemp, Warning, TEXT("Exit State Hit Player"))
+
 	RemainingTime = Duration;
 }
 
