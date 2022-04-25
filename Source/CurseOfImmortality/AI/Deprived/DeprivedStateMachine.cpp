@@ -24,6 +24,19 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	CurrentState->OnStateUpdate(DeltaTime);
+
+	FVector PlayerLocation(Player->GetActorLocation());
+	FVector PlayerForwardDir(Player->GetActorForwardVector() * 300.f + PlayerLocation);
+	FVector OwnLocation(SelfRef->GetActorLocation());
+
+
+	DrawDebugLine(GetWorld(), PlayerLocation, PlayerForwardDir, FColor::Red);
+	DrawDebugLine(GetWorld(), OwnLocation, PlayerForwardDir, FColor::Green);
+
+	FVector Test(PlayerForwardDir - OwnLocation);
+	Test.Normalize();
+
+	DrawDebugLine(GetWorld(), PlayerForwardDir, Test * 200.f + PlayerForwardDir, FColor::Blue);
 }
 
 void UDeprivedStateMachine::BeginPlay()
@@ -40,7 +53,7 @@ void UDeprivedStateMachine::BeginPlay()
 	JumpAttack = NewObject<UDeprivedJumpAttack>();
 	HitPlayer = NewObject<UDeprivedHitPlayer>();
 	Recover = NewObject<UDeprivedRecover>();
-	
+
 	CurrentState = Idle;
 	CurrentState->OnStateEnter(this);
 }
@@ -48,9 +61,10 @@ void UDeprivedStateMachine::BeginPlay()
 void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float DeltaTime)
 {
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
+	Target.Z = 0.f;
 	Target.Normalize();
-	const FVector MoveDir(SelfRef->GetActorLocation() + Target * DeltaTime * Speed);
-	SelfRef->SetActorLocation(MoveDir, true);
+
+	SelfRef->MovementComponent->SetDirection(Target, Speed);
 }
 
 void UDeprivedStateMachine::FocusOnPlayer()

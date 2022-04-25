@@ -26,8 +26,9 @@ private:
 	UPROPERTY()
 	UDeprivedStateMachine* Controller;
 
-	FVector JumpDestination;
 	FVector PlayerLocation;
+	FVector JumpDestination;
+	FVector JumpDir;
 
 	bool LocationSet = false;
 

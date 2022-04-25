@@ -24,9 +24,10 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetDirection(FVector MoveInput, float MovementSpeedInput);
+	void SetDirection(FVector MoveInput, float MovementSpeedInput, float AxisValue = 1.f);
 	
 	float MovementSpeed;
+	
 	FVector Direction;
 	bool DirectionSet;
 	USceneComponent* RootComponent;

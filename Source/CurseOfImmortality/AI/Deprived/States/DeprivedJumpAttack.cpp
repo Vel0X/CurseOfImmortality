@@ -34,6 +34,7 @@ void UDeprivedJumpAttack::OnStateExit()
 	LocationSet = false;
 	RemainingTime = ChargeTime;
 	PlayerLocation = FVector::Zero();
+	JumpDestination = FVector::Zero();
 }
 
 void UDeprivedJumpAttack::OnStateUpdate(float DeltaTime)
@@ -52,16 +53,26 @@ void UDeprivedJumpAttack::OnStateUpdate(float DeltaTime)
 			}
 			else
 			{
-				Controller->Transition(Controller->GetHitPlayer(), Controller);
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Do Dmg to Player in State Jump Attack");
 			}
 		};
 	}
+
+	JumpDestination.Z = 0;
+	FVector OwnLocation = Controller->GetSelfRef()->GetActorLocation();
+	OwnLocation.Z = 0;
+
 	Jump(DeltaTime);
 
-	if (FVector::Dist(PlayerLocation, Controller->GetSelfRef()->GetActorLocation()) <= 50.f)
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
+	                                 FString::SanitizeFloat(FVector::Dist(JumpDestination, OwnLocation)));
+
+	if (FVector::Dist(JumpDestination, OwnLocation) <= 50.f)
 	{
 		Controller->Transition(Controller->GetRecover(), Controller);
 	}
+
+	DrawDebugSphere(GetWorld(), FVector::Zero(), 50, 10, FColor::Red, true, 15.f, 0, 2);
 }
 
 void UDeprivedJumpAttack::Jump(float DeltaTime)
@@ -71,12 +82,20 @@ void UDeprivedJumpAttack::Jump(float DeltaTime)
 		if (!LocationSet)
 		{
 			PlayerLocation = Controller->GetPlayer()->GetActorLocation();
-			JumpDestination = PlayerLocation - Controller->GetSelfRef()->GetActorLocation();
+
+			FVector PlayerForwardDir(Controller->GetPlayer()->GetActorForwardVector() * 300.f + PlayerLocation);
+			FVector OwnLocation(Controller->GetSelfRef()->GetActorLocation());
+
+			JumpDestination = PlayerForwardDir - OwnLocation;
+			JumpDestination.Normalize();
+			JumpDestination = JumpDestination * 200.f + PlayerForwardDir;
+			JumpDir = JumpDestination - OwnLocation;
+
 			LocationSet = true;
 		}
 		else
 		{
-			Controller->MoveToTarget(JumpDestination, 2000.f, DeltaTime);
+			Controller->MoveToTarget(JumpDir, 2000.f, DeltaTime);
 		}
 	}
 	else

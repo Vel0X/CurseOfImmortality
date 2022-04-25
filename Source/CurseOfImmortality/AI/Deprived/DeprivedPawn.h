@@ -43,7 +43,6 @@ private:
 	USphereComponent* AttackSphere;
 	UPROPERTY()
 	UDeprivedStateMachine* StateMachine;
-	
 
 public:
 	bool IsHitPlayer() const;
