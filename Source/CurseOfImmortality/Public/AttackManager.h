@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "BaseUpgrade.h"
 #include "BaseAbility.h"
+#include "RangedAbility.h"
 #include "UpgradeSpecification.h"
 
 #include "AttackManager.generated.h"
@@ -16,15 +17,9 @@ USTRUCT()
 struct FActiveAbility
 {
 	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere)
-	TEnumAsByte<EUpgradeName> AbilityName;
-
-	UPROPERTY(EditAnywhere)
-	TEnumAsByte<EAbilityType> AbilityType;
 	
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<ABaseAbility> Class;
+	UAbilitySpecification* Specification;
 	
 	UPROPERTY(EditAnywhere)
 	int Level;
@@ -36,10 +31,7 @@ struct FActiveUpgrade
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	TEnumAsByte<EUpgradeName> UpgradeName;
-	
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<UBaseUpgrade> Class;
+	UUpgradeSpecification* Specification;
 	
 	UPROPERTY(EditAnywhere)
 	int Level;
@@ -82,7 +74,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
-	void OnKeyPressed();
+	void OnRangedKeyPressed();
+	void OnSpecialKeyPressed();
+	void SpawnAbility(const FActiveAbility& Ability);
 	void BindToInput();
 	
 	void SpawnFromTemplate(ABaseAbility* Template) const;
@@ -103,12 +97,15 @@ protected:
 	void CleanupAbility(int AbilityHandle);
 	
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class ABaseAbility>  abilityClassType;
+	UPROPERTY(EditAnywhere)
+	FActiveAbility ActiveRangedAbility;
+	
+	UPROPERTY(EditAnywhere)
+	FActiveAbility  ActiveSpecialAbility;
 
 	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<UBaseUpgrade>> Upgrades;
-
+	TArray<FActiveUpgrade> ActiveUpgrades;
+	
 	UPROPERTY(EditAnywhere)
 	TArray<UUpgradeSpecification*> PossibleUpgrades;
 
@@ -119,11 +116,5 @@ public:
 	TArray<FPooledEntry> Pool;
 private:
 	int AbilityMapHandle;
-	
-	UPROPERTY(EditAnywhere)
-	TArray<FActiveUpgrade> ActiveUpgrades;
-
-	UPROPERTY(EditAnywhere)
-	TArray<FActiveAbility> ActiveAbilities;
 };
 

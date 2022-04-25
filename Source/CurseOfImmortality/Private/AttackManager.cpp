@@ -23,6 +23,10 @@ void AAttackManager::BeginPlay()
 
 }
 
+void AAttackManager::CleanupAbility(int AbilityHandle)
+{
+}
+
 // Called every frame
 void AAttackManager::Tick(float DeltaTime)
 {
@@ -41,7 +45,8 @@ void AAttackManager::BindToInput()
 		// Bind inputs here
 		// InputComponent->BindAction("Jump", IE_Pressed, this, &AUnrealisticPawn::Jump);
 		// etc...
-		InputComponent->BindAction("TestInputZ", IE_Pressed, this, &AAttackManager::OnKeyPressed);	
+		InputComponent->BindAction("TestInputRanged", IE_Pressed, this, &AAttackManager::OnRangedKeyPressed);	
+		InputComponent->BindAction("testInputSpecial", IE_Pressed, this, &AAttackManager::OnSpecialKeyPressed);	
 
 		// Now hook up our InputComponent to one in a Player
 		// Controller, so that input flows down to us
@@ -51,16 +56,11 @@ void AAttackManager::BindToInput()
 
 void AAttackManager::SpawnFromTemplate(ABaseAbility* Template) const
 {
-	const FVector Location = Template->GetActorLocation();
+	const FVector Location = FVector::Zero();
 	const FRotator Rotation = Template->GetActorRotation();
 	FActorSpawnParameters Parameters = FActorSpawnParameters();
 	Parameters.Template = Template;
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Template->GetClass(), &Location, &Rotation, Parameters));
-	AbilityInstance->SetActorLocation(Template->GetActorLocation());
-
-	//UE_LOG(LogTemp, Error, TEXT("Location of Original %s"), *Template->GetActorLocation().ToString());
-	//UE_LOG(LogTemp, Error, TEXT("Location after Spawning %s"), *AbilityInstance->GetActorLocation().ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("templated Spawn was triggered"));
 
 	AbilityInstance->ResetLifetime();
 	AbilityInstance->AfterInitialization();
@@ -68,17 +68,23 @@ void AAttackManager::SpawnFromTemplate(ABaseAbility* Template) const
 
 void AAttackManager::SpawnFromTemplate(ABaseAbility* Template, const FRotator Rotator) const
 {
-	const FVector Location = Template->GetActorLocation();
+	const FVector Location = FVector::Zero();
 	FActorSpawnParameters Parameters = FActorSpawnParameters();
 	Parameters.Template = Template;
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Template->GetClass(), &Location, &Rotator, Parameters));
-	AbilityInstance->SetActorLocation(Template->GetActorLocation());
-	//UE_LOG(LogTemp, Error, TEXT("Location of Original %s"), *Template->GetActorLocation().ToString());
-	//UE_LOG(LogTemp, Error, TEXT("Location after Spawning %s"), *AbilityInstance->GetActorLocation().ToString());
 	
 	AbilityInstance->ResetLifetime();
 	AbilityInstance->AfterInitialization();
 	UE_LOG(LogTemp, Warning, TEXT("templated Spawn was triggered"));
+}
+
+bool Check(const UAbilitySpecification* Ability, const FActiveAbility& ActiveAbility)
+{
+	if(ActiveAbility.Specification->AbilityName == Ability->AbilityName && ActiveAbility.Level == Ability->MaxLevel)
+	{
+		return true; //ability is present and max Level
+	}
+	return false;
 }
 
 void AAttackManager::UpdateAbilityPool()
@@ -90,19 +96,29 @@ void AAttackManager::UpdateAbilityPool()
 		int Weight = 100;
 		bool TypeFound = false; //does the player already have an ability of that type?
 		bool AbilityPresent = false; //is the ability already present at it's max level?
-		for (const FActiveAbility ActiveAbility : ActiveAbilities)
+
+		switch(Ability->AbilityType)
 		{
-			if(ActiveAbility.AbilityName == Ability->AbilityName && ActiveAbility.Level == Ability->MaxLevel)
-			{
-				AbilityPresent = true;
-				break;
-			}
-			if(ActiveAbility.AbilityType == Ability->AbilityType)
+		case Ranged:
+			if(ActiveRangedAbility.Specification != nullptr)
 			{
 				TypeFound = true;
 			}
+			break;
+		case Skill:
+			if(ActiveSpecialAbility.Specification != nullptr)
+			{
+				TypeFound = true;
+			}
+			break;
+		default: ;
 		}
 
+		if(Check(Ability, ActiveRangedAbility) || Check(Ability, ActiveSpecialAbility))
+		{
+			AbilityPresent = true;
+		}
+		
 		if(AbilityPresent)
 		{
 			continue;
@@ -120,21 +136,24 @@ void AAttackManager::UpdateAbilityPool()
 		int Weight = 100;
 		bool PrerequisitesMet = false;
 
-		if(Upgrade->Application == EAbilityType::None) //if Type is None, then the Upgrade doesn't require any prerequisites to function
+		switch(Upgrade->Application)
 		{
-			PrerequisitesMet = true;	
-		}
-		else
-		{
-			for (const FActiveAbility ActiveAbility : ActiveAbilities)
+		case None:
+			PrerequisitesMet = true;
+			break;
+		case Ranged:
+			if(ActiveRangedAbility.Specification != nullptr)
 			{
-				if(ActiveAbility.AbilityType == Upgrade->Application)
-				{
-					PrerequisitesMet = true;
-					break;
-				}
-
+				PrerequisitesMet = true;
 			}
+			break;
+		case Skill:
+			if(ActiveSpecialAbility.Specification != nullptr)
+			{
+				PrerequisitesMet = true;
+			}
+			break;
+		default: ;
 		}
 
 		if(!PrerequisitesMet)
@@ -144,14 +163,14 @@ void AAttackManager::UpdateAbilityPool()
 		
 		bool Restricted = false;
 		bool UpgradePresent = false;
-		for (const FActiveUpgrade ActiveUpgrade : ActiveUpgrades)
+		for (const auto [Specification, Level] : ActiveUpgrades)
 		{
-			if(ActiveUpgrade.UpgradeName == Upgrade->UpgradeName && ActiveUpgrade.Level == Upgrade->MaxLevel)
+			if(Specification->UpgradeName == Upgrade->UpgradeName && Level == Upgrade->MaxLevel)
 			{
 				UpgradePresent = true;
 				break;
 			}
-			if(Upgrade->Restrictions.Contains(ActiveUpgrade.UpgradeName))
+			if(Upgrade->Restrictions.Contains(Specification->UpgradeName))
 			{
 				Restricted = true;
 				break;
@@ -163,7 +182,7 @@ void AAttackManager::UpdateAbilityPool()
 			continue;
 		}
 
-		Pool.Add(FPooledEntry(Upgrade->UpgradeName, true, 100));
+		Pool.Add(FPooledEntry(Upgrade->UpgradeName, true, Weight));
 	}
 	
 	UE_LOG(LogTemp, Warning, TEXT("PoolSize %d"), Pool.Num());
@@ -174,15 +193,36 @@ void AAttackManager::PickThreeFromPool()
 {
 }
 
-void AAttackManager::OnKeyPressed()
+void AAttackManager::OnRangedKeyPressed()
 {
-	//ABaseAbility* baseAbilityInstance = (ABaseAbility*) GetWorld()->SpawnActor(ABaseAbility::StaticClass());
-	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(abilityClassType));
+	SpawnAbility(ActiveRangedAbility);
+}
+
+
+void AAttackManager::OnSpecialKeyPressed()
+{
+	SpawnAbility(ActiveSpecialAbility);
+}
+
+void AAttackManager::SpawnAbility(const FActiveAbility& Ability)
+{
+	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class));
 	AbilityInstance->InitializeAbility(AbilityMapHandle, this);
+
+	//AbilityInstance->AbilityType
 	
-	for (const auto Upgrade : Upgrades)
+	for (const auto [Specification, Level] : ActiveUpgrades)
 	{
-		AbilityInstance->AddUpgrade(Upgrade, 1);
+
+		//only upgrades that work with the AbilityType will be applied to the Ability
+		if(Specification->Application != None)
+		{
+			if(Specification->Application != AbilityInstance->AbilityType)
+			{
+				continue;
+			}
+		}
+		AbilityInstance->AddUpgrade(Specification->Class, Level);
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Spawn was triggered"));
 	AbilityInstance->AfterInitialization();
@@ -190,6 +230,5 @@ void AAttackManager::OnKeyPressed()
 	//const FActiveAbility ActiveAbility = FActiveAbility(AbilityInstance, ActiveUpgrades);
 	//ActiveAbilities.Add(AbilityMapHandle, ActiveAbility);
 	AbilityMapHandle++;
-	//UWorld::SpawnActor(abilityClassType);
 }
 

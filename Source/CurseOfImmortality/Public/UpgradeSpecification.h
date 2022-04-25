@@ -11,6 +11,7 @@ UENUM()
 enum EUpgradeName
 {
 	Fireball,
+	KarysAnimus,
 	Behemoth,
 	Hemorrhage,
 	CursemarkOfDoom, //does this need to be on an ability
