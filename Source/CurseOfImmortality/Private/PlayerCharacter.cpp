@@ -26,6 +26,7 @@ void APlayerCharacter::Setup()
 {
 	Super::Setup();
 	SetupPlayerInputComponent();
+	Yaw = 0;
 }
 
 
@@ -33,7 +34,6 @@ void APlayerCharacter::Setup()
 void APlayerCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-
 }
 
 
@@ -62,6 +62,24 @@ void APlayerCharacter::MoveForward(float Value)
 void APlayerCharacter::MoveRight(float Value)
 {
 	MoveInput.Y = Value;
+	Yaw += Value; 
+	if (Yaw > 180)
+	{
+		Yaw = -180;
+	}else
+	{
+		if (Yaw < -180)
+		{
+			Yaw = 180;
+		}
+	}
+	int YawInt = Yaw;
+	Yaw = YawInt;
+	if (YawInt % 45 == 0)
+	{
+		FRotator NewRotation = FRotator (0,Yaw,0);
+		MoveInput.Rotation() = NewRotation;
+	} 
 	MovementComponent->SetDirection(MoveInput, MovementSpeed);
 }
 

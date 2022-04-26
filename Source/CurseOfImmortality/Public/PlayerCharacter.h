@@ -53,4 +53,5 @@ public:
 		UCameraComponent* PlayerCamera;
 
 	FVector MoveInput;
+	float Yaw;
 };

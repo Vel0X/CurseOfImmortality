@@ -31,6 +31,7 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 	if (DirectionSet)
 	{
+		//RootComponent->SetWorldRotation(Direction.Rotation());
 		RootComponent->SetRelativeRotation(Direction.Rotation());
 		RootComponent->AddWorldOffset(Direction * DeltaTime * MovementSpeed, false);
 		DirectionSet = false;
@@ -45,15 +46,7 @@ void UCharacterMovement::SetDirection(FVector MoveInput, float MovementSpeedInpu
 	{
 		MovementSpeed = MovementSpeedInput;
 		Direction = MoveInput;
-		/*if(MoveInput.X != 0)
-		{
-			Direction.X = MoveInput.X;
-		}
-
-		if(MoveInput.Y != 0)
-		{
-			Direction.Y = MoveInput.Y;
-		}*/
+		Direction.Normalize();
 		DirectionSet = true;
 	}
 }
