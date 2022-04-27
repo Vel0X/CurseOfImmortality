@@ -102,17 +102,20 @@ struct FPfNode
 };
 
 UCLASS()
-class CURSEOFIMMORTALITY_API UPathfindingGrid : public UObject, public TBaseGrid<FPfNode>
+class CURSEOFIMMORTALITY_API AUPathfindingGrid : public AActor, public TBaseGrid<FPfNode>
 {
 	GENERATED_BODY()
 
 public:
-	UPathfindingGrid();
+	AUPathfindingGrid();
 	virtual void Print() override;
 
 	bool GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path);
 	int CalculateDistance(int StartX, int StartY, int EndX, int EndY) const;
 	FPfNode* GetLowestCostNode(TArray<FPfNode*>& OpenList);
 	bool CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path);
-
+	bool GetCoordinatesFromWorldPosition(const FVector WorldPosition, int& X, int& Y) const;
+	bool GetWorldPositionFromCoordinates(const int X, const int Y, FVector& WorldPosition) const;
+public:
+	float CellSize;
 };

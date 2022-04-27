@@ -66,6 +66,8 @@ void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float Delt
 	Target.Z = 0.f;
 	Target.Normalize();
 
+	GetWorld()->GetClass
+
 	SelfRef->MovementComponent->SetDirection(Target, Speed);
 }
 

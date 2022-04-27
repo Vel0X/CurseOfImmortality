@@ -3,7 +3,7 @@
 
 #include "PathfindingGrid.h"
 
-UPathfindingGrid::UPathfindingGrid(): TBaseGrid<FPfNode>(10, 10)
+AUPathfindingGrid::AUPathfindingGrid(): TBaseGrid<FPfNode>(10, 10)
 {
 	for (int x = 0; x < Width; ++x)
 	{
@@ -14,7 +14,7 @@ UPathfindingGrid::UPathfindingGrid(): TBaseGrid<FPfNode>(10, 10)
 	}
 }
 
-void UPathfindingGrid::Print()
+void AUPathfindingGrid::Print()
 {	
 	TBaseGrid<FPfNode>::Print();
 	auto node = GetValue(2,2);
@@ -24,7 +24,7 @@ void UPathfindingGrid::Print()
 
 static constexpr int GMaximumIterations = 100000;
 
-bool UPathfindingGrid::GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path)
+bool AUPathfindingGrid::GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path)
 {
 
 	TArray<FPfNode*> OpenList, ClosedList;
@@ -100,7 +100,7 @@ bool UPathfindingGrid::GetPath(int StartX, int StartY, int EndX, int EndY, TArra
 static constexpr int GStraight_Cost = 10;
 static constexpr int GDiagonal_Cost = 14;
 
-int UPathfindingGrid::CalculateDistance(const int StartX, const int StartY, const int EndX, const int EndY) const
+int AUPathfindingGrid::CalculateDistance(const int StartX, const int StartY, const int EndX, const int EndY) const
 {
 	const int XDist = abs(StartX - EndX);
 	const int YDist = abs(StartY - EndY);
@@ -108,7 +108,7 @@ int UPathfindingGrid::CalculateDistance(const int StartX, const int StartY, cons
 	return min(XDist, YDist) * GDiagonal_Cost + RemainingDist * GStraight_Cost;
 }
 
-FPfNode* UPathfindingGrid::GetLowestCostNode(TArray<FPfNode*>& OpenList)
+FPfNode* AUPathfindingGrid::GetLowestCostNode(TArray<FPfNode*>& OpenList)
 {
 	int lowest = OpenList[0]->S;
 	FPfNode* LowestNode = OpenList[0]; 
@@ -123,7 +123,7 @@ FPfNode* UPathfindingGrid::GetLowestCostNode(TArray<FPfNode*>& OpenList)
 	return LowestNode;
 }
 
-bool UPathfindingGrid::CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path)
+bool AUPathfindingGrid::CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path)
 {
 	Path.Add(EndNode);
 	FPfNode* Current = EndNode;
@@ -132,7 +132,23 @@ bool UPathfindingGrid::CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path)
 		Path.Add(Current->CameFrom);
 		Current = Current->CameFrom;
 	}
-	Algo::Reverse(Path
-		);
+	Algo::Reverse(Path);
 	return true;
+}
+
+bool AUPathfindingGrid::GetCoordinatesFromWorldPosition(const FVector WorldPosition, int& X, int& Y) const
+{
+	const FVector RelativePoint = WorldPosition - GetActorLocation();
+	X = static_cast<int>(RelativePoint.X / CellSize);
+	Y = static_cast<int>(RelativePoint.Y / CellSize);
+	return X < Width && Y < Height;
+}
+
+bool AUPathfindingGrid::GetWorldPositionFromCoordinates(const int X, const int Y, FVector& WorldPosition) const
+{
+	FVector Origin = GetActorLocation();
+	Origin.X += (X + 0.5f) * CellSize;
+	Origin.Y += (Y + 0.5f) * CellSize;
+	WorldPosition = Origin;
+	return X < Width && Y < Height;
 }
