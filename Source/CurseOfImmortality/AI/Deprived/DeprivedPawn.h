@@ -19,10 +19,6 @@ class CURSEOFIMMORTALITY_API ADeprivedPawn : public ABaseEnemyPawn
 public:
 	ADeprivedPawn();
 
-	USphereComponent* GetAttackSphere() const;
-	
-	
-private:
 	//States
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool Idle = false;
@@ -36,7 +32,9 @@ private:
 	bool Recover = false;
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool HitPlayer = false;
-	
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	bool NormalAttack = false;
+
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere)
@@ -44,17 +42,31 @@ private:
 	UPROPERTY()
 	UDeprivedStateMachine* StateMachine;
 
-public:
-	bool IsHitPlayer() const;
-	void SetHitPlayer(const bool bHitPlayer);
-	bool IsRecover() const;
-	void SetRecover(const bool bStandUp);
-	bool IsIdle() const;
-	void SetIdle(const bool bIdle);
-	bool IsRunning() const;
-	void SetRunning(const bool bMoving);
-	bool IsJump() const;
-	void SetJump(const bool bJump);
-	bool IsStunned() const;
-	void SetStunned(const bool bStunned);
+	//Base Stats
+	UPROPERTY(EditAnywhere, Category="Base Stats")
+	float Speed = 400.f;
+
+	//Cool Downs and Durations
+	UPROPERTY(EditAnywhere, Category="time")
+	float RecoverDuration = 2.f;
+	UPROPERTY(EditAnywhere, Category="Time")
+	float CurrentRecoverDuration = RecoverDuration;
+	UPROPERTY(EditAnywhere, Category="Time")
+	float JumpAttackCoolDown = 10.f;
+	UPROPERTY(EditAnywhere, Category="Time")
+	float CurrentJumpAttackCoolDown = JumpAttackCoolDown;
+	UPROPERTY(EditAnywhere, Category="Time")
+	float NormalAttackDuration = 10.f;
+	UPROPERTY(EditAnywhere, Category="Time")
+	float CurrentNormalAttackDuration = NormalAttackDuration;
+
+	//Distances for Movement
+	UPROPERTY(EditAnywhere, Category="Distances")
+	float DistJumpAttack = 800.f;
+	UPROPERTY(EditAnywhere, Category="Distances")
+	float DistRunning = 1000.f;
+	UPROPERTY(EditAnywhere, Category="Distances")
+	float DistNormalAttack = 400.f;
+	UPROPERTY(EditAnywhere, Category="Distances")
+	float MinDistNormalAttack = 50.f;
 };

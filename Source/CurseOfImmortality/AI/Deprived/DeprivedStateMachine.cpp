@@ -11,6 +11,7 @@
 #include "States/DeprivedHitPlayer.h"
 #include "States/DeprivedIdle.h"
 #include "States/DeprivedJumpAttack.h"
+#include "States/DeprivedNormalAttack.h"
 #include "States/DeprivedRecover.h"
 #include "States/DeprivedRunning.h"
 
@@ -53,6 +54,7 @@ void UDeprivedStateMachine::BeginPlay()
 	JumpAttack = NewObject<UDeprivedJumpAttack>();
 	HitPlayer = NewObject<UDeprivedHitPlayer>();
 	Recover = NewObject<UDeprivedRecover>();
+	NormalAttack = NewObject<UDeprivedNormalAttack>();
 
 	CurrentState = Idle;
 	CurrentState->OnStateEnter(this);
@@ -81,6 +83,10 @@ void UDeprivedStateMachine::FocusOnPlayer()
 //Getter and Setter
 ADeprivedPawn* UDeprivedStateMachine::GetSelfRef() const
 {
+	if (!SelfRef)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Self Ref in Deprived StateMachine"))
+	}
 	return SelfRef;
 }
 
@@ -91,29 +97,4 @@ ABaseCharacter* UDeprivedStateMachine::GetPlayer() const
 		UE_LOG(LogTemp, Error, TEXT("No Player in Deprived StateMachine"))
 	}
 	return Player;
-}
-
-UState* UDeprivedStateMachine::GetIdle() const
-{
-	return Idle;
-}
-
-UState* UDeprivedStateMachine::GetRunning() const
-{
-	return Running;
-}
-
-UState* UDeprivedStateMachine::GetJumpAttack() const
-{
-	return JumpAttack;
-}
-
-UState* UDeprivedStateMachine::GetRecover() const
-{
-	return Recover;
-}
-
-UState* UDeprivedStateMachine::GetHitPlayer() const
-{
-	return HitPlayer;
 }

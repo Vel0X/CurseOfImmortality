@@ -17,7 +17,7 @@ void UDeprivedJumpAttack::OnStateEnter(UStateMachine* StateMachine)
 	UE_LOG(LogTemp, Warning, TEXT("Jump Attack State Entered"))
 
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
-	Controller->GetSelfRef()->SetJump(true);
+	Controller->GetSelfRef()->Jump = true;
 
 	Controller->GetSelfRef()->GetCollisionCapsule()->SetCollisionProfileName(TEXT("OverlapAll"));
 }
@@ -28,7 +28,7 @@ void UDeprivedJumpAttack::OnStateExit()
 
 	UE_LOG(LogTemp, Warning, TEXT("Exit State Jump Attack"))
 
-	Controller->GetSelfRef()->SetJump(false);
+	Controller->GetSelfRef()->Jump = false;
 	Controller->GetSelfRef()->GetCollisionCapsule()->SetCollisionProfileName(TEXT("Pawn"));
 
 	LocationSet = false;
@@ -42,7 +42,7 @@ void UDeprivedJumpAttack::OnStateUpdate(float DeltaTime)
 	Super::OnStateUpdate(DeltaTime);
 
 	TArray<AActor*> OverlappingActors;
-	Controller->GetSelfRef()->GetAttackSphere()->GetOverlappingActors(OverlappingActors);
+	Controller->GetSelfRef()->AttackSphere->GetOverlappingActors(OverlappingActors);
 
 	for (AActor* OverlappingActor : OverlappingActors)
 	{
@@ -63,16 +63,14 @@ void UDeprivedJumpAttack::OnStateUpdate(float DeltaTime)
 	OwnLocation.Z = 0;
 
 	Jump(DeltaTime);
-
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
-	                                 FString::SanitizeFloat(FVector::Dist(JumpDestination, OwnLocation)));
+	//
+	// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red,
+	//                                  FString::SanitizeFloat(FVector::Dist(JumpDestination, OwnLocation)));
 
 	if (FVector::Dist(JumpDestination, OwnLocation) <= 50.f)
 	{
-		Controller->Transition(Controller->GetRecover(), Controller);
+		Controller->Transition(Controller->Recover, Controller);
 	}
-
-	DrawDebugSphere(GetWorld(), FVector::Zero(), 50, 10, FColor::Red, true, 15.f, 0, 2);
 }
 
 void UDeprivedJumpAttack::Jump(float DeltaTime)
@@ -83,8 +81,8 @@ void UDeprivedJumpAttack::Jump(float DeltaTime)
 		{
 			PlayerLocation = Controller->GetPlayer()->GetActorLocation();
 
-			FVector PlayerForwardDir(Controller->GetPlayer()->GetActorForwardVector() * 300.f + PlayerLocation);
-			FVector OwnLocation(Controller->GetSelfRef()->GetActorLocation());
+			const FVector PlayerForwardDir(Controller->GetPlayer()->GetActorForwardVector() * 300.f + PlayerLocation);
+			const FVector OwnLocation(Controller->GetSelfRef()->GetActorLocation());
 
 			JumpDestination = PlayerForwardDir - OwnLocation;
 			JumpDestination.Normalize();

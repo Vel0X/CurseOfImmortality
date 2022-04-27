@@ -2,19 +2,20 @@
 
 
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedRunning.h"
+
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 
 void UDeprivedRunning::OnStateEnter(UStateMachine* StateMachine)
 {
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
-	Controller->GetSelfRef()->SetRunning(true);
+	Controller->GetSelfRef()->Running = true;
 	UE_LOG(LogTemp, Warning, TEXT("Running State Entered"))
 }
 
 void UDeprivedRunning::OnStateExit()
 {
-	Controller->GetSelfRef()->SetRunning(false);
+	Controller->GetSelfRef()->Running = false;
 	UE_LOG(LogTemp, Warning, TEXT("Running State Exit"))
 }
 
@@ -27,17 +28,32 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	}
 	Controller->FocusOnPlayer();
 
-	const FVector PlayerLocation = Controller->GetPlayer()->GetActorLocation();
+	const ABaseCharacter* Player = Controller->GetPlayer();
+	const ADeprivedPawn* SelfRef = Controller->GetSelfRef();
 
-	if (FVector::Dist(PlayerLocation, Controller->GetSelfRef()->GetActorLocation()) < 800.f)
+	const FVector PlayerLocation = Player->GetActorLocation();
+	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
+
+	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
 	{
-		UE_LOG(LogTemp, Error, TEXT("%s"), *PlayerLocation.ToString());
-		Controller->Transition(Controller->GetJumpAttack(), Controller);
+		if (FVector::Dist(PlayerLocation, Controller->GetSelfRef()->GetActorLocation()) < SelfRef->MinDistNormalAttack)
+		{
+			Controller->Transition(Controller->NormalAttack, Controller);
+		}
+		Controller->MoveToTarget(Target, SelfRef->Speed, DeltaTime);
+	}
+	else if (FVector::Dist(PlayerLocation, Controller->GetSelfRef()->GetActorLocation()) < 800.f)
+	{
+		if (Controller->GetSelfRef()->JumpAttackCoolDown)
+		{
+		}
+		else
+		{
+		}
+		Controller->Transition(Controller->JumpAttack, Controller);
 	}
 	else
 	{
-		const FVector Target = PlayerLocation - Controller->GetSelfRef()->GetActorLocation();
-		
 		Controller->MoveToTarget(Target, 400.f, DeltaTime);
 	}
 }

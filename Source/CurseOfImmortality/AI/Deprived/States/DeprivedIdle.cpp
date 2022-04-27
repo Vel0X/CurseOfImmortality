@@ -10,14 +10,14 @@ void UDeprivedIdle::OnStateEnter(UStateMachine* StateMachine)
 	Super::OnStateEnter(StateMachine);
 
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
-	Controller->GetSelfRef()->SetIdle(true);
+	Controller->GetSelfRef()->Idle = true;
 	UE_LOG(LogTemp, Warning, TEXT("Idle State Entered"))
 }
 
 void UDeprivedIdle::OnStateExit()
 {
 	Super::OnStateExit();
-	Controller->GetSelfRef()->SetIdle(false);
+	Controller->GetSelfRef()->Idle = false;
 	UE_LOG(LogTemp, Warning, TEXT("Exit Idle State"))
 }
 
@@ -34,8 +34,8 @@ void UDeprivedIdle::OnStateUpdate(float DeltaTime)
 	Controller->FocusOnPlayer();
 	const FVector PlayerLocation = Controller->GetPlayer()->GetActorLocation();
 
-	if (FVector::Dist(PlayerLocation, Controller->GetSelfRef()->GetActorLocation()) < 1000)
+	if (FVector::Dist(PlayerLocation, Controller->GetSelfRef()->GetActorLocation()) < Controller->GetSelfRef()->DistRunning)
 	{
-		Controller->Transition(Controller->GetRunning(), Controller);
+		Controller->Transition(Controller->Running, Controller);
 	}
 }

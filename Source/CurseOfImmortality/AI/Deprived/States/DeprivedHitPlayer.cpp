@@ -10,7 +10,7 @@ void UDeprivedHitPlayer::OnStateEnter(UStateMachine* StateMachine)
 	Super::OnStateEnter(StateMachine);
 
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
-	Controller->GetSelfRef()->SetHitPlayer(true);
+	Controller->GetSelfRef()->HitPlayer = true;
 	UE_LOG(LogTemp, Warning, TEXT("Hit Player State Entered"))
 }
 
@@ -18,10 +18,9 @@ void UDeprivedHitPlayer::OnStateExit()
 {
 	Super::OnStateExit();
 
-	Controller->GetSelfRef()->SetHitPlayer(false);
+	Controller->GetSelfRef()->HitPlayer = false;
 	UE_LOG(LogTemp, Warning, TEXT("Exit State Hit Player"))
 
-	UE_LOG(LogTemp, Warning, TEXT("Exit State Hit Player"))
 
 	RemainingTime = Duration;
 }
@@ -36,6 +35,6 @@ void UDeprivedHitPlayer::OnStateUpdate(float DeltaTime)
 
 	if (RemainingTime <= 0)
 	{
-		Controller->Transition(Controller->GetRunning(), Controller);
+		Controller->Transition(Controller->Running, Controller);
 	}
 }

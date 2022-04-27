@@ -27,15 +27,24 @@ public:
 
 	void FocusOnPlayer();
 
-	//Getter and Setter
+	//States
+	UPROPERTY(BlueprintReadOnly)
+	UState* Idle;
+	UPROPERTY(BlueprintReadOnly)
+	UState* Running;
+	UPROPERTY(BlueprintReadOnly)
+	UState* JumpAttack;
+	UPROPERTY(BlueprintReadOnly)
+	UState* Recover;
+	UPROPERTY(BlueprintReadOnly)
+	UState* HitPlayer;
+	UPROPERTY(BlueprintReadOnly)
+	UState* NormalAttack;
+
+	//Getter
 	ADeprivedPawn* GetSelfRef() const;
 	ABaseCharacter* GetPlayer() const;
-	UState* GetIdle() const;
-	UState* GetRunning() const;
-	UState* GetJumpAttack() const;
-	UState* GetRecover() const;
-	UState* GetHitPlayer() const;
-	
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -45,16 +54,4 @@ private:
 	ADeprivedPawn* SelfRef;
 	UPROPERTY()
 	ABaseCharacter* Player;
-
-	//States
-	UPROPERTY()
-	UState* Idle;
-	UPROPERTY()
-	UState* Running;
-	UPROPERTY()
-	UState* JumpAttack;
-	UPROPERTY()
-	UState* Recover;
-	UPROPERTY()
-	UState* HitPlayer;
 };
