@@ -42,7 +42,8 @@ public:
 
 	virtual void DestroyAbility();
 
-	virtual void InitializeAbility(int _AbilityHandle, AActor* Caster);
+	UFUNCTION(BlueprintNativeEvent)
+	void InitializeAbility(int _AbilityHandle, AActor* Caster, int Level);
 	void AfterInitialization();
 
 public:

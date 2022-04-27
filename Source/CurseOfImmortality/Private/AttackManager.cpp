@@ -61,7 +61,7 @@ void AAttackManager::SpawnFromTemplate(ABaseAbility* Template) const
 	FActorSpawnParameters Parameters = FActorSpawnParameters();
 	Parameters.Template = Template;
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Template->GetClass(), &Location, &Rotation, Parameters));
-
+	AbilityInstance->SetActorLocation(Template->GetActorLocation());
 	AbilityInstance->ResetLifetime();
 	AbilityInstance->AfterInitialization();
 }
@@ -72,7 +72,8 @@ void AAttackManager::SpawnFromTemplate(ABaseAbility* Template, const FRotator Ro
 	FActorSpawnParameters Parameters = FActorSpawnParameters();
 	Parameters.Template = Template;
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Template->GetClass(), &Location, &Rotator, Parameters));
-	
+	AbilityInstance->SetActorLocation(Template->GetActorLocation());
+
 	AbilityInstance->ResetLifetime();
 	AbilityInstance->AfterInitialization();
 	UE_LOG(LogTemp, Warning, TEXT("templated Spawn was triggered"));
@@ -207,7 +208,7 @@ void AAttackManager::OnSpecialKeyPressed()
 void AAttackManager::SpawnAbility(const FActiveAbility& Ability)
 {
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class));
-	AbilityInstance->InitializeAbility(AbilityMapHandle, this);
+	AbilityInstance->InitializeAbility(AbilityMapHandle, this, Ability.Level);
 
 	//AbilityInstance->AbilityType
 	
@@ -217,14 +218,14 @@ void AAttackManager::SpawnAbility(const FActiveAbility& Ability)
 		//only upgrades that work with the AbilityType will be applied to the Ability
 		if(Specification->Application != None)
 		{
-			if(Specification->Application != AbilityInstance->AbilityType)
+			if(Specification->Application != Ability.Specification->AbilityType)
 			{
+
 				continue;
 			}
 		}
 		AbilityInstance->AddUpgrade(Specification->Class, Level);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Spawn was triggered"));
 	AbilityInstance->AfterInitialization();
 
 	//const FActiveAbility ActiveAbility = FActiveAbility(AbilityInstance, ActiveUpgrades);

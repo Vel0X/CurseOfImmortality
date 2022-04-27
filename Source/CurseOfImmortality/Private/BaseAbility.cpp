@@ -63,11 +63,6 @@ void ABaseAbility::Tick(float DeltaTime)
 	CanInteract = true;
 }
 
-void ABaseAbility::InitializeAbility(const int _AbilityHandle, AActor* Caster)
-{
-	AbilityHandle = _AbilityHandle;
-}
-
 void ABaseAbility::AfterInitialization()
 {
 	for (const auto Upgrade : UpgradeStack)
@@ -78,6 +73,7 @@ void ABaseAbility::AfterInitialization()
 		}
 		else
 		{
+			UE_LOG(LogTemp, Error, TEXT("?"));
 			Upgrade->OnAbilityStart(AbilityHandle);
 		}
 	}
@@ -114,6 +110,11 @@ void ABaseAbility::DestroyAbility()
 
 	}
 	Destroy();
+}
+
+void ABaseAbility::InitializeAbility_Implementation(int _AbilityHandle, AActor* Caster, int Level)
+{
+	
 }
 
 void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel)

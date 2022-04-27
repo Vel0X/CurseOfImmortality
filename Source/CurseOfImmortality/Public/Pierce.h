@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API UPierce final: public URangedOnlyUpgradeComponent
+class CURSEOFIMMORTALITY_API UPierce final: public UBaseUpgrade
 {
 	GENERATED_BODY()
 

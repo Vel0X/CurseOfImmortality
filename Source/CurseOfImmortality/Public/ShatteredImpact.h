@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API UShatteredImpact : public URangedOnlyUpgradeComponent
+class CURSEOFIMMORTALITY_API UShatteredImpact : public UBaseUpgrade
 {
 	GENERATED_BODY()
 

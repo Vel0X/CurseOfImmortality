@@ -12,6 +12,7 @@ enum EUpgradeName
 {
 	Fireball,
 	KarysAnimus,
+	Whirlwind,
 	Behemoth,
 	Hemorrhage,
 	CursemarkOfDoom, //does this need to be on an ability

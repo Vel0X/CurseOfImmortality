@@ -3,9 +3,10 @@
 
 #include "SpecialAbility.h"
 
-void ASpecialAbility::InitializeAbility(const int _AbilityHandle, AActor* Caster)
+
+void ASpecialAbility::InitializeAbility_Implementation(int _AbilityHandle, AActor* Caster, int Level)
 {
-	Super::InitializeAbility(_AbilityHandle, Caster);
+	Super::InitializeAbility_Implementation(_AbilityHandle, Caster, Level);
 	Parent = Caster;
 }
 
