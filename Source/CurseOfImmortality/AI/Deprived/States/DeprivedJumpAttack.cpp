@@ -17,9 +17,12 @@ void UDeprivedJumpAttack::OnStateEnter(UStateMachine* StateMachine)
 	UE_LOG(LogTemp, Warning, TEXT("Jump Attack State Entered"))
 
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
-	Controller->GetSelfRef()->Jump = true;
+	Player = Controller->GetPlayer();
+	SelfRef = Controller->GetSelfRef();
 
-	Controller->GetSelfRef()->GetCollisionCapsule()->SetCollisionProfileName(TEXT("OverlapAll"));
+	SelfRef->Jump = true;
+
+	SelfRef->GetCollisionCapsule()->SetCollisionProfileName(TEXT("OverlapAll"));
 }
 
 void UDeprivedJumpAttack::OnStateExit()
@@ -32,7 +35,7 @@ void UDeprivedJumpAttack::OnStateExit()
 	Controller->GetSelfRef()->GetCollisionCapsule()->SetCollisionProfileName(TEXT("Pawn"));
 
 	LocationSet = false;
-	RemainingTime = ChargeTime;
+	SelfRef->CurrentJumpAttackChargeTime = SelfRef->JumpAttackChargeTime;
 	PlayerLocation = FVector::Zero();
 	JumpDestination = FVector::Zero();
 }
@@ -42,7 +45,7 @@ void UDeprivedJumpAttack::OnStateUpdate(float DeltaTime)
 	Super::OnStateUpdate(DeltaTime);
 
 	TArray<AActor*> OverlappingActors;
-	Controller->GetSelfRef()->AttackSphere->GetOverlappingActors(OverlappingActors);
+	SelfRef->AttackSphere->GetOverlappingActors(OverlappingActors);
 
 	for (AActor* OverlappingActor : OverlappingActors)
 	{
@@ -59,7 +62,7 @@ void UDeprivedJumpAttack::OnStateUpdate(float DeltaTime)
 	}
 
 	JumpDestination.Z = 0;
-	FVector OwnLocation = Controller->GetSelfRef()->GetActorLocation();
+	OwnLocation = SelfRef->GetActorLocation();
 	OwnLocation.Z = 0;
 
 	Jump(DeltaTime);
@@ -73,31 +76,33 @@ void UDeprivedJumpAttack::OnStateUpdate(float DeltaTime)
 	}
 }
 
-void UDeprivedJumpAttack::Jump(float DeltaTime)
+void UDeprivedJumpAttack::SetLocation()
 {
-	if (RemainingTime <= 0)
+	PlayerLocation = Player->GetActorLocation();
+
+	const FVector PlayerForwardDir = Player->GetActorForwardVector() * SelfRef->PlayerForwardVector +
+		PlayerLocation;
+	OwnLocation = SelfRef->GetActorLocation();
+
+	JumpDestination = PlayerForwardDir - OwnLocation;
+	JumpDestination.Normalize();
+	JumpDestination = JumpDestination * SelfRef->DistAfterPlayer + PlayerForwardDir;
+	JumpDir = JumpDestination - OwnLocation;
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, Player->GetActorLocation().ToString());
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, JumpDestination.ToString());
+
+	LocationSet = true;
+}
+
+void UDeprivedJumpAttack::Jump(float DeltaTime) const
+{
+	const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
+	float CurveValue;
+	Animation->GetCurveValue(FName("MovementSpeed"), CurveValue);
+
+	if (LocationSet)
 	{
-		if (!LocationSet)
-		{
-			PlayerLocation = Controller->GetPlayer()->GetActorLocation();
-
-			const FVector PlayerForwardDir(Controller->GetPlayer()->GetActorForwardVector() * 300.f + PlayerLocation);
-			const FVector OwnLocation(Controller->GetSelfRef()->GetActorLocation());
-
-			JumpDestination = PlayerForwardDir - OwnLocation;
-			JumpDestination.Normalize();
-			JumpDestination = JumpDestination * 200.f + PlayerForwardDir;
-			JumpDir = JumpDestination - OwnLocation;
-
-			LocationSet = true;
-		}
-		else
-		{
-			Controller->MoveToTarget(JumpDir, 2000.f, DeltaTime);
-		}
-	}
-	else
-	{
-		RemainingTime -= DeltaTime * 1.f;
+		Controller->MoveToTarget(JumpDir, SelfRef->JumpAttackSpeed * CurveValue, DeltaTime);
 	}
 }

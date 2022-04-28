@@ -27,17 +27,16 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	CurrentState->OnStateUpdate(DeltaTime);
 
 	FVector PlayerLocation(Player->GetActorLocation());
-	FVector PlayerForwardDir(Player->GetActorForwardVector() * 300.f + PlayerLocation);
+	FVector PlayerForwardDir(Player->GetActorForwardVector() * SelfRef->PlayerForwardVector + PlayerLocation);
 	FVector OwnLocation(SelfRef->GetActorLocation());
-
-
+	
 	DrawDebugLine(GetWorld(), PlayerLocation, PlayerForwardDir, FColor::Red);
 	DrawDebugLine(GetWorld(), OwnLocation, PlayerForwardDir, FColor::Green);
-
 	FVector Test(PlayerForwardDir - OwnLocation);
 	Test.Normalize();
+	DrawDebugLine(GetWorld(), PlayerForwardDir, Test * SelfRef->DistAfterPlayer + PlayerForwardDir, FColor::Blue);
 
-	DrawDebugLine(GetWorld(), PlayerForwardDir, Test * 200.f + PlayerForwardDir, FColor::Blue);
+	SelfRef->CurrentJumpAttackCoolDown -= DeltaTime;
 }
 
 void UDeprivedStateMachine::BeginPlay()
@@ -66,7 +65,6 @@ void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float Delt
 	Target.Z = 0.f;
 	Target.Normalize();
 
-	GetWorld()->GetClass
 
 	SelfRef->MovementComponent->SetDirection(Target, Speed);
 }

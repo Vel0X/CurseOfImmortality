@@ -9,13 +9,16 @@
 void UDeprivedRunning::OnStateEnter(UStateMachine* StateMachine)
 {
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
-	Controller->GetSelfRef()->Running = true;
+	Player = Controller->GetPlayer();
+	SelfRef = Controller->GetSelfRef();
+
+	SelfRef->Running = true;
 	UE_LOG(LogTemp, Warning, TEXT("Running State Entered"))
 }
 
 void UDeprivedRunning::OnStateExit()
 {
-	Controller->GetSelfRef()->Running = false;
+	SelfRef->Running = false;
 	UE_LOG(LogTemp, Warning, TEXT("Running State Exit"))
 }
 
@@ -28,32 +31,27 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	}
 	Controller->FocusOnPlayer();
 
-	const ABaseCharacter* Player = Controller->GetPlayer();
-	const ADeprivedPawn* SelfRef = Controller->GetSelfRef();
-
 	const FVector PlayerLocation = Player->GetActorLocation();
 	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
 	{
-		if (FVector::Dist(PlayerLocation, Controller->GetSelfRef()->GetActorLocation()) < SelfRef->MinDistNormalAttack)
-		{
-			Controller->Transition(Controller->NormalAttack, Controller);
-		}
-		Controller->MoveToTarget(Target, SelfRef->Speed, DeltaTime);
+		Controller->Transition(Controller->NormalAttack, Controller);
 	}
-	else if (FVector::Dist(PlayerLocation, Controller->GetSelfRef()->GetActorLocation()) < 800.f)
+	else if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistJumpAttack)
 	{
-		if (Controller->GetSelfRef()->JumpAttackCoolDown)
+		if (SelfRef->CurrentJumpAttackCoolDown <= 0.f)
 		{
+			SelfRef->CurrentJumpAttackCoolDown = SelfRef->JumpAttackCoolDown;
+			Controller->Transition(Controller->JumpAttack, Controller);
 		}
 		else
 		{
+			Controller->MoveToTarget(Target, SelfRef->Speed, DeltaTime);
 		}
-		Controller->Transition(Controller->JumpAttack, Controller);
 	}
 	else
 	{
-		Controller->MoveToTarget(Target, 400.f, DeltaTime);
+		Controller->MoveToTarget(Target, SelfRef->Speed, DeltaTime);
 	}
 }

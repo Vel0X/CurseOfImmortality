@@ -3,15 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CurseOfImmortality/AI/AIBaseClasses/State.h"
+#include "DeprivedBaseState.h"
 #include "DeprivedJumpAttack.generated.h"
 
-class UDeprivedStateMachine;
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API UDeprivedJumpAttack : public UState
+class CURSEOFIMMORTALITY_API UDeprivedJumpAttack : public UDeprivedBaseState
 {
 	GENERATED_BODY()
 
@@ -22,19 +21,16 @@ public:
 
 	virtual void OnStateUpdate(float DeltaTime) override;
 
-private:
-	UPROPERTY()
-	UDeprivedStateMachine* Controller;
+	UFUNCTION(BlueprintCallable)
+	void SetLocation();
 
+private:
 	FVector PlayerLocation;
 	FVector JumpDestination;
 	FVector JumpDir;
+	FVector OwnLocation;
 
 	bool LocationSet = false;
 
-	float JumpSpeed = 2000.f;
-	const float ChargeTime = 1.f;
-	float RemainingTime = ChargeTime;
-
-	void Jump(float DeltaTime);
+	void Jump(float DeltaTime) const;
 };

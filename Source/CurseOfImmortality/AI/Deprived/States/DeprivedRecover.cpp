@@ -10,18 +10,21 @@ void UDeprivedRecover::OnStateEnter(UStateMachine* StateMachine)
 	Super::OnStateEnter(StateMachine);
 
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
-	Controller->GetSelfRef()->Recover = true;
+	Player = Controller->GetPlayer();
+	SelfRef = Controller->GetSelfRef();
+	
+	SelfRef->Recover = true;
 	UE_LOG(LogTemp, Warning, TEXT("Recover State Entered"))
 }
 
 void UDeprivedRecover::OnStateExit()
 {
 	Super::OnStateExit();
-
-	Controller->GetSelfRef()->Recover = false;
+	
+	SelfRef->Recover = false;
 	UE_LOG(LogTemp, Warning, TEXT("Exit State Recover"))
 
-	RemainingTime = Duration;
+	SelfRef->CurrentRecoverDuration = SelfRef->RecoverDuration;
 }
 
 void UDeprivedRecover::OnStateUpdate(float DeltaTime)
@@ -30,9 +33,9 @@ void UDeprivedRecover::OnStateUpdate(float DeltaTime)
 
 	Controller->FocusOnPlayer();
 
-	RemainingTime -= DeltaTime * 1;
+	SelfRef->CurrentRecoverDuration -= DeltaTime;
 
-	if (RemainingTime <= 0)
+	if (SelfRef->CurrentRecoverDuration <= 0)
 	{
 		Controller->Transition(Controller->Running, Controller);
 	}

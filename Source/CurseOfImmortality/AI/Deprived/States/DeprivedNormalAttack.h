@@ -3,15 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CurseOfImmortality/AI/AIBaseClasses/State.h"
+#include "DeprivedBaseState.h"
 #include "DeprivedNormalAttack.generated.h"
 
-class UDeprivedStateMachine;
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API UDeprivedNormalAttack : public UState
+class CURSEOFIMMORTALITY_API UDeprivedNormalAttack : public UDeprivedBaseState
 {
 	GENERATED_BODY()
 
@@ -21,10 +20,4 @@ public:
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
-
-	UPROPERTY()
-	UDeprivedStateMachine* Controller;
-
-	float Duration = 2.f;
-	float CurrentDuration = Duration;
 };

@@ -10,16 +10,20 @@ void UDeprivedNormalAttack::OnStateEnter(UStateMachine* StateMachine)
 	Super::OnStateEnter(StateMachine);
 
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
-	Controller->GetSelfRef()->NormalAttack = true;
+	Player = Controller->GetPlayer();
+	SelfRef = Controller->GetSelfRef();
+	SelfRef->NormalAttack = true;
+	
 	UE_LOG(LogTemp, Warning, TEXT("NormalAttack State Entered"))
 }
 
 void UDeprivedNormalAttack::OnStateExit()
 {
 	Super::OnStateExit();
-
-	Controller->GetSelfRef()->NormalAttack = false;
-	CurrentDuration = Duration;
+	
+	SelfRef->NormalAttack = false;
+	SelfRef->CurrentNormalAttackDuration = SelfRef->NormalAttackDuration;
+	
 	UE_LOG(LogTemp, Warning, TEXT("Exit State NormalAttack"))
 }
 
@@ -27,17 +31,16 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	const FVector PlayerLocation = Controller->GetPlayer()->GetActorLocation();
-	const FVector Target = PlayerLocation - Controller->GetSelfRef()->GetActorLocation();
+	const FVector PlayerLocation = Player->GetActorLocation();
+	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 
-	if (FVector::Dist(PlayerLocation, Controller->GetSelfRef()->GetActorLocation()) > 100.f)
+	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) > SelfRef->MinDistNormalAttack)
 	{
-		Controller->MoveToTarget(Target, 400.f, DeltaTime);
+		Controller->MoveToTarget(Target, SelfRef->Speed, DeltaTime);
 	}
-	if (CurrentDuration <= 0.f)
+	if (SelfRef->CurrentNormalAttackDuration <= 0.f)
 	{
 		Controller->Transition(Controller->Running, Controller);
 	}
-
-	CurrentDuration -= DeltaTime;
+	SelfRef->CurrentNormalAttackDuration -= DeltaTime;
 }

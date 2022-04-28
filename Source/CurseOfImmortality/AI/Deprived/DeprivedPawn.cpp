@@ -16,6 +16,9 @@ ADeprivedPawn::ADeprivedPawn()
 	AttackSphere->SetupAttachment(RootComponent);
 
 	StateMachine = CreateDefaultSubobject<UDeprivedStateMachine>("StateMachine");
+
+	CurrentJumpAttackCoolDown = 0.f;
+	CurrentJumpAttackChargeTime = JumpAttackChargeTime;
+	CurrentRecoverDuration = RecoverDuration;
+	CurrentNormalAttackDuration = NormalAttackDuration;
 }
-
-

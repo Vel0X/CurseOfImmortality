@@ -3,7 +3,7 @@
 
 #include "State.h"
 
-void UState::OnStateEnter(UStateMachine* Controller)
+void UState::OnStateEnter(UStateMachine* StateMachine)
 {
 }
 

@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
 #include "State.generated.h"
-class UStateMachine;
 /**
  * 
  */
+class ABaseCharacter;
+class ABaseEnemyPawn;
 class UStateMachine;
 UCLASS()
 class CURSEOFIMMORTALITY_API UState : public UObject

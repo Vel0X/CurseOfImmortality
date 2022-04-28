@@ -39,30 +39,38 @@ public:
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere)
 	USphereComponent* AttackSphere;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UDeprivedStateMachine* StateMachine;
 
 	//Base Stats
 	UPROPERTY(EditAnywhere, Category="Base Stats")
 	float Speed = 400.f;
 
+	//Jump Attack
+	UPROPERTY(EditAnywhere, Category="Jump Attack")
+	float JumpAttackSpeed = 2000.f;
+	UPROPERTY(EditAnywhere, Category="Jump Attack")
+	float DistJumpAttack = 800.f;
+	UPROPERTY(EditAnywhere, Category="Jump Attack")
+	float DistAfterPlayer = 200.f;
+	UPROPERTY(EditAnywhere, Category="Jump Attack")
+	float PlayerForwardVector = 300.f;
+	UPROPERTY(EditAnywhere, Category="Jump Attack")
+	float JumpAttackCoolDown = 5.f;
+	float CurrentJumpAttackCoolDown;
+	UPROPERTY(EditAnywhere, Category="Jump Attack")
+	float JumpAttackChargeTime = 1.f;
+	float CurrentJumpAttackChargeTime;
+
 	//Cool Downs and Durations
 	UPROPERTY(EditAnywhere, Category="time")
 	float RecoverDuration = 2.f;
+	float CurrentRecoverDuration;
 	UPROPERTY(EditAnywhere, Category="Time")
-	float CurrentRecoverDuration = RecoverDuration;
-	UPROPERTY(EditAnywhere, Category="Time")
-	float JumpAttackCoolDown = 10.f;
-	UPROPERTY(EditAnywhere, Category="Time")
-	float CurrentJumpAttackCoolDown = JumpAttackCoolDown;
-	UPROPERTY(EditAnywhere, Category="Time")
-	float NormalAttackDuration = 10.f;
-	UPROPERTY(EditAnywhere, Category="Time")
-	float CurrentNormalAttackDuration = NormalAttackDuration;
+	float NormalAttackDuration = 4.29f;
+	float CurrentNormalAttackDuration;
 
 	//Distances for Movement
-	UPROPERTY(EditAnywhere, Category="Distances")
-	float DistJumpAttack = 800.f;
 	UPROPERTY(EditAnywhere, Category="Distances")
 	float DistRunning = 1000.f;
 	UPROPERTY(EditAnywhere, Category="Distances")
