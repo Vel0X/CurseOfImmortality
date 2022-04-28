@@ -4,33 +4,38 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "CharacterMovement.generated.h"
+#include "CharacterMovement.h"
+#include "InputManager.generated.h"
 
 
+class APlayerCharacter;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CURSEOFIMMORTALITY_API UCharacterMovement : public UActorComponent
+class CURSEOFIMMORTALITY_API UInputManager : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UCharacterMovement();
+	UInputManager();
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	
+	void MoveForward(float Value);
+
+	void MoveRight(float Value);
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetDirection(FVector MoveInput, float MovementSpeedInput);
+	void SetupPlayerInput(UInputComponent* InputComponent);
 	
-	float MovementSpeed;
-	FVector Direction;
-	AActor* Owner;
+	APlayerCharacter *Player;
+
+	UCharacterMovement *MovementComponent;
+
+	FVector MoveInput;
 	
-	USceneComponent* RootComponent;
-	bool DirectionSet;
-		
 };

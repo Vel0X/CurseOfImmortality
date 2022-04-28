@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
+#include "InputManager.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
@@ -29,12 +30,8 @@ protected:
 	
 	void SetupPlayerInputComponent();
 
-	void MoveForward(float Value);
-
-	void MoveRight(float Value);
-
 public:
-
+	
 	virtual void Tick(float DeltaTime) override;
 	
 //	virtual void TakeDamage(float Damage) override;
@@ -51,7 +48,8 @@ public:
 		USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere)
 		UCameraComponent* PlayerCamera;
+	UPROPERTY(EditAnywhere)
+		UInputManager* InputManager;
 
 	FVector MoveInput;
-	float Yaw;
 };

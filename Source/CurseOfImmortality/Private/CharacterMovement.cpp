@@ -20,7 +20,6 @@ void UCharacterMovement::BeginPlay()
 	Super::BeginPlay();
 	Owner = GetOwner();
 	RootComponent = Owner->GetRootComponent();
-	
 }
 
 
@@ -31,8 +30,14 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 	if (DirectionSet)
 	{
-		//RootComponent->SetWorldRotation(Direction.Rotation());
-		RootComponent->SetRelativeRotation(Direction.Rotation());
+		//UE_LOG(LogTemp, Warning, TEXT("Text,%d"), Direction.Length());
+		if(Direction.Length() < 0.65)
+		{
+			DirectionSet = false;
+			return;
+		}
+		Direction.Normalize();
+		RootComponent->SetWorldRotation(Direction.Rotation());
 		RootComponent->AddWorldOffset(Direction * DeltaTime * MovementSpeed, false);
 		DirectionSet = false;
 	}
@@ -41,12 +46,11 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UCharacterMovement::SetDirection(FVector MoveInput, float MovementSpeedInput)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Text,%s"), *Direction.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Text,%s"), *MoveInput.ToString());
 	if(!MoveInput.IsZero())
 	{
 		MovementSpeed = MovementSpeedInput;
 		Direction = MoveInput;
-		Direction.Normalize();
 		DirectionSet = true;
 	}
 }
