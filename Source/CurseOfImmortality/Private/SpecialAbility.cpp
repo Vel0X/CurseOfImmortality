@@ -4,9 +4,8 @@
 #include "SpecialAbility.h"
 
 
-void ASpecialAbility::InitializeAbility_Implementation(int _AbilityHandle, AActor* Caster, int Level)
+void ASpecialAbility::InitializeAbility(int _AbilityHandle, AActor* Caster, int Level)
 {
-	Super::InitializeAbility_Implementation(_AbilityHandle, Caster, Level);
 	Parent = Caster;
 }
 

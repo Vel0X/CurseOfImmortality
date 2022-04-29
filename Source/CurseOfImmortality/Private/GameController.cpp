@@ -21,3 +21,13 @@ AAttackManager* UGameController::GetAttackManager() const
 {
 	return AttackManager;
 }
+
+TArray<AActor*> UGameController::GetEnemies() const
+{
+	return ActiveEnemies;
+}
+
+void UGameController::AddEnemy(AActor* Enemy)
+{
+	ActiveEnemies.Add(Enemy);
+}

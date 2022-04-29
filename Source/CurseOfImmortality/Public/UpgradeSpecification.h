@@ -10,7 +10,9 @@
 UENUM()
 enum EUpgradeName
 {
+	SwordSlash,
 	Fireball,
+	ArcaneWhisper,
 	KarysAnimus,
 	Whirlwind,
 	Behemoth,

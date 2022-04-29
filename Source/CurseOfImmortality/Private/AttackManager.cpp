@@ -56,27 +56,32 @@ void AAttackManager::BindToInput()
 
 void AAttackManager::SpawnFromTemplate(ABaseAbility* Template) const
 {
+	Template->CanInteract = false;
 	const FVector Location = FVector::Zero();
 	const FRotator Rotation = Template->GetActorRotation();
 	FActorSpawnParameters Parameters = FActorSpawnParameters();
 	Parameters.Template = Template;
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Template->GetClass(), &Location, &Rotation, Parameters));
 	AbilityInstance->SetActorLocation(Template->GetActorLocation());
+	AbilityInstance->AbilityCreationCallback(Template);
 	AbilityInstance->ResetLifetime();
 	AbilityInstance->AfterInitialization();
 }
 
 void AAttackManager::SpawnFromTemplate(ABaseAbility* Template, const FRotator Rotator) const
 {
+	Template->CanInteract = false;
 	const FVector Location = FVector::Zero();
 	FActorSpawnParameters Parameters = FActorSpawnParameters();
 	Parameters.Template = Template;
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Template->GetClass(), &Location, &Rotator, Parameters));
 	AbilityInstance->SetActorLocation(Template->GetActorLocation());
 
+	AbilityInstance->AbilityCreationCallback(Template);
+	//UE_LOG(LogTemp, Warning, TEXT("templated Spawn was triggered"));
+
 	AbilityInstance->ResetLifetime();
 	AbilityInstance->AfterInitialization();
-	UE_LOG(LogTemp, Warning, TEXT("templated Spawn was triggered"));
 }
 
 bool Check(const UAbilitySpecification* Ability, const FActiveAbility& ActiveAbility)

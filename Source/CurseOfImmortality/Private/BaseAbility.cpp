@@ -27,8 +27,10 @@ void ABaseAbility::BeginPlay()
 
 void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
 {
+	
 	if(!CanInteract)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit Enemy during Initialization"));
 		return;
 	}
 	
@@ -51,6 +53,10 @@ void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
 	}
 }
 
+void ABaseAbility::AbilityCreationCallback(ABaseAbility* Caller)
+{
+}
+
 // Called every frame
 void ABaseAbility::Tick(float DeltaTime)
 {
@@ -65,6 +71,9 @@ void ABaseAbility::Tick(float DeltaTime)
 
 void ABaseAbility::AfterInitialization()
 {
+	if(PendingDestruction)
+		return;
+	
 	for (const auto Upgrade : UpgradeStack)
 	{
 		if(Upgrade == nullptr)
@@ -73,7 +82,6 @@ void ABaseAbility::AfterInitialization()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("?"));
 			Upgrade->OnAbilityStart(AbilityHandle);
 		}
 	}
@@ -85,6 +93,7 @@ void ABaseAbility::AfterInitialization()
 
 void ABaseAbility::DestroyAbility()
 {
+	
 	//OnAbilityEnd.Broadcast(AbilityHandle);
 	for (const auto Upgrade : UpgradeStack)
 	{
@@ -98,6 +107,7 @@ void ABaseAbility::DestroyAbility()
 		}
 	}
 	const UNiagaraComponent* vfx = FindComponentByClass<UNiagaraComponent>();
+/*
 	if(vfx == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Found no vfx"));
@@ -109,12 +119,13 @@ void ABaseAbility::DestroyAbility()
 		//vfx->GetAsset()->Destro
 
 	}
+	*/
+	PendingDestruction = true;
 	Destroy();
 }
 
-void ABaseAbility::InitializeAbility_Implementation(int _AbilityHandle, AActor* Caster, int Level)
+void ABaseAbility::InitializeAbility(int _AbilityHandle, AActor* Caster, int Level)
 {
-	
 }
 
 void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel)

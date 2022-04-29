@@ -18,7 +18,8 @@ void UShatteredImpact::OnEnemyHit()
 	
 	const AAttackManager* AttackManager = static_cast<UGameController*>(GetOwner()->GetGameInstance())->GetAttackManager();
 
-
+	UE_LOG(LogTemp, Warning, TEXT("OnEnemyHitTriggered"));
+	
 	if(SplitsRemaining > 0)
 	{
 		SplitsRemaining--;

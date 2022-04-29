@@ -20,8 +20,13 @@ protected:
 public:
 	void BindAbilityController(AAttackManager* _AttackManager);
 	AAttackManager* GetAttackManager() const;
-	
+
+	TArray<AActor*> GetEnemies() const;
+	void AddEnemy(AActor* Enemy);
 private:
 	UPROPERTY(EditAnywhere)
 	AAttackManager* AttackManager;
+
+	UPROPERTY(EditAnywhere)
+	TArray<AActor*> ActiveEnemies;
 };

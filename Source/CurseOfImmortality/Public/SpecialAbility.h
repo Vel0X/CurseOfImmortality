@@ -13,11 +13,8 @@ UCLASS()
 class CURSEOFIMMORTALITY_API ASpecialAbility : public ABaseAbility
 {
 	GENERATED_BODY()
-
 public:
-	virtual void InitializeAbility_Implementation(int _AbilityHandle, AActor* Caster, int Level) override;
-	//virtual void InitializeAbility(int _AbilityHandle, AActor* Caster, int Level) override;
-
+	virtual void InitializeAbility(int _AbilityHandle, AActor* Caster, int Level) override;
 protected:
 	void Tick(float DeltaSeconds) override;
 	

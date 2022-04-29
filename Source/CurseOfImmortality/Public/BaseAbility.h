@@ -28,13 +28,14 @@ class CURSEOFIMMORTALITY_API ABaseAbility : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ABaseAbility();
-
+	UFUNCTION(BlueprintCallable)
+	virtual void OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor);
+	virtual void AbilityCreationCallback(ABaseAbility* Caller);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
 
-	UFUNCTION()
-	virtual void OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor);
 
 public:
 	// Called every frame
@@ -42,9 +43,9 @@ public:
 
 	virtual void DestroyAbility();
 
-	UFUNCTION(BlueprintNativeEvent)
-	void InitializeAbility(int _AbilityHandle, AActor* Caster, int Level);
-	void AfterInitialization();
+	virtual void InitializeAbility(int _AbilityHandle, AActor* Caster, int Level);
+
+	virtual void AfterInitialization();
 
 public:
 	UPROPERTY(EditAnywhere)
@@ -54,10 +55,12 @@ public:
 	void AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel);
 	void ResetLifetime();
 	bool DestroyOnEnemyHit = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool CanInteract = false;
 	UPROPERTY(EditAnywhere)
 	float RelativeSize = 1.0f;
-
+	UPROPERTY(EditAnywhere)
+	bool PendingDestruction = false;
 protected:
 	UPROPERTY(EditAnywhere)
 	TArray<UBaseUpgrade*> UpgradeStack;
