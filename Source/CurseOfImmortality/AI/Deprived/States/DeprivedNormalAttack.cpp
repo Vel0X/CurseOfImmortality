@@ -13,17 +13,17 @@ void UDeprivedNormalAttack::OnStateEnter(UStateMachine* StateMachine)
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
 	SelfRef->NormalAttack = true;
-	
+
 	UE_LOG(LogTemp, Warning, TEXT("NormalAttack State Entered"))
 }
 
 void UDeprivedNormalAttack::OnStateExit()
 {
 	Super::OnStateExit();
-	
+
 	SelfRef->NormalAttack = false;
 	SelfRef->CurrentNormalAttackDuration = SelfRef->NormalAttackDuration;
-	
+
 	UE_LOG(LogTemp, Warning, TEXT("Exit State NormalAttack"))
 }
 
@@ -31,12 +31,16 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
+	const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
+	float CurveValue;
+	Animation->GetCurveValue(FName("MovementSpeed"), CurveValue);
+
 	const FVector PlayerLocation = Player->GetActorLocation();
 	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) > SelfRef->MinDistNormalAttack)
 	{
-		Controller->MoveToTarget(Target, SelfRef->Speed, DeltaTime);
+		Controller->MoveToTarget(Target, SelfRef->Speed * CurveValue, DeltaTime);
 	}
 	if (SelfRef->CurrentNormalAttackDuration <= 0.f)
 	{

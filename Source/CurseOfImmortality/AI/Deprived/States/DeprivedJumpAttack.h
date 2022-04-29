@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class CURSEOFIMMORTALITY_API UDeprivedJumpAttack : public UDeprivedBaseState
 {
 	GENERATED_BODY()

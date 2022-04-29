@@ -105,4 +105,8 @@ void UDeprivedJumpAttack::Jump(float DeltaTime) const
 	{
 		Controller->MoveToTarget(JumpDir, SelfRef->JumpAttackSpeed * CurveValue, DeltaTime);
 	}
+	else
+	{
+		Controller->FocusOnPlayer();
+	}
 }
