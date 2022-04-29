@@ -4,24 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/State.h"
-#include "DeprivedBaseState.generated.h"
+#include "StormCallerBaseState.generated.h"
 
-class UDeprivedStateMachine;
-class ADeprivedPawn;
-class APlayerCharacter;
+class AStormCallerPawn;
+class UStormCallerStateMachine;
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API UDeprivedBaseState : public UState
+class CURSEOFIMMORTALITY_API UStormCallerBaseState : public UState
 {
 	GENERATED_BODY()
 
 protected:
 	UPROPERTY()
-	ADeprivedPawn* SelfRef;
+	AStormCallerPawn* SelfRef;
 	UPROPERTY()
 	ABaseCharacter* Player;
 	UPROPERTY()
-	UDeprivedStateMachine* Controller;
+	UStormCallerStateMachine* Controller;
 };

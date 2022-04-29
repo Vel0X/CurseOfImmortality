@@ -28,12 +28,6 @@ void UDeprivedIdle::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	if (!Controller)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Refrence Controller Missing in Idle State"));
-		return;
-	}
-
 	Controller->FocusOnPlayer();
 	const FVector PlayerLocation = Player->GetActorLocation();
 

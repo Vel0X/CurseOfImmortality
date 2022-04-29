@@ -28,17 +28,17 @@ public:
 	void FocusOnPlayer();
 
 	//States
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	UState* Idle;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	UState* Running;
 	UPROPERTY(BlueprintReadOnly)
 	UState* JumpAttack;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	UState* Recover;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	UState* HitPlayer;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	UState* NormalAttack;
 
 	//Getter

@@ -20,19 +20,19 @@ public:
 	ADeprivedPawn();
 
 	//States
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite)
 	bool Idle = false;
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite)
 	bool Running = false;
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite)
 	bool Jump = false;
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite)
 	bool Stunned = false;
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite)
 	bool Recover = false;
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite)
 	bool HitPlayer = false;
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite)
 	bool NormalAttack = false;
 
 	UPROPERTY(EditAnywhere)
@@ -43,6 +43,8 @@ public:
 	UDeprivedStateMachine* StateMachine;
 
 	//Base Stats
+	UPROPERTY(EditAnywhere, Category="Base Stats")
+	float Damage = 10.f;
 	UPROPERTY(EditAnywhere, Category="Base Stats")
 	float Speed = 400.f;
 
