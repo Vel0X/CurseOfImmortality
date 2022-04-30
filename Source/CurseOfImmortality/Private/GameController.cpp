@@ -2,7 +2,7 @@
 
 
 #include "GameController.h"
-#include "AttackManager.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 
 void UGameController::OnStart()
 {
