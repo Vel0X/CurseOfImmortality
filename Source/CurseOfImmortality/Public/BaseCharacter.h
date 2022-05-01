@@ -26,9 +26,9 @@ public:
 
 	virtual void Setup();
 
-	virtual void TakeDamage(float Damage);
+	virtual void ReceiveDamage(float Damage);
 
-	virtual void DoDamage(float Damage, ABaseCharacter EnemyCharacter);
+	virtual void DealDamage(float Damage, ABaseCharacter *EnemyCharacter);
 
 	virtual void OnDeath();
 

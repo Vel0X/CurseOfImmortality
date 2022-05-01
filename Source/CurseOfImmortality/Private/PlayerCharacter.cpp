@@ -26,7 +26,7 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::Setup()
 {
 	Super::Setup();
-	SetupPlayerInputComponent();
+	SetupInputComponent();
 }
 
 
@@ -36,9 +36,24 @@ void APlayerCharacter::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
+void APlayerCharacter::ReceiveDamage(float Damage)
+{
+	Super::ReceiveDamage(Damage);
+}
+
+void APlayerCharacter::DealDamage(float Damage, ABaseCharacter *EnemyCharacter)
+{
+	Super::DealDamage(Damage, EnemyCharacter);
+}
+
+void APlayerCharacter::OnDeath()
+{
+	Super::OnDeath();
+}
+
 
 //Called to bind functionality to input
-void APlayerCharacter::SetupPlayerInputComponent()
+void APlayerCharacter::SetupInputComponent()
 {
 	InputComponent = NewObject<UInputComponent>(this);
 	InputComponent->RegisterComponent();
@@ -51,21 +66,3 @@ void APlayerCharacter::SetupPlayerInputComponent()
 		EnableInput(GetWorld()->GetFirstPlayerController());
 	}
 }
-
-/*void APlayerCharacter::TakeDamage(float Damage)
-{
-	Super::TakeDamage(Damage);
-
-}
-
-void APlayerCharacter::DoDamage(float Damage, ABaseCharacter EnemyCharacter)
-{
-	Super::DoDamage(Damage, EnemyCharacter);
-
-}
-
-void APlayerCharacter::OnDeath()
-{
-	//Do stuff
-
-}*/

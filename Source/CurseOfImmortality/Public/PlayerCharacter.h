@@ -28,17 +28,15 @@ protected:
 	
 	virtual void Setup() override;
 	
-	void SetupPlayerInputComponent();
+	void SetupInputComponent();
+	//void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override; TODO
 
 public:
 	
 	virtual void Tick(float DeltaTime) override;
-	
-//	virtual void TakeDamage(float Damage) override;
-
-//	virtual void DoDamage(float Damage, ABaseCharacter EnemyCharacter) override;
-
-//	virtual void OnDeath() override;
+	virtual void ReceiveDamage(float Damage) override;
+	virtual void DealDamage(float Damage, ABaseCharacter *EnemyCharacter) override;
+	virtual void OnDeath() override;
 
 	UPROPERTY(EditAnywhere)
 		UCapsuleComponent* CapsuleComponent;
@@ -50,6 +48,5 @@ public:
 		UCameraComponent* PlayerCamera;
 	UPROPERTY(EditAnywhere)
 		UInputManager* InputManager;
-
-	FVector MoveInput;
+	
 };

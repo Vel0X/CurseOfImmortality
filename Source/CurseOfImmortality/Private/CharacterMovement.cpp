@@ -18,8 +18,7 @@ UCharacterMovement::UCharacterMovement()
 void UCharacterMovement::BeginPlay()
 {
 	Super::BeginPlay();
-	Owner = GetOwner();
-	RootComponent = Owner->GetRootComponent();
+	RootComponent = GetOwner()->GetRootComponent();
 }
 
 
@@ -46,9 +45,9 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UCharacterMovement::SetDirection(FVector MoveInput, float MovementSpeedInput)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Text,%s"), *MoveInput.ToString());
-	if(!MoveInput.IsZero())
+	if(!(MoveInput.IsZero() && Direction.IsZero()))
 	{
+		//UE_LOG(LogTemp, Warning, TEXT("Text,%s"), *MoveInput.ToString());
 		MovementSpeed = MovementSpeedInput;
 		Direction = MoveInput;
 		DirectionSet = true;

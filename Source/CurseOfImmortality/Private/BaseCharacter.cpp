@@ -26,7 +26,7 @@ void ABaseCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ABaseCharacter::TakeDamage(float Damage)
+void ABaseCharacter::ReceiveDamage(float Damage)
 {
 	Health -= Damage;
 }
@@ -36,9 +36,9 @@ void ABaseCharacter::Setup()
 	
 }
 
-void ABaseCharacter::DoDamage(float Damage, ABaseCharacter EnemyCharacter)
+void ABaseCharacter::DealDamage(float Damage, ABaseCharacter *EnemyCharacter)
 {
-	EnemyCharacter.TakeDamage(Damage);
+	EnemyCharacter->ReceiveDamage(Damage);
 }
 
 void ABaseCharacter::OnDeath()

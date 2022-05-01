@@ -2,7 +2,6 @@
 
 
 #include "InputManager.h"
-
 #include "PlayerCharacter.h"
 
 
@@ -12,6 +11,9 @@ UInputManager::UInputManager()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+
+	MaxBufferTime = 0.5;
+	TimeTillNextAction = 0;
 	Player = static_cast <APlayerCharacter*>(GetOwner());
 	if(Player != nullptr)
 	{
@@ -27,7 +29,6 @@ UInputManager::UInputManager()
 void UInputManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 
@@ -35,8 +36,16 @@ void UInputManager::BeginPlay()
 void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	
+	if (TimeTillNextAction > 0)
+	{
+		TimeTillNextAction -= DeltaTime;
+	} else if (InputBuffer.Num()>0)
+	{
+		DoAction(InputBuffer.Last());
+		InputBuffer.Empty();
+	}
+	
 }
 
 //Called to bind functionality to input
@@ -44,24 +53,59 @@ void UInputManager::SetupPlayerInput(UInputComponent* InputComponent)
 {
 	InputComponent->BindAxis("MoveForward", this, &UInputManager::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &UInputManager::MoveRight);
+	InputComponent->BindAction("MeleeAbility",  IE_Pressed, this, &UInputManager::MeleeAbility);
+	InputComponent->BindAction("RangedAbility",  IE_Pressed, this, &UInputManager::RangedAbility);
+	InputComponent->BindAction("SpecialAbility",  IE_Pressed, this, &UInputManager::SpecialAbility);
+	InputComponent->BindAction("Dash",  IE_Pressed, this, &UInputManager::Dash);
 }
 
 void UInputManager::MoveForward(float Value)
 {
 	MoveInput.X = Value;
-	if(MovementComponent != nullptr)
-	{
-		MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
-	}
-	
+	MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
 }
 
 void UInputManager::MoveRight(float Value)
 {
 	MoveInput.Y = Value;
-	if(MovementComponent != nullptr)
+	MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
+}
+
+void UInputManager::MeleeAbility()
+{
+	AddToBuffer(InputAction::MeleeAbility);
+}
+
+void UInputManager::RangedAbility()
+{
+	AddToBuffer(InputAction::RangedAbility);
+}
+
+void UInputManager::SpecialAbility()
+{
+	AddToBuffer(InputAction::SpecialAbility);
+}
+
+void UInputManager::Dash()
+{
+	AddToBuffer(InputAction::Dash);
+}
+
+void UInputManager::AddToBuffer(InputAction _InputAction)
+{
+	if(TimeTillNextAction <= 0 && InputBuffer.Num() == 0)
 	{
-		MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
+		DoAction(_InputAction);
+	} else if (TimeTillNextAction <= MaxBufferTime)
+	{
+		InputBuffer.Add(_InputAction);
+		UE_LOG(LogTemp, Display, TEXT("Added Action to buffer"));
 	}
-	
+}
+
+void UInputManager::DoAction(InputAction _InputAction)
+{
+	// USE ABILITY
+	TimeTillNextAction = 1.5; //Set to Ability time
+	UE_LOG(LogTemp, Display, TEXT("Used Action"));
 }

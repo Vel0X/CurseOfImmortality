@@ -28,9 +28,7 @@ public:
 	
 	float MovementSpeed;
 	FVector Direction;
-	AActor* Owner;
-	
-	USceneComponent* RootComponent;
 	bool DirectionSet;
-		
+	USceneComponent* RootComponent;
+	
 };
