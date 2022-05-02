@@ -106,7 +106,7 @@ public:
 	
 	void BindToInput();
 	
-	void SortActiveUpgrades();
+	void SortActiveUpgrades(bool Verbose = false);
 	
 	bool CheckCooldown(EAbilityType Ability);
 	
@@ -120,7 +120,7 @@ public:
 	 */
 	void UpdateAbilityPool();
 
-	void PickThreeFromPool();
+	void PickThreeFromPool(bool Verbose = false);
 
 	void GetUpgrade(int Index);
 
@@ -142,7 +142,7 @@ public:
 	TMap<TEnumAsByte<EAbilityType>, FActiveAbility> ActiveAbilities;
 	
 	UPROPERTY(EditAnywhere)
-	TArray<FActiveUpgrade> ActiveUpgrades;
+	TMap<TEnumAsByte<EUpgradeName>, FActiveUpgrade> ActiveUpgrades;
 	
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EUpgradeName>,UUpgradeSpecification*> PossibleUpgrades;

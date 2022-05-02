@@ -66,41 +66,41 @@ void AAttackManager::BindToInput()
 	}
 }
 
-void AAttackManager::SortActiveUpgrades()
+void AAttackManager::SortActiveUpgrades(bool Verbose)
 {
-	
-	UE_LOG(LogTemp, Warning, TEXT("Before Sorting"));
-
-	for (int i = 0; i < ActiveUpgrades.Num(); ++i)
+	if(Verbose)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *ActiveUpgrades[i].Specification->DisplayName);
+		UE_LOG(LogTemp, Warning, TEXT("Before Sorting"));
+
+		for (const auto Tuple : ActiveUpgrades)
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *Tuple.Value.Specification->DisplayName);
 	}
-	
-	
-	
-	ActiveUpgrades.Sort();
 
 	
-	UE_LOG(LogTemp, Warning, TEXT("After Sorting"));
+	ActiveUpgrades.ValueSort([](const FActiveUpgrade& A, const FActiveUpgrade& B) {
+	return A.Specification < B.Specification; // sort strings by length
+		});
 	
-	for (int i = 0; i < ActiveUpgrades.Num(); ++i)
+	if(Verbose)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *ActiveUpgrades[i].Specification->DisplayName);
+		UE_LOG(LogTemp, Warning, TEXT("After Sorting"));
+
+		for (const auto Tuple : ActiveUpgrades)
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *Tuple.Value.Specification->DisplayName);
 	}
+	
 	
 }
 
 bool AAttackManager::CheckCooldown(const EAbilityType Ability)
 {
-	
 	return ActiveAbilities[Ability].CurrentCooldown <= 0.0f;
-
 }
 
 
 bool Check(const UAbilitySpecification* Ability, const FActiveAbility& ActiveAbility)
 {
-	return ActiveAbility.Specification->AbilityName == Ability->AbilityName && ActiveAbility.Level == Ability->MaxLevel;
+	return ActiveAbility.Specification->AbilityName == Ability->AbilityName && ActiveAbility.Level == ActiveAbility.Specification->MaxLevel;
 }
 
 void AAttackManager::UpdateAbilityPool()
@@ -108,23 +108,39 @@ void AAttackManager::UpdateAbilityPool()
 	//initial weight per entry = 100
 	//some entries start with lower weights, that can be boosted by obtaining other upgrades
 
+	Pool.Empty();
+	
 	for (const auto Tuple : PossibleAbilities)
 	{
+		const auto PossibleAbilityName = Tuple.Key;
+		const auto PossibleAbility = Tuple.Value;
+		
+		if(PossibleAbility == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Ability Specification in PossibleAbilities was NULL"));
+			continue;
+		}
 		int Weight = 100;
 		bool TypeFound = false; //does the player already have an ability of that type?
 		bool AbilityPresent = false; //is the ability already present at it's max level?
 
-		if(ActiveAbilities.Contains(Tuple.Value->AbilityType))
+		if(ActiveAbilities.Contains(PossibleAbility->AbilityType))
 		{
 			TypeFound = true;
-			if(Check(Tuple.Value, ActiveAbilities[Tuple.Value->AbilityType]))
+
+			const auto ActiveAbility = ActiveAbilities[PossibleAbility->AbilityType];
+			
+			if(ActiveAbility.Specification->AbilityName == PossibleAbilityName && ActiveAbility.Level == ActiveAbility.Specification->MaxLevel)
 				AbilityPresent = true;
+
 		}
 		
 		if(AbilityPresent)
 		{
+			//UE_LOG(LogTemp, Warning, TEXT("Ability %s present at max Level"), *PossibleAbility->DisplayName);
 			continue;
 		}
+		
 		if(TypeFound)
 		{
 			Weight = 20;
@@ -136,34 +152,44 @@ void AAttackManager::UpdateAbilityPool()
 
 	for (const auto Tuple : PossibleUpgrades)
 	{
+		const auto PossibleUpgradeName = Tuple.Key;
+		const auto PossibleUpgrade = Tuple.Value;
+		if(Tuple.Value == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Upgrade Specification in PossibleUpgrades was NULL"));
+			continue;
+		}
+
 		int Weight = 100;
 		bool PrerequisitesMet = false;
 
-		if(Tuple.Value->Application == None)
+		if(PossibleUpgrade->Application == None)
 		{
 			PrerequisitesMet = true;
 
 		}
-		else if(ActiveAbilities.Contains(Tuple.Value->Application))
+		else if(ActiveAbilities.Contains(PossibleUpgrade->Application))
 		{
 			PrerequisitesMet = true;
 		}
 
 		if(!PrerequisitesMet)
-		{
 			continue;
-		}
+		
 		
 		bool Restricted = false;
 		bool UpgradePresent = false;
-		for (const auto [Specification, Level] : ActiveUpgrades)
+		
+		for (const auto BTuple : ActiveUpgrades)
 		{
-			if(Specification->UpgradeName == Tuple.Value->UpgradeName && Level == Tuple.Value->MaxLevel)
+			const auto ActiveUpgradeName = BTuple.Key;
+			const auto ActiveUpgrade = BTuple.Value;
+			if(ActiveUpgradeName == PossibleUpgradeName && ActiveUpgrade.Level == ActiveUpgrade.Specification->MaxLevel)
 			{
 				UpgradePresent = true;
 				break;
 			}
-			if(Tuple.Value->Restrictions.Contains(Specification->UpgradeName))
+			if(PossibleUpgrade->Restrictions.Contains(ActiveUpgradeName))
 			{
 				Restricted = true;
 				break;
@@ -171,34 +197,31 @@ void AAttackManager::UpdateAbilityPool()
 		}
 
 		if(Restricted || UpgradePresent)
-		{
 			continue;
-		}
+		
 
-		Pool.Add(FPooledEntry(Tuple.Value->UpgradeName, true, Weight));
+		Pool.Add(FPooledEntry(PossibleUpgradeName, true, Weight));
 	}
 	
-	UE_LOG(LogTemp, Warning, TEXT("PoolSize %d"), Pool.Num());
-
+	//UE_LOG(LogTemp, Warning, TEXT("PoolSize %d"), Pool.Num());
 }
 
-void AAttackManager::PickThreeFromPool()
+void AAttackManager::PickThreeFromPool(bool Verbose)
 {
 	int PoolSize = 0;
+	
 	for (const auto Entry : Pool)
-	{
 		PoolSize += Entry.Weight;
-	}
+	
 
 	SelectedPoolEntries.Empty();
 	
 	int NumberOfEntries = 3;
 	constexpr int MaxIter = 1000;
 	int Iter = 0;
+	
 	if(Pool.Num() < NumberOfEntries)
-	{
 		NumberOfEntries = Pool.Num();
-	}
 	
 	while(SelectedPoolEntries.Num() < NumberOfEntries && Iter < MaxIter)
 	{
@@ -210,29 +233,31 @@ void AAttackManager::PickThreeFromPool()
 			if(Accumulation > Rand)
 			{
 				if(!SelectedPoolEntries.Contains(i))
-				{
 					SelectedPoolEntries.Add(i);
-				}
+				
 				break;
 			}
 		}
 		Iter++;
 	}
 
-	for (int i = 0; i < SelectedPoolEntries.Num(); ++i)
+	if(Verbose)
 	{
-		const auto Name = Pool[SelectedPoolEntries[i]].Name;
-		if(PossibleAbilities.Contains(Name))
+		for (int i = 0; i < SelectedPoolEntries.Num(); ++i)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("%s"), *PossibleAbilities[Name]->DisplayName);
-		}
-		else if(PossibleUpgrades.Contains(Name))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("%s"), *PossibleUpgrades[Name]->DisplayName);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("Something went wrong! An Upgrade selected, that is not in the Possible Abilites or Possible Upgrades"));
+			const auto Name = Pool[SelectedPoolEntries[i]].Name;
+			if(PossibleAbilities.Contains(Name))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("%s"), *PossibleAbilities[Name]->DisplayName);
+			}
+			else if(PossibleUpgrades.Contains(Name))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("%s"), *PossibleUpgrades[Name]->DisplayName);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Something went wrong! An Upgrade selected, that is not in the Possible Abilites or Possible Upgrades"));
+			}
 		}
 	}
 }
@@ -256,84 +281,89 @@ void AAttackManager::GetUpgrade(const int Index)
 	const FPooledEntry Entry = Pool[PoolIndex];
 
 	//if the Upgrade is an Upgrade-Ability
-	if(Entry.Type)
+	if(Entry.Type) 
+	{
+
+		if(ActiveUpgrades.Contains(Entry.Name))
+		{
+			if(ActiveUpgrades[Entry.Name].Level >= ActiveUpgrades[Entry.Name].Specification->MaxLevel)
+			{
+				UE_LOG(LogTemp, Error, TEXT("Upgrade %s was already max Level, so it can not be leveled up further"), *ActiveUpgrades[Entry.Name].Specification->DisplayName);
+				return;
+			}
+
+			ActiveUpgrades[Entry.Name].Level++;
+		}
+		else
+		{
+			if(PossibleUpgrades.Contains(Entry.Name))
+			{
+				ActiveUpgrades.Add( Entry.Name,FActiveUpgrade(PossibleUpgrades[Entry.Name], 1));
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Upgrade does not exist in Possible Upgrades. This should not happen!"));
+				return;
+			}
+		}
+	}
+	else //if the Upgrade is a Base-Ability
 	{
 		bool bFound = false;
-		//if the Upgrade is already in the Active Upgrades, increase its Level
-		for (int i = 0; i < ActiveUpgrades.Num(); ++i)
+		EAbilityType Type = Ranged;
+		for(const auto Tuple : ActiveAbilities)
 		{
-			if (Entry.Name == ActiveUpgrades[i].Specification->UpgradeName)
+			const auto ActiveAbility = Tuple.Value;
+			if(ActiveAbility.Specification->AbilityName == Entry.Name)
 			{
-				if(ActiveUpgrades[i].Level >= ActiveUpgrades[i].Specification->MaxLevel)
+				if(ActiveAbility.Level >= ActiveAbility.Specification->MaxLevel)
 				{
-					//UE_LOG(LogTemp, Error, TEXT("Upgrade was already max Level, so it can not be leveled up further %s"), ActiveUpgrades[i].Specification->DisplayName);
+					UE_LOG(LogTemp, Error, TEXT("Ability %s was already max Level, so it can not be leveled up further"), *ActiveAbilities[Tuple.Value.Specification->AbilityType].Specification->DisplayName);
 					return;
 				}
-				
-				ActiveUpgrades[i].Level++;
+
+				Type = ActiveAbility.Specification->AbilityType;
 				bFound = true;
 				break;
 			}
 		}
+		if(bFound)
+		{
+			if(ActiveAbilities.Contains(Type))
+			{
+				ActiveAbilities[Type].Level++;
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Ability Type was ill defined in Ability"));
+			}
 
-		//if the Upgrade us not in Active Upgrades, get it from the Possible Upgrades
-		if(!bFound)
-		{
-			if(PossibleUpgrades.Contains(Entry.Name))
-			{
-				ActiveUpgrades.Add(FActiveUpgrade(PossibleUpgrades[Entry.Name], 1));
-			}
-		}
-	}
-
-	/*
-	else
-	{
-		if(ActiveRangedAbility.Specification->AbilityName == Entry.Name)
-		{
-			if(ActiveRangedAbility.Level >= ActiveRangedAbility.Specification->MaxLevel)
-			{
-				//UE_LOG(LogTemp, Error, TEXT("Ability was already max Level, so it can not be leveled up further %s"), ActiveRangedAbility.Specification->DisplayName);
-				return;
-			}
-				
-			ActiveRangedAbility.Level++;
-		}
-		else if(ActiveSpecialAbility.Specification->AbilityName == Entry.Name)
-		{
-			if(ActiveSpecialAbility.Level >= ActiveSpecialAbility.Specification->MaxLevel)
-			{
-				//UE_LOG(LogTemp, Error, TEXT("Ability was already max Level, so it can not be leveled up further %s"), ActiveSpecialAbility.Specification->DisplayName);
-				return;
-			}
-				
-			ActiveSpecialAbility.Level++;
 		}
 		else
 		{
-			for (int i = 0; i < PossibleAbilities.Num(); ++i)
+			if(PossibleAbilities.Contains(Entry.Name))
 			{
-				if(Entry.Name == PossibleAbilities[i]->AbilityName)
-				{
-					if(PossibleAbilities[i]->AbilityType == Ranged)
-					{
-						ActiveRangedAbility = FActiveAbility(PossibleAbilities[i], 1);
-					}
-					else
-					{
-						ActiveSpecialAbility = FActiveAbility(PossibleAbilities[i], 1);
-					}
-					break;
-				}
+				ActiveAbilities.Add(PossibleAbilities[Entry.Name]->AbilityType, FActiveAbility(PossibleAbilities[Entry.Name], 1));
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Ability does not exist in Possible Abilities. This should not happen!"));
+				return;
 			}
 		}
 	}
-	*/
+
 	SortActiveUpgrades();
+	UpdateAbilityPool();
 }
 
 void AAttackManager::PrintCurrentlyActive()
 {
+	for (const auto Tuple : ActiveAbilities)
+		UE_LOG(LogTemp, Warning, TEXT("BaseAbility: %s Level %i"), *Tuple.Value.Specification->DisplayName, Tuple.Value.Level);
+
+	for (const auto Tuple : ActiveUpgrades)
+		UE_LOG(LogTemp, Warning, TEXT("UpgradeAbility: %s Level %i"), *Tuple.Value.Specification->DisplayName, Tuple.Value.Level);
 }
 
 void AAttackManager::OnRangedKeyPressed()
@@ -357,19 +387,19 @@ void AAttackManager::SpawnAbility(FActiveAbility& Ability)
 
 	//AbilityInstance->AbilityType
 	
-	for (const auto [Specification, Level] : ActiveUpgrades)
+	for (const auto Tuple : ActiveUpgrades)
 	{
 
 		//only upgrades that work with the AbilityType will be applied to the Ability
-		if(Specification->Application != None)
+		if(Tuple.Value.Specification->Application != None)
 		{
-			if(Specification->Application != Ability.Specification->AbilityType)
+			if(Tuple.Value.Specification->Application != Ability.Specification->AbilityType)
 			{
 
 				continue;
 			}
 		}	
-		AbilityInstance->AddUpgrade(Specification->Class, Level);
+		AbilityInstance->AddUpgrade(Tuple.Value.Specification->Class, Tuple.Value.Level);
 	}
 	AbilityInstance->AfterInitialization();
 

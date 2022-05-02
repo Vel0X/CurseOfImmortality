@@ -14,7 +14,7 @@ void ACustomGameMode::SpawnEnemy()
 void ACustomGameMode::AttackManager_PickThreeFromPool() const
 {
 	const auto AM = static_cast<UGameController*>(GetGameInstance())->GetAttackManager();
-	AM->PickThreeFromPool();
+	AM->PickThreeFromPool(true);
 }
 
 void ACustomGameMode::AttackManager_GetUpgrade(const int Index) const
