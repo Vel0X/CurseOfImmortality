@@ -18,6 +18,10 @@ class CURSEOFIMMORTALITY_API UAbilitySpecification final: public UDataAsset
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(EditAnywhere)
+	FString DisplayName;
+	
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EUpgradeName> AbilityName;
 
@@ -29,6 +33,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int MaxLevel = 3;
+
+	//needs to be the same length as max Levels
+	UPROPERTY(EditAnywhere)
+	TArray<float> Cooldown;
 
 	UPROPERTY(EditAnywhere)
 	int InitialWeight = 100;

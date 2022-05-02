@@ -20,7 +20,7 @@ void AAttackManager::BeginPlay()
 	Super::BeginPlay();
 	BindToInput();
 	static_cast<UGameController*>(GetGameInstance())->BindAbilityController(this);
-
+	
 	UpdateAbilityPool();
 	SortActiveUpgrades();
 
@@ -35,6 +35,15 @@ void AAttackManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//reduce Cooldowns
+	for (const auto Tuple : ActiveAbilities)
+	{
+		if(Tuple.Value.CurrentCooldown > 0.0f)
+		{
+			ActiveAbilities[Tuple.Key].CurrentCooldown -= DeltaTime;
+			//Tuple.Value -= DeltaTime;
+		}
+	}
 
 }
 
@@ -59,49 +68,57 @@ void AAttackManager::BindToInput()
 
 void AAttackManager::SortActiveUpgrades()
 {
-	//Sort: Attribute Setters -> Attribute Setters/Readers -> Attribute Readers
+	
+	UE_LOG(LogTemp, Warning, TEXT("Before Sorting"));
+
+	for (int i = 0; i < ActiveUpgrades.Num(); ++i)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *ActiveUpgrades[i].Specification->DisplayName);
+	}
+	
+	
+	
+	ActiveUpgrades.Sort();
+
+	
+	UE_LOG(LogTemp, Warning, TEXT("After Sorting"));
+	
+	for (int i = 0; i < ActiveUpgrades.Num(); ++i)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *ActiveUpgrades[i].Specification->DisplayName);
+	}
+	
+}
+
+bool AAttackManager::CheckCooldown(const EAbilityType Ability)
+{
+	
+	return ActiveAbilities[Ability].CurrentCooldown <= 0.0f;
+
 }
 
 
 bool Check(const UAbilitySpecification* Ability, const FActiveAbility& ActiveAbility)
 {
-	if(ActiveAbility.Specification->AbilityName == Ability->AbilityName && ActiveAbility.Level == Ability->MaxLevel)
-	{
-		return true; //ability is present and max Level
-	}
-	return false;
+	return ActiveAbility.Specification->AbilityName == Ability->AbilityName && ActiveAbility.Level == Ability->MaxLevel;
 }
 
 void AAttackManager::UpdateAbilityPool()
 {
 	//initial weight per entry = 100
 	//some entries start with lower weights, that can be boosted by obtaining other upgrades
-	for (const UAbilitySpecification* Ability : PossibleAbilities)
+
+	for (const auto Tuple : PossibleAbilities)
 	{
 		int Weight = 100;
 		bool TypeFound = false; //does the player already have an ability of that type?
 		bool AbilityPresent = false; //is the ability already present at it's max level?
 
-		switch(Ability->AbilityType)
+		if(ActiveAbilities.Contains(Tuple.Value->AbilityType))
 		{
-		case Ranged:
-			if(ActiveRangedAbility.Specification != nullptr)
-			{
-				TypeFound = true;
-			}
-			break;
-		case Skill:
-			if(ActiveSpecialAbility.Specification != nullptr)
-			{
-				TypeFound = true;
-			}
-			break;
-		default: ;
-		}
-
-		if(Check(Ability, ActiveRangedAbility) || Check(Ability, ActiveSpecialAbility))
-		{
-			AbilityPresent = true;
+			TypeFound = true;
+			if(Check(Tuple.Value, ActiveAbilities[Tuple.Value->AbilityType]))
+				AbilityPresent = true;
 		}
 		
 		if(AbilityPresent)
@@ -112,33 +129,24 @@ void AAttackManager::UpdateAbilityPool()
 		{
 			Weight = 20;
 		}
-		Pool.Add(FPooledEntry(Ability->AbilityName, false, Weight));
+		Pool.Add(FPooledEntry(Tuple.Value->AbilityName, false, Weight));
 		//pool the ability with the appropriate weight
 	}
+	
 
-	for (const UUpgradeSpecification* Upgrade : PossibleUpgrades)
+	for (const auto Tuple : PossibleUpgrades)
 	{
 		int Weight = 100;
 		bool PrerequisitesMet = false;
 
-		switch(Upgrade->Application)
+		if(Tuple.Value->Application == None)
 		{
-		case None:
 			PrerequisitesMet = true;
-			break;
-		case Ranged:
-			if(ActiveRangedAbility.Specification != nullptr)
-			{
-				PrerequisitesMet = true;
-			}
-			break;
-		case Skill:
-			if(ActiveSpecialAbility.Specification != nullptr)
-			{
-				PrerequisitesMet = true;
-			}
-			break;
-		default: ;
+
+		}
+		else if(ActiveAbilities.Contains(Tuple.Value->Application))
+		{
+			PrerequisitesMet = true;
 		}
 
 		if(!PrerequisitesMet)
@@ -150,12 +158,12 @@ void AAttackManager::UpdateAbilityPool()
 		bool UpgradePresent = false;
 		for (const auto [Specification, Level] : ActiveUpgrades)
 		{
-			if(Specification->UpgradeName == Upgrade->UpgradeName && Level == Upgrade->MaxLevel)
+			if(Specification->UpgradeName == Tuple.Value->UpgradeName && Level == Tuple.Value->MaxLevel)
 			{
 				UpgradePresent = true;
 				break;
 			}
-			if(Upgrade->Restrictions.Contains(Specification->UpgradeName))
+			if(Tuple.Value->Restrictions.Contains(Specification->UpgradeName))
 			{
 				Restricted = true;
 				break;
@@ -167,7 +175,7 @@ void AAttackManager::UpdateAbilityPool()
 			continue;
 		}
 
-		Pool.Add(FPooledEntry(Upgrade->UpgradeName, true, Weight));
+		Pool.Add(FPooledEntry(Tuple.Value->UpgradeName, true, Weight));
 	}
 	
 	UE_LOG(LogTemp, Warning, TEXT("PoolSize %d"), Pool.Num());
@@ -176,26 +184,172 @@ void AAttackManager::UpdateAbilityPool()
 
 void AAttackManager::PickThreeFromPool()
 {
+	int PoolSize = 0;
+	for (const auto Entry : Pool)
+	{
+		PoolSize += Entry.Weight;
+	}
+
+	SelectedPoolEntries.Empty();
+	
+	int NumberOfEntries = 3;
+	constexpr int MaxIter = 1000;
+	int Iter = 0;
+	if(Pool.Num() < NumberOfEntries)
+	{
+		NumberOfEntries = Pool.Num();
+	}
+	
+	while(SelectedPoolEntries.Num() < NumberOfEntries && Iter < MaxIter)
+	{
+		const int Rand = FMath::RandRange(0, PoolSize);
+		int Accumulation = 0;
+		for (int i = 0; i < Pool.Num(); ++i)
+		{
+			Accumulation += Pool[i].Weight;
+			if(Accumulation > Rand)
+			{
+				if(!SelectedPoolEntries.Contains(i))
+				{
+					SelectedPoolEntries.Add(i);
+				}
+				break;
+			}
+		}
+		Iter++;
+	}
+
+	for (int i = 0; i < SelectedPoolEntries.Num(); ++i)
+	{
+		const auto Name = Pool[SelectedPoolEntries[i]].Name;
+		if(PossibleAbilities.Contains(Name))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *PossibleAbilities[Name]->DisplayName);
+		}
+		else if(PossibleUpgrades.Contains(Name))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *PossibleUpgrades[Name]->DisplayName);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Something went wrong! An Upgrade selected, that is not in the Possible Abilites or Possible Upgrades"));
+		}
+	}
 }
 
-void AAttackManager::GetUpgrade()
+void AAttackManager::GetUpgrade(const int Index)
 {
+	if(Index >= SelectedPoolEntries.Num())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Index %i is out of bounds"), Index);
+		return;
+	}
+
+	int PoolIndex = SelectedPoolEntries[Index];
 	//Get the Upgrade
+	if(PoolIndex >= Pool.Num())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Pool was modified in between PickThreeFromPool and GetUpgrade. This is not allowed!"));
+		return;
+	}
+
+	const FPooledEntry Entry = Pool[PoolIndex];
+
+	//if the Upgrade is an Upgrade-Ability
+	if(Entry.Type)
+	{
+		bool bFound = false;
+		//if the Upgrade is already in the Active Upgrades, increase its Level
+		for (int i = 0; i < ActiveUpgrades.Num(); ++i)
+		{
+			if (Entry.Name == ActiveUpgrades[i].Specification->UpgradeName)
+			{
+				if(ActiveUpgrades[i].Level >= ActiveUpgrades[i].Specification->MaxLevel)
+				{
+					//UE_LOG(LogTemp, Error, TEXT("Upgrade was already max Level, so it can not be leveled up further %s"), ActiveUpgrades[i].Specification->DisplayName);
+					return;
+				}
+				
+				ActiveUpgrades[i].Level++;
+				bFound = true;
+				break;
+			}
+		}
+
+		//if the Upgrade us not in Active Upgrades, get it from the Possible Upgrades
+		if(!bFound)
+		{
+			if(PossibleUpgrades.Contains(Entry.Name))
+			{
+				ActiveUpgrades.Add(FActiveUpgrade(PossibleUpgrades[Entry.Name], 1));
+			}
+		}
+	}
+
+	/*
+	else
+	{
+		if(ActiveRangedAbility.Specification->AbilityName == Entry.Name)
+		{
+			if(ActiveRangedAbility.Level >= ActiveRangedAbility.Specification->MaxLevel)
+			{
+				//UE_LOG(LogTemp, Error, TEXT("Ability was already max Level, so it can not be leveled up further %s"), ActiveRangedAbility.Specification->DisplayName);
+				return;
+			}
+				
+			ActiveRangedAbility.Level++;
+		}
+		else if(ActiveSpecialAbility.Specification->AbilityName == Entry.Name)
+		{
+			if(ActiveSpecialAbility.Level >= ActiveSpecialAbility.Specification->MaxLevel)
+			{
+				//UE_LOG(LogTemp, Error, TEXT("Ability was already max Level, so it can not be leveled up further %s"), ActiveSpecialAbility.Specification->DisplayName);
+				return;
+			}
+				
+			ActiveSpecialAbility.Level++;
+		}
+		else
+		{
+			for (int i = 0; i < PossibleAbilities.Num(); ++i)
+			{
+				if(Entry.Name == PossibleAbilities[i]->AbilityName)
+				{
+					if(PossibleAbilities[i]->AbilityType == Ranged)
+					{
+						ActiveRangedAbility = FActiveAbility(PossibleAbilities[i], 1);
+					}
+					else
+					{
+						ActiveSpecialAbility = FActiveAbility(PossibleAbilities[i], 1);
+					}
+					break;
+				}
+			}
+		}
+	}
+	*/
 	SortActiveUpgrades();
+}
+
+void AAttackManager::PrintCurrentlyActive()
+{
 }
 
 void AAttackManager::OnRangedKeyPressed()
 {
-	SpawnAbility(ActiveRangedAbility);
+	if(ActiveAbilities.Contains(Ranged) && CheckCooldown(Ranged))
+		SpawnAbility(ActiveAbilities[Ranged]);
 }
 
 
 void AAttackManager::OnSpecialKeyPressed()
 {
-	SpawnAbility(ActiveSpecialAbility);
+	if(ActiveAbilities.Contains(Special) && CheckCooldown(Special))
+		SpawnAbility(ActiveAbilities[Special]);
 }
 
-void AAttackManager::SpawnAbility(const FActiveAbility& Ability)
+void AAttackManager::SpawnAbility(FActiveAbility& Ability)
 {
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class));
 	AbilityInstance->InitializeAbility(AbilityMapHandle, this, Ability.Level);
@@ -222,6 +376,16 @@ void AAttackManager::SpawnAbility(const FActiveAbility& Ability)
 	//const FActiveAbility ActiveAbility = FActiveAbility(AbilityInstance, ActiveUpgrades);
 	//ActiveAbilities.Add(AbilityMapHandle, ActiveAbility);
 	AbilityMapHandle++;
+
+
+	//set Cooldown
+	if(Ability.Specification->Cooldown.Num() < Ability.Level)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Ability Cooldown Array had fewer entries than there are Ability-Levels"));
+		return;
+	}
+
+	Ability.CurrentCooldown = Ability.Specification->Cooldown[Ability.Level-1];
 }
 
 void AAttackManager::SpawnFromTemplate(ABaseAbility* Template) const
@@ -240,4 +404,3 @@ void AAttackManager::SpawnFromTemplate(ABaseAbility* Template, const FRotator Ro
 	AbilityInstance->ResetLifetime();
 	AbilityInstance->AfterInitialization();
 }
-

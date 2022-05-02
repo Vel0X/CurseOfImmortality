@@ -16,7 +16,7 @@ enum EAbilityType
 	None, 
 	Melee,
 	Ranged,
-	Skill
+	Special
 };
 
 

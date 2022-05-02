@@ -25,12 +25,19 @@ enum EUpgradeName
 	Spellblade,
 	BattleFrenzy,
 	FierceDetermination,
-	SealOfCongruence, 
-	Pierce,            
+	SealOfCongruence,
+	Pierce,         
 	ShatteredImpact,
 	SustainedFocus,
 	BerserkerFury,
 	ArcaneReplicator
+};
+
+UENUM()
+enum EUpgradeOrder
+{
+	AttributeSetter,
+	AttributeReader
 };
 
 /**
@@ -42,6 +49,9 @@ class CURSEOFIMMORTALITY_API UUpgradeSpecification final : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere)
+	FString DisplayName;
+	
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EUpgradeName> UpgradeName;
 	
@@ -56,6 +66,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int MaxLevel = 3;
+
+	UPROPERTY(EditAnywhere)
+	TEnumAsByte<EUpgradeOrder> UpgradeOrder;
 
 	UPROPERTY(EditAnywhere)
 	int InitialWeight = 100;

@@ -17,12 +17,24 @@ USTRUCT()
 struct FActiveAbility
 {
 	GENERATED_BODY()
+
+	FActiveAbility(): Specification(nullptr), Level(1), CurrentCooldown(0.0f)
+	{
+	}
+
+	FActiveAbility(UAbilitySpecification* Specification, const int Level)
+		:Specification(Specification), Level(Level), CurrentCooldown(0.0f)
+	{
+	}
 	
 	UPROPERTY(EditAnywhere)
 	UAbilitySpecification* Specification;
 	
 	UPROPERTY(EditAnywhere)
 	int Level;
+
+	UPROPERTY(EditAnywhere)
+	float CurrentCooldown;
 };
 
 USTRUCT()
@@ -30,11 +42,26 @@ struct FActiveUpgrade
 {
 	GENERATED_BODY()
 
+	FActiveUpgrade(): Specification(nullptr), Level(1)
+	{
+	}
+
+	FActiveUpgrade(UUpgradeSpecification* Specification, const int Level)
+		:Specification(Specification), Level(Level)
+	{
+	}
+	
 	UPROPERTY(EditAnywhere)
 	UUpgradeSpecification* Specification;
 	
 	UPROPERTY(EditAnywhere)
 	int Level;
+
+	bool operator<(const FActiveUpgrade& Other) const
+	{
+		return Specification->UpgradeOrder < Other.Specification->UpgradeOrder;
+	}
+
 };
 
 USTRUCT()
@@ -76,13 +103,16 @@ public:
 	
 	void OnRangedKeyPressed();
 	void OnSpecialKeyPressed();
-	void SpawnAbility(const FActiveAbility& Ability);
+	
 	void BindToInput();
+	
 	void SortActiveUpgrades();
 	
+	bool CheckCooldown(EAbilityType Ability);
+	
+	void SpawnAbility(FActiveAbility& Ability);
 	void SpawnFromTemplate(ABaseAbility* Template) const;
 	void SpawnFromTemplate(ABaseAbility* Template, FRotator Rotator) const;
-
 
 	/**
 	 * @brief
@@ -92,7 +122,9 @@ public:
 
 	void PickThreeFromPool();
 
-	void GetUpgrade();
+	void GetUpgrade(int Index);
+
+	void PrintCurrentlyActive();
 
 protected:
 	// Called when the game starts or when spawned
@@ -100,30 +132,38 @@ protected:
 	void CleanupAbility(int AbilityHandle);
 	
 public:
-	UPROPERTY(EditAnywhere)
-	FActiveAbility ActiveRangedAbility;
+	//UPROPERTY(EditAnywhere)
+	//FActiveAbility ActiveRangedAbility;
 	
-	UPROPERTY(EditAnywhere)
-	FActiveAbility  ActiveSpecialAbility;
+	//UPROPERTY(EditAnywhere)
+	//FActiveAbility  ActiveSpecialAbility;
 
+	UPROPERTY(EditAnywhere)
+	TMap<TEnumAsByte<EAbilityType>, FActiveAbility> ActiveAbilities;
+	
 	UPROPERTY(EditAnywhere)
 	TArray<FActiveUpgrade> ActiveUpgrades;
 	
 	UPROPERTY(EditAnywhere)
-	TArray<UUpgradeSpecification*> PossibleUpgrades;
+	TMap<TEnumAsByte<EUpgradeName>,UUpgradeSpecification*> PossibleUpgrades;
 
 	UPROPERTY(EditAnywhere)
-	TArray<UAbilitySpecification*> PossibleAbilities;
+	TMap<TEnumAsByte<EUpgradeName>,UAbilitySpecification*> PossibleAbilities;
 
 	UPROPERTY(EditAnywhere)
 	TArray<FPooledEntry> Pool;
 
-
+	//Indizes to three entries from Pool, selected using PickThreeFromPool
+	UPROPERTY(EditAnywhere)
+	TArray<int> SelectedPoolEntries;
 
 	//Blueprint Actors, that get spawned with Upgrades need to be defined in an actor, since the BP-Assets can only be assigned via UI
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AArcaneReplicatorTurret> ArcaneReplicatorTurretBP;
 private:
-	int AbilityMapHandle;
+	int AbilityMapHandle = 0;
+
+	//UPROPERTY(EditAnywhere)
+	//TMap<TEnumAsByte<EAbilityType>, float> Cooldowns = TMap<TEnumAsByte<EAbilityType>, float>();
 };
 
