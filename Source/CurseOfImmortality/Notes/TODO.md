@@ -8,8 +8,8 @@
 
 ### General:
 
-- Upgrade Application Order: In which order lie the Upgrades on the Stack
-  - Enum and making Upgrades sortable with Enum
+- (**DONE**) Upgrade Application Order: In which order lie the Upgrades on the Stack
+ - (**DONE**) Enum and making Upgrades sortable with Enum
 - Weight Behaviour Classes
   - Change Weight based on Number of Rounds
   - Change Weight based on Number of Abilties or Ratio Abilities/Upgrades)
