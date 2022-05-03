@@ -27,8 +27,7 @@ void UStormCallerIdle::OnStateExit()
 void UStormCallerIdle::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
-
-	Controller->FocusOnPlayer();
+	
 	const FVector PlayerLocation = Player->GetActorLocation();
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->AwakeRange)

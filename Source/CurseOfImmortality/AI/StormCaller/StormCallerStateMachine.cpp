@@ -19,6 +19,7 @@ void UStormCallerStateMachine::TickComponent(float DeltaTime, ELevelTick TickTyp
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	CurrentState->OnStateUpdate(DeltaTime);
+	FocusOnPlayer();
 }
 
 AStormCallerPawn* UStormCallerStateMachine::GetSelfRef() const
@@ -49,8 +50,8 @@ void UStormCallerStateMachine::BeginPlay()
 
 void UStormCallerStateMachine::FocusOnPlayer()
 {
-	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
-	if (!Player) { UE_LOG(LogTemp, Error, TEXT("No Player in Deprived StateMachine")); }
+	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in StormCaller StateMachine")); }
+	if (!Player) { UE_LOG(LogTemp, Error, TEXT("No Player in StormCaller StateMachine")); }
 	const FVector PlayerLocation = Player->GetActorLocation();
 	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 
