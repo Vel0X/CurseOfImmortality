@@ -353,7 +353,7 @@ void AAttackManager::GetUpgrade(const int Index)
 		}
 	}
 
-	SortActiveUpgrades();
+	SortActiveUpgrades(true);
 	UpdateAbilityPool();
 }
 
