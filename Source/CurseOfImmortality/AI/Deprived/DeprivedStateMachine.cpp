@@ -29,7 +29,7 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	FVector PlayerLocation(Player->GetActorLocation());
 	FVector PlayerForwardDir(Player->GetActorForwardVector() * SelfRef->PlayerForwardVector + PlayerLocation);
 	FVector OwnLocation(SelfRef->GetActorLocation());
-	
+
 	DrawDebugLine(GetWorld(), PlayerLocation, PlayerForwardDir, FColor::Red);
 	DrawDebugLine(GetWorld(), OwnLocation, PlayerForwardDir, FColor::Green);
 	FVector Test(PlayerForwardDir - OwnLocation);
