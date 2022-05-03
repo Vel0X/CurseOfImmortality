@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Char.h"
 #include "GameFramework/Actor.h"
 #include "Enemy.generated.h"
 
 UCLASS()
-class CURSEOFIMMORTALITY_API AEnemy : public AActor
+class CURSEOFIMMORTALITY_API AEnemy : public AChar
 {
 	GENERATED_BODY()
 	
