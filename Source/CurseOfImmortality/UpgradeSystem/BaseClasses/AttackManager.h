@@ -120,8 +120,10 @@ public:
 	 */
 	void UpdateAbilityPool();
 
+	UFUNCTION(BlueprintCallable, Category="AttackManager")
 	void PickThreeFromPool(bool Verbose = false);
 
+	UFUNCTION(BlueprintCallable, Category="AttackManager")
 	void GetUpgrade(int Index);
 
 	void PrintCurrentlyActive();
@@ -154,7 +156,7 @@ public:
 	TArray<FPooledEntry> Pool;
 
 	//Indizes to three entries from Pool, selected using PickThreeFromPool
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<int> SelectedPoolEntries;
 
 	//Blueprint Actors, that get spawned with Upgrades need to be defined in an actor, since the BP-Assets can only be assigned via UI
