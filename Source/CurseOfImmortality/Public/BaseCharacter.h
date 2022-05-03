@@ -48,12 +48,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	bool Immune;
-
-private:
-	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* CollisionCapsule;
-
-//Getter and Setter
-public:
-	UCapsuleComponent* GetCollisionCapsule() const;
 };

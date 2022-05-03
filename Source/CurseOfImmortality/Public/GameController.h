@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PlayerCharacter.h"
 #include "Engine/GameInstance.h"
 #include "GameController.generated.h"
 
@@ -23,6 +24,7 @@ public:
 
 	TArray<AActor*> GetEnemies() const;
 	void AddEnemy(AActor* Enemy);
+	
 private:
 	UPROPERTY(EditAnywhere)
 	AAttackManager* AttackManager;

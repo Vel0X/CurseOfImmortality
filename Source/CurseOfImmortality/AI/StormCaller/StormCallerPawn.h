@@ -7,6 +7,7 @@
 #include "StormCallerPawn.generated.h"
 
 class UStormCallerStateMachine;
+class URandomAOEAbilty;
 /**
  * 
  */
@@ -30,6 +31,9 @@ public:
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UStormCallerStateMachine* StateMachine;
+
+	UPROPERTY(EditAnywhere)
+	URandomAOEAbilty* StormCast;
 
 	//Base Stats
 	UPROPERTY(EditAnywhere, Category="Base Stats")

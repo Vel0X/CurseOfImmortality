@@ -4,6 +4,7 @@
 #include "CurseOfImmortality/AI/StormCaller/StormCallerPawn.h"
 
 #include "StormCallerStateMachine.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/RandomAOEAbilty.h"
 
 AStormCallerPawn::AStormCallerPawn()
 {
@@ -11,4 +12,6 @@ AStormCallerPawn::AStormCallerPawn()
 	Mesh->SetupAttachment(RootComponent);
 
 	StateMachine = CreateDefaultSubobject<UStormCallerStateMachine>("StateMachine");
+
+	StormCast = CreateDefaultSubobject<URandomAOEAbilty>("Storm Call");
 }
