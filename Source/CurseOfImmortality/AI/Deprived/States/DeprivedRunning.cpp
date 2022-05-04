@@ -3,6 +3,7 @@
 
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedRunning.h"
 
+#include "GameController.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 
@@ -14,6 +15,13 @@ void UDeprivedRunning::OnStateEnter(UStateMachine* StateMachine)
 
 	SelfRef->Running = true;
 	UE_LOG(LogTemp, Warning, TEXT("Running State Entered"))
+
+	auto Grid = static_cast<UGameController*>(Controller->GetOwner()->GetGameInstance())->GetPathfindingGrid();
+
+	if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, true))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
+	}
 }
 
 void UDeprivedRunning::OnStateExit()
@@ -34,24 +42,39 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	const FVector PlayerLocation = Player->GetActorLocation();
 	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 
-	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
+	if (!Path.IsEmpty())
 	{
-		Controller->Transition(Controller->NormalAttack, Controller);
-	}
-	else if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistJumpAttack)
-	{
-		if (SelfRef->CurrentJumpAttackCoolDown <= 0.f)
+		// if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
+		// {
+		// 	Controller->Transition(Controller->NormalAttack, Controller);
+		// }
+		// // else if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistJumpAttack)
+		// // {
+		// // 	if (SelfRef->CurrentJumpAttackCoolDown <= 0.f)
+		// // 	{
+		// // 		SelfRef->CurrentJumpAttackCoolDown = SelfRef->JumpAttackCoolDown;
+		// // 		Controller->Transition(Controller->JumpAttack, Controller);
+		// // 	}
+		// // 	else
+		// // 	{
+		// // 		Controller->MoveToTarget(Path[PathIndex], SelfRef->Speed, DeltaTime);
+		// // 		if (FVector::Dist(Path[PathIndex], SelfRef->GetActorLocation()) < 50.f)
+		// // 		{
+		// // 			PathIndex++;
+		// // 		}
+		// // 	}
+		// // }
+		// else
+		// {
+		// 	
+		// }
+		Controller->MoveToTarget(Path[PathIndex], SelfRef->Speed, DeltaTime);
+		FVector L(SelfRef->GetActorLocation());
+		L.Z = 0;
+		if (FVector::Dist(Path[PathIndex], L) < 50.f)
 		{
-			SelfRef->CurrentJumpAttackCoolDown = SelfRef->JumpAttackCoolDown;
-			Controller->Transition(Controller->JumpAttack, Controller);
+			if (PathIndex < Path.Num() - 1)
+				PathIndex++;
 		}
-		else
-		{
-			Controller->MoveToTarget(Target, SelfRef->Speed, DeltaTime);
-		}
-	}
-	else
-	{
-		Controller->MoveToTarget(Target, SelfRef->Speed, DeltaTime);
 	}
 }

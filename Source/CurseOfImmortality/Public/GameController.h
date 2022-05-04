@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PlayerCharacter.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "Engine/GameInstance.h"
 #include "GameController.generated.h"
 
@@ -22,13 +23,21 @@ public:
 	void BindAbilityController(AAttackManager* _AttackManager);
 	AAttackManager* GetAttackManager() const;
 
+	void BindPathfindingGrid(AUPathfindingGrid* _PathfindingGrid);
+	AUPathfindingGrid* GetPathfindingGrid() const;
+	
 	TArray<AActor*> GetEnemies() const;
 	void AddEnemy(AActor* Enemy);
+
+
 	
 private:
 	UPROPERTY(EditAnywhere)
 	AAttackManager* AttackManager;
 
+	UPROPERTY(EditAnywhere)
+	AUPathfindingGrid* PathfindingGrid;
+	
 	UPROPERTY(EditAnywhere)
 	TArray<AActor*> ActiveEnemies;
 };

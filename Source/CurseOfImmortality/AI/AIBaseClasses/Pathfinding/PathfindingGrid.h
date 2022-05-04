@@ -110,12 +110,23 @@ public:
 	AUPathfindingGrid();
 	virtual void Print() override;
 
-	bool GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path);
+	virtual bool ShouldTickIfViewportsOnly() const override;
+virtual void Tick(float DeltaSeconds) override;
+	virtual void BeginPlay() override;
+	void PrintGrid();
+	bool GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path, bool Verbose = false);
+	bool GetPathWorldSpace(FVector Start,FVector End, TArray<FVector>& WorldSpacePath, bool Verbose = false);
+
+	void GenerateNavmesh();
+	
 	int CalculateDistance(int StartX, int StartY, int EndX, int EndY) const;
 	FPfNode* GetLowestCostNode(TArray<FPfNode*>& OpenList);
-	bool CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path);
+	void ToggleWalkable(int X, int Y);
+	bool CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path, bool Verbose = false);
 	bool GetCoordinatesFromWorldPosition(const FVector WorldPosition, int& X, int& Y) const;
 	bool GetWorldPositionFromCoordinates(const int X, const int Y, FVector& WorldPosition) const;
+	TArray<FVector> ConvertPathToWorldSpace(const TArray<FPfNode*>& Path, bool Verbose = false) const;
 public:
-	float CellSize;
+	UPROPERTY(EditAnywhere)
+	float CellSize = 100.0f;
 };

@@ -26,4 +26,16 @@ public:
 
 	UFUNCTION(Exec, Category = ExecFunctions)
 	void AttackManager_PrintCurrentlyActive() const;
+
+	UFUNCTION(Exec, Category= ExecFunctions)
+	void Pathfinding_GetPath(int SX, int SY, int EX, int EY);
+
+	UFUNCTION(Exec, Category= ExecFunctions)
+	void Pathfinding_GetPathWS(float StartX, float StartY, float EndX, float EndY);
+	
+	UFUNCTION(Exec, Category= ExecFunctions)
+	void Pathfinding_ToggleWalkable(int X, int Y);
+	
+	UFUNCTION(Exec, Category= ExecFunctions)
+	void Pathfinding_GenerateNavmesh();
 };

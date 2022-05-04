@@ -29,7 +29,7 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	FVector PlayerLocation(Player->GetActorLocation());
 	FVector PlayerForwardDir(Player->GetActorForwardVector() * SelfRef->PlayerForwardVector + PlayerLocation);
 	FVector OwnLocation(SelfRef->GetActorLocation());
-	
+
 	DrawDebugLine(GetWorld(), PlayerLocation, PlayerForwardDir, FColor::Red);
 	DrawDebugLine(GetWorld(), OwnLocation, PlayerForwardDir, FColor::Green);
 	FVector Test(PlayerForwardDir - OwnLocation);
@@ -62,9 +62,9 @@ void UDeprivedStateMachine::BeginPlay()
 void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float DeltaTime)
 {
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
+	Target = Target - SelfRef->GetActorLocation();
 	Target.Z = 0.f;
 	Target.Normalize();
-
 
 	SelfRef->MovementComponent->SetDirection(Target, Speed);
 }

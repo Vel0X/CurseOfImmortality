@@ -29,3 +29,30 @@ void ACustomGameMode::AttackManager_PrintCurrentlyActive() const
 	AM->PrintCurrentlyActive();
 }
 
+void ACustomGameMode::Pathfinding_GetPath(int SX, int SY, int EX, int EY)
+{
+	const auto PF = static_cast<UGameController*>(GetGameInstance())->GetPathfindingGrid();
+	TArray<FPfNode*> Path;
+	PF->GetPath(SX, SY, EX, EY, Path, true);
+}
+
+void ACustomGameMode::Pathfinding_GetPathWS(float StartX, float StartY, float EndX, float EndY)
+{
+	const auto PF = static_cast<UGameController*>(GetGameInstance())->GetPathfindingGrid();
+	TArray<FVector> Path;
+
+	PF->GetPathWorldSpace(FVector(StartX, StartY, 0.0f), FVector(EndX, EndY, 0.0f), Path, true);
+}
+
+void ACustomGameMode::Pathfinding_ToggleWalkable(int X, int Y)
+{
+	const auto PF = static_cast<UGameController*>(GetGameInstance())->GetPathfindingGrid();
+	PF->ToggleWalkable(X, Y);
+}
+
+void ACustomGameMode::Pathfinding_GenerateNavmesh()
+{
+	const auto PF = static_cast<UGameController*>(GetGameInstance())->GetPathfindingGrid();
+	PF->GenerateNavmesh();
+}
+

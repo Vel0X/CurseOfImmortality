@@ -22,6 +22,16 @@ AAttackManager* UGameController::GetAttackManager() const
 	return AttackManager;
 }
 
+void UGameController::BindPathfindingGrid(AUPathfindingGrid* _PathfindingGrid)
+{
+	PathfindingGrid = _PathfindingGrid;
+}
+
+AUPathfindingGrid* UGameController::GetPathfindingGrid() const
+{
+	return PathfindingGrid;
+}
+
 TArray<AActor*> UGameController::GetEnemies() const
 {
 	return ActiveEnemies;

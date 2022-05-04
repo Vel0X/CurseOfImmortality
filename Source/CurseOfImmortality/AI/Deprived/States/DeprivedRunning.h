@@ -21,4 +21,8 @@ public:
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
+
+private:
+	TArray<FVector> Path;
+	int PathIndex = 0;
 };
