@@ -4,7 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "CurseOfImmortality/Enums/Enums.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseStatSpecification.h"
 #include "Char.generated.h"
+
+
 
 UCLASS()
 class CURSEOFIMMORTALITY_API AChar : public AActor
@@ -23,6 +28,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void RecalculateStats();
+	
+	UPROPERTY(EditAnywhere)
+	TArray<UBaseBuff*> Buffs;
+	
+	UPROPERTY(EditAnywhere)
+	UBaseStatSpecification* BaseStats;
 
+	UPROPERTY(EditAnywhere)
+	TMap<TEnumAsByte<EStats>, float> Stats;
 	//TArray<>
 };

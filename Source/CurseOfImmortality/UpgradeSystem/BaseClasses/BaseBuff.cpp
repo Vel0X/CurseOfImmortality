@@ -21,14 +21,21 @@ void UBaseBuff::InitializeBuff(AChar* _Target)
 
 void UBaseBuff::OnTakeDamage(int AbilityHandle)
 {
-	
 }
 
 void UBaseBuff::OnBuffBegin()
 {
 }
 
+void UBaseBuff::OnBuffTick(float DeltaTime)
+{
+}
+
 void UBaseBuff::OnBuffEnd()
+{
+}
+
+void UBaseBuff::IntitializeBuff(int Level)
 {
 }
 

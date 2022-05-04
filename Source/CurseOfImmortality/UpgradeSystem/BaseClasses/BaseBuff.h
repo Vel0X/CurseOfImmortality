@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
+#include "CurseOfImmortality/Enums/Enums.h"
 #include "BaseBuff.generated.h"
 
+class AChar;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CURSEOFIMMORTALITY_API UBaseBuff : public UActorComponent
@@ -24,12 +25,18 @@ public:
 
 	virtual void OnBuffBegin();
 
+	virtual void OnBuffTick(float DeltaTime);
+	
 	virtual void OnBuffEnd();
+
+	virtual void IntitializeBuff(int Level);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	
+
+public:
+
 	UPROPERTY(EditAnywhere)
 	AChar* Target;
 	
@@ -48,4 +55,10 @@ protected:
 	//ignore BuffDuration and instead remove the Buff at an arbitrary point in time
 	UPROPERTY(EditAnywhere)
 	bool CustomBuffEnd;
+
+	UPROPERTY(EditAnywhere)
+	bool StatModifier;
+
+	UPROPERTY(EditAnywhere)
+	TMap<TEnumAsByte<EStats>, float> StatModifications; 
 };

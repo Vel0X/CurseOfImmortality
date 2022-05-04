@@ -24,3 +24,22 @@ void AChar::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AChar::RecalculateStats()
+{
+	for (auto Stat : Stats)
+	{
+		Stats[Stat.Key] = BaseStats->BaseStats[Stat.Key];
+	}
+	
+	for (const auto Buff : Buffs)
+	{
+		if(!Buff->StatModifier)
+			continue;
+
+		for (const auto StatMod : Buff->StatModifications)
+		{
+			Stats[StatMod.Key] += StatMod.Value;
+		}
+	}
+}
+
