@@ -18,7 +18,7 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere)
-	class UCapsuleComponent* CollisionCapsule;
+	UCapsuleComponent* CollisionCapsule;
 
 	//Getter
 public:
