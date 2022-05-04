@@ -2,6 +2,8 @@
 
 
 #include "GameController.h"
+
+#include "PlayerCharacter.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 
 void UGameController::OnStart()
@@ -11,13 +13,19 @@ void UGameController::OnStart()
 
 }
 
-void UGameController::BindAbilityController(AAttackManager* _AttackManager)
+void UGameController::BindAbilityController(UAttackManager* _AttackManager)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Bind AbilityController was called"));
 	AttackManager = _AttackManager;
 }
 
-AAttackManager* UGameController::GetAttackManager() const
+void UGameController::BindPlayerCharacter(APlayerCharacter* _PlayerCharacter)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Bind PlayerCharacter was called"));
+	PlayerCharacter = _PlayerCharacter;
+}
+
+UAttackManager* UGameController::GetAttackManager() const
 {
 	return AttackManager;
 }

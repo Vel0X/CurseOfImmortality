@@ -12,6 +12,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "PlayerCharacter.generated.h"
 
+class UAttackManager;
 /**
  * 
  */
@@ -48,5 +49,7 @@ public:
 		UCameraComponent* PlayerCamera;
 	UPROPERTY(EditAnywhere)
 		UInputManager* InputManager;
+	UPROPERTY(EditAnywhere)
+		UAttackManager* AttackManager;
 	
 };

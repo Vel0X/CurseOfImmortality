@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PlayerCharacter.h"
 #include "Engine/GameInstance.h"
 #include "GameController.generated.h"
 
-class AAttackManager;
+class UAttackManager;
 /**
  * 
  */
@@ -18,15 +19,21 @@ class CURSEOFIMMORTALITY_API UGameController : public UGameInstance
 protected:
 	virtual void OnStart() override;
 public:
-	void BindAbilityController(AAttackManager* _AttackManager);
-	AAttackManager* GetAttackManager() const;
+	void BindAbilityController(UAttackManager* _AttackManager);
+	void BindPlayerCharacter(APlayerCharacter* _PlayerCharacter);
+	UAttackManager* GetAttackManager() const;
+	APlayerCharacter* GetPlayerCharacter() const;
 
 	TArray<AActor*> GetEnemies() const;
 	void AddEnemy(AActor* Enemy);
 private:
 	UPROPERTY(EditAnywhere)
-	AAttackManager* AttackManager;
+	UAttackManager* AttackManager;
 
 	UPROPERTY(EditAnywhere)
+	APlayerCharacter* PlayerCharacter;
+	
+	UPROPERTY(EditAnywhere)
 	TArray<AActor*> ActiveEnemies;
+
 };

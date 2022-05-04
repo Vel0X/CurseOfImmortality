@@ -4,9 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "UpgradeSpecification.h"
-#include "../../../../Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/ActiveSocket.h"
+#include "Components/ActorComponent.h"
 #include "CurseOfImmortality/UpgradeSystem/IndirectAbilities/ArcaneReplicatorTurret.h"
-#include "GameFramework/Actor.h"
 #include "AttackManager.generated.h"
 
 
@@ -90,21 +89,18 @@ struct FPooledEntry
 };
 
 UCLASS()
-class CURSEOFIMMORTALITY_API AAttackManager : public AActor
+class CURSEOFIMMORTALITY_API UAttackManager : public UActorComponent
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AAttackManager();
+	UAttackManager();
 
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-	
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void OnRangedKeyPressed();
 	void OnSpecialKeyPressed();
-	
-	void BindToInput();
 	
 	void SortActiveUpgrades(bool Verbose = false);
 	

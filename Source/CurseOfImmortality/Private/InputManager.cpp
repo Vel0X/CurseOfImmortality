@@ -3,6 +3,7 @@
 
 #include "InputManager.h"
 #include "PlayerCharacter.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 
 
 // Sets default values for this component's properties
@@ -105,7 +106,21 @@ void UInputManager::AddToBuffer(InputAction _InputAction)
 
 void UInputManager::DoAction(InputAction _InputAction)
 {
-	// USE ABILITY
 	TimeTillNextAction = 1.5; //Set to Ability time
 	UE_LOG(LogTemp, Display, TEXT("Used Action"));
+	switch (_InputAction)
+	{
+	case InputAction::MeleeAbility:
+		//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnMeleeKeyPressed();
+		break;
+	case InputAction::RangedAbility:
+		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnRangedKeyPressed();
+		break;
+	case InputAction::SpecialAbility:
+		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnSpecialKeyPressed();
+		break;
+	case InputAction::Dash:
+		//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnDashKeyPressed();
+		break;
+	}
 }

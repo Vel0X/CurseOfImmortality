@@ -11,7 +11,6 @@
 UENUM()
 enum class InputAction
 {
-	NoAction     UMETA(DisplayName = "NoAction"),
 	MeleeAbility     UMETA(DisplayName = "MeleeAbility"),
 	RangedAbility      UMETA(DisplayName = "RangedAbility"),
 	SpecialAbility   UMETA(DisplayName = "SpecialAbility"),
