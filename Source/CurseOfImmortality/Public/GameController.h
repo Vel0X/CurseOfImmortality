@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/UpgradeSystem/GameDummy/MainChar.h"
 #include "Engine/GameInstance.h"
 #include "GameController.generated.h"
 
-class AAttackManager;
+class UAttackManager;
 /**
  * 
  */
@@ -18,15 +19,21 @@ class CURSEOFIMMORTALITY_API UGameController : public UGameInstance
 protected:
 	virtual void OnStart() override;
 public:
-	void BindAbilityController(AAttackManager* _AttackManager);
-	AAttackManager* GetAttackManager() const;
+	void BindAbilityController(UAttackManager* _AttackManager);
+	UAttackManager* GetAttackManager() const;
 
 	TArray<AActor*> GetEnemies() const;
 	void AddEnemy(AActor* Enemy);
+
+	AMainChar* GetMainChar() const;
+	void SetMainChar(AMainChar* _MainChar);
 private:
 	UPROPERTY(EditAnywhere)
-	AAttackManager* AttackManager;
+	UAttackManager* AttackManager;
 
 	UPROPERTY(EditAnywhere)
 	TArray<AActor*> ActiveEnemies;
+
+	UPROPERTY(EditAnywhere)
+	AMainChar* MainChar;
 };

@@ -13,3 +13,10 @@ enum EStats
 	Gravity,
 	Movespeed
 };
+
+UENUM()
+enum EBuff
+{
+	Bleed,
+	IncreaseHealth
+};

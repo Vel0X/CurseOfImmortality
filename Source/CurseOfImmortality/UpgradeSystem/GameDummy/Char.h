@@ -6,11 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "CurseOfImmortality/Enums/Enums.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
-#include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseStatSpecification.h"
 #include "Char.generated.h"
 
 
-
+class UBaseStatSpecification;
 UCLASS()
 class CURSEOFIMMORTALITY_API AChar : public AActor
 {
@@ -29,9 +28,16 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void RecalculateStats();
+
+	void AddBuff(UBaseBuff* Buff);
+	
+	void RemoveBuff(UBaseBuff* Buff);
+	void TakeDamage(float Amount, bool Verbose = false);
 	
 	UPROPERTY(EditAnywhere)
 	TArray<UBaseBuff*> Buffs;
+
+	float CurrentHealth = 0.0f;
 	
 	UPROPERTY(EditAnywhere)
 	UBaseStatSpecification* BaseStats;
@@ -40,3 +46,4 @@ public:
 	TMap<TEnumAsByte<EStats>, float> Stats;
 	//TArray<>
 };
+

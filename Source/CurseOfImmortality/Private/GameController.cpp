@@ -11,13 +11,13 @@ void UGameController::OnStart()
 
 }
 
-void UGameController::BindAbilityController(AAttackManager* _AttackManager)
+void UGameController::BindAbilityController(UAttackManager* _AttackManager)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Bind AbilityController was called"));
 	AttackManager = _AttackManager;
 }
 
-AAttackManager* UGameController::GetAttackManager() const
+UAttackManager* UGameController::GetAttackManager() const
 {
 	return AttackManager;
 }
@@ -30,4 +30,14 @@ TArray<AActor*> UGameController::GetEnemies() const
 void UGameController::AddEnemy(AActor* Enemy)
 {
 	ActiveEnemies.Add(Enemy);
+}
+
+AMainChar* UGameController::GetMainChar() const
+{
+	return MainChar;
+}
+
+void UGameController::SetMainChar(AMainChar* _MainChar)
+{
+	MainChar = _MainChar;
 }

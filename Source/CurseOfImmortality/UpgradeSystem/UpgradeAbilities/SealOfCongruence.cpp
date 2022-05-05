@@ -39,7 +39,7 @@ void USealOfCongruence::OnAbilityStart(int AbilityHandle)
 	//UE_LOG(LogTemp, Warning, TEXT("Instantiating new projectiles (Seal of Congruence) %d"), ChargesLeft);
 	ChargesLeft--;
 	
-	const AAttackManager* AttackManager = static_cast<UGameController*>(GetOwner()->GetGameInstance())->GetAttackManager();
+	const UAttackManager* AttackManager = static_cast<UGameController*>(GetOwner()->GetGameInstance())->GetAttackManager();
 
 	ABaseAbility* Owner = static_cast<ABaseAbility*>(GetOwner());
 	if(Owner != nullptr)

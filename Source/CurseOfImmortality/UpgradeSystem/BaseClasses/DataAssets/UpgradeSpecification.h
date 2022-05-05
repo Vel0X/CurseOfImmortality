@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseUpgrade.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseUpgrade.h"
 #include "Engine/DataAsset.h"
 #include "UpgradeSpecification.generated.h"
 

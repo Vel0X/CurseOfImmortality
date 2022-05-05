@@ -11,34 +11,26 @@ UIncreaseHealth::UIncreaseHealth()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	CurrentStacks = 1;
+	Stackable = false;
+	CustomBuffEnd = true;
+	StatModifier = true;
+	StatModifications.Add(Health, 100);
 }
 
-
-// Called when the game starts
-void UIncreaseHealth::BeginPlay()
+void UIncreaseHealth::IntitializeBuff(int Level, AChar* _Owner)
 {
-	Super::BeginPlay();
-
-	// ...
-	
+	Super::IntitializeBuff(Level, _Owner);
 }
 
 
 // Called every frame
-void UIncreaseHealth::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
 
 void UIncreaseHealth::OnBuffBegin()
 {
 	Super::OnBuffBegin();
-	static_cast<AChar*>(GetOwner())->RecalculateStats(); //apply the Stat Increase of this Buff
 }
 
 void UIncreaseHealth::OnBuffEnd()

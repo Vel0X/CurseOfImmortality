@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseAbility.h"
 #include "UpgradeSpecification.h"
 #include "Engine/DataAsset.h"
 #include "AbilitySpecification.generated.h"

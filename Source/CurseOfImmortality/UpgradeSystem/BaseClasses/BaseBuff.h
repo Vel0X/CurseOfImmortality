@@ -9,16 +9,14 @@
 
 class AChar;
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class CURSEOFIMMORTALITY_API UBaseBuff : public UActorComponent
+UCLASS()
+class CURSEOFIMMORTALITY_API UBaseBuff : public UObject
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
 	UBaseBuff();
-
-	virtual void InitializeBuff(AChar* _Target);
 	
 	UFUNCTION()
 	virtual void OnTakeDamage(int AbilityHandle);
@@ -29,16 +27,12 @@ public:
 	
 	virtual void OnBuffEnd();
 
-	virtual void IntitializeBuff(int Level);
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	virtual void IntitializeBuff(int Level, AChar* _Owner);
 
 public:
 
 	UPROPERTY(EditAnywhere)
-	AChar* Target;
+	AChar* Owner;
 	
 	UPROPERTY(EditAnywhere)
 	float BuffDuration;

@@ -3,6 +3,8 @@
 
 #include "Bleed.h"
 
+#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
+
 UBleed::UBleed()
 {
 	BuffDuration = 5.0f;
@@ -18,6 +20,7 @@ void UBleed::OnBuffTick(float DeltaTime)
 	Super::OnBuffTick(DeltaTime);
 	if(TimeUntilNextTick <= 0.0f)
 	{
+		Owner->TakeDamage(10, true);
 		//Deal Damage
 		TimeUntilNextTick = TickInterval;
 	}

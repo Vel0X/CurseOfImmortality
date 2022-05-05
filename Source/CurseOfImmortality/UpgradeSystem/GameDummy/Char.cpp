@@ -3,6 +3,8 @@
 
 #include "Char.h"
 
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/BaseStatSpecification.h"
+
 
 // Sets default values
 AChar::AChar()
@@ -15,6 +17,15 @@ AChar::AChar()
 void AChar::BeginPlay()
 {
 	Super::BeginPlay();
+	RecalculateStats();
+	if(Stats.Contains(Health))
+	{
+		CurrentHealth = Stats[Health];
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("!!!"));
+	}
 	
 }
 
@@ -22,13 +33,20 @@ void AChar::BeginPlay()
 void AChar::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	for (int i = Buffs.Num() - 1; i >= 0; --i)
+	{
+		Buffs[i]->OnBuffTick(DeltaTime);
+
+	}
 }
+
 
 void AChar::RecalculateStats()
 {
-	for (auto Stat : Stats)
+	Stats.Empty();
+	for (auto Stat : BaseStats->BaseStats)
 	{
-		Stats[Stat.Key] = BaseStats->BaseStats[Stat.Key];
+		Stats.Add(Stat.Key, Stat.Value);
 	}
 	
 	for (const auto Buff : Buffs)
@@ -40,6 +58,40 @@ void AChar::RecalculateStats()
 		{
 			Stats[StatMod.Key] += StatMod.Value;
 		}
+	}
+}
+
+void AChar::AddBuff(UBaseBuff* Buff)
+{
+	Buffs.Add(Buff);
+	if(Buff->StatModifier)
+	{
+		RecalculateStats();
+	}
+	Buff->IntitializeBuff(1,this);
+	UE_LOG(LogTemp, Warning, TEXT("Buff was added"));
+}
+
+void AChar::RemoveBuff(UBaseBuff* Buff)
+{
+	if(Buffs.Contains(Buff))
+	{
+	UE_LOG(LogTemp, Warning, TEXT("Buff was removed"));
+		Buffs.Remove(Buff);
+		if(Buff->StatModifier)
+		{
+			RecalculateStats();
+		}
+	}
+	
+}
+
+void AChar::TakeDamage(float Amount, bool Verbose)
+{
+	CurrentHealth -= Amount;
+	if(Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Char Health is at %f Max Health %f"), CurrentHealth, Stats[Health]);
 	}
 }
 

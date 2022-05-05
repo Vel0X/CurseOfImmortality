@@ -26,4 +26,7 @@ public:
 
 	UFUNCTION(Exec, Category = ExecFunctions)
 	void AttackManager_PrintCurrentlyActive() const;
+
+	UFUNCTION(Exec, Category = ExecFunctions)
+	void AddBuffToPlayer(int BuffID) const;
 };
