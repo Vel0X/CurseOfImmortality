@@ -45,7 +45,7 @@ public:
 	{
 		return X >= 0 && Y >= 0 && X < Width && Y < Height;
 	}
-	
+
 	void SetValue(const int X, const int Y, const T& Value)
 	{
 		Values[GetIndex(X, Y)] = Value;
@@ -55,20 +55,20 @@ public:
 	{
 		TArray<T*> Neighbors;
 
-		for (int x = X-1; x <= X+1; ++x)
+		for (int x = X - 1; x <= X + 1; ++x)
 		{
-			for (int y = Y - 1; y <= Y + 1 ; ++y)
+			for (int y = Y - 1; y <= Y + 1; ++y)
 			{
-				if(x == X && y == Y)
-					continue;
-				
-				if(!IsValid(x,y))
+				if (x == X && y == Y)
 					continue;
 
-				Neighbors.Add(&GetValue(x,y));
+				if (!IsValid(x, y))
+					continue;
+
+				Neighbors.Add(&GetValue(x, y));
 			}
 		}
-		
+
 		return Neighbors;
 	}
 
@@ -92,7 +92,7 @@ struct FPfNode
 		H = MAXINT;
 		G = MAXINT;
 		S = MAXINT;
-		CameFrom = nullptr; 
+		CameFrom = nullptr;
 	}
 
 	int X = 0, Y = 0;
@@ -102,23 +102,23 @@ struct FPfNode
 };
 
 UCLASS()
-class CURSEOFIMMORTALITY_API AUPathfindingGrid : public AActor, public TBaseGrid<FPfNode>
+class CURSEOFIMMORTALITY_API APathfindingGrid : public AActor, public TBaseGrid<FPfNode>
 {
 	GENERATED_BODY()
 
 public:
-	AUPathfindingGrid();
+	APathfindingGrid();
 	virtual void Print() override;
 
 	virtual bool ShouldTickIfViewportsOnly() const override;
-virtual void Tick(float DeltaSeconds) override;
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
 	void PrintGrid();
 	bool GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path, bool Verbose = false);
-	bool GetPathWorldSpace(FVector Start,FVector End, TArray<FVector>& WorldSpacePath, bool Verbose = false);
+	bool GetPathWorldSpace(FVector Start, FVector End, TArray<FVector>& WorldSpacePath, bool Verbose = false);
 
 	void GenerateNavmesh();
-	
+
 	int CalculateDistance(int StartX, int StartY, int EndX, int EndY) const;
 	FPfNode* GetLowestCostNode(TArray<FPfNode*>& OpenList);
 	void ToggleWalkable(int X, int Y);
@@ -129,4 +129,7 @@ virtual void Tick(float DeltaSeconds) override;
 public:
 	UPROPERTY(EditAnywhere)
 	float CellSize = 100.0f;
+
+	UPROPERTY(EditAnywhere)
+	bool ShowNavGrid = false;
 };

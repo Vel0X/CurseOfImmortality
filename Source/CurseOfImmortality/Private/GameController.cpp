@@ -22,12 +22,12 @@ AAttackManager* UGameController::GetAttackManager() const
 	return AttackManager;
 }
 
-void UGameController::BindPathfindingGrid(AUPathfindingGrid* _PathfindingGrid)
+void UGameController::BindPathfindingGrid(APathfindingGrid* _PathfindingGrid)
 {
 	PathfindingGrid = _PathfindingGrid;
 }
 
-AUPathfindingGrid* UGameController::GetPathfindingGrid() const
+APathfindingGrid* UGameController::GetPathfindingGrid() const
 {
 	return PathfindingGrid;
 }

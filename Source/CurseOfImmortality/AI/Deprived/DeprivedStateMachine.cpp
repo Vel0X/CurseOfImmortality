@@ -59,7 +59,7 @@ void UDeprivedStateMachine::BeginPlay()
 	CurrentState->OnStateEnter(this);
 }
 
-void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float DeltaTime)
+void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed)
 {
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
 	Target = Target - SelfRef->GetActorLocation();
@@ -77,6 +77,20 @@ void UDeprivedStateMachine::FocusOnPlayer()
 	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 
 	const FRotator LookAtRotation = FRotator(0.f, Target.Rotation().Yaw, 0.f);
+	SelfRef->GetCollisionCapsule()->SetWorldRotation(LookAtRotation);
+}
+
+void UDeprivedStateMachine::FocusOnPath(FVector PathLocation, float DeltaTime)
+{
+	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
+	const FVector SelfRefLocation(SelfRef->GetActorLocation());
+	FVector Target = PathLocation - SelfRefLocation;
+
+	Target.Z = 0;
+
+	const FRotator LookAtRotation(
+		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 180.f).Rotation());
+
 	SelfRef->GetCollisionCapsule()->SetWorldRotation(LookAtRotation);
 }
 

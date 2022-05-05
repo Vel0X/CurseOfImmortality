@@ -23,8 +23,8 @@ public:
 	void BindAbilityController(AAttackManager* _AttackManager);
 	AAttackManager* GetAttackManager() const;
 
-	void BindPathfindingGrid(AUPathfindingGrid* _PathfindingGrid);
-	AUPathfindingGrid* GetPathfindingGrid() const;
+	void BindPathfindingGrid(APathfindingGrid* _PathfindingGrid);
+	APathfindingGrid* GetPathfindingGrid() const;
 	
 	TArray<AActor*> GetEnemies() const;
 	void AddEnemy(AActor* Enemy);
@@ -36,7 +36,7 @@ private:
 	AAttackManager* AttackManager;
 
 	UPROPERTY(EditAnywhere)
-	AUPathfindingGrid* PathfindingGrid;
+	APathfindingGrid* PathfindingGrid;
 	
 	UPROPERTY(EditAnywhere)
 	TArray<AActor*> ActiveEnemies;

@@ -23,6 +23,11 @@ public:
 	virtual void OnStateUpdate(float DeltaTime) override;
 
 private:
+	void FollowPath(float DeltaTime);
+	
 	TArray<FVector> Path;
+	
 	int PathIndex = 0;
+	
+	float PathfindingTimer = 0.f;
 };

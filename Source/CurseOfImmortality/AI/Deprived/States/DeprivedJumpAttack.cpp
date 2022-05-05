@@ -103,7 +103,7 @@ void UDeprivedJumpAttack::Jump(float DeltaTime) const
 
 	if (LocationSet)
 	{
-		Controller->MoveToTarget(JumpDir, SelfRef->JumpAttackSpeed * CurveValue, DeltaTime);
+		Controller->MoveToTarget(JumpDir, SelfRef->JumpAttackSpeed * CurveValue);
 	}
 	else
 	{

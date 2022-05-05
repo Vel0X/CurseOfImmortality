@@ -5,7 +5,7 @@
 
 #include "GameController.h"
 
-AUPathfindingGrid::AUPathfindingGrid(): TBaseGrid<FPfNode>(10, 10)
+APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(30, 30)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -18,58 +18,61 @@ AUPathfindingGrid::AUPathfindingGrid(): TBaseGrid<FPfNode>(10, 10)
 	}
 }
 
-void AUPathfindingGrid::Print()
+void APathfindingGrid::Print()
 {
 	TBaseGrid<FPfNode>::Print();
 	auto node = GetValue(2, 2);
 	UE_LOG(LogTemp, Warning, TEXT("VALUE %d"), node.X);
 }
 
-bool AUPathfindingGrid::ShouldTickIfViewportsOnly() const
+bool APathfindingGrid::ShouldTickIfViewportsOnly() const
 {
 	return true;
 }
 
-void AUPathfindingGrid::Tick(float DeltaSeconds)
+void APathfindingGrid::Tick(float DeltaSeconds)
 {
-	for (int x = 0; x < Width + 1; ++x)
+	if (ShowNavGrid)
 	{
-		auto VS = GetActorLocation() + FVector(x * CellSize, 0, 0);
-		auto VE = GetActorLocation() + FVector(x * CellSize, Height * CellSize, 0);
-
-		DrawDebugLine(GetWorld(), VS, VE, FColor::Black, false, -1, 0, 5);
-	}
-
-	for (int y = 0; y < Height + 1; ++y)
-	{
-		auto VS = GetActorLocation() + FVector(0, y * CellSize, 0);
-		auto VE = GetActorLocation() + FVector(Width * CellSize, y * CellSize, 0);
-
-		DrawDebugLine(GetWorld(), VS, VE, FColor::Black, false, -1, 0, 5);
-	}
-
-	for (int x = 0; x < Width; ++x)
-	{
-		for (int y = 0; y < Height; ++y)
+		for (int x = 0; x < Width + 1; ++x)
 		{
-			FVector WorldPosition;
-			GetWorldPositionFromCoordinates(x, y, WorldPosition);
-			FColor Green = FColor(30, 255, 50, 80);
-			FColor Red = FColor(255, 40, 50, 80);
-			FColor C = GetValue(x, y).IsWalkable ? Green : Red;
-			DrawDebugSolidBox(GetWorld(), WorldPosition, FVector(CellSize * 0.5f, CellSize * 0.5f, 0.1f), C, false);
+			auto VS = GetActorLocation() + FVector(x * CellSize, 0, 0);
+			auto VE = GetActorLocation() + FVector(x * CellSize, Height * CellSize, 0);
+
+			DrawDebugLine(GetWorld(), VS, VE, FColor::Black, false, -1, 0, 5);
+		}
+
+		for (int y = 0; y < Height + 1; ++y)
+		{
+			auto VS = GetActorLocation() + FVector(0, y * CellSize, 0);
+			auto VE = GetActorLocation() + FVector(Width * CellSize, y * CellSize, 0);
+
+			DrawDebugLine(GetWorld(), VS, VE, FColor::Black, false, -1, 0, 5);
+		}
+
+		for (int x = 0; x < Width; ++x)
+		{
+			for (int y = 0; y < Height; ++y)
+			{
+				FVector WorldPosition;
+				GetWorldPositionFromCoordinates(x, y, WorldPosition);
+				FColor Green = FColor(30, 255, 50, 80);
+				FColor Red = FColor(255, 40, 50, 80);
+				FColor C = GetValue(x, y).IsWalkable ? Green : Red;
+				DrawDebugSolidBox(GetWorld(), WorldPosition, FVector(CellSize * 0.5f, CellSize * 0.5f, 0.1f), C, false);
+			}
 		}
 	}
 }
 
-void AUPathfindingGrid::BeginPlay()
+void APathfindingGrid::BeginPlay()
 {
 	Super::BeginPlay();
 
 	static_cast<UGameController*>(GetGameInstance())->BindPathfindingGrid(this);
 }
 
-void AUPathfindingGrid::PrintGrid()
+void APathfindingGrid::PrintGrid()
 {
 	for (int y = 0; y < Height; ++y)
 	{
@@ -90,7 +93,7 @@ void AUPathfindingGrid::PrintGrid()
 
 static constexpr int GMaximumIterations = 100000;
 
-bool AUPathfindingGrid::GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path, bool Verbose)
+bool APathfindingGrid::GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path, bool Verbose)
 {
 	TArray<FPfNode*> OpenList, ClosedList;
 
@@ -160,7 +163,7 @@ bool AUPathfindingGrid::GetPath(int StartX, int StartY, int EndX, int EndY, TArr
 	return false;
 }
 
-bool AUPathfindingGrid::GetPathWorldSpace(FVector Start, FVector End, TArray<FVector>& WorldSpacePath, bool Verbose)
+bool APathfindingGrid::GetPathWorldSpace(FVector Start, FVector End, TArray<FVector>& WorldSpacePath, bool Verbose)
 {
 	int SX = 0, SY = 0, EX = 0, EY = 0;
 	if (!GetCoordinatesFromWorldPosition(Start, SX, SY))
@@ -190,7 +193,7 @@ bool AUPathfindingGrid::GetPathWorldSpace(FVector Start, FVector End, TArray<FVe
 	return false;
 }
 
-void AUPathfindingGrid::GenerateNavmesh()
+void APathfindingGrid::GenerateNavmesh()
 {
 	for (int x = 0; x < Width; ++x)
 	{
@@ -201,7 +204,8 @@ void AUPathfindingGrid::GenerateNavmesh()
 			GetWorldPositionFromCoordinates(x, y, WorldPosition);
 			FVector StartPosition = WorldPosition + FVector(0, 0, 1000);
 			FCollisionQueryParams P = FCollisionQueryParams();
-			if (GetWorld()->LineTraceSingleByChannel(R, StartPosition, WorldPosition, ECollisionChannel::ECC_WorldStatic, P))
+			if (GetWorld()->LineTraceSingleByChannel(R, StartPosition, WorldPosition,
+			                                         ECollisionChannel::ECC_WorldStatic, P))
 			{
 				ToggleWalkable(x, y);
 			}
@@ -212,7 +216,7 @@ void AUPathfindingGrid::GenerateNavmesh()
 static constexpr int GStraight_Cost = 10;
 static constexpr int GDiagonal_Cost = 14;
 
-int AUPathfindingGrid::CalculateDistance(const int StartX, const int StartY, const int EndX, const int EndY) const
+int APathfindingGrid::CalculateDistance(const int StartX, const int StartY, const int EndX, const int EndY) const
 {
 	const int XDist = abs(StartX - EndX);
 	const int YDist = abs(StartY - EndY);
@@ -220,7 +224,7 @@ int AUPathfindingGrid::CalculateDistance(const int StartX, const int StartY, con
 	return min(XDist, YDist) * GDiagonal_Cost + RemainingDist * GStraight_Cost;
 }
 
-FPfNode* AUPathfindingGrid::GetLowestCostNode(TArray<FPfNode*>& OpenList)
+FPfNode* APathfindingGrid::GetLowestCostNode(TArray<FPfNode*>& OpenList)
 {
 	int lowest = OpenList[0]->S;
 	FPfNode* LowestNode = OpenList[0];
@@ -235,13 +239,13 @@ FPfNode* AUPathfindingGrid::GetLowestCostNode(TArray<FPfNode*>& OpenList)
 	return LowestNode;
 }
 
-void AUPathfindingGrid::ToggleWalkable(int X, int Y)
+void APathfindingGrid::ToggleWalkable(int X, int Y)
 {
 	FPfNode* Node = &GetValue(X, Y);
 	Node->IsWalkable = !Node->IsWalkable;
 }
 
-bool AUPathfindingGrid::CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path, bool Verbose)
+bool APathfindingGrid::CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path, bool Verbose)
 {
 	Path.Add(EndNode);
 	FPfNode* Current = EndNode;
@@ -263,7 +267,7 @@ bool AUPathfindingGrid::CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path, 
 	return true;
 }
 
-bool AUPathfindingGrid::GetCoordinatesFromWorldPosition(const FVector WorldPosition, int& X, int& Y) const
+bool APathfindingGrid::GetCoordinatesFromWorldPosition(const FVector WorldPosition, int& X, int& Y) const
 {
 	const FVector RelativePoint = WorldPosition - GetActorLocation();
 	X = RelativePoint.X / CellSize;
@@ -271,7 +275,7 @@ bool AUPathfindingGrid::GetCoordinatesFromWorldPosition(const FVector WorldPosit
 	return X < Width && Y < Height;
 }
 
-bool AUPathfindingGrid::GetWorldPositionFromCoordinates(const int X, const int Y, FVector& WorldPosition) const
+bool APathfindingGrid::GetWorldPositionFromCoordinates(const int X, const int Y, FVector& WorldPosition) const
 {
 	FVector Origin = GetActorLocation();
 	Origin.X += (X + 0.5f) * CellSize;
@@ -280,7 +284,7 @@ bool AUPathfindingGrid::GetWorldPositionFromCoordinates(const int X, const int Y
 	return X < Width && Y < Height;
 }
 
-TArray<FVector> AUPathfindingGrid::ConvertPathToWorldSpace(const TArray<FPfNode*>& Path, bool Verbose) const
+TArray<FVector> APathfindingGrid::ConvertPathToWorldSpace(const TArray<FPfNode*>& Path, bool Verbose) const
 {
 	if (Verbose)
 	{
@@ -297,7 +301,7 @@ TArray<FVector> AUPathfindingGrid::ConvertPathToWorldSpace(const TArray<FPfNode*
 		if (Verbose)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("%s"), *P.ToString());
-			DrawDebugSphere(GetWorld(), P, 30.0f, 20, FColor::Red, true, 10);
+			DrawDebugSphere(GetWorld(), P, 30.0f, 20, FColor::Red, false, 1);
 			//DrawDebugDirectionalArrow()
 		}
 	}

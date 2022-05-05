@@ -23,9 +23,10 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	void MoveToTarget(FVector Target, float Speed, float DeltaTime);
+	void MoveToTarget(FVector Target, float Speed);
 
 	void FocusOnPlayer();
+	void FocusOnPath(FVector PathLocation, float DeltaTime);
 
 	//States
 	UPROPERTY()

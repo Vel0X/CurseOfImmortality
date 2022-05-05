@@ -40,7 +40,7 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) > SelfRef->MinDistNormalAttack)
 	{
-		Controller->MoveToTarget(Target, SelfRef->Speed * CurveValue, DeltaTime);
+		Controller->MoveToTarget(Target, SelfRef->Speed * CurveValue);
 	}
 	if (SelfRef->CurrentNormalAttackDuration <= 0.f)
 	{
