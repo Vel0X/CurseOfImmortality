@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
 #include "GameFramework/Actor.h"
 #include "BaseAbility.generated.h"
 
@@ -43,11 +44,13 @@ public:
 
 	virtual void DestroyAbility();
 
-	virtual void InitializeAbility(int _AbilityHandle, AActor* Caster, int Level);
+	virtual void InitializeAbility(int _AbilityHandle, AChar* _Caster, int Level);
 
 	virtual void AfterInitialization();
 
 public:
+	UPROPERTY(EditAnywhere)
+	AChar* Caster;
 	UPROPERTY(EditAnywhere)
 	float AbilityLifetime = 3.0f;
 	UPROPERTY(EditAnywhere)

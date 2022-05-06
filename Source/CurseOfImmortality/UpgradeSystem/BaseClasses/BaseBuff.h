@@ -21,18 +21,22 @@ public:
 	UFUNCTION()
 	virtual void OnTakeDamage(int AbilityHandle);
 
+	virtual void AddBuffStack();
+
 	virtual void OnBuffBegin();
 
 	virtual void OnBuffTick(float DeltaTime);
 	
 	virtual void OnBuffEnd();
 
-	virtual void IntitializeBuff(int Level, AChar* _Owner);
-
-public:
-
+	virtual void InitializeBuff(int Level, AChar* _Owner);
+	
 	UPROPERTY(EditAnywhere)
 	AChar* Owner;
+
+	FString DisplayName = "";
+
+	TEnumAsByte<EBuff> BuffType;
 	
 	UPROPERTY(EditAnywhere)
 	float BuffDuration;
@@ -48,10 +52,13 @@ public:
 
 	//ignore BuffDuration and instead remove the Buff at an arbitrary point in time
 	UPROPERTY(EditAnywhere)
-	bool CustomBuffEnd;
+	bool CustomBuffEnd = false;
 
 	UPROPERTY(EditAnywhere)
-	bool StatModifier;
+	bool StatModifier = false;
+
+	UPROPERTY(EditAnywhere)
+	bool RefreshOnNew = false;
 
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EStats>, float> StatModifications; 

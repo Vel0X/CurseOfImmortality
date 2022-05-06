@@ -6,9 +6,9 @@
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "Kismet/KismetMathLibrary.h"
 
-void UShatteredImpact::OnEnemyHit()
+void UShatteredImpact::OnEnemyHit(AChar* Enemy)
 {
-	Super::OnEnemyHit();
+	Super::OnEnemyHit(Enemy);
 	ABaseAbility* Owner = static_cast<ABaseAbility*>(GetOwner());
 
 	if(!Owner->CanInteract)

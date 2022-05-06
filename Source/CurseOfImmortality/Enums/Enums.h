@@ -18,5 +18,7 @@ UENUM()
 enum EBuff
 {
 	Bleed,
-	IncreaseHealth
+	IncreaseHealth,
+	CursedBlade,
+	Rejuvenation
 };

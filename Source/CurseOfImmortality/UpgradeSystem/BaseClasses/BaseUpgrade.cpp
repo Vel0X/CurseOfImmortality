@@ -46,7 +46,7 @@ void UBaseUpgrade::OnAbilityEnd(int AbilityHandle)
 	//UE_LOG(LogTemp, Warning, TEXT("On Abilityend was called in Base Upgrade"));
 }
 
-void UBaseUpgrade::OnEnemyHit()
+void UBaseUpgrade::OnEnemyHit(AChar* Enemy)
 {
 	
 }

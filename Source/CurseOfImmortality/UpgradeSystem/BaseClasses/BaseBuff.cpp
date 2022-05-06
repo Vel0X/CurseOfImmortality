@@ -19,6 +19,11 @@ void UBaseBuff::OnTakeDamage(int AbilityHandle)
 {
 }
 
+void UBaseBuff::AddBuffStack()
+{
+	
+}
+
 void UBaseBuff::OnBuffBegin()
 {
 }
@@ -40,7 +45,7 @@ void UBaseBuff::OnBuffEnd()
 {
 }
 
-void UBaseBuff::IntitializeBuff(int Level, AChar* _Owner)
+void UBaseBuff::InitializeBuff(int Level, AChar* _Owner)
 {
 	Owner = _Owner;
 	RemainingDuration = BuffDuration;

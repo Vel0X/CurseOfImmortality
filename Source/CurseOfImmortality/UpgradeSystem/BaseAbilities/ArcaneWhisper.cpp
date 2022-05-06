@@ -13,9 +13,9 @@ void AArcaneWhisper::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AArcaneWhisper::InitializeAbility(int _AbilityHandle, AActor* Caster, int Level)
+void AArcaneWhisper::InitializeAbility(int _AbilityHandle, AChar* _Caster, int Level)
 {
-	Super::InitializeAbility(_AbilityHandle, Caster, Level);
+	Super::InitializeAbility(_AbilityHandle, _Caster, Level);
 	HitActors.Empty();
 }
 

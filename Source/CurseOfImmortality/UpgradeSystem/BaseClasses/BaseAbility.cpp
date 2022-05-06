@@ -4,6 +4,7 @@
 #include "BaseAbility.h"
 #include "BaseUpgrade.h"
 #include "NiagaraCommon.h"
+#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
 #include "Niagara/Public/NiagaraComponent.h"
 
 // Sets default values
@@ -27,7 +28,12 @@ void ABaseAbility::BeginPlay()
 
 void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
 {
-	
+	const auto OtherChar = static_cast<AChar*>(OtherActor);
+	if(OtherChar == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Hit something that doesnt derive from AChar!"));
+		return;
+	}
 	if(!CanInteract)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hit Enemy during Initialization"));
@@ -43,7 +49,7 @@ void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
 		}
 		else
 		{
-			Upgrade->OnEnemyHit();
+			Upgrade->OnEnemyHit(OtherChar);
 		}
 	}
 	if(DestroyOnEnemyHit)
@@ -120,8 +126,9 @@ void ABaseAbility::DestroyAbility()
 	Destroy();
 }
 
-void ABaseAbility::InitializeAbility(int _AbilityHandle, AActor* Caster, int Level)
+void ABaseAbility::InitializeAbility(int _AbilityHandle, AChar* _Caster, int Level)
 {
+	Caster = _Caster;
 }
 
 void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel)

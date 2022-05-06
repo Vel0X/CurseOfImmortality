@@ -13,16 +13,25 @@ UIncreaseHealth::UIncreaseHealth()
 	// off to improve performance if you don't need them.
 
 	// ...
+	DisplayName = "IncreaseHealth";
 	CurrentStacks = 1;
-	Stackable = false;
+	Stackable = true;
 	CustomBuffEnd = true;
 	StatModifier = true;
-	StatModifications.Add(Health, 100);
+	StatModifications.Add(Health, IncreaseValue);
 }
 
-void UIncreaseHealth::IntitializeBuff(int Level, AChar* _Owner)
+void UIncreaseHealth::AddBuffStack()
 {
-	Super::IntitializeBuff(Level, _Owner);
+	Super::AddBuffStack();
+	CurrentStacks ++;
+	StatModifications[Health] += IncreaseValue;
+	
+}
+
+void UIncreaseHealth::InitializeBuff(int Level, AChar* _Owner)
+{
+	Super::InitializeBuff(Level, _Owner);
 }
 
 

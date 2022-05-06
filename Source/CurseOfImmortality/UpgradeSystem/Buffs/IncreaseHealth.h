@@ -16,12 +16,12 @@ public:
 	// Sets default values for this component's properties
 	UIncreaseHealth();
 
-protected:
-
-public:
-
-	virtual void IntitializeBuff(int Level, AChar* _Owner) override;
+	virtual void AddBuffStack() override;
+	virtual void InitializeBuff(int Level, AChar* _Owner) override;
 	virtual void OnBuffBegin() override;
 
 	virtual void OnBuffEnd() override;
+
+private:
+	float IncreaseValue = 100.0f;
 };

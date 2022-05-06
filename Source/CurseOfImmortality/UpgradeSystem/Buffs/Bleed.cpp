@@ -7,12 +7,29 @@
 
 UBleed::UBleed()
 {
+	DisplayName = "Bleed";
 	BuffDuration = 5.0f;
 	RemainingDuration = BuffDuration;
+	TimeUntilNextTick = TickInterval;
 	CurrentStacks = 1;
 	Stackable = true;
+	RefreshOnNew = true;
 	CustomBuffEnd = false;
 	StatModifier = false;
+	BuffType = Bleed;
+}
+
+void UBleed::InitializeBuff(int Level, AChar* _Owner)
+{
+	Super::InitializeBuff(Level, _Owner); 
+}
+
+void UBleed::AddBuffStack()
+{
+	Super::AddBuffStack();
+	RemainingDuration = BuffDuration;
+	DamageAmount += DamageAmount / static_cast<float>(CurrentStacks);
+	CurrentStacks++;
 }
 
 void UBleed::OnBuffTick(float DeltaTime)
@@ -20,8 +37,8 @@ void UBleed::OnBuffTick(float DeltaTime)
 	Super::OnBuffTick(DeltaTime);
 	if(TimeUntilNextTick <= 0.0f)
 	{
-		Owner->TakeDamage(10, true);
 		//Deal Damage
+		Owner->TakeDmg(DamageAmount, true);
 		TimeUntilNextTick = TickInterval;
 	}
 	else

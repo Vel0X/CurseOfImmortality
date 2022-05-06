@@ -3,8 +3,9 @@
 
 #include "Char.h"
 
+#include "GameController.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/BaseStatSpecification.h"
-
+#include "Niagara/Public/NiagaraFunctionLibrary.h"
 
 // Sets default values
 AChar::AChar()
@@ -63,35 +64,115 @@ void AChar::RecalculateStats()
 
 void AChar::AddBuff(UBaseBuff* Buff)
 {
-	Buffs.Add(Buff);
-	if(Buff->StatModifier)
+	int FoundIndex = -1;
+	for (int i = 0; i < Buffs.Num(); ++i)
 	{
-		RecalculateStats();
+		if(Buffs[i]->DisplayName == Buff->DisplayName)
+		{
+			FoundIndex = i;
+			break;
+		}
 	}
-	Buff->IntitializeBuff(1,this);
-	UE_LOG(LogTemp, Warning, TEXT("Buff was added"));
+
+	//if the Buff is already present...
+	if(FoundIndex != -1)
+	{
+		//if the Buff is not stackable
+		if(!Buff->Stackable)
+		{
+			//if the Buff should renew when it is already present
+			if(Buff->RefreshOnNew)
+			{
+				Buffs[FoundIndex]->InitializeBuff(1, this);
+				UE_LOG(LogTemp, Warning, TEXT("%s was already present and was refreshed"), *Buff->DisplayName);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("%s was already present and is not stackable"), *Buff->DisplayName);
+				return;
+			}
+		}
+		Buffs[FoundIndex]->AddBuffStack();
+	}
+	//Buff is not already present
+	else
+	{
+		Buffs.Add(Buff);
+		Buff->InitializeBuff(1,this);
+		UE_LOG(LogTemp, Warning, TEXT("%s was added"), *Buff->DisplayName);
+		AddBuffParticles(Buff->BuffType);
+	}
+	
+	if(Buff->StatModifier)
+		RecalculateStats();
+	
 }
 
 void AChar::RemoveBuff(UBaseBuff* Buff)
 {
 	if(Buffs.Contains(Buff))
 	{
-	UE_LOG(LogTemp, Warning, TEXT("Buff was removed"));
+	UE_LOG(LogTemp, Warning, TEXT("%s was removed"), *Buff->DisplayName);
 		Buffs.Remove(Buff);
+		RemoveBuffParticles(Buff->BuffType);
 		if(Buff->StatModifier)
 		{
 			RecalculateStats();
 		}
 	}
-	
 }
 
-void AChar::TakeDamage(float Amount, bool Verbose)
+void AChar::AddBuffParticles(EBuff Buff)
+{
+	if(!ActiveParticleEffects.Contains(Buff))
+	{
+		auto FX = static_cast<UGameController*>(GetGameInstance())->GetAttackManager()->PossibleUpgrades->BuffVFX;
+		if(!FX.Contains(Buff))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No VFX available"));
+			return;
+		}
+		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(FX[Buff], RootComponent, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
+		NiagaraComp->SetupAttachment(RootComponent);
+		ActiveParticleEffects.Add(Buff, NiagaraComp);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("VFX already exists"));
+	}
+}
+
+void AChar::RemoveBuffParticles(EBuff Buff)
+{
+	if(ActiveParticleEffects.Contains(Buff))
+	{
+		ActiveParticleEffects[Buff]->DestroyComponent();
+		ActiveParticleEffects.Remove(Buff);
+	}
+
+}
+
+void AChar::TakeDmg(float Amount, bool Verbose)
 {
 	CurrentHealth -= Amount;
 	if(Verbose)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Char Health is at %f Max Health %f"), CurrentHealth, Stats[Health]);
+		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: Char Health is at %f Max Health %f"), CurrentHealth, Stats[Health]);
 	}
 }
+
+void AChar::Heal(float Amount, bool Verbose)
+{
+	CurrentHealth += Amount;
+	if(CurrentHealth > Stats[Health])
+	{
+		CurrentHealth = Stats[Health];
+	}
+
+	if(Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("After Heal: Char Health is at %f Max Health %f"), CurrentHealth, Stats[Health]);
+	}
+}
+
 

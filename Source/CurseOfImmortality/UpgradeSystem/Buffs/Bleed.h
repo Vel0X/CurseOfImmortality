@@ -21,13 +21,13 @@ protected:
 
 public:
 	// Called every frame
-	
+	virtual void InitializeBuff(int Level, AChar* _Owner) override;
+	virtual void AddBuffStack() override;
 
 	virtual void OnBuffTick(float DeltaTime) override;
 
 public:
-	UPROPERTY(EditAnywhere)
 	float TickInterval = 0.5f;
-
+	float DamageAmount = 10.0f;
 	float TimeUntilNextTick = 0.0f;
 };

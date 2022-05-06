@@ -366,7 +366,7 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 	const FRotator Rotation = GetOwner()->GetActorRotation();
 	
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class, &Location, &Rotation));
-	AbilityInstance->InitializeAbility(AbilityMapHandle, GetOwner(), Ability.Level);
+	AbilityInstance->InitializeAbility(AbilityMapHandle, static_cast<AChar*>(GetOwner()), Ability.Level);
 	AbilityInstance->OnAbilityCreation();
 	//AbilityInstance->AbilityType
 	

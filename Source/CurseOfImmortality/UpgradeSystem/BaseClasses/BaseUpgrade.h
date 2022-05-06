@@ -25,7 +25,7 @@ public:
 	virtual void OnAbilityEnd(int AbilityHandle);
 
 	UFUNCTION()
-	virtual void OnEnemyHit();
+	virtual void OnEnemyHit(AChar* Enemy);
 	
 	TEnumAsByte<EAbilityType> RestrictedTo;
 

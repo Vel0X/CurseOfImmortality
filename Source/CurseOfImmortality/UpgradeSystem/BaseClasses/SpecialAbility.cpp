@@ -4,16 +4,16 @@
 #include "SpecialAbility.h"
 
 
-void ASpecialAbility::InitializeAbility(int _AbilityHandle, AActor* Caster, int Level)
+void ASpecialAbility::InitializeAbility(int _AbilityHandle, AChar* _Caster, int Level)
 {
-	Parent = Caster;
+	Super::InitializeAbility(_AbilityHandle, Caster, Level);
 }
 
 void ASpecialAbility::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if(Parent != nullptr)
+	if(Caster != nullptr)
 	{
-		SetActorLocation(Parent->GetActorLocation());
+		SetActorLocation(Caster->GetActorLocation());
 	}
 }

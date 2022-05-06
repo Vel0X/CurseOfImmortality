@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySpecification.h"
+#include "NiagaraSystem.h"
 #include "UpgradeSpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
 #include "UObject/Object.h"
@@ -26,4 +27,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<UBaseBuff>> Buffs;
+
+	UPROPERTY(EditAnywhere)
+	TMap<TEnumAsByte<EBuff>, UNiagaraSystem*> BuffVFX;
 };

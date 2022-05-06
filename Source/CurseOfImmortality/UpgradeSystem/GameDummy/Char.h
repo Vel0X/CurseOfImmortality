@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/Actor.h"
 #include "CurseOfImmortality/Enums/Enums.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
@@ -30,13 +31,18 @@ public:
 	void RecalculateStats();
 
 	void AddBuff(UBaseBuff* Buff);
-	
 	void RemoveBuff(UBaseBuff* Buff);
-	void TakeDamage(float Amount, bool Verbose = false);
-	
+	void AddBuffParticles(EBuff Buff);
+	void RemoveBuffParticles(EBuff Buff);
+	void TakeDmg(float Amount, bool Verbose = false);
+	void Heal(float Amount, bool Verbose = false);
+
 	UPROPERTY(EditAnywhere)
 	TArray<UBaseBuff*> Buffs;
 
+	UPROPERTY(EditAnywhere)
+	TMap<TEnumAsByte<EBuff>, UNiagaraComponent*> ActiveParticleEffects;
+	
 	float CurrentHealth = 0.0f;
 	
 	UPROPERTY(EditAnywhere)
@@ -44,6 +50,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EStats>, float> Stats;
+
+	UPROPERTY(EditAnywhere)
+	FString DisplayName = "";
 	//TArray<>
 };
+
 

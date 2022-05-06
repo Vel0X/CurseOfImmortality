@@ -1,16 +1,17 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseUpgrade.h"
-#include "Pierce.generated.h"
+#include "UObject/Object.h"
+#include "CursemarkOfDoom.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API UPierce final: public UBaseUpgrade
+class CURSEOFIMMORTALITY_API UCursemarkOfDoom: public UBaseUpgrade
 {
 	GENERATED_BODY()
 
