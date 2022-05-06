@@ -80,6 +80,8 @@ void UDeprivedJumpAttack::SetLocation()
 {
 	PlayerLocation = Player->GetActorLocation();
 
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Location Set");
+
 	const FVector PlayerForwardDir = Player->GetActorForwardVector() * SelfRef->PlayerForwardVector +
 		PlayerLocation;
 	OwnLocation = SelfRef->GetActorLocation();
@@ -88,9 +90,6 @@ void UDeprivedJumpAttack::SetLocation()
 	JumpDestination.Normalize();
 	JumpDestination = JumpDestination * SelfRef->DistAfterPlayer + PlayerForwardDir;
 	JumpDir = JumpDestination - OwnLocation;
-
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, Player->GetActorLocation().ToString());
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, JumpDestination.ToString());
 
 	LocationSet = true;
 }

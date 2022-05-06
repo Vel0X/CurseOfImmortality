@@ -177,11 +177,6 @@ bool APathfindingGrid::GetPathWorldSpace(FVector Start, FVector End, TArray<FVec
 		return false;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("SX %i"), SX);
-	UE_LOG(LogTemp, Warning, TEXT("SY %i"), SY);
-	UE_LOG(LogTemp, Warning, TEXT("EX %i"), EX);
-	UE_LOG(LogTemp, Warning, TEXT("EY %i"), EY);
-
 	TArray<FPfNode*> Path;
 	if (GetPath(SX, SY, EX, EY, Path, false))
 	{

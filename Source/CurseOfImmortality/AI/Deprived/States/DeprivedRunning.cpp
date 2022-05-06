@@ -33,37 +33,45 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 
 	const FVector PlayerLocation = Player->GetActorLocation();
 	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
-
+	
 	if (!Path.IsEmpty())
 	{
 		FHitResult Hit;
 		FCollisionQueryParams CollisionParams;
+		CollisionParams.AddIgnoredActor(SelfRef);
+		CollisionParams.AddIgnoredActor(Player);
 
 		FVector LineTraceStart = SelfRef->GetActorLocation();
 		FVector LineTraceEnd = PlayerLocation - LineTraceStart;
 		LineTraceEnd.Normalize();
 		LineTraceEnd *= SelfRef->DistJumpAttack;
 
-		DrawDebugLine(Controller->GetWorld(), LineTraceStart, LineTraceEnd, FColor::Purple);
+		DrawDebugLine(Controller->GetWorld(), LineTraceStart, PlayerLocation, FColor::Purple);
 
 		Controller->GetWorld()->LineTraceSingleByChannel(Hit, LineTraceStart, LineTraceEnd, ECC_Pawn, CollisionParams);
 
-		UE_LOG(LogTemp, Error, TEXT("%s"), *Hit.GetActor()->GetName());
+		// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, PlayerLocation.ToString());
+		// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("%b"), Hit.bBlockingHit);
 
-		if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
+		if (!Hit.bBlockingHit)
 		{
-			Controller->Transition(Controller->NormalAttack, Controller);
-		}
-		else if (Cast<APlayerCharacter>(Cast<APlayerCharacter>(Hit.GetActor())))
-		{
-			if (SelfRef->CurrentJumpAttackCoolDown <= 0.f)
+			if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
 			{
-				SelfRef->CurrentJumpAttackCoolDown = SelfRef->JumpAttackCoolDown;
-				Controller->Transition(Controller->JumpAttack, Controller);
+				Controller->Transition(Controller->NormalAttack, Controller);
 			}
-			else
+			else if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistJumpAttack)
 			{
-				FollowPath(DeltaTime);
+				UE_LOG(LogTemp, Error, TEXT("CheckJumpAttack"));
+				if (SelfRef->CurrentJumpAttackCoolDown <= 0.f)
+				{
+					UE_LOG(LogTemp, Error, TEXT("JumpAttack"));
+					SelfRef->CurrentJumpAttackCoolDown = SelfRef->JumpAttackCoolDown;
+					Controller->Transition(Controller->JumpAttack, Controller);
+				}
+				else
+				{
+					FollowPath(DeltaTime);
+				}
 			}
 		}
 		else
@@ -77,7 +85,7 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 		Path.Empty();
 		auto Grid = static_cast<UGameController*>(Controller->GetOwner()->GetGameInstance())->GetPathfindingGrid();
 
-		if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, true))
+		if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path))
 		{
 			UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
 		}
