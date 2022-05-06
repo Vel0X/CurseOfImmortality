@@ -32,8 +32,8 @@ public:
 
 	void AddBuff(UBaseBuff* Buff);
 	void RemoveBuff(UBaseBuff* Buff);
-	void AddBuffParticles(EBuff Buff);
-	void RemoveBuffParticles(EBuff Buff);
+	void AddBuffParticles(UBaseBuff* Buff);
+	void RemoveBuffParticles(const UBaseBuff* Buff);
 	void TakeDmg(float Amount, bool Verbose = false);
 	void Heal(float Amount, bool Verbose = false);
 

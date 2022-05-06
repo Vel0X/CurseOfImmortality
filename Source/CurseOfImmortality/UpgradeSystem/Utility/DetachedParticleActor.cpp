@@ -22,5 +22,31 @@ void ADetachedParticleActor::BeginPlay()
 void ADetachedParticleActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if(RemainingLifetime <= 0.0f)
+	{
+		Destroy();
+	}
+	else
+	{
+		RemainingLifetime -= DeltaTime;
+	}
+
+	if(FollowParent != nullptr)
+	{
+		SetActorLocation(FollowParent->GetActorLocation());
+	}
+}
+
+void ADetachedParticleActor::InitializeParticleActor(UNiagaraComponent* ParticleSystem,
+	AActor* _FollowParent, float ManualDestructionTime)
+{
+	ParticleSystem->SetupAttachment(RootComponent);
+	ParticleSystem->Deactivate();
+	RemainingLifetime = ManualDestructionTime == -1 ? 5.0f : ManualDestructionTime;
+
+	if(_FollowParent != nullptr)
+	{
+		FollowParent = _FollowParent;
+	}
 }
 

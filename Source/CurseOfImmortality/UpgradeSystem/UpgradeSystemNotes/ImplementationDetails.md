@@ -69,3 +69,10 @@ classes in the future)
 - Managing the BaseAbilties and UpgradeAbilities that are currently active on the PlayerCharacter
 - Managing the Pool, from which one of three random Upgrades can be picked at the end of each round
 
+---
+---
+---
+
+# Notes
+
+- Buff needs to be able to manipulate its VFX (e.g., Cursemark of Doom)

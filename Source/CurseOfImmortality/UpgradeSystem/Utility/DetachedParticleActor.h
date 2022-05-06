@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/Actor.h"
 #include "DetachedParticleActor.generated.h"
 
@@ -22,4 +23,11 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void InitializeParticleActor(UNiagaraComponent* ParticleSystem, AActor* _FollowParent = nullptr, float ManualDestructionTime = -1.0f);
+
+	float RemainingLifetime = 0.0f;
+
+	UPROPERTY(EditAnywhere)
+	AActor* FollowParent = nullptr;
 };

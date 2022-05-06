@@ -5,6 +5,7 @@
 
 #include "GameController.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/BaseStatSpecification.h"
+#include "CurseOfImmortality/UpgradeSystem/Utility/DetachedParticleActor.h"
 #include "Niagara/Public/NiagaraFunctionLibrary.h"
 
 // Sets default values
@@ -100,7 +101,7 @@ void AChar::AddBuff(UBaseBuff* Buff)
 		Buffs.Add(Buff);
 		Buff->InitializeBuff(1,this);
 		UE_LOG(LogTemp, Warning, TEXT("%s was added"), *Buff->DisplayName);
-		AddBuffParticles(Buff->BuffType);
+		AddBuffParticles(Buff);
 	}
 	
 	if(Buff->StatModifier)
@@ -114,7 +115,7 @@ void AChar::RemoveBuff(UBaseBuff* Buff)
 	{
 	UE_LOG(LogTemp, Warning, TEXT("%s was removed"), *Buff->DisplayName);
 		Buffs.Remove(Buff);
-		RemoveBuffParticles(Buff->BuffType);
+		RemoveBuffParticles(Buff);
 		if(Buff->StatModifier)
 		{
 			RecalculateStats();
@@ -122,19 +123,19 @@ void AChar::RemoveBuff(UBaseBuff* Buff)
 	}
 }
 
-void AChar::AddBuffParticles(EBuff Buff)
+void AChar::AddBuffParticles(UBaseBuff* Buff)
 {
-	if(!ActiveParticleEffects.Contains(Buff))
+	if(!ActiveParticleEffects.Contains(Buff->BuffType))
 	{
 		auto FX = static_cast<UGameController*>(GetGameInstance())->GetAttackManager()->PossibleUpgrades->BuffVFX;
-		if(!FX.Contains(Buff))
+		if(!FX.Contains(Buff->BuffType))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("No VFX available"));
 			return;
 		}
-		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(FX[Buff], RootComponent, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
+		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(FX[Buff->BuffType], RootComponent, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
 		NiagaraComp->SetupAttachment(RootComponent);
-		ActiveParticleEffects.Add(Buff, NiagaraComp);
+		ActiveParticleEffects.Add(Buff->BuffType, NiagaraComp);
 	}
 	else
 	{
@@ -142,12 +143,13 @@ void AChar::AddBuffParticles(EBuff Buff)
 	}
 }
 
-void AChar::RemoveBuffParticles(EBuff Buff)
+void AChar::RemoveBuffParticles(const UBaseBuff* Buff)
 {
-	if(ActiveParticleEffects.Contains(Buff))
+	if(ActiveParticleEffects.Contains(Buff->BuffType))
 	{
-		ActiveParticleEffects[Buff]->DestroyComponent();
-		ActiveParticleEffects.Remove(Buff);
+		const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+		DetachedParticleActor->InitializeParticleActor(ActiveParticleEffects[Buff->BuffType], nullptr, -1);
+		ActiveParticleEffects.Remove(Buff->BuffType);
 	}
 
 }
