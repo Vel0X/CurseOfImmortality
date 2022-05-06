@@ -43,6 +43,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float MovementSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float CurrentMovementSpeed;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	bool Died;
 

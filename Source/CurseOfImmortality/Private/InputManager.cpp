@@ -14,7 +14,7 @@ UInputManager::UInputManager()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	MaxBufferTime = 0.5;
-	TimeTillNextAction = 0;
+	LastAction = InputAction::NoAction;
 	Player = static_cast <APlayerCharacter*>(GetOwner());
 	if(Player != nullptr)
 	{
@@ -38,9 +38,11 @@ void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
-	if (TimeTillNextAction > 0)
+	if (Player->CurrentAnimationDuration > 0)
 	{
-		TimeTillNextAction -= DeltaTime;
+		Player->CurrentAnimationDuration -= DeltaTime;
+	//	UE_LOG(LogTemp, Warning, TEXT("Text,%f"), Player->CurrentAnimationDuration);
+		
 	} else if (InputBuffer.Num()>0)
 	{
 		DoAction(InputBuffer.Last());
@@ -62,12 +64,20 @@ void UInputManager::SetupPlayerInput(UInputComponent* InputComponent)
 
 void UInputManager::MoveForward(float Value)
 {
+	if (Value != 0 && LastAction == InputAction::NoAction)
+	{
+		LastAction = InputAction::Running;
+	}
 	MoveInput.X = Value;
 	MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
 }
 
 void UInputManager::MoveRight(float Value)
 {
+	if (Value != 0 && LastAction == InputAction::NoAction)
+	{
+		LastAction = InputAction::Running;
+	}
 	MoveInput.Y = Value;
 	MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
 }
@@ -92,12 +102,18 @@ void UInputManager::Dash()
 	AddToBuffer(InputAction::Dash);
 }
 
+/*void UInputManager::SetAction(InputAction Action)
+{
+	if(LastAction != )
+	LastAction = Action;
+}*/
+
 void UInputManager::AddToBuffer(InputAction _InputAction)
 {
-	if(TimeTillNextAction <= 0 && InputBuffer.Num() == 0)
+	if(Player->CurrentAnimationDuration <= 0 && InputBuffer.Num() == 0)
 	{
 		DoAction(_InputAction);
-	} else if (TimeTillNextAction <= MaxBufferTime)
+	} else if (Player->CurrentAnimationDuration <= MaxBufferTime)
 	{
 		InputBuffer.Add(_InputAction);
 		UE_LOG(LogTemp, Display, TEXT("Added Action to buffer"));
@@ -106,21 +122,26 @@ void UInputManager::AddToBuffer(InputAction _InputAction)
 
 void UInputManager::DoAction(InputAction _InputAction)
 {
-	TimeTillNextAction = 1.5; //Set to Ability time
 	UE_LOG(LogTemp, Display, TEXT("Used Action"));
 	switch (_InputAction)
 	{
 	case InputAction::MeleeAbility:
+		LastAction = InputAction::MeleeAbility;
 		//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnMeleeKeyPressed();
 		break;
 	case InputAction::RangedAbility:
+		LastAction = InputAction::RangedAbility;
 		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnRangedKeyPressed();
 		break;
 	case InputAction::SpecialAbility:
+		LastAction = InputAction::SpecialAbility;
 		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnSpecialKeyPressed();
 		break;
 	case InputAction::Dash:
+		LastAction = InputAction::Dash;
 		//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnDashKeyPressed();
+		break;
+	default:
 		break;
 	}
 }

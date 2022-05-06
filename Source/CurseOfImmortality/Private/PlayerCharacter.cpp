@@ -22,8 +22,9 @@ APlayerCharacter::APlayerCharacter()
 	PlayerCamera->SetupAttachment(SpringArm);
 	InputManager = CreateDefaultSubobject<UInputManager>(TEXT("InputManager"));
 	AttackManager = CreateDefaultSubobject<UAttackManager>(TEXT("AttackManager"));
+	StateMachine = CreateDefaultSubobject<UStateMachine>(TEXT("StateMachine"));
 }
-
+ 
 
 // Called when the game starts or when spawned
 void APlayerCharacter::Setup()
