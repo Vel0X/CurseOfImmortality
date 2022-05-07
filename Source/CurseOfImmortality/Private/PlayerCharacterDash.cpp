@@ -31,7 +31,8 @@ void UPlayerCharacterDash::OnStateUpdate(float DeltaTime)
 	
 	if (SelfRef->CurrentAnimationDuration <= 0)
 	{
-		Controller->GetSelfRef()->InputManager->LastAction = InputAction::NoAction;
+		SelfRef->InputManager->LastAction = InputAction::NoAction;
 		Controller->Transition(Controller->Idle, Controller);
 	}
+	SelfRef->GetRootComponent()->AddWorldOffset(SelfRef->GetActorForwardVector() * DeltaTime * 1500, true);
 }
