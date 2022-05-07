@@ -29,7 +29,8 @@ public:
 	virtual void Setup();
 
 	virtual void ReceiveDamage(float Damage);
-
+	
+	UFUNCTION(BlueprintCallable, Category = "Damage")
 	virtual void DealDamage(float Damage, ABaseCharacter *EnemyCharacter);
 
 	virtual void OnDeath();

@@ -39,7 +39,13 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 		}
 		Direction.Normalize();
 		RootComponent->SetWorldRotation(Direction.Rotation());
-		if(Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
+		if(Cast<APlayerCharacter>(GetOwner())!=nullptr)
+		{
+			if(Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
+			{
+				Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed;
+			}
+		} else
 		{
 			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed;
 		}
