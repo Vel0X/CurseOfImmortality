@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "PlayerCharacterBaseState.h"
-#include "CurseOfImmortality/AI/AIBaseClasses/State.h"
 #include "PlayerCharacterIdle.generated.h"
 
 /**

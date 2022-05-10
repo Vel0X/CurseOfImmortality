@@ -4,10 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "CharacterMovement.h"
 #include "BaseCharacter.generated.h"
 
-class UCapsuleComponent;
+class UCharacterMovement;
 
 UCLASS()
 class CURSEOFIMMORTALITY_API ABaseCharacter : public APawn

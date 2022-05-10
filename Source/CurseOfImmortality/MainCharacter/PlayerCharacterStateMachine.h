@@ -8,9 +8,7 @@
 
 enum class InputAction;
 class APlayerCharacter;
-class UPlayerCharacterRunning;
-class UPlayerCharacterIdle;
-class UPlayerCharacterMelee;
+
 /**
  * 
  */

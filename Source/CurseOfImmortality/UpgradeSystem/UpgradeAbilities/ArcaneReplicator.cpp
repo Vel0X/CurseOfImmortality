@@ -3,7 +3,7 @@
 
 #include "ArcaneReplicator.h"
 
-#include "GameController.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/SpecialAbility.h"
 #include "CurseOfImmortality/UpgradeSystem/IndirectAbilities/ArcaneReplicatorTurret.h"

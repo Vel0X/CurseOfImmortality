@@ -3,8 +3,9 @@
 
 #include "PlayerCharacterDash.h"
 
-#include "PlayerCharacterStateMachine.h"
-#include "PlayerCharacter.h"
+#include "CurseOfImmortality/MainCharacter/PlayerCharacterStateMachine.h"
+#include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
+#include "CurseOfImmortality/MainCharacter/InputManager.h"
 
 void UPlayerCharacterDash::OnStateEnter(UStateMachine* StateMachine)
 {

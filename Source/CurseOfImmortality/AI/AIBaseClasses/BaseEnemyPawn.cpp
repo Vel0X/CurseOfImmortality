@@ -2,7 +2,6 @@
 
 
 #include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
-#include "Components/CapsuleComponent.h"
 
 
 ABaseEnemyPawn::ABaseEnemyPawn()

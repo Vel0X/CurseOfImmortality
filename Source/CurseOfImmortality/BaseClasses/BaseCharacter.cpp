@@ -2,6 +2,8 @@
 
 
 #include "BaseCharacter.h"
+#include "CharacterMovement.h"
+
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()

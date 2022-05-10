@@ -2,8 +2,7 @@
 
 
 #include "GameController.h"
-
-#include "PlayerCharacter.h"
+#include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 
 void UGameController::OnStart()

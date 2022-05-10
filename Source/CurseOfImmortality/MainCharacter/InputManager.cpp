@@ -4,6 +4,7 @@
 #include "InputManager.h"
 #include "PlayerCharacter.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
+#include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 
 
 // Sets default values for this component's properties

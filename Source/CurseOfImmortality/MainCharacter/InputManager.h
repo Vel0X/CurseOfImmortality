@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "CharacterMovement.h"
 #include "InputManager.generated.h"
 
+class UCharacterMovement;
 
 UENUM()
 enum class InputAction

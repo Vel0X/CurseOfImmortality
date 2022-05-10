@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PlayerCharacter.h"
 #include "Engine/GameInstance.h"
 #include "GameController.generated.h"
 
+class APlayerCharacter;
 class UAttackManager;
 /**
  * 

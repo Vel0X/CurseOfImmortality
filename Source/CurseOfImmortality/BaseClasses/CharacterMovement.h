@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
 #include "CharacterMovement.generated.h"
 
+class UActorComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CURSEOFIMMORTALITY_API UCharacterMovement : public UActorComponent

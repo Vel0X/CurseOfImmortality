@@ -2,8 +2,10 @@
 
 
 #include "CharacterMovement.h"
+#include "BaseCharacter.h"
+#include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
+#include "CurseOfImmortality/MainCharacter/InputManager.h"
 
-#include "PlayerCharacter.h"
 
 // Sets default values for this component's properties
 UCharacterMovement::UCharacterMovement()

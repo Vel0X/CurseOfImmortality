@@ -3,7 +3,7 @@
 
 #include "ArcaneWhisper.h"
 
-#include "GameController.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "NiagaraComponent.h"
 
 static TArray<AActor*> HitActors;

@@ -4,12 +4,14 @@
 #include "PlayerCharacterStateMachine.h"
 
 #include "PlayerCharacter.h"
-#include "PlayerCharacterDash.h"
-#include "PlayerCharacterIdle.h"
-#include "PlayerCharacterRunning.h"
-#include "PlayerCharacterMelee.h"
-#include "PlayerCharacterRanged.h"
-#include "PlayerCharacterSpecial.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/State.h"
+#include "InputManager.h"
+#include "States/PlayerCharacterDash.h"
+#include "States/PlayerCharacterIdle.h"
+#include "States/PlayerCharacterMelee.h"
+#include "States/PlayerCharacterRanged.h"
+#include "States/PlayerCharacterRunning.h"
+#include "States/PlayerCharacterSpecial.h"
 
 UPlayerCharacterStateMachine::UPlayerCharacterStateMachine()
 {

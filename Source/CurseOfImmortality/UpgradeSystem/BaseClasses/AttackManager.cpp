@@ -2,7 +2,7 @@
 
 #include "AttackManager.h"
 #include "AbilitySpecification.h"
-#include "GameController.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
 
 //#define GAME_INSTANCE static_cast<UGameController*>(GetGameInstance())
 

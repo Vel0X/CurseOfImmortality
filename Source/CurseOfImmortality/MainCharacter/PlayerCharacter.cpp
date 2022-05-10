@@ -2,8 +2,11 @@
 
 
 #include "PlayerCharacter.h"
-#include "GameController.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
+#include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
+#include "CurseOfImmortality/MainCharacter/InputManager.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/StateMachine.h"
 
 
 // Sets default values

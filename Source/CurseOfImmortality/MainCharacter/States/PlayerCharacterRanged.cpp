@@ -2,9 +2,9 @@
 
 
 #include "PlayerCharacterRanged.h"
-
-#include "PlayerCharacterStateMachine.h"
-#include "PlayerCharacter.h"
+#include "CurseOfImmortality/MainCharacter/InputManager.h"
+#include "CurseOfImmortality/MainCharacter/PlayerCharacterStateMachine.h"
+#include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 
 void UPlayerCharacterRanged::OnStateEnter(UStateMachine* StateMachine)
 {

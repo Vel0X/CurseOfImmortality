@@ -3,7 +3,7 @@
 
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedJumpAttack.h"
 
-#include "PlayerCharacter.h"
+#include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 #include "Components/CapsuleComponent.h"

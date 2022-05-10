@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseCharacter.h"
-#include "InputManager.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Components/SkeletalMeshComponent.h"
-#include "CurseOfImmortality/AI/AIBaseClasses/StateMachine.h"
+#include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "PlayerCharacter.generated.h"
 
+class UInputManager;
 class UAttackManager;
+class UStateMachine;
+
 /**
  * 
  */
