@@ -3,8 +3,8 @@
 
 #include "BaseAbility.h"
 #include "BaseUpgrade.h"
-#include "NiagaraCommon.h"
 #include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
+#include "NiagaraCommon.h"
 #include "Niagara/Public/NiagaraComponent.h"
 
 // Sets default values
@@ -14,49 +14,77 @@ ABaseAbility::ABaseAbility()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+
+
 // Called when the game starts or when spawned
 void ABaseAbility::BeginPlay()
 {
 	Super::BeginPlay();
 	RemainingAbilityLifetime = AbilityLifetime;
 	OnActorBeginOverlap.AddDynamic( this, &ABaseAbility::OnEnemyHit);
-
 	//UE_LOG(LogTemp, Warning, TEXT("AbilityInstance was spawned (Base)"));
 	//OnActorBeginOverlap.AddDynamic(this, &ABaseAbility::AtOverlap);
+
 
 }
 
 void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
 {
-	const auto OtherChar = static_cast<AChar*>(OtherActor);
-	if(OtherChar == nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Hit something that doesnt derive from AChar!"));
-		return;
-	}
-	if(!CanInteract)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Hit Enemy during Initialization"));
-		return;
-	}
 	
-	UE_LOG(LogTemp, Warning, TEXT("Enemy was hit"));
-	for (const auto Upgrade : UpgradeStack)
+
+
+	
+	if(OtherActor->GetClass()->IsChildOf(AChar::StaticClass()))
 	{
-		if(Upgrade == nullptr)
+		if(!CanInteract)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL in list"));
+			UE_LOG(LogTemp, Warning, TEXT("Hit Enemy during Initialization"));
+			return;
 		}
-		else
+		
+		AChar* OtherChar = static_cast<AChar*>(OtherActor);
+		if(Caster == OtherChar)
 		{
-			Upgrade->OnEnemyHit(OtherChar);
+			return;
 		}
+		OtherChar->TakeDmg(10,  Caster, this, false);
+
+
+		
+		UE_LOG(LogTemp, Warning, TEXT("Enemy was hit"));
+		for (const auto Upgrade : UpgradeStack)
+		{
+			if(Upgrade == nullptr)
+			{
+				UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL in list"));
+			}
+			else
+			{
+				Upgrade->OnEnemyHit(OtherChar);
+			}
+		}
+		
+
+		if(DestroyOnEnemyHit)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Ability was destroyed on Enemyhit"));
+			DestroyAbility();
+		}
+
+		return;
 	}
-	if(DestroyOnEnemyHit)
+
+	if(OtherActor->GetClass()->IsChildOf(ARangedAbility::StaticClass()))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Ability was destroyed on Enemyhit"));
-		DestroyAbility();
+		ARangedAbility* OtherAbility = static_cast<ARangedAbility*>(OtherActor);
+		UE_LOG(LogTemp, Error, TEXT("Hit other Ability"));
+		for (const auto Upgrade : UpgradeStack)
+		{
+			Upgrade->OnAbilityHit(OtherAbility);
+		}
+
 	}
+	//Handling hitting other Abilities
 }
 
 void ABaseAbility::OnAbilityCreation()
@@ -90,8 +118,17 @@ void ABaseAbility::AfterInitialization()
 	}
 
 	//set params of ability
-	const FVector newScale = FVector(RelativeSize, RelativeSize, RelativeSize);
-	SetActorScale3D(newScale);
+	const FVector NewScale = FVector(RelativeSize, RelativeSize, RelativeSize);
+	SetActorScale3D(NewScale);
+
+	TArray<AActor*> Overlapping;
+	GetOverlappingActors(Overlapping);
+	UE_LOG(LogTemp, Warning, TEXT("Overlapping %i"), Overlapping.Num());
+	
+	for (const auto Actor : Overlapping)
+	{
+		OnEnemyHit(this, Actor);
+	}
 }
 
 void ABaseAbility::DestroyAbility()
@@ -109,7 +146,7 @@ void ABaseAbility::DestroyAbility()
 			Upgrade->OnAbilityEnd(AbilityHandle);
 		}
 	}
-	const UNiagaraComponent* vfx = FindComponentByClass<UNiagaraComponent>();
+	//const UNiagaraComponent* vfx = FindComponentByClass<UNiagaraComponent>();
 /*
 	if(vfx == nullptr)
 	{

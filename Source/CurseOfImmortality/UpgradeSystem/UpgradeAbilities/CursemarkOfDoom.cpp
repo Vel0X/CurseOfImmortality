@@ -2,17 +2,17 @@
 
 
 #include "CursemarkOfDoom.h"
-
-#include "CurseOfImmortality/UpgradeSystem/Buffs/Bleed.h"
+#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
+#include "CurseOfImmortality/UpgradeSystem/Buffs/CursedBlade.h"
 
 void UCursemarkOfDoom::OnEnemyHit(AChar* Enemy)
 {
 	Super::OnEnemyHit(Enemy);
 
 	//apply the Cursemark Of Doom Buff on the Enemy
-	UE_LOG(LogTemp, Warning, TEXT("yyyyy"));
-	const auto BleedInstance = NewObject<UBleed>();
-	Enemy->AddBuff(BleedInstance);
+	UE_LOG(LogTemp, Warning, TEXT("Add Cursed Blade Instance on Enemy Hit"));
+	const auto CursedBladeInstance = NewObject<UCursedBlade>();
+	Enemy->AddBuff(CursedBladeInstance);
 }
 
 void UCursemarkOfDoom::InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel)

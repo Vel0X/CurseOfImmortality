@@ -3,6 +3,7 @@
 #include "AttackManager.h"
 
 #include "GameController.h"
+#include "PersistentWorldManager.h"
 #include "DataAssets/AbilitySpecification.h"
 
 //#define GAME_INSTANCE static_cast<UGameController*>(GetGameInstance())
@@ -29,12 +30,13 @@ void UAttackManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	}
 }
 
+
 // Called when the game starts or when spawned
 void UAttackManager::BeginPlay()
 {
 	Super::BeginPlay();
 	static_cast<UGameController*>(GetOwner()->GetGameInstance())->BindAbilityController(this);
-	
+	FPersistentWorldManager::AttackManager = this;
 	UpdateAbilityPool();
 	SortActiveUpgrades();
 
@@ -347,17 +349,10 @@ void UAttackManager::PrintCurrentlyActive()
 		UE_LOG(LogTemp, Warning, TEXT("UpgradeAbility: %s Level %i"), *Tuple.Value.Specification->DisplayName, Tuple.Value.Level);
 }
 
-void UAttackManager::OnRangedKeyPressed()
+void UAttackManager::OnKeyPressed(EAbilityType Type)
 {
-	if(ActiveAbilities.Contains(Ranged) && CheckCooldown(Ranged))
-		SpawnAbility(ActiveAbilities[Ranged]);
-}
-
-
-void UAttackManager::OnSpecialKeyPressed()
-{
-	if(ActiveAbilities.Contains(Special) && CheckCooldown(Special))
-		SpawnAbility(ActiveAbilities[Special]);
+	if(ActiveAbilities.Contains(Type) && CheckCooldown(Type))
+		SpawnAbility(ActiveAbilities[Type]);
 }
 
 void UAttackManager::SpawnAbility(FActiveAbility& Ability)
@@ -369,7 +364,7 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 	AbilityInstance->InitializeAbility(AbilityMapHandle, static_cast<AChar*>(GetOwner()), Ability.Level);
 	AbilityInstance->OnAbilityCreation();
 	//AbilityInstance->AbilityType
-	
+
 	for (const auto Tuple : ActiveUpgrades)
 	{
 
@@ -381,7 +376,8 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 
 				continue;
 			}
-		}	
+		}
+		UE_LOG(LogTemp, Error, TEXT("Added %s"), *Tuple.Value.Specification->DisplayName);
 		AbilityInstance->AddUpgrade(Tuple.Value.Specification->Class, Tuple.Value.Level);
 	}
 	AbilityInstance->AfterInitialization();

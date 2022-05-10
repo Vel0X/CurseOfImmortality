@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../../../../Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/ActiveSocket.h"
 #include "CurseOfImmortality/UpgradeSystem/IndirectAbilities/ArcaneReplicatorTurret.h"
 #include "Components/ActorComponent.h"
 #include "DataAssets/UpgradeList.h"
@@ -100,10 +99,8 @@ public:
 	UAttackManager();
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
-	void OnRangedKeyPressed();
-	void OnSpecialKeyPressed();
-	
+
+	void OnKeyPressed(EAbilityType Type);
 	
 	void SortActiveUpgrades(bool Verbose = false);
 	

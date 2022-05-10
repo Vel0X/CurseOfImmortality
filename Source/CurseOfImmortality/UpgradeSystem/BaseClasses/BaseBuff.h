@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
 #include "CurseOfImmortality/Enums/Enums.h"
 #include "BaseBuff.generated.h"
 
+class UNiagaraComponent;
+class ABaseAbility;
 class AChar;
 
 UCLASS()
@@ -19,7 +20,7 @@ public:
 	UBaseBuff();
 	
 	UFUNCTION()
-	virtual void OnTakeDamage(int AbilityHandle);
+	virtual void OnTakeDamage(ABaseAbility* Ability);
 
 	virtual void AddBuffStack();
 
@@ -30,6 +31,12 @@ public:
 	virtual void OnBuffEnd();
 
 	virtual void InitializeBuff(int Level, AChar* _Owner);
+
+	//virtual UNiagaraSystem* GetVFX() const;
+
+	virtual UNiagaraComponent* SetupVfx(EAttachmentPoint AttachmentPoint);
+
+	virtual void DestroyVfx();
 	
 	UPROPERTY(EditAnywhere)
 	AChar* Owner;
@@ -60,6 +67,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool RefreshOnNew = false;
 
+	int DefaultHandle = -1;
+	
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EStats>, float> StatModifications; 
 };

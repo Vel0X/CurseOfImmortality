@@ -20,5 +20,14 @@ enum EBuff
 	Bleed,
 	IncreaseHealth,
 	CursedBlade,
-	Rejuvenation
+	Rejuvenation,
+	SoulFlayer
+};
+
+UENUM()
+enum EAttachmentPoint
+{
+	UpperPoint,
+	CenterPoint,
+	LowerPoint
 };

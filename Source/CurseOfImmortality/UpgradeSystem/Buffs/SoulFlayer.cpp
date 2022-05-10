@@ -1,44 +1,38 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Bleed.h"
+#include "SoulFlayer.h"
+
 #include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
 
-UBleed::UBleed()
+USoulFlayer::USoulFlayer()
 {
-	DisplayName = "Bleed";
+	DisplayName = "Soul Flayer";
 	BuffDuration = 5.0f;
 	RemainingDuration = BuffDuration;
 	TimeUntilNextTick = TickInterval;
 	CurrentStacks = 1;
-	Stackable = true;
-	RefreshOnNew = true;
+	Stackable = false;
+	RefreshOnNew = false;
 	CustomBuffEnd = false;
-	StatModifier = false;
-	BuffType = Bleed;
+	StatModifier = true;
+	BuffType = SoulFlayer;
+	StatModifications.Add(EStats::PhysicalDamage, DamageIncrease);
+	StatModifications.Add(EStats::Movespeed, MoveSpeedIncrease);
+
 }
 
-void UBleed::InitializeBuff(int Level, AChar* _Owner)
+void USoulFlayer::InitializeBuff(int Level, AChar* _Owner)
 {
 	Super::InitializeBuff(Level, _Owner);
-	VFX = SetupVfx(CenterPoint);
 }
 
-void UBleed::AddBuffStack()
-{
-	Super::AddBuffStack();
-	RemainingDuration = BuffDuration;
-	DamageAmount += DamageAmount / static_cast<float>(CurrentStacks);
-	CurrentStacks++;
-}
-
-void UBleed::OnBuffEnd()
+void USoulFlayer::OnBuffEnd()
 {
 	Super::OnBuffEnd();
-	DestroyVfx();
 }
 
-void UBleed::OnBuffTick(float DeltaTime)
+void USoulFlayer::OnBuffTick(float DeltaTime)
 {
 	Super::OnBuffTick(DeltaTime);
 	if(TimeUntilNextTick <= 0.0f)

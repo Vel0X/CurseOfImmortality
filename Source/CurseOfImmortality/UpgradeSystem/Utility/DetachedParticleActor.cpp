@@ -40,7 +40,7 @@ void ADetachedParticleActor::Tick(float DeltaTime)
 void ADetachedParticleActor::InitializeParticleActor(UNiagaraComponent* ParticleSystem,
 	AActor* _FollowParent, float ManualDestructionTime)
 {
-	ParticleSystem->SetupAttachment(RootComponent);
+	ParticleSystem->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 	ParticleSystem->Deactivate();
 	RemainingLifetime = ManualDestructionTime == -1 ? 5.0f : ManualDestructionTime;
 

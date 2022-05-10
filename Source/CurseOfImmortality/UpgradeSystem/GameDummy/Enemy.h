@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Char.h"
-#include "GameFramework/Actor.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 #include "Enemy.generated.h"
 
 UCLASS()
@@ -24,4 +24,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void CastAbility();
+	
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* Mesh;
+
+	UPROPERTY(EditAnywhere)
+	UAbilitySpecification* Specification;
+
+	float ShootInterval = 1.0f;
+
+	float TimeUntilNextShot = 0.0f;
 };

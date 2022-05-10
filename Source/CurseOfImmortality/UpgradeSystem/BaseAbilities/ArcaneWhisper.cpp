@@ -71,7 +71,7 @@ void AArcaneWhisper::OnAbilityCreation()
 void AArcaneWhisper::AfterInitialization()
 {
 	Super::AfterInitialization();
-	delayedAfterInit = true;
+	bDelayedAfterInit = true;
 	UE_LOG(LogTemp, Warning, TEXT("AFTER INIT"));
 
 
@@ -81,7 +81,7 @@ void AArcaneWhisper::Tick(float DeltaSeconds)
 {
 
 	Super::Tick(DeltaSeconds);
-	if(delayedAfterInit)
+	if(bDelayedAfterInit)
 	{
 		if(Target)
 		{
@@ -103,7 +103,7 @@ void AArcaneWhisper::Tick(float DeltaSeconds)
 		{
 			Destroy(); //regular Destroy, as the Ability basically has not even spawned yet
 		}
-		delayedAfterInit = false;
+		bDelayedAfterInit = false;
 	}
 }
 

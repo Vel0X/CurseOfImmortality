@@ -16,7 +16,8 @@ class CURSEOFIMMORTALITY_API AMainChar : public AChar
 public:
 	// Sets default values for this actor's properties
 	AMainChar();
-	void BindToInput(); 
+	void BindToInput();
+	void OnMeleeKeyPressed();
 	void OnRangedKeyPressed();
 	void OnSpecialKeyPressed();
 protected:

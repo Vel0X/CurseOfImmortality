@@ -13,6 +13,14 @@ AChar::AChar()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	RootComponent = CreateDefaultSubobject<USceneComponent>("Root");
+	UpperAttachmentPoint = CreateDefaultSubobject<USceneComponent>("UpperAttachmentPoint");
+	UpperAttachmentPoint->SetupAttachment(RootComponent);
+	CenterAttachmentPoint = CreateDefaultSubobject<USceneComponent>("CenterAttachmentPoint");
+	CenterAttachmentPoint->SetupAttachment(RootComponent);
+	LowerAttachmentPoint = CreateDefaultSubobject<USceneComponent>("LowerAttachmentPoint");
+	LowerAttachmentPoint->SetupAttachment(RootComponent);
+
 }
 
 // Called when the game starts or when spawned
@@ -41,7 +49,6 @@ void AChar::Tick(float DeltaTime)
 
 	}
 }
-
 
 void AChar::RecalculateStats()
 {
@@ -101,7 +108,6 @@ void AChar::AddBuff(UBaseBuff* Buff)
 		Buffs.Add(Buff);
 		Buff->InitializeBuff(1,this);
 		UE_LOG(LogTemp, Warning, TEXT("%s was added"), *Buff->DisplayName);
-		AddBuffParticles(Buff);
 	}
 	
 	if(Buff->StatModifier)
@@ -115,7 +121,7 @@ void AChar::RemoveBuff(UBaseBuff* Buff)
 	{
 	UE_LOG(LogTemp, Warning, TEXT("%s was removed"), *Buff->DisplayName);
 		Buffs.Remove(Buff);
-		RemoveBuffParticles(Buff);
+		Buff->OnBuffEnd();
 		if(Buff->StatModifier)
 		{
 			RecalculateStats();
@@ -123,44 +129,22 @@ void AChar::RemoveBuff(UBaseBuff* Buff)
 	}
 }
 
-void AChar::AddBuffParticles(UBaseBuff* Buff)
-{
-	if(!ActiveParticleEffects.Contains(Buff->BuffType))
-	{
-		auto FX = static_cast<UGameController*>(GetGameInstance())->GetAttackManager()->PossibleUpgrades->BuffVFX;
-		if(!FX.Contains(Buff->BuffType))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("No VFX available"));
-			return;
-		}
-		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(FX[Buff->BuffType], RootComponent, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
-		NiagaraComp->SetupAttachment(RootComponent);
-		ActiveParticleEffects.Add(Buff->BuffType, NiagaraComp);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("VFX already exists"));
-	}
-}
-
-void AChar::RemoveBuffParticles(const UBaseBuff* Buff)
-{
-	if(ActiveParticleEffects.Contains(Buff->BuffType))
-	{
-		const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
-		DetachedParticleActor->InitializeParticleActor(ActiveParticleEffects[Buff->BuffType], nullptr, -1);
-		ActiveParticleEffects.Remove(Buff->BuffType);
-	}
-
-}
-
-void AChar::TakeDmg(float Amount, bool Verbose)
+void AChar::TakeDmg(float Amount, AChar* Dealer, ABaseAbility* Ability, bool Verbose)
 {
 	CurrentHealth -= Amount;
 	if(Verbose)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: Char Health is at %f Max Health %f"), CurrentHealth, Stats[Health]);
 	}
+
+
+	//notify all buffs of the damage taken
+	
+	for (int i = 0; i < Buffs.Num(); ++i)
+	{
+		Buffs[i]->OnTakeDamage(Ability);
+	}
+	
 }
 
 void AChar::Heal(float Amount, bool Verbose)
@@ -177,4 +161,51 @@ void AChar::Heal(float Amount, bool Verbose)
 	}
 }
 
+UNiagaraComponent* AChar::SetupBuffVfx(UNiagaraSystem* Vfx, const EAttachmentPoint AttachmentPoint, int& Handle)
+{
+	USceneComponent* AttachmentLocation = nullptr;
+	
+	switch (AttachmentPoint)
+	{
+	case UpperPoint:
+		AttachmentLocation = UpperAttachmentPoint;
+		break;
+	case CenterPoint:
+		AttachmentLocation = CenterAttachmentPoint;
+		break;
+	case LowerPoint:
+		AttachmentLocation = LowerAttachmentPoint;
+		break;
+	}
+	
+	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(Vfx, AttachmentLocation, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
+	NiagaraComp->AttachToComponent(AttachmentLocation, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+	ActiveParticleEffects.Add(ActiveParticleEffectHandle, NiagaraComp);
 
+	Handle = ActiveParticleEffectHandle;
+	ActiveParticleEffectHandle++;
+	
+	return NiagaraComp;
+}
+
+void AChar::RemoveBuffVfx(const int Handle, const bool SpawnDetachedParticleActor)
+{
+	if(ActiveParticleEffects.Contains(Handle))
+	{
+		if(SpawnDetachedParticleActor)
+		{
+			const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+			DetachedParticleActor->InitializeParticleActor(ActiveParticleEffects[Handle], nullptr, -1);
+		}
+		else
+		{
+			ActiveParticleEffects[Handle]->DestroyComponent();
+		}
+
+		ActiveParticleEffects.Remove(Handle);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("INVALID HANDLE"));
+	}
+}

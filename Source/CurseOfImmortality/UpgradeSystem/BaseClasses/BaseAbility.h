@@ -3,14 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
 #include "GameFramework/Actor.h"
 #include "BaseAbility.generated.h"
 
 //DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityStart, int);
 //DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityEnd, int);
 
+class AChar;
 class UBaseUpgrade;
+
 UENUM()
 enum EAbilityType
 {
@@ -29,6 +30,7 @@ class CURSEOFIMMORTALITY_API ABaseAbility : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ABaseAbility();
+	
 	UFUNCTION(BlueprintCallable)
 	virtual void OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor);
 	virtual void OnAbilityCreation();

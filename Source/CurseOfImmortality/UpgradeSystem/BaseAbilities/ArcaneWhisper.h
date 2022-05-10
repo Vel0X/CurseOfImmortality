@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API AArcaneWhisper : public ARangedAbility
+class CURSEOFIMMORTALITY_API AArcaneWhisper final : public ARangedAbility
 {
 	GENERATED_BODY()
 
@@ -27,7 +27,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float BounceRange = 700;
 
-	bool delayedAfterInit = false;
+	bool bDelayedAfterInit = false;
 	UPROPERTY(EditAnywhere)
 	FVector SpawnLocation = FVector::Zero();
 };

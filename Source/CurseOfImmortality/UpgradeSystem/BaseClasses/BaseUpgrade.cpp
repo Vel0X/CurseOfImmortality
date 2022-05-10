@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "BaseUpgrade.h"
+#include "BaseAbility.h"
+#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
 
 // Sets default values for this component's properties
 UBaseUpgrade::UBaseUpgrade()
@@ -47,6 +48,11 @@ void UBaseUpgrade::OnAbilityEnd(int AbilityHandle)
 }
 
 void UBaseUpgrade::OnEnemyHit(AChar* Enemy)
+{
+	
+}
+
+void UBaseUpgrade::OnAbilityHit(ARangedAbility* Ability)
 {
 	
 }

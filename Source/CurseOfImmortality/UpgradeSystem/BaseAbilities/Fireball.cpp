@@ -20,6 +20,19 @@ AFireball::AFireball()
 	Collision->SetupAttachment(ProjectileMesh);
 }
 
+void AFireball::OnInteraction(ABaseAbility* OtherAbility)
+{
+	Super::OnInteraction(OtherAbility);
+	UE_LOG(LogTemp, Warning, TEXT("ffff"));
+	//rotate the Actor 180°
+	FVector NewForward = GetActorForwardVector();
+	NewForward.X *= -1;
+	NewForward.Y *= -1;
+
+	SetActorRotation(NewForward.Rotation());
+	
+}
+
 void AFireball::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);

@@ -11,7 +11,6 @@ AMainChar::AMainChar()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	RootComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	AttackManager = CreateDefaultSubobject<UAttackManager>("AttackManager");
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 	Mesh->SetupAttachment(RootComponent);
@@ -35,6 +34,8 @@ void AMainChar::BindToInput()
 		// Bind inputs here
 		// InputComponent->BindAction("Jump", IE_Pressed, this, &AUnrealisticPawn::Jump);
 		// etc...
+
+		InputComponent->BindAction("TestInputMelee", IE_Pressed, this, &AMainChar::OnMeleeKeyPressed);	
 		InputComponent->BindAction("TestInputRanged", IE_Pressed, this, &AMainChar::OnRangedKeyPressed);	
 		InputComponent->BindAction("testInputSpecial", IE_Pressed, this, &AMainChar::OnSpecialKeyPressed);	
 
@@ -44,21 +45,26 @@ void AMainChar::BindToInput()
 	}
 }
 
+
 // Called every frame
 void AMainChar::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void AMainChar::OnRangedKeyPressed()
+void AMainChar::OnMeleeKeyPressed()
 {
-	AttackManager->OnRangedKeyPressed();
+	AttackManager->OnKeyPressed(Melee);
 }
 
+void AMainChar::OnRangedKeyPressed()
+{
+	AttackManager->OnKeyPressed(Ranged);
+}
 
 void AMainChar::OnSpecialKeyPressed()
 {
-	AttackManager->OnSpecialKeyPressed();
+	AttackManager->OnKeyPressed(Special);
 }
 
 

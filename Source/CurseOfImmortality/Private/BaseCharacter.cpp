@@ -25,7 +25,6 @@ void ABaseCharacter::BeginPlay()
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -35,14 +34,14 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
-void ABaseCharacter::TakeDamage(float Damage)
+void ABaseCharacter::ReceiveDamage(float Damage)
 {
 	Health -= Damage;
 }
 
 void ABaseCharacter::DoDamage(float Damage, ABaseCharacter EnemyCharacter)
 {
-	EnemyCharacter.TakeDamage(Damage);
+	EnemyCharacter.ReceiveDamage(Damage);
 }
 
 void ABaseCharacter::OnDeath()

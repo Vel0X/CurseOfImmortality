@@ -3,13 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NiagaraComponent.h"
 #include "GameFramework/Actor.h"
 #include "CurseOfImmortality/Enums/Enums.h"
-#include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
 #include "Char.generated.h"
 
 
+class UNiagaraComponent;
+class UNiagaraSystem;
+class ABaseAbility;
+class UBaseBuff;
 class UBaseStatSpecification;
 UCLASS()
 class CURSEOFIMMORTALITY_API AChar : public AActor
@@ -28,20 +30,34 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	/**
+	 * @brief Recalculate the Stats of the Char, by getting the BaseStats and adding all the Stat Modifications on top
+	 */
 	void RecalculateStats();
 
 	void AddBuff(UBaseBuff* Buff);
 	void RemoveBuff(UBaseBuff* Buff);
-	void AddBuffParticles(UBaseBuff* Buff);
-	void RemoveBuffParticles(const UBaseBuff* Buff);
-	void TakeDmg(float Amount, bool Verbose = false);
+
+	/**
+	 * @brief Generic function for receiving damage
+	 * @param Amount How much Damage was done
+	 * @param Dealer Who dealt the Damage
+	 * @param Ability By which Ability was the Damage dealt (null, if the Damage was done some other way)
+	 * @param Verbose Enable Logging
+	 */
+	void TakeDmg(float Amount, AChar* Dealer, ABaseAbility* Ability, bool Verbose = false);
+	
 	void Heal(float Amount, bool Verbose = false);
+	
+	UNiagaraComponent* SetupBuffVfx(UNiagaraSystem* Vfx, const EAttachmentPoint AttachmentPoint, int& Handle);
+	
+	void RemoveBuffVfx(const int Handle, const bool SpawnDetachedParticleActor = true);
 
 	UPROPERTY(EditAnywhere)
 	TArray<UBaseBuff*> Buffs;
 
 	UPROPERTY(EditAnywhere)
-	TMap<TEnumAsByte<EBuff>, UNiagaraComponent*> ActiveParticleEffects;
+	TMap<int, UNiagaraComponent*> ActiveParticleEffects;
 	
 	float CurrentHealth = 0.0f;
 	
@@ -53,7 +69,20 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	FString DisplayName = "";
+
+	UPROPERTY(EditAnywhere)
+	USceneComponent* UpperAttachmentPoint;
+
+	UPROPERTY(EditAnywhere)
+	USceneComponent* CenterAttachmentPoint;
+
+	UPROPERTY(EditAnywhere)
+	USceneComponent* LowerAttachmentPoint;
+
 	//TArray<>
+
+private:
+	int ActiveParticleEffectHandle = 0;
 };
 
 
