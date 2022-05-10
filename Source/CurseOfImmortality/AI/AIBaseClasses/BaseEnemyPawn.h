@@ -20,7 +20,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	UCapsuleComponent* CollisionCapsule;
 
-	//Getter
+	//Getter and Setter
 public:
 	UCapsuleComponent* GetCollisionCapsule() const;
 };

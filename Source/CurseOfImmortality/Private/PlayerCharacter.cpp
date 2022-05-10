@@ -2,6 +2,8 @@
 
 
 #include "PlayerCharacter.h"
+#include "GameController.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 
 
 // Sets default values
@@ -19,13 +21,16 @@ APlayerCharacter::APlayerCharacter()
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	PlayerCamera->SetupAttachment(SpringArm);
 	InputManager = CreateDefaultSubobject<UInputManager>(TEXT("InputManager"));
+	AttackManager = CreateDefaultSubobject<UAttackManager>(TEXT("AttackManager"));
+	StateMachine = CreateDefaultSubobject<UStateMachine>(TEXT("StateMachine"));
 }
-
+ 
 
 // Called when the game starts or when spawned
 void APlayerCharacter::Setup()
 {
 	Super::Setup();
+	static_cast<UGameController*>(GetOwner()->GetGameInstance())->BindPlayerCharacter(this);
 	SetupInputComponent();
 }
 
