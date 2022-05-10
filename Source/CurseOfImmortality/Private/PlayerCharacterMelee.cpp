@@ -12,13 +12,16 @@ void UPlayerCharacterMelee::OnStateEnter(UStateMachine* StateMachine)
 
 	Controller = Cast<UPlayerCharacterStateMachine>(StateMachine);
 	SelfRef = Controller->GetSelfRef();
-	
+
 	SelfRef->Melee = true;
 	SelfRef->CurrentAnimationDuration = SelfRef->MeleeDuration1;
 
-	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = Cast<APlayerCharacter>(SelfRef)->MovementSpeedWhileAttacking;
-	
-	UE_LOG(LogTemp, Warning, TEXT("Melee State Entered"));
+	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = Cast<APlayerCharacter>(SelfRef)->
+		MovementSpeedWhileAttacking;
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Melee State Entered"));
+	}
 }
 
 void UPlayerCharacterMelee::OnStateExit()
@@ -26,14 +29,17 @@ void UPlayerCharacterMelee::OnStateExit()
 	Super::OnStateExit();
 	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = 0;
 	SelfRef->Melee = false;
-	UE_LOG(LogTemp, Warning, TEXT("Exit Melee State"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Exit Melee State"))
+	}
 }
 
 void UPlayerCharacterMelee::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	if(Controller->GetSelfRef()->InputManager->LastAction == InputAction::Dash)
+	if (Controller->GetSelfRef()->InputManager->LastAction == InputAction::Dash)
 	{
 		Controller->Transition(Controller->Dash, Controller);
 	}

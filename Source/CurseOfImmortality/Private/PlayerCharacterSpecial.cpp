@@ -12,27 +12,33 @@ void UPlayerCharacterSpecial::OnStateEnter(UStateMachine* StateMachine)
 
 	Controller = Cast<UPlayerCharacterStateMachine>(StateMachine);
 	SelfRef = Controller->GetSelfRef();
-	
+
 	SelfRef->Special = true;
 	SelfRef->CurrentAnimationDuration = SelfRef->SpecialDuration1;
-	
+
 	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = 0;
-	
-	UE_LOG(LogTemp, Warning, TEXT("Special State Entered"))
+
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Special State Entered"))
+	}
 }
 
 void UPlayerCharacterSpecial::OnStateExit()
 {
 	Super::OnStateExit();
 	SelfRef->Special = false;
-	UE_LOG(LogTemp, Warning, TEXT("Exit Special State"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Exit Special State"))
+	}
 }
 
 void UPlayerCharacterSpecial::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
-	
-	if(Controller->GetSelfRef()->InputManager->LastAction == InputAction::Dash)
+
+	if (Controller->GetSelfRef()->InputManager->LastAction == InputAction::Dash)
 	{
 		Controller->Transition(Controller->Dash, Controller);
 	}

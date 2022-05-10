@@ -12,23 +12,29 @@ void UPlayerCharacterRunning::OnStateEnter(UStateMachine* StateMachine)
 
 	Controller = Cast<UPlayerCharacterStateMachine>(StateMachine);
 	SelfRef = Controller->GetSelfRef();
-	
+
 	SelfRef->Running = true;
-	UE_LOG(LogTemp, Warning, TEXT("Running State Entered"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Running State Entered"))
+	}
 }
 
 void UPlayerCharacterRunning::OnStateExit()
 {
 	Super::OnStateExit();
 	SelfRef->Running = false;
-	UE_LOG(LogTemp, Warning, TEXT("Exit Running State"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Exit Running State"))
+	}
 }
 
 void UPlayerCharacterRunning::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
-	
-	switch(*Controller->NewAction)
+
+	switch (*Controller->NewAction)
 	{
 	case InputAction::NoAction:
 		Controller->Transition(Controller->Idle, Controller);

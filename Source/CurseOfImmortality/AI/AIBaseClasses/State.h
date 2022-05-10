@@ -22,4 +22,6 @@ public:
 	virtual void OnStateExit();
 
 	virtual void OnStateUpdate(float DeltaTime);
+
+	bool Verbose = false;
 };

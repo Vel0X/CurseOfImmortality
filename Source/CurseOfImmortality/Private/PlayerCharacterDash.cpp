@@ -15,14 +15,20 @@ void UPlayerCharacterDash::OnStateEnter(UStateMachine* StateMachine)
 	
 	SelfRef->Dash = true;
 	SelfRef->CurrentAnimationDuration = SelfRef->DashDuration1;
-	UE_LOG(LogTemp, Warning, TEXT("Dash State Entered"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Dash State Entered"))
+	}
 }
 
 void UPlayerCharacterDash::OnStateExit()
 {
 	Super::OnStateExit();
 	SelfRef->Dash = false;
-	UE_LOG(LogTemp, Warning, TEXT("Exit Dash State"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Exit Dash State"))
+	}
 }
 
 void UPlayerCharacterDash::OnStateUpdate(float DeltaTime)

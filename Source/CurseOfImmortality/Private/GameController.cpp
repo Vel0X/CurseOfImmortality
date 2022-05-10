@@ -10,7 +10,6 @@ void UGameController::OnStart()
 {
 	Super::OnStart();
 	UE_LOG(LogTemp, Warning, TEXT("GameController was created"));
-
 }
 
 void UGameController::BindAbilityController(UAttackManager* _AttackManager)

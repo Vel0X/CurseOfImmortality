@@ -17,14 +17,20 @@ void UPlayerCharacterRanged::OnStateEnter(UStateMachine* StateMachine)
 
 	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = 0;
 	
-	UE_LOG(LogTemp, Warning, TEXT("Ranged State Entered"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Ranged State Entered"))
+	}
 }
 
 void UPlayerCharacterRanged::OnStateExit()
 {
 	Super::OnStateExit();
 	SelfRef->Ranged = false;
-	UE_LOG(LogTemp, Warning, TEXT("Exit Ranged State"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Exit Ranged State"))
+	}
 }
 
 void UPlayerCharacterRanged::OnStateUpdate(float DeltaTime)

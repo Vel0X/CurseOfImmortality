@@ -68,7 +68,6 @@ public:
 				Neighbors.Add(&GetValue(x, y));
 			}
 		}
-
 		return Neighbors;
 	}
 
@@ -117,6 +116,7 @@ public:
 	bool GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path, bool Verbose = false);
 	bool GetPathWorldSpace(FVector Start, FVector End, TArray<FVector>& WorldSpacePath, bool Verbose = false);
 
+	UFUNCTION(BlueprintCallable)
 	void GenerateNavmesh();
 
 	int CalculateDistance(int StartX, int StartY, int EndX, int EndY) const;

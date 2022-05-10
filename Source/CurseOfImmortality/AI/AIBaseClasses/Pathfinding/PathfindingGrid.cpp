@@ -105,7 +105,6 @@ bool APathfindingGrid::GetPath(int StartX, int StartY, int EndX, int EndY, TArra
 		}
 	}
 
-
 	int CurrentIterations = 0;
 
 	FPfNode* StartNode = &GetValue(StartX, StartY);
@@ -177,10 +176,13 @@ bool APathfindingGrid::GetPathWorldSpace(FVector Start, FVector End, TArray<FVec
 		return false;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("SX %i"), SX);
-	UE_LOG(LogTemp, Warning, TEXT("SY %i"), SY);
-	UE_LOG(LogTemp, Warning, TEXT("EX %i"), EX);
-	UE_LOG(LogTemp, Warning, TEXT("EY %i"), EY);
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SX %i"), SX);
+		UE_LOG(LogTemp, Warning, TEXT("SY %i"), SY);
+		UE_LOG(LogTemp, Warning, TEXT("EX %i"), EX);
+		UE_LOG(LogTemp, Warning, TEXT("EY %i"), EY);
+	}
 
 	TArray<FPfNode*> Path;
 	if (GetPath(SX, SY, EX, EY, Path, false))
@@ -207,7 +209,17 @@ void APathfindingGrid::GenerateNavmesh()
 			if (GetWorld()->LineTraceSingleByChannel(R, StartPosition, WorldPosition,
 			                                         ECollisionChannel::ECC_WorldStatic, P))
 			{
-				ToggleWalkable(x, y);
+				if (!Cast<APawn>(R.GetActor()))
+				{
+					TArray<FPfNode*> NodesToToggle = GetNeighbors(x, y);
+					for (FPfNode* Node : NodesToToggle)
+					{
+						if (Node->IsWalkable)
+						{
+							ToggleWalkable(Node->X, Node->Y);
+						}
+					}
+				}
 			}
 		}
 	}
