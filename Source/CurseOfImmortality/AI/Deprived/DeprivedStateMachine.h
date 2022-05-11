@@ -6,7 +6,7 @@
 #include "CurseOfImmortality/AI/AIBaseClasses/StateMachine.h"
 #include "DeprivedStateMachine.generated.h"
 
-class ABaseCharacter;
+class APlayerCharacter;
 class ADeprivedPawn;
 class UDeprivedRunning;
 class UDeprivedIdle;
@@ -24,7 +24,6 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	void MoveToTarget(FVector Target, float Speed);
-
 	void FocusOnPlayer();
 	void FocusOnPath(FVector PathLocation, float DeltaTime);
 
@@ -44,7 +43,7 @@ public:
 
 	//Getter
 	ADeprivedPawn* GetSelfRef() const;
-	ABaseCharacter* GetPlayer() const;
+	APlayerCharacter* GetPlayer() const;
 
 protected:
 	virtual void BeginPlay() override;
@@ -54,5 +53,5 @@ private:
 	UPROPERTY()
 	ADeprivedPawn* SelfRef;
 	UPROPERTY()
-	ABaseCharacter* Player;
+	APlayerCharacter* Player;
 };

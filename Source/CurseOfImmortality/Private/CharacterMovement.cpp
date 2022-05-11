@@ -43,7 +43,21 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 		{
 			RootComponent->SetWorldRotation(Direction.Rotation());
 		}
-		RootComponent->AddWorldOffset(Direction * DeltaTime * MovementSpeed, false);
+		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
+		{
+			if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
+			{
+				Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->
+					MovementSpeed;
+			}
+		}
+		else
+		{
+			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed;
+		}
+		RootComponent->AddWorldOffset(Direction * DeltaTime * MovementSpeed,
+		                              true);
+
 		DirectionSet = false;
 	}
 }
@@ -57,5 +71,13 @@ void UCharacterMovement::SetDirection(FVector MoveInput, float MovementSpeedInpu
 		MovementSpeed = MovementSpeedInput;
 		Direction = MoveInput;
 		DirectionSet = true;
+	}
+	else
+	{
+		if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running) //TODO Maybe do better
+		{
+			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = 0;
+			Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction = InputAction::NoAction;
+		}
 	}
 }

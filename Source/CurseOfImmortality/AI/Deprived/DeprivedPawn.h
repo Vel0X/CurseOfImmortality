@@ -45,8 +45,6 @@ public:
 	//Base Stats
 	UPROPERTY(EditAnywhere, Category="Base Stats")
 	float Damage = 10.f;
-	UPROPERTY(EditAnywhere, Category="Base Stats")
-	float Speed = 400.f;
 
 	//Jump Attack
 	UPROPERTY(EditAnywhere, Category="Jump Attack")

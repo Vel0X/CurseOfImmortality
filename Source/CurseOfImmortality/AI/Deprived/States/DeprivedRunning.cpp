@@ -14,13 +14,19 @@ void UDeprivedRunning::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->Running = true;
-	UE_LOG(LogTemp, Warning, TEXT("Running State Entered"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Running State Entered"))
+	}
 }
 
 void UDeprivedRunning::OnStateExit()
 {
 	SelfRef->Running = false;
-	UE_LOG(LogTemp, Warning, TEXT("Running State Exit"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Running State Exit"))
+	}
 }
 
 void UDeprivedRunning::OnStateUpdate(float DeltaTime)
@@ -32,72 +38,75 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	}
 
 	const FVector PlayerLocation = Player->GetActorLocation();
-	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
-	
-	if (!Path.IsEmpty())
+	const FVector TargetPlayer = PlayerLocation - SelfRef->GetActorLocation();
+
+	FVector OwnLocation(SelfRef->GetActorLocation());
+	FVector RightVectorSelf(SelfRef->GetActorRightVector());
+	FVector LeftVectorSelf(RightVectorSelf.operator-());
+	FVector RightVectorPlayer(Player->GetActorRightVector());
+	FVector LeftVectorPlayer(RightVectorPlayer.operator-());
+	FVector StartPointLeft(LeftVectorSelf * SelfRef->GetCollisionCapsule()->GetUnscaledCapsuleRadius() + OwnLocation);
+	FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
+	FVector StartPointRight(RightVectorSelf * SelfRef->GetCollisionCapsule()->GetUnscaledCapsuleRadius() + OwnLocation);
+	FVector EndPointRight(RightVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
+
+	FHitResult HitMid;
+	FHitResult HitLeft;
+	FHitResult HitRight;
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(Player);
+	CollisionParams.AddIgnoredActor(SelfRef);
+
+	Controller->GetWorld()->LineTraceSingleByChannel(HitMid, SelfRef->GetActorLocation(), Player->GetActorLocation(),
+	                                                 ECC_Pawn, CollisionParams);
+	Controller->GetWorld()->LineTraceSingleByChannel(HitLeft, StartPointLeft, EndPointLeft,
+	                                                 ECC_Pawn, CollisionParams);
+	Controller->GetWorld()->LineTraceSingleByChannel(HitRight, StartPointRight, EndPointLeft,
+	                                                 ECC_Pawn, CollisionParams);
+
+	if (HitMid.bBlockingHit || HitLeft.bBlockingHit || HitRight.bBlockingHit)
 	{
-		FHitResult Hit;
-		FCollisionQueryParams CollisionParams;
-		CollisionParams.AddIgnoredActor(SelfRef);
-		CollisionParams.AddIgnoredActor(Player);
-
-		FVector LineTraceStart = SelfRef->GetActorLocation();
-		FVector LineTraceEnd = PlayerLocation - LineTraceStart;
-		LineTraceEnd.Normalize();
-		LineTraceEnd *= SelfRef->DistJumpAttack;
-
-		DrawDebugLine(Controller->GetWorld(), LineTraceStart, PlayerLocation, FColor::Purple);
-
-		Controller->GetWorld()->LineTraceSingleByChannel(Hit, LineTraceStart, LineTraceEnd, ECC_Pawn, CollisionParams);
-
-		// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, PlayerLocation.ToString());
-		// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("%b"), Hit.bBlockingHit);
-
-		if (!Hit.bBlockingHit)
+		if (PathfindingTimer <= 0)
 		{
-			if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
+			Path.Empty();
+			auto Grid = static_cast<UGameController*>(Controller->GetOwner()->GetGameInstance())->GetPathfindingGrid();
+
+			if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, true))
 			{
-				Controller->Transition(Controller->NormalAttack, Controller);
+				Path.Empty();
+				UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
 			}
-			else if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistJumpAttack)
-			{
-				UE_LOG(LogTemp, Error, TEXT("CheckJumpAttack"));
-				if (SelfRef->CurrentJumpAttackCoolDown <= 0.f)
-				{
-					UE_LOG(LogTemp, Error, TEXT("JumpAttack"));
-					SelfRef->CurrentJumpAttackCoolDown = SelfRef->JumpAttackCoolDown;
-					Controller->Transition(Controller->JumpAttack, Controller);
-				}
-				else
-				{
-					FollowPath(DeltaTime);
-				}
-			}
+			PathIndex = 0;
+			PathfindingTimer = 0.5f;
 		}
-		else
+		if (!Path.IsEmpty())
 		{
 			FollowPath(DeltaTime);
 		}
 	}
-
-	if (PathfindingTimer <= 0)
+	else
 	{
-		Path.Empty();
-		auto Grid = static_cast<UGameController*>(Controller->GetOwner()->GetGameInstance())->GetPathfindingGrid();
-
-		if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path))
+		Controller->FocusOnPlayer();
+		Controller->MoveToTarget(PlayerLocation, SelfRef->MovementSpeed);
+		if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
+			Controller->Transition(Controller->NormalAttack, Controller);
 		}
-		PathIndex = 0;
-		PathfindingTimer = 0.5f;
+		else if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistJumpAttack)
+		{
+			if (SelfRef->CurrentJumpAttackCoolDown <= 0.f)
+			{
+				SelfRef->CurrentJumpAttackCoolDown = SelfRef->JumpAttackCoolDown;
+				Controller->Transition(Controller->JumpAttack, Controller);
+			}
+		}
 	}
 	PathfindingTimer -= DeltaTime;
 }
 
 void UDeprivedRunning::FollowPath(float DeltaTime)
 {
-	Controller->MoveToTarget(Path[PathIndex], SelfRef->Speed);
+	Controller->MoveToTarget(Path[PathIndex], SelfRef->MovementSpeed);
 	FVector L(SelfRef->GetActorLocation());
 	L.Z = 0;
 	Controller->FocusOnPath(Path[PathIndex], DeltaTime);

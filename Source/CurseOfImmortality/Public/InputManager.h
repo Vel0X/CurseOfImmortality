@@ -11,11 +11,12 @@
 UENUM()
 enum class InputAction
 {
-	NoAction     UMETA(DisplayName = "NoAction"),
-	MeleeAbility     UMETA(DisplayName = "MeleeAbility"),
-	RangedAbility      UMETA(DisplayName = "RangedAbility"),
-	SpecialAbility   UMETA(DisplayName = "SpecialAbility"),
-	Dash   UMETA(DisplayName = "Dash"),
+	NoAction 			UMETA(DisplayName = "Idle"),
+	Running				UMETA(DisplayName = "Running"),
+	MeleeAbility		UMETA(DisplayName = "MeleeAbility"),
+	RangedAbility		UMETA(DisplayName = "RangedAbility"),
+	SpecialAbility		UMETA(DisplayName = "SpecialAbility"),
+	Dash				UMETA(DisplayName = "Dash"),
 };
 
 class APlayerCharacter;
@@ -48,6 +49,8 @@ protected:
 	
 	void Dash();
 
+	//void SetAction(InputAction Action);
+
 	TArray<InputAction> InputBuffer;
 
 	UPROPERTY(EditAnywhere)
@@ -64,8 +67,8 @@ public:
 	UCharacterMovement *MovementComponent;
 
 	FVector MoveInput;
-	
-	float TimeTillNextAction;
+
+	InputAction LastAction;
 };
 
 

@@ -21,7 +21,7 @@ protected:
 	UPROPERTY()
 	ADeprivedPawn* SelfRef;
 	UPROPERTY()
-	ABaseCharacter* Player;
+	APlayerCharacter* Player;
 	UPROPERTY()
 	UDeprivedStateMachine* Controller;
 };

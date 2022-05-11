@@ -13,8 +13,10 @@
 void UDeprivedJumpAttack::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
-
-	UE_LOG(LogTemp, Warning, TEXT("Jump Attack State Entered"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Jump Attack State Entered"))
+	}
 
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
 	Player = Controller->GetPlayer();
@@ -28,8 +30,10 @@ void UDeprivedJumpAttack::OnStateEnter(UStateMachine* StateMachine)
 void UDeprivedJumpAttack::OnStateExit()
 {
 	Super::OnStateExit();
-
-	UE_LOG(LogTemp, Warning, TEXT("Exit State Jump Attack"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Exit State Jump Attack"))
+	}
 
 	Controller->GetSelfRef()->Jump = false;
 	Controller->GetSelfRef()->GetCollisionCapsule()->SetCollisionProfileName(TEXT("Pawn"));
@@ -80,8 +84,6 @@ void UDeprivedJumpAttack::SetLocation()
 {
 	PlayerLocation = Player->GetActorLocation();
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Location Set");
-
 	const FVector PlayerForwardDir = Player->GetActorForwardVector() * SelfRef->PlayerForwardVector +
 		PlayerLocation;
 	OwnLocation = SelfRef->GetActorLocation();
@@ -90,6 +92,9 @@ void UDeprivedJumpAttack::SetLocation()
 	JumpDestination.Normalize();
 	JumpDestination = JumpDestination * SelfRef->DistAfterPlayer + PlayerForwardDir;
 	JumpDir = JumpDestination - OwnLocation;
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, Player->GetActorLocation().ToString());
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, JumpDestination.ToString());
 
 	LocationSet = true;
 }

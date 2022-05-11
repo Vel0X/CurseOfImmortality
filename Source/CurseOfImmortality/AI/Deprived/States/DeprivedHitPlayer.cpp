@@ -14,7 +14,10 @@ void UDeprivedHitPlayer::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->HitPlayer = true;
-	UE_LOG(LogTemp, Warning, TEXT("Hit Player State Entered"))
+	if(Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit Player State Entered"))
+	}
 }
 
 void UDeprivedHitPlayer::OnStateExit()
@@ -22,9 +25,11 @@ void UDeprivedHitPlayer::OnStateExit()
 	Super::OnStateExit();
 
 	Controller->GetSelfRef()->HitPlayer = false;
-	UE_LOG(LogTemp, Warning, TEXT("Exit State Hit Player"))
+	if(Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Exit State Hit Player"))
 
-
+	}
 	SelfRef->CurrentRecoverDuration = SelfRef->RecoverDuration;
 }
 

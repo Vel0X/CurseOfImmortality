@@ -27,14 +27,24 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	CurrentState->OnStateUpdate(DeltaTime);
 
 	FVector PlayerLocation(Player->GetActorLocation());
-	FVector PlayerForwardDir(Player->GetActorForwardVector() * SelfRef->PlayerForwardVector + PlayerLocation);
 	FVector OwnLocation(SelfRef->GetActorLocation());
+	FVector RightVectorSelf(SelfRef->GetActorRightVector());
+	FVector LeftVectorSelf(RightVectorSelf.operator-());
+	FVector RightVectorPlayer(Player->GetActorRightVector());
+	FVector LeftVectorPlayer(RightVectorPlayer.operator-());
+	FVector StartPointLeft(LeftVectorSelf * SelfRef->GetCollisionCapsule()->GetUnscaledCapsuleRadius() + OwnLocation);
+	FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
+	FVector StartPointRight(RightVectorSelf * SelfRef->GetCollisionCapsule()->GetUnscaledCapsuleRadius() + OwnLocation);
+	FVector EndPointRight(RightVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
 
-	DrawDebugLine(GetWorld(), PlayerLocation, PlayerForwardDir, FColor::Red);
-	DrawDebugLine(GetWorld(), OwnLocation, PlayerForwardDir, FColor::Green);
-	FVector Test(PlayerForwardDir - OwnLocation);
-	Test.Normalize();
-	DrawDebugLine(GetWorld(), PlayerForwardDir, Test * SelfRef->DistAfterPlayer + PlayerForwardDir, FColor::Blue);
+	DrawDebugLine(GetWorld(), OwnLocation, PlayerLocation, FColor::Red);
+	DrawDebugLine(
+		GetWorld(), RightVectorSelf * SelfRef->GetCollisionCapsule()->GetUnscaledCapsuleRadius() + OwnLocation,
+		RightVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation, FColor::Blue);
+	DrawDebugLine(
+		GetWorld(), LeftVectorSelf * SelfRef->GetCollisionCapsule()->GetUnscaledCapsuleRadius() + OwnLocation,
+		LeftVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation, FColor::Green);
+
 
 	SelfRef->CurrentJumpAttackCoolDown -= DeltaTime;
 }
@@ -45,7 +55,7 @@ void UDeprivedStateMachine::BeginPlay()
 
 	//Initialise References
 	SelfRef = Cast<ADeprivedPawn>(GetOwner());
-	Player = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetPawn());
+	Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetPawn());
 
 	//Initialise States
 	Idle = NewObject<UDeprivedIdle>();
@@ -54,6 +64,14 @@ void UDeprivedStateMachine::BeginPlay()
 	HitPlayer = NewObject<UDeprivedHitPlayer>();
 	Recover = NewObject<UDeprivedRecover>();
 	NormalAttack = NewObject<UDeprivedNormalAttack>();
+
+	//Log States
+	Idle->Verbose = true;
+	Running->Verbose = true;
+	JumpAttack->Verbose = true;
+	HitPlayer->Verbose = true;
+	Recover->Verbose = true;
+	NormalAttack->Verbose = true;
 
 	CurrentState = Idle;
 	CurrentState->OnStateEnter(this);
@@ -89,7 +107,7 @@ void UDeprivedStateMachine::FocusOnPath(FVector PathLocation, float DeltaTime)
 	Target.Z = 0;
 
 	const FRotator LookAtRotation(
-		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 180.f).Rotation());
+		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 270.f).Rotation());
 
 	SelfRef->GetCollisionCapsule()->SetWorldRotation(LookAtRotation);
 }
@@ -104,7 +122,7 @@ ADeprivedPawn* UDeprivedStateMachine::GetSelfRef() const
 	return SelfRef;
 }
 
-ABaseCharacter* UDeprivedStateMachine::GetPlayer() const
+APlayerCharacter* UDeprivedStateMachine::GetPlayer() const
 {
 	if (!Player)
 	{

@@ -16,7 +16,7 @@ void UShatteredImpact::OnEnemyHit()
 		return;
 	}
 	
-	const AAttackManager* AttackManager = static_cast<UGameController*>(GetOwner()->GetGameInstance())->GetAttackManager();
+	const UAttackManager* AttackManager = static_cast<UGameController*>(GetOwner()->GetGameInstance())->GetAttackManager();
 
 	UE_LOG(LogTemp, Warning, TEXT("OnEnemyHitTriggered"));
 	

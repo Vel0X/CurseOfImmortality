@@ -1,39 +1,38 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AttackManager.h"
-
 #include "AbilitySpecification.h"
 #include "GameController.h"
 
 //#define GAME_INSTANCE static_cast<UGameController*>(GetGameInstance())
 
 // Sets default values
-AAttackManager::AAttackManager()
+UAttackManager::UAttackManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
 // Called when the game starts or when spawned
-void AAttackManager::BeginPlay()
+void UAttackManager::BeginPlay()
 {
 	Super::BeginPlay();
-	BindToInput();
-	static_cast<UGameController*>(GetGameInstance())->BindAbilityController(this);
+	
+	static_cast<UGameController*>(GetOwner()->GetGameInstance())->BindAbilityController(this);
 	
 	UpdateAbilityPool();
 	SortActiveUpgrades();
 
 }
 
-void AAttackManager::CleanupAbility(int AbilityHandle)
+void UAttackManager::CleanupAbility(int AbilityHandle)
 {
 }
 
 // Called every frame
-void AAttackManager::Tick(float DeltaTime)
+void UAttackManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::Tick(DeltaTime);
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	//reduce Cooldowns
 	for (const auto Tuple : ActiveAbilities)
@@ -47,26 +46,9 @@ void AAttackManager::Tick(float DeltaTime)
 
 }
 
-void AAttackManager::BindToInput() 
-{
-	// Initialize our component
-	InputComponent = NewObject<UInputComponent>(this);
-	InputComponent->RegisterComponent();
-	if (InputComponent)
-	{
-		// Bind inputs here
-		// InputComponent->BindAction("Jump", IE_Pressed, this, &AUnrealisticPawn::Jump);
-		// etc...
-		InputComponent->BindAction("TestInputRanged", IE_Pressed, this, &AAttackManager::OnRangedKeyPressed);	
-		InputComponent->BindAction("testInputSpecial", IE_Pressed, this, &AAttackManager::OnSpecialKeyPressed);	
 
-		// Now hook up our InputComponent to one in a Player
-		// Controller, so that input flows down to us
-		EnableInput(GetWorld()->GetFirstPlayerController());
-	}
-}
 
-void AAttackManager::SortActiveUpgrades(bool Verbose)
+void UAttackManager::SortActiveUpgrades(bool Verbose)
 {
 	if(Verbose)
 	{
@@ -92,8 +74,10 @@ void AAttackManager::SortActiveUpgrades(bool Verbose)
 	
 }
 
-bool AAttackManager::CheckCooldown(const EAbilityType Ability)
+bool UAttackManager::CheckCooldown(const EAbilityType Ability)
 {
+	auto cd= ActiveAbilities[Ability].CurrentCooldown;
+	UE_LOG(LogTemp, Warning, TEXT("cd %f"), cd);
 	return ActiveAbilities[Ability].CurrentCooldown <= 0.0f;
 }
 
@@ -103,7 +87,7 @@ bool Check(const UAbilitySpecification* Ability, const FActiveAbility& ActiveAbi
 	return ActiveAbility.Specification->AbilityName == Ability->AbilityName && ActiveAbility.Level == ActiveAbility.Specification->MaxLevel;
 }
 
-void AAttackManager::UpdateAbilityPool()
+void UAttackManager::UpdateAbilityPool()
 {
 	//initial weight per entry = 100
 	//some entries start with lower weights, that can be boosted by obtaining other upgrades
@@ -206,7 +190,7 @@ void AAttackManager::UpdateAbilityPool()
 	//UE_LOG(LogTemp, Warning, TEXT("PoolSize %d"), Pool.Num());
 }
 
-void AAttackManager::PickThreeFromPool(bool Verbose)
+void UAttackManager::PickThreeFromPool(bool Verbose)
 {
 	int PoolSize = 0;
 	
@@ -262,7 +246,7 @@ void AAttackManager::PickThreeFromPool(bool Verbose)
 	}
 }
 
-void AAttackManager::GetUpgrade(const int Index)
+void UAttackManager::GetUpgrade(const int Index)
 {
 	if(Index >= SelectedPoolEntries.Num())
 	{
@@ -357,7 +341,7 @@ void AAttackManager::GetUpgrade(const int Index)
 	UpdateAbilityPool();
 }
 
-void AAttackManager::PrintCurrentlyActive()
+void UAttackManager::PrintCurrentlyActive()
 {
 	for (const auto Tuple : ActiveAbilities)
 		UE_LOG(LogTemp, Warning, TEXT("BaseAbility: %s Level %i"), *Tuple.Value.Specification->DisplayName, Tuple.Value.Level);
@@ -366,23 +350,25 @@ void AAttackManager::PrintCurrentlyActive()
 		UE_LOG(LogTemp, Warning, TEXT("UpgradeAbility: %s Level %i"), *Tuple.Value.Specification->DisplayName, Tuple.Value.Level);
 }
 
-void AAttackManager::OnRangedKeyPressed()
+void UAttackManager::OnRangedKeyPressed()
 {
 	if(ActiveAbilities.Contains(Ranged) && CheckCooldown(Ranged))
 		SpawnAbility(ActiveAbilities[Ranged]);
 }
 
 
-void AAttackManager::OnSpecialKeyPressed()
+void UAttackManager::OnSpecialKeyPressed()
 {
 	if(ActiveAbilities.Contains(Special) && CheckCooldown(Special))
 		SpawnAbility(ActiveAbilities[Special]);
 }
 
-void AAttackManager::SpawnAbility(FActiveAbility& Ability)
+void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 {
-	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class));
-	AbilityInstance->InitializeAbility(AbilityMapHandle, this, Ability.Level);
+	auto loc = GetOwner()->GetActorLocation();
+	auto rot = GetOwner()->GetActorRotation();
+	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class, &loc, &rot));
+	AbilityInstance->InitializeAbility(AbilityMapHandle, GetOwner(), Ability.Level);
 	AbilityInstance->OnAbilityCreation();
 
 	//AbilityInstance->AbilityType
@@ -418,12 +404,12 @@ void AAttackManager::SpawnAbility(FActiveAbility& Ability)
 	Ability.CurrentCooldown = Ability.Specification->Cooldown[Ability.Level-1];
 }
 
-void AAttackManager::SpawnFromTemplate(ABaseAbility* Template) const
+void UAttackManager::SpawnFromTemplate(ABaseAbility* Template) const
 {
 	SpawnFromTemplate(Template, Template->GetActorRotation());
 }
 
-void AAttackManager::SpawnFromTemplate(ABaseAbility* Template, const FRotator Rotator) const
+void UAttackManager::SpawnFromTemplate(ABaseAbility* Template, const FRotator Rotator) const
 {
 	const FVector Location = FVector::Zero();
 	FActorSpawnParameters Parameters = FActorSpawnParameters();

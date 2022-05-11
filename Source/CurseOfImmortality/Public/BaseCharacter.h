@@ -29,7 +29,8 @@ public:
 	virtual void Setup();
 
 	virtual void ReceiveDamage(float Damage);
-
+	
+	UFUNCTION(BlueprintCallable, Category = "Damage")
 	virtual void DealDamage(float Damage, ABaseCharacter *EnemyCharacter);
 
 	virtual void OnDeath();
@@ -42,6 +43,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float MovementSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float CurrentMovementSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	bool Died;

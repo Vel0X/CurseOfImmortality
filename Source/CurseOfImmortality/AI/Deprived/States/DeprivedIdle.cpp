@@ -2,6 +2,8 @@
 
 
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedIdle.h"
+
+#include "PlayerCharacter.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 
@@ -12,16 +14,22 @@ void UDeprivedIdle::OnStateEnter(UStateMachine* StateMachine)
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
-	
+
 	SelfRef->Idle = true;
-	UE_LOG(LogTemp, Warning, TEXT("Idle State Entered"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Idle State Entered"))
+	}
 }
 
 void UDeprivedIdle::OnStateExit()
 {
 	Super::OnStateExit();
 	SelfRef->Idle = false;
-	UE_LOG(LogTemp, Warning, TEXT("Exit Idle State"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Exit Idle State"))
+	}
 }
 
 void UDeprivedIdle::OnStateUpdate(float DeltaTime)

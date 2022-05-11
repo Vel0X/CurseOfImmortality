@@ -2,6 +2,8 @@
 
 
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedNormalAttack.h"
+
+#include "PlayerCharacter.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 
@@ -14,7 +16,10 @@ void UDeprivedNormalAttack::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 	SelfRef->NormalAttack = true;
 
-	UE_LOG(LogTemp, Warning, TEXT("NormalAttack State Entered"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NormalAttack State Entered"))
+	}
 }
 
 void UDeprivedNormalAttack::OnStateExit()
@@ -24,23 +29,27 @@ void UDeprivedNormalAttack::OnStateExit()
 	SelfRef->NormalAttack = false;
 	SelfRef->CurrentNormalAttackDuration = SelfRef->NormalAttackDuration;
 
-	UE_LOG(LogTemp, Warning, TEXT("Exit State NormalAttack"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Exit State NormalAttack"))
+	}
 }
 
 void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
+	Controller->FocusOnPlayer();
+
 	const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
 	float CurveValue;
 	Animation->GetCurveValue(FName("MovementSpeed"), CurveValue);
 
 	const FVector PlayerLocation = Player->GetActorLocation();
-	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) > SelfRef->MinDistNormalAttack)
 	{
-		Controller->MoveToTarget(Target, SelfRef->Speed * CurveValue);
+		Controller->MoveToTarget(PlayerLocation, SelfRef->MovementSpeed * CurveValue);
 	}
 	if (SelfRef->CurrentNormalAttackDuration <= 0.f)
 	{
