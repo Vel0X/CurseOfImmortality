@@ -16,8 +16,13 @@ UCLASS()
 class CURSEOFIMMORTALITY_API ADeprivedPawn : public ABaseEnemyPawn
 {
 	GENERATED_BODY()
+
+	virtual void ReceiveDamage(float Damage) override;
+
 public:
 	ADeprivedPawn();
+
+	virtual void DealDamage(float Damage, ABaseCharacter* EnemyCharacter) override;
 
 	//States
 	UPROPERTY(BlueprintReadWrite)
@@ -34,17 +39,26 @@ public:
 	bool HitPlayer = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool NormalAttack = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool Dead = false;
 
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere)
-	USphereComponent* AttackSphere;
+	USphereComponent* JumpAttackSphere;
+	UPROPERTY(EditAnywhere)
+	USphereComponent* NormalAttackSphereLeft;
+	UPROPERTY(EditAnywhere)
+	USphereComponent* NormalAttackSphereRight;
+	TArray<USphereComponent*> NormalAttackSphereArray;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UDeprivedStateMachine* StateMachine;
 
 	//Base Stats
 	UPROPERTY(EditAnywhere, Category="Base Stats")
-	float Damage = 10.f;
+	float DamageJumpAttack = 50.f;
+	UPROPERTY(EditAnywhere, Category="Base Stats")
+	float DamageNormalAttack = 10.f;
 
 	//Jump Attack
 	UPROPERTY(EditAnywhere, Category="Jump Attack")
@@ -61,6 +75,9 @@ public:
 	UPROPERTY(EditAnywhere, Category="Jump Attack")
 	float JumpAttackChargeTime = 1.f;
 	float CurrentJumpAttackChargeTime;
+	UPROPERTY(EditAnywhere, Category="Jump Attack")
+	float JumpAttackDuration = 2.3f;
+	float CurrentJumpAttackDuration;
 
 	//Cool Downs and Durations
 	UPROPERTY(EditAnywhere, Category="time")

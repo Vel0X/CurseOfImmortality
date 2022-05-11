@@ -4,6 +4,7 @@
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedNormalAttack.h"
 
 #include "PlayerCharacter.h"
+#include "Components/SphereComponent.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 
@@ -47,9 +48,42 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 
 	const FVector PlayerLocation = Player->GetActorLocation();
 
+	if (LeftHandCanAttack)
+	{
+		TArray<AActor*> OverlappingActors;
+		SelfRef->NormalAttackSphereLeft->GetOverlappingActors(OverlappingActors);
+
+		for (AActor* OverlappingActor : OverlappingActors)
+		{
+			if (Cast<APlayerCharacter>(OverlappingActor))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Damage Left"))
+				SelfRef->DealDamage(SelfRef->DamageNormalAttack, Player);
+				LeftHandCanAttack = false;
+			};
+		}
+	}
+	if (RightHandCanAttack)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Right Hand Can Attack"))
+
+		TArray<AActor*> OverlappingActors;
+		SelfRef->NormalAttackSphereRight->GetOverlappingActors(OverlappingActors);
+
+		for (AActor* OverlappingActor : OverlappingActors)
+		{
+			if (Cast<APlayerCharacter>(OverlappingActor))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Damage Right"))
+				SelfRef->DealDamage(SelfRef->DamageNormalAttack, Player);
+				RightHandCanAttack = false;
+			};
+		}
+	}
+
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) > SelfRef->MinDistNormalAttack)
 	{
-		Controller->MoveToTarget(PlayerLocation, SelfRef->MovementSpeed * CurveValue);
+		Controller->MoveToTarget(PlayerLocation, (SelfRef->MovementSpeed + 500) * CurveValue);
 	}
 	if (SelfRef->CurrentNormalAttackDuration <= 0.f)
 	{

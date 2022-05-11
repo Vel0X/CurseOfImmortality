@@ -24,27 +24,13 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	CurrentState->OnStateUpdate(DeltaTime);
+	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
+	if (!CurrentState) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
 
-	FVector PlayerLocation(Player->GetActorLocation());
-	FVector OwnLocation(SelfRef->GetActorLocation());
-	FVector RightVectorSelf(SelfRef->GetActorRightVector());
-	FVector LeftVectorSelf(RightVectorSelf.operator-());
-	FVector RightVectorPlayer(Player->GetActorRightVector());
-	FVector LeftVectorPlayer(RightVectorPlayer.operator-());
-	FVector StartPointLeft(LeftVectorSelf * SelfRef->GetCollisionCapsule()->GetUnscaledCapsuleRadius() + OwnLocation);
-	FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
-	FVector StartPointRight(RightVectorSelf * SelfRef->GetCollisionCapsule()->GetUnscaledCapsuleRadius() + OwnLocation);
-	FVector EndPointRight(RightVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
-
-	DrawDebugLine(GetWorld(), OwnLocation, PlayerLocation, FColor::Red);
-	DrawDebugLine(
-		GetWorld(), RightVectorSelf * SelfRef->GetCollisionCapsule()->GetUnscaledCapsuleRadius() + OwnLocation,
-		RightVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation, FColor::Blue);
-	DrawDebugLine(
-		GetWorld(), LeftVectorSelf * SelfRef->GetCollisionCapsule()->GetUnscaledCapsuleRadius() + OwnLocation,
-		LeftVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation, FColor::Green);
-
+	if (!SelfRef->Dead)
+	{
+		CurrentState->OnStateUpdate(DeltaTime);
+	}
 
 	SelfRef->CurrentJumpAttackCoolDown -= DeltaTime;
 }

@@ -38,7 +38,7 @@ public:
 	UState* Recover;
 	UPROPERTY()
 	UState* HitPlayer;
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	UState* NormalAttack;
 
 	//Getter

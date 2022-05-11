@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class CURSEOFIMMORTALITY_API UDeprivedNormalAttack : public UDeprivedBaseState
 {
 	GENERATED_BODY()
@@ -20,4 +20,9 @@ public:
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool LeftHandCanAttack = true;
+	UPROPERTY(BlueprintReadWrite)
+	bool RightHandCanAttack = true;
 };
