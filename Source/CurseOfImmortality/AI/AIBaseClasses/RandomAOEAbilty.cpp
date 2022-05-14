@@ -3,6 +3,7 @@
 
 #include "RandomAOEAbilty.h"
 
+#include "DamageObject.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -30,12 +31,17 @@ void URandomAOEAbilty::StartAbility()
 	FVector PlayerLocation = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetPawn()->GetActorLocation();
 	PlayerLocation.Z = 0;
 
-	const FVector2d RandomPoint = FMath::RandPointInCircle(RangeAroundPlayer);
-	FVector RandomPoint3D(RandomPoint, 0);
+	for (int i = 0; i < Amount; ++i)
+	{
+		const FVector2d RandomPoint = FMath::RandPointInCircle(RangeAroundPlayer);
+		FVector RandomPoint3D(RandomPoint, 0);
 
-	FVector DamageFieldLocation = PlayerLocation + RandomPoint3D;
+		FVector DamageFieldLocation = PlayerLocation + RandomPoint3D;
 
-	DrawDebugSphere(GetWorld(), DamageFieldLocation, DamageField, 20, FColor::Red, true, DamageDuration);
+		UDamageObject* DamageObject = NewObject<UDamageObject>(this);
+		DamageObject->RegisterComponent();
+		DamageObject->SetUp(DamageDuration, false, DamageField, DamageFieldLocation, Damage);
+	}
 }
 
 

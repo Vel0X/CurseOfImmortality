@@ -3,18 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
-#include "RandomAOEAbilty.generated.h"
+#include "DamageObject.generated.h"
 
-
+class USphereComponent;
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class CURSEOFIMMORTALITY_API URandomAOEAbilty : public UActorComponent
+class CURSEOFIMMORTALITY_API UDamageObject : public UActorComponent
 {
 	GENERATED_BODY()
 
+	void DealDamageToPawns() const;
+
 public:
 	// Sets default values for this component's properties
-	URandomAOEAbilty();
+	UDamageObject();
+	void SetUp(float _Duration, bool bNoDot, float _DamageRadius, FVector _SpawnLocation, float _Damage);
 
 protected:
 	// Called when the game starts
@@ -25,17 +27,15 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	void StartAbility();
-
 private:
-	UPROPERTY(EditAnywhere)
-	float DamageField = 100.f;
-	UPROPERTY(EditAnywhere)
-	float RangeAroundPlayer = 500.f;
-	UPROPERTY(EditAnywhere)
-	float DamageDuration = 10.f;
-	UPROPERTY(EditAnywhere)
-	float Damage = 10.f;
-	UPROPERTY(EditAnywhere)
-	float Amount = 3.f;
+	float Duration;
+	float DamageRadius;
+	float Damage;
+	bool NoDot;
+	bool SetupComplete;
+
+	FVector SpawnLocation;
+
+	UPROPERTY()
+	USphereComponent* DamageSphere;
 };

@@ -14,4 +14,6 @@ AStormCallerPawn::AStormCallerPawn()
 	StateMachine = CreateDefaultSubobject<UStormCallerStateMachine>("StateMachine");
 
 	StormCast = CreateDefaultSubobject<URandomAOEAbilty>("Storm Call");
+
+	CurrentAttackCoolDown = AttackCoolDown;
 }

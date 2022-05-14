@@ -20,6 +20,7 @@ void UStormCallerStateMachine::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 	CurrentState->OnStateUpdate(DeltaTime);
 	FocusOnPlayer();
+	SelfRef->CurrentAttackCoolDown -= DeltaTime;
 }
 
 AStormCallerPawn* UStormCallerStateMachine::GetSelfRef() const

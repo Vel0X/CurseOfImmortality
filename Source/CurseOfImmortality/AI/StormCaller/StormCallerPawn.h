@@ -38,7 +38,10 @@ public:
 	//Base Stats
 	UPROPERTY(EditAnywhere, Category="Base Stats")
 	float Damage = 10.f;
-
+	UPROPERTY(EditAnywhere, Category="Base Stats")
+	float AttackCoolDown = 10.f;
+	float CurrentAttackCoolDown;
+	
 	//Ranges
 	UPROPERTY(EditAnywhere, Category="Ranges")
 	float AwakeRange = 1000.f;
