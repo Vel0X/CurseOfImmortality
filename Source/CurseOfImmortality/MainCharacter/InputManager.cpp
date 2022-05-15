@@ -38,7 +38,19 @@ void UInputManager::BeginPlay()
 void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+
+	if (Player->CurrentDashCooldown > 0)
+	{
+		Player->CurrentDashCooldown -= DeltaTime;
+	}
+	if (Player->CurrentMeleeFollowUpTime > 0)
+	{
+		Player->CurrentMeleeFollowUpTime -= DeltaTime;
+	} else if (Player->CurrentMeleeFollowUpTime <= 0 && Player->MeleeComboCount != 0)
+	{
+		Player->MeleeComboCount = 0;
+		Player->MeleeStartFrame = 0;
+	}
 	if (Player->CurrentAnimationDuration > 0)
 	{
 		Player->CurrentAnimationDuration -= DeltaTime;
@@ -65,22 +77,28 @@ void UInputManager::SetupPlayerInput(UInputComponent* InputComponent)
 
 void UInputManager::MoveForward(float Value)
 {
-	if (Value != 0 && LastAction == InputAction::NoAction)
+	if (!Player->Dash)
 	{
-		LastAction = InputAction::Running;
+		if (Value != 0 && LastAction == InputAction::NoAction)
+		{
+			LastAction = InputAction::Running;
+		}
+		MoveInput.X = Value;
+		MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
 	}
-	MoveInput.X = Value;
-	MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
 }
 
 void UInputManager::MoveRight(float Value)
 {
-	if (Value != 0 && LastAction == InputAction::NoAction)
+	if (!Player->Dash)
 	{
-		LastAction = InputAction::Running;
+		if (Value != 0 && LastAction == InputAction::NoAction)
+		{
+			LastAction = InputAction::Running;
+		}
+		MoveInput.Y = Value;
+		MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
 	}
-	MoveInput.Y = Value;
-	MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
 }
 
 void UInputManager::MeleeAbility()
@@ -100,14 +118,8 @@ void UInputManager::SpecialAbility()
 
 void UInputManager::Dash()
 {
-	AddToBuffer(InputAction::Dash);
+	DoAction(InputAction::Dash);
 }
-
-/*void UInputManager::SetAction(InputAction Action)
-{
-	if(LastAction != )
-	LastAction = Action;
-}*/
 
 void UInputManager::AddToBuffer(InputAction _InputAction)
 {
@@ -126,6 +138,13 @@ void UInputManager::DoAction(InputAction _InputAction)
 	UE_LOG(LogTemp, Display, TEXT("Used Action"));
 	switch (_InputAction)
 	{
+	case InputAction::Dash:
+		if (Player->CurrentDashCooldown <= 0)
+		{
+			LastAction = InputAction::Dash;
+			//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnDashKeyPressed();
+		}
+		break;
 	case InputAction::MeleeAbility:
 		LastAction = InputAction::MeleeAbility;
 		//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnMeleeKeyPressed();
@@ -137,10 +156,6 @@ void UInputManager::DoAction(InputAction _InputAction)
 	case InputAction::SpecialAbility:
 		LastAction = InputAction::SpecialAbility;
 		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnSpecialKeyPressed();
-		break;
-	case InputAction::Dash:
-		LastAction = InputAction::Dash;
-		//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnDashKeyPressed();
 		break;
 	default:
 		break;

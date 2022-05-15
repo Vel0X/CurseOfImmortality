@@ -43,7 +43,10 @@ void UPlayerCharacterRunning::OnStateUpdate(float DeltaTime)
 		Controller->Transition(Controller->SpecialAttack, Controller);
 		break;
 	case InputAction::Dash:
-		Controller->Transition(Controller->Dash, Controller);
+		if (SelfRef->CurrentDashCooldown <= 0)
+		{
+			Controller->Transition(Controller->Dash, Controller);
+		}
 		break;
 	case InputAction::Running:
 		break;

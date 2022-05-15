@@ -49,8 +49,6 @@ protected:
 	
 	void Dash();
 
-	//void SetAction(InputAction Action);
-
 	TArray<InputAction> InputBuffer;
 
 	UPROPERTY(EditAnywhere)

@@ -31,7 +31,7 @@ void UPlayerCharacterRanged::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 	
-	if(Controller->GetSelfRef()->InputManager->LastAction == InputAction::Dash)
+	if(Controller->GetSelfRef()->InputManager->LastAction == InputAction::Dash && SelfRef->CurrentDashCooldown <= 0)
 	{
 		Controller->Transition(Controller->Dash, Controller);
 	}

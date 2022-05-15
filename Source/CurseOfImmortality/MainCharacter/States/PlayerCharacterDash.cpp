@@ -16,6 +16,7 @@ void UPlayerCharacterDash::OnStateEnter(UStateMachine* StateMachine)
 	
 	SelfRef->Dash = true;
 	SelfRef->CurrentAnimationDuration = SelfRef->DashDuration1;
+	SelfRef->CurrentDashCooldown = SelfRef->DashCooldown;
 	UE_LOG(LogTemp, Warning, TEXT("Dash State Entered"))
 }
 
@@ -35,5 +36,5 @@ void UPlayerCharacterDash::OnStateUpdate(float DeltaTime)
 		SelfRef->InputManager->LastAction = InputAction::NoAction;
 		Controller->Transition(Controller->Idle, Controller);
 	}
-	SelfRef->GetRootComponent()->AddWorldOffset(SelfRef->GetActorForwardVector() * DeltaTime * 1500, true);
+	SelfRef->GetRootComponent()->AddWorldOffset(SelfRef->GetActorForwardVector() * DeltaTime * SelfRef->DashSpeed, true);
 }

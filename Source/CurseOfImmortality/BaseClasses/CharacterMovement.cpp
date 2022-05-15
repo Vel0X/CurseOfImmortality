@@ -3,8 +3,10 @@
 
 #include "CharacterMovement.h"
 #include "BaseCharacter.h"
+#include "VectorTypes.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
+#include "EntitySystem/MovieSceneComponentDebug.h"
 
 
 // Sets default values for this component's properties
@@ -39,14 +41,34 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 			DirectionSet = false;
 			return;
 		}
+
 		Direction.Normalize();
+		
+		if(Cast<APlayerCharacter>(GetOwner())!=nullptr)
+		{
+			if(Cast<APlayerCharacter>(GetOwner())->Melee)
+			{
+				if(UKismetMathLibrary::Acos(FVector::DotProduct(GetOwner()->GetActorForwardVector(), Direction)) < 1.5)
+				{
+					Direction = GetOwner()->GetActorForwardVector();
+				} else
+				{
+					return;
+				}
+				
+			}
+		}
+		
 		RootComponent->SetWorldRotation(Direction.Rotation());
+		
 		if(Cast<APlayerCharacter>(GetOwner())!=nullptr)
 		{
 			if(Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
 			{
 				Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed;
 			}
+			
+			
 		} else
 		{
 			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed;
@@ -67,10 +89,13 @@ void UCharacterMovement::SetDirection(FVector MoveInput, float MovementSpeedInpu
 		DirectionSet = true;
 	} else
 	{
-		if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running) //TODO Maybe do better
+		if(Cast<APlayerCharacter>(GetOwner())!=nullptr)
 		{
-			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = 0;
-			Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction = InputAction::NoAction;
+			if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running) //TODO Maybe do better
+				{
+				Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = 0;
+				Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction = InputAction::NoAction;
+				}
 		}
 	}
 }
