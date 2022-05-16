@@ -19,6 +19,7 @@ void UArcaneReplicator::OnAbilityStart(int AbilityHandle)
 	ASpecialAbility* Owner = static_cast<ASpecialAbility*>(GetOwner());
 	if(Owner != nullptr)
 	{
+		
 		//FVector Forward = Owner->GetActorForwardVector();
 		const auto TurretClass = static_cast<UGameController*>(Owner->GetGameInstance())->GetAttackManager()->ArcaneReplicatorTurretBP;
 		AActor* Turret = GetWorld()->SpawnActor(TurretClass);
@@ -33,5 +34,6 @@ void UArcaneReplicator::OnAbilityStart(int AbilityHandle)
 				TurretCasted->ResetLifetime();
 			}
 		}
+		
 	}
 }

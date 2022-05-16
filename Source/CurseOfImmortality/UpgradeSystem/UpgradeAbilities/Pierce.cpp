@@ -23,9 +23,9 @@ void UPierce::InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel
 	}
 }
 
-void UPierce::OnEnemyHit()
+void UPierce::OnEnemyHit(AChar* Enemy)
 {
-	Super::OnEnemyHit();
+	Super::OnEnemyHit(Enemy);
 	
 	ABaseAbility* Owner = static_cast<ABaseAbility*>(GetOwner());
 	if(PiercesLeft > 0)

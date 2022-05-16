@@ -9,7 +9,9 @@
 //DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityStart, int);
 //DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityEnd, int);
 
+class AChar;
 class UBaseUpgrade;
+
 UENUM()
 enum EAbilityType
 {
@@ -28,6 +30,7 @@ class CURSEOFIMMORTALITY_API ABaseAbility : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ABaseAbility();
+	
 	UFUNCTION(BlueprintCallable)
 	virtual void OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor);
 	virtual void OnAbilityCreation();
@@ -43,11 +46,13 @@ public:
 
 	virtual void DestroyAbility();
 
-	virtual void InitializeAbility(int _AbilityHandle, AActor* Caster, int Level);
+	virtual void InitializeAbility(int _AbilityHandle, AChar* _Caster, int Level);
 
 	virtual void AfterInitialization();
 
 public:
+	UPROPERTY(EditAnywhere)
+	AChar* Caster;
 	UPROPERTY(EditAnywhere)
 	float AbilityLifetime = 3.0f;
 	UPROPERTY(EditAnywhere)

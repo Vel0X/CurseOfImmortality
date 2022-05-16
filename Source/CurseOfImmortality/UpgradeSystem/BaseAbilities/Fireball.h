@@ -13,12 +13,14 @@ class UNiagaraComponent;
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API AFireball : public ARangedAbility
+class CURSEOFIMMORTALITY_API AFireball final : public ARangedAbility
 {
 	GENERATED_BODY()
 public:
 	// Sets default values for this pawn's properties
 	AFireball();
+
+	virtual void OnInteraction(ABaseAbility* OtherAbility) override;
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 public:

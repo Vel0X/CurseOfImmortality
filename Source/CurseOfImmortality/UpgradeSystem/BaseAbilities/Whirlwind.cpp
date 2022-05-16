@@ -9,8 +9,8 @@ AWhirlwind::AWhirlwind()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	RootComponent = CreateDefaultSubobject<USceneComponent>("RootComponent");
 
-	Vfx = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Vfx"));
+	Vfx = CreateDefaultSubobject<UNiagaraComponent>("Vfx");
 	Vfx->SetupAttachment(RootComponent);
 }

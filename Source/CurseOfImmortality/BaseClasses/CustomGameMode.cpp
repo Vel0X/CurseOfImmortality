@@ -5,6 +5,7 @@
 
 #include "GameController.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
+#include "CurseOfImmortality/UpgradeSystem/Buffs/Bleed.h"
 
 void ACustomGameMode::SpawnEnemy()
 {
@@ -27,5 +28,14 @@ void ACustomGameMode::AttackManager_PrintCurrentlyActive() const
 {
 	const auto AM = static_cast<UGameController*>(GetGameInstance())->GetAttackManager();
 	AM->PrintCurrentlyActive();
+}
+
+void ACustomGameMode::AddBuffToPlayer(int BuffID) const
+{
+	const auto AM = static_cast<UGameController*>(GetGameInstance())->GetAttackManager();
+	const auto MainChar = static_cast<UGameController*>(GetGameInstance())->GetMainChar();
+	const auto B = AM->PossibleUpgrades->Buffs[BuffID];
+	
+	MainChar->AddBuff(NewObject<UBaseBuff>(B->StaticClass(), B));
 }
 

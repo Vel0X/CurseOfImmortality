@@ -26,6 +26,7 @@ public:
 
 	TArray<AActor*> GetEnemies() const;
 	void AddEnemy(AActor* Enemy);
+
 private:
 	UPROPERTY(EditAnywhere)
 	UAttackManager* AttackManager;

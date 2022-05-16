@@ -8,7 +8,7 @@
 #include "KarysAnimus.generated.h"
 
 UCLASS()
-class CURSEOFIMMORTALITY_API AKarysAnimus : public ASpecialAbility
+class CURSEOFIMMORTALITY_API AKarysAnimus final : public ASpecialAbility
 {
 	GENERATED_BODY()
 

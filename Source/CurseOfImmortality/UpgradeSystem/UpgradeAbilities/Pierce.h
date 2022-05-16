@@ -15,7 +15,7 @@ class CURSEOFIMMORTALITY_API UPierce final: public UBaseUpgrade
 	GENERATED_BODY()
 
 public:
-	virtual void OnEnemyHit() override;
+	virtual void OnEnemyHit(AChar* Enemy) override;
 	virtual void InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel) override;
 
 private:

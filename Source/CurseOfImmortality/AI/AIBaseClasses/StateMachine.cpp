@@ -38,7 +38,6 @@ void UStateMachine::Transition(UState* NewState, UStateMachine* Controller)
 void UStateMachine::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 	// ...
 }
 
