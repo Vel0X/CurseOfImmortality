@@ -211,6 +211,7 @@ UNiagaraComponent* ABaseCharacter::SetupBuffVfx(UNiagaraSystem* Vfx, const EAtta
 		AttachmentLocation = LowerAttachmentPoint;
 		break;
 	}
+
 	
 	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(Vfx, AttachmentLocation, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
 	NiagaraComp->AttachToComponent(AttachmentLocation, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
@@ -218,7 +219,6 @@ UNiagaraComponent* ABaseCharacter::SetupBuffVfx(UNiagaraSystem* Vfx, const EAtta
 
 	Handle = ActiveParticleEffectHandle;
 	ActiveParticleEffectHandle++;
-	
 	return NiagaraComp;
 }
 
@@ -229,7 +229,7 @@ void ABaseCharacter::RemoveBuffVfx(const int Handle, const bool SpawnDetachedPar
 		if(SpawnDetachedParticleActor)
 		{
 			const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
-			DetachedParticleActor->InitializeParticleActor(ActiveParticleEffects[Handle], nullptr, -1);
+			DetachedParticleActor->InitializeParticleActor(ActiveParticleEffects[Handle], this, -1);
 		}
 		else
 		{

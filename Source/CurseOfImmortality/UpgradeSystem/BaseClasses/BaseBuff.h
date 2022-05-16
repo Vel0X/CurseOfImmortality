@@ -78,5 +78,5 @@ public:
 	int DefaultHandle = -1;
 	
 	UPROPERTY(EditAnywhere)
-	TMap<TEnumAsByte<EStats>, float> StatModifications; 
+	TMap<TEnumAsByte<EStats>, float> StatModifications;
 };

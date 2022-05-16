@@ -42,13 +42,11 @@ void UBaseBuff::OnBuffTick(float DeltaTime)
 		RemainingDuration -= DeltaTime;
 	}
 
-	if(!InheritRotation)
+	if(!InheritRotation &&ParticleSystem != nullptr)
 	{
-		if(ParticleSystem != nullptr)
-		{
-			ParticleSystem->SetWorldRotation(FRotator::ZeroRotator);
-		}
+		ParticleSystem->SetWorldRotation(FRotator::ZeroRotator);
 	}
+	
 }
 
 void UBaseBuff::OnBuffEnd()
@@ -76,7 +74,7 @@ UNiagaraComponent* UBaseBuff::SetupVfx(const EAttachmentPoint AttachmentPoint)
 		UE_LOG(LogTemp, Error, TEXT("No VFX Asset set for Buff %s"), *DisplayName);
 		return nullptr;
 	}
-	
+
 	return Owner->SetupBuffVfx(VfxList[BuffType], AttachmentPoint, DefaultHandle);
 
 }
