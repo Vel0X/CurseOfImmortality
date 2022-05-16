@@ -105,7 +105,7 @@ int AUPathfindingGrid::CalculateDistance(const int StartX, const int StartY, con
 	const int XDist = abs(StartX - EndX);
 	const int YDist = abs(StartY - EndY);
 	const int RemainingDist = abs(XDist - YDist);
-	return min(XDist, YDist) * GDiagonal_Cost + RemainingDist * GStraight_Cost;
+	return FMath::Min(XDist, YDist) * GDiagonal_Cost + RemainingDist * GStraight_Cost;
 }
 
 FPfNode* AUPathfindingGrid::GetLowestCostNode(TArray<FPfNode*>& OpenList)

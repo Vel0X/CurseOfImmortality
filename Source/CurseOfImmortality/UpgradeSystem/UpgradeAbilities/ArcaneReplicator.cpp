@@ -3,7 +3,7 @@
 
 #include "ArcaneReplicator.h"
 
-#include "CurseOfImmortality/BaseClasses/GameController.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/SpecialAbility.h"
 #include "CurseOfImmortality/UpgradeSystem/IndirectAbilities/ArcaneReplicatorTurret.h"
@@ -21,7 +21,7 @@ void UArcaneReplicator::OnAbilityStart(int AbilityHandle)
 	{
 		
 		//FVector Forward = Owner->GetActorForwardVector();
-		const auto TurretClass = static_cast<UGameController*>(Owner->GetGameInstance())->GetAttackManager()->ArcaneReplicatorTurretBP;
+		const auto TurretClass = FPersistentWorldManager::AttackManager->ArcaneReplicatorTurretBP;
 		AActor* Turret = GetWorld()->SpawnActor(TurretClass);
 		if(Turret != nullptr)
 		{

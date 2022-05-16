@@ -3,8 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../../../../../Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src/ActiveSocket.h"
-#include "UObject/Object.h"
 #include "PathfindingGrid.generated.h"
 
 template <class T>
@@ -79,19 +77,19 @@ protected:
 
 struct FPfNode
 {
-	FPfNode()
+	FPfNode() : X(0), Y(0), CameFrom(nullptr)
 	{
 	}
 
-	FPfNode(const int X, const int Y) : X(X), Y(Y)
+	FPfNode(const int X, const int Y) : X(X), Y(Y), CameFrom(nullptr)
 	{
 	}
 
 	void Reset()
 	{
-		H = MAXINT;
-		G = MAXINT;
-		S = MAXINT;
+		H = 999999;
+		G = 999999;
+		S = 999999;
 		CameFrom = nullptr; 
 	}
 

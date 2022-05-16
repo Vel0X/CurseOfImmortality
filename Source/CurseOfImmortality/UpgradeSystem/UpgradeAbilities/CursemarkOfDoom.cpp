@@ -2,6 +2,8 @@
 
 
 #include "CursemarkOfDoom.h"
+
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/Buffs/CursedBlade.h"
 
 void UCursemarkOfDoom::OnEnemyHit(ABaseCharacter* Enemy)
@@ -10,7 +12,8 @@ void UCursemarkOfDoom::OnEnemyHit(ABaseCharacter* Enemy)
 
 	//apply the Cursemark Of Doom Buff on the Enemy
 	UE_LOG(LogTemp, Warning, TEXT("Add Cursed Blade Instance on Enemy Hit"));
-	const auto CursedBladeInstance = NewObject<UCursedBlade>();
+
+	const auto CursedBladeInstance = FPersistentWorldManager::ObjectFactory->GetBuff(CursedBlade);
 	Enemy->AddBuff(CursedBladeInstance);
 }
 

@@ -2,9 +2,8 @@
 
 
 #include "ArcaneWhisper.h"
-
-#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "NiagaraComponent.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 static TArray<AActor*> HitActors;
 
@@ -36,7 +35,7 @@ void AArcaneWhisper::OnAbilityCreation()
 	SetActorRotation(FRotator::ZeroRotator);
 	Target = nullptr;
 	
-	TArray<AActor*> Enemies = static_cast<UGameController*>(GetGameInstance())->GetEnemies();
+	TArray<ABaseCharacter*> Enemies = FPersistentWorldManager::GetEnemies(); //  static_cast<UGameController*>(GetGameInstance())->GetEnemies();
 	//UE_LOG(LogTemp, Warning, TEXT("HIT %d"), HitActors.Num());
 
 	int ClosestIndex = -1;

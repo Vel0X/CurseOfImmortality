@@ -2,7 +2,8 @@
 
 
 #include "SealOfCongruence.h"
-#include "CurseOfImmortality/BaseClasses/GameController.h"
+
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -39,7 +40,7 @@ void USealOfCongruence::OnAbilityStart(int AbilityHandle)
 	//UE_LOG(LogTemp, Warning, TEXT("Instantiating new projectiles (Seal of Congruence) %d"), ChargesLeft);
 	ChargesLeft--;
 	
-	const UAttackManager* AttackManager = static_cast<UGameController*>(GetOwner()->GetGameInstance())->GetAttackManager();
+	const UAttackManager* AttackManager = FPersistentWorldManager::AttackManager;
 
 	ABaseAbility* Owner = static_cast<ABaseAbility*>(GetOwner());
 	if(Owner != nullptr)

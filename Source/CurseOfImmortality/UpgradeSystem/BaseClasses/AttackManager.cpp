@@ -2,8 +2,7 @@
 
 #include "AttackManager.h"
 
-#include "PersistentWorldManager.h"
-#include "CurseOfImmortality/BaseClasses/GameController.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "DataAssets/AbilitySpecification.h"
 
 //#define GAME_INSTANCE static_cast<UGameController*>(GetGameInstance())
@@ -36,7 +35,6 @@ void UAttackManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 void UAttackManager::BeginPlay()
 {
 	Super::BeginPlay();
-	static_cast<UGameController*>(GetOwner()->GetGameInstance())->BindAbilityController(this);
 	FPersistentWorldManager::AttackManager = this;
 	UpdateAbilityPool();
 	SortActiveUpgrades();

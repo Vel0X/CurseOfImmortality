@@ -2,10 +2,9 @@
 
 
 #include "KarysAnimusProjectile.h"
-
-#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "NiagaraComponent.h"
 #include "Components/SphereComponent.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "Kismet/KismetMathLibrary.h"
 
 AKarysAnimusProjectile::AKarysAnimusProjectile()
@@ -68,7 +67,7 @@ void AKarysAnimusProjectile::Tick(float DeltaSeconds)
 
 bool AKarysAnimusProjectile::GetTarget()
 {
-	TArray<AActor*> Enemies = static_cast<UGameController*>(GetGameInstance())->GetEnemies();
+	TArray<ABaseCharacter*> Enemies = FPersistentWorldManager::GetEnemies();
 	int ClosestIndex = -1;
 	float ClosestDistance = 1000000.0f;
 	for (int i = 0; i < Enemies.Num(); ++i)
