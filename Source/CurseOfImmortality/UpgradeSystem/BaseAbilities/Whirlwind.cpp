@@ -11,6 +11,8 @@ AWhirlwind::AWhirlwind()
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>("RootComponent");
 
-	Vfx = CreateDefaultSubobject<UNiagaraComponent>("Vfx");
-	Vfx->SetupAttachment(RootComponent);
+	ParticleSystem = CreateDefaultSubobject<UNiagaraComponent>("Vfx");
+	ParticleSystem->SetupAttachment(RootComponent);
+
+	DamageComponent = CreateDefaultSubobject<UDamageComponent>("DamageComponent");
 }

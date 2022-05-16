@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/BaseClasses/DamageComponent.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/SpecialAbility.h"
 #include "Whirlwind.generated.h"
 
@@ -20,6 +21,8 @@ public:
 	AWhirlwind();
 
 	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* Vfx;
-	
+	UNiagaraComponent* ParticleSystem;
+
+	UPROPERTY(EditAnywhere)
+	UDamageComponent* DamageComponent;
 };
