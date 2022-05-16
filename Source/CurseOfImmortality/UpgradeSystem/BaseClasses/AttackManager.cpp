@@ -2,8 +2,8 @@
 
 #include "AttackManager.h"
 
-#include "GameController.h"
 #include "PersistentWorldManager.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "DataAssets/AbilitySpecification.h"
 
 //#define GAME_INSTANCE static_cast<UGameController*>(GetGameInstance())
@@ -133,7 +133,7 @@ void UAttackManager::UpdateAbilityPool()
 	}
 	
 
-	for (const auto Tuple : PossibleUpgrades)
+	for (const auto Tuple : PossibleUpgrades->PossibleUpgradeAbilities)
 	{
 		const auto PossibleUpgradeName = Tuple.Key;
 		const auto PossibleUpgrade = Tuple.Value;
@@ -365,7 +365,7 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 	const FRotator Rotation = GetOwner()->GetActorRotation();
 	
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class, &Location, &Rotation));
-	AbilityInstance->InitializeAbility(AbilityMapHandle, static_cast<AChar*>(GetOwner()), Ability.Level);
+	AbilityInstance->InitializeAbility(AbilityMapHandle, static_cast<ABaseCharacter*>(GetOwner()), Ability.Level);
 	AbilityInstance->OnAbilityCreation();
 	//AbilityInstance->AbilityType
 

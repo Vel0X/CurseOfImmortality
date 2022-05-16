@@ -29,6 +29,11 @@ UAttackManager* UGameController::GetAttackManager() const
 	return AttackManager;
 }
 
+APlayerCharacter* UGameController::GetPlayerCharacter() const
+{
+	return PlayerCharacter;
+}
+
 TArray<AActor*> UGameController::GetEnemies() const
 {
 	return ActiveEnemies;

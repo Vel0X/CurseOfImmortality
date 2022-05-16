@@ -2,7 +2,6 @@
 
 
 #include "Bleed.h"
-#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
 
 UBleed::UBleed()
 {
@@ -18,10 +17,10 @@ UBleed::UBleed()
 	BuffType = Bleed;
 }
 
-void UBleed::InitializeBuff(int Level, AChar* _Owner)
+void UBleed::InitializeBuff(int Level, ABaseCharacter* _Owner)
 {
 	Super::InitializeBuff(Level, _Owner);
-	VFX = SetupVfx(CenterPoint);
+	ParticleSystem = SetupVfx(UpperPoint);
 }
 
 void UBleed::AddBuffStack()

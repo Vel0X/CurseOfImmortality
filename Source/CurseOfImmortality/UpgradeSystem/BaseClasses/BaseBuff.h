@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "CurseOfImmortality/Enums/Enums.h"
 #include "BaseBuff.generated.h"
 
@@ -30,7 +31,7 @@ public:
 	
 	virtual void OnBuffEnd();
 
-	virtual void InitializeBuff(int Level, AChar* _Owner);
+	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner);
 
 	//virtual UNiagaraSystem* GetVFX() const;
 
@@ -39,7 +40,7 @@ public:
 	virtual void DestroyVfx();
 	
 	UPROPERTY(EditAnywhere)
-	AChar* Owner;
+	ABaseCharacter* Owner;
 
 	FString DisplayName = "";
 
@@ -49,6 +50,10 @@ public:
 	float BuffDuration;
 
 	float RemainingDuration;
+
+	//might need an array for this later
+	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* ParticleSystem;
 	
 	//when this buff is already on an object multiple iterations can be stacked atop of each other
 	UPROPERTY(EditAnywhere)
@@ -61,6 +66,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool CustomBuffEnd = false;
 
+	UPROPERTY(EditAnywhere)
+	bool InheritRotation = false;
+	
 	UPROPERTY(EditAnywhere)
 	bool StatModifier = false;
 

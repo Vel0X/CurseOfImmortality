@@ -19,7 +19,7 @@ public:
 	USoulFlayer();
 
 	// Called every frame
-	virtual void InitializeBuff(int Level, AChar* _Owner) override;
+	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner) override;
 	virtual void OnBuffEnd() override;
 	virtual void OnBuffTick(float DeltaTime) override;
 

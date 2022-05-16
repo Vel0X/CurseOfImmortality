@@ -2,7 +2,6 @@
 
 #include "BaseUpgrade.h"
 #include "BaseAbility.h"
-#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
 
 // Sets default values for this component's properties
 UBaseUpgrade::UBaseUpgrade()
@@ -47,7 +46,7 @@ void UBaseUpgrade::OnAbilityEnd(int AbilityHandle)
 	//UE_LOG(LogTemp, Warning, TEXT("On Abilityend was called in Base Upgrade"));
 }
 
-void UBaseUpgrade::OnEnemyHit(AChar* Enemy)
+void UBaseUpgrade::OnEnemyHit(ABaseCharacter* Enemy)
 {
 	
 }

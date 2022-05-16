@@ -5,8 +5,7 @@
 #include "NiagaraSystem.h"
 #include "PersistentWorldManager.h"
 #include "BaseAbility.h"
-#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
-
+#include "NiagaraComponent.h"
 
 // Sets default values for this component's properties
 UBaseBuff::UBaseBuff()
@@ -43,6 +42,13 @@ void UBaseBuff::OnBuffTick(float DeltaTime)
 		RemainingDuration -= DeltaTime;
 	}
 
+	if(!InheritRotation)
+	{
+		if(ParticleSystem != nullptr)
+		{
+			ParticleSystem->SetWorldRotation(FRotator::ZeroRotator);
+		}
+	}
 }
 
 void UBaseBuff::OnBuffEnd()
@@ -50,7 +56,7 @@ void UBaseBuff::OnBuffEnd()
 	
 }
 
-void UBaseBuff::InitializeBuff(int Level, AChar* _Owner)
+void UBaseBuff::InitializeBuff(int Level, ABaseCharacter* _Owner)
 {
 	Owner = _Owner;
 	RemainingDuration = BuffDuration;

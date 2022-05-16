@@ -17,7 +17,7 @@ public:
 	UIncreaseHealth();
 
 	virtual void AddBuffStack() override;
-	virtual void InitializeBuff(int Level, AChar* _Owner) override;
+	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner) override;
 	virtual void OnBuffBegin() override;
 
 	virtual void OnBuffEnd() override;

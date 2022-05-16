@@ -58,8 +58,8 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 				
 			}
 		}
-		
-		RootComponent->SetWorldRotation(Direction.Rotation());
+		GetOwner()->SetActorRotation(Direction.Rotation());
+		//RootComponent->SetWorldRotation(Direction.Rotation());
 		
 		if(Cast<APlayerCharacter>(GetOwner())!=nullptr)
 		{
@@ -73,7 +73,8 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 		{
 			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed;
 		}
-		RootComponent->AddWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed, true);
+		GetOwner()->AddActorWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed, true);
+		//RootComponent->AddWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed, true);
 		DirectionSet = false;
 	}
 }

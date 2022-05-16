@@ -9,6 +9,7 @@
 //DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityStart, int);
 //DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityEnd, int);
 
+class ABaseCharacter;
 class AChar;
 class UBaseUpgrade;
 
@@ -46,13 +47,13 @@ public:
 
 	virtual void DestroyAbility();
 
-	virtual void InitializeAbility(int _AbilityHandle, AChar* _Caster, int Level);
+	virtual void InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level);
 
 	virtual void AfterInitialization();
 
 public:
 	UPROPERTY(EditAnywhere)
-	AChar* Caster;
+	ABaseCharacter* Caster;
 	UPROPERTY(EditAnywhere)
 	float AbilityLifetime = 3.0f;
 	UPROPERTY(EditAnywhere)

@@ -26,6 +26,18 @@ public:
 	// Sets default values for this pawn's properties
 	APlayerCharacter();
 
+protected:
+	
+	virtual void Setup() override;
+	void SetupInputComponent();
+
+public:
+	
+	virtual void Tick(float DeltaTime) override;
+	virtual void ReceiveDamage(float Damage) override;
+	virtual void DealDamage(float Damage, ABaseCharacter *EnemyCharacter) override;
+	virtual void OnDeath() override;
+	
 	//States
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Idle = false;
@@ -79,21 +91,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float MovementSpeedWhileAttacking = 300;
 	
-protected:
 	
-	virtual void Setup() override;
-	
-	void SetupInputComponent();
-
-public:
-	
-	virtual void Tick(float DeltaTime) override;
-	virtual void ReceiveDamage(float Damage) override;
-	virtual void DealDamage(float Damage, ABaseCharacter *EnemyCharacter) override;
-	virtual void OnDeath() override;
-
-	UPROPERTY(EditAnywhere)
-		UCapsuleComponent* CapsuleComponent;
 	UPROPERTY(EditAnywhere)
 		USkeletalMeshComponent* SkeletalMesh;
 	UPROPERTY(EditAnywhere)

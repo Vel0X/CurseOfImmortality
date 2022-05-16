@@ -6,5 +6,5 @@
 void URangedOnlyUpgradeComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	RestrictedTo = EAbilityType::Ranged;
+	RestrictedTo = Ranged;
 }

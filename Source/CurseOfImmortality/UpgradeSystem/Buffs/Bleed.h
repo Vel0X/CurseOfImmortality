@@ -15,19 +15,12 @@ public:
 	// Sets default values for this component's properties
 	UBleed();
 
-protected:
-	// Called when the game starts
-
 public:
 	// Called every frame
-	virtual void InitializeBuff(int Level, AChar* _Owner) override;
+	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner) override;
 	virtual void AddBuffStack() override;
 	virtual void OnBuffEnd() override;
 	virtual void OnBuffTick(float DeltaTime) override;
-
-	UNiagaraComponent* VFX;
-
-public:
 	float TickInterval = 0.5f;
 	float DamageAmount = 10.0f;
 	float TimeUntilNextTick = 0.0f;

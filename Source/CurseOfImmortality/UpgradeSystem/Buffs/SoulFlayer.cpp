@@ -3,8 +3,6 @@
 
 #include "SoulFlayer.h"
 
-#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
-
 USoulFlayer::USoulFlayer()
 {
 	DisplayName = "Soul Flayer";
@@ -22,7 +20,7 @@ USoulFlayer::USoulFlayer()
 
 }
 
-void USoulFlayer::InitializeBuff(int Level, AChar* _Owner)
+void USoulFlayer::InitializeBuff(int Level, ABaseCharacter* _Owner)
 {
 	Super::InitializeBuff(Level, _Owner);
 }

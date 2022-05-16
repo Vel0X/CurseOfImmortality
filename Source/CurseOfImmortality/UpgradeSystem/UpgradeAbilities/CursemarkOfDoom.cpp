@@ -2,10 +2,9 @@
 
 
 #include "CursemarkOfDoom.h"
-#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
 #include "CurseOfImmortality/UpgradeSystem/Buffs/CursedBlade.h"
 
-void UCursemarkOfDoom::OnEnemyHit(AChar* Enemy)
+void UCursemarkOfDoom::OnEnemyHit(ABaseCharacter* Enemy)
 {
 	Super::OnEnemyHit(Enemy);
 

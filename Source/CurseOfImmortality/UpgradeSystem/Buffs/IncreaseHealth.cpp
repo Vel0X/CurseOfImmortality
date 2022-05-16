@@ -3,8 +3,6 @@
 
 #include "IncreaseHealth.h"
 
-#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
-
 
 // Sets default values for this component's properties
 UIncreaseHealth::UIncreaseHealth()
@@ -29,7 +27,7 @@ void UIncreaseHealth::AddBuffStack()
 	
 }
 
-void UIncreaseHealth::InitializeBuff(int Level, AChar* _Owner)
+void UIncreaseHealth::InitializeBuff(int Level, ABaseCharacter* _Owner)
 {
 	Super::InitializeBuff(Level, _Owner);
 }

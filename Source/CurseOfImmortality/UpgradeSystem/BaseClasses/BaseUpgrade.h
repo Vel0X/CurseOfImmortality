@@ -29,7 +29,7 @@ public:
 	virtual void OnAbilityEnd(int AbilityHandle);
 
 	UFUNCTION()
-	virtual void OnEnemyHit(AChar* Enemy);
+	virtual void OnEnemyHit(ABaseCharacter* Enemy);
 
 	UFUNCTION()
 	virtual void OnAbilityHit(ARangedAbility* Ability);

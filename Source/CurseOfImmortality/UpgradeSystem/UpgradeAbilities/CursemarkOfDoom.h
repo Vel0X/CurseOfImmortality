@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseUpgrade.h"
-#include "UObject/Object.h"
 #include "CursemarkOfDoom.generated.h"
 
 /**
@@ -16,7 +15,7 @@ class CURSEOFIMMORTALITY_API UCursemarkOfDoom: public UBaseUpgrade
 	GENERATED_BODY()
 
 public:
-	virtual void OnEnemyHit(AChar* Enemy) override;
+	virtual void OnEnemyHit(ABaseCharacter* Enemy) override;
 	virtual void InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel) override;
 
 private:

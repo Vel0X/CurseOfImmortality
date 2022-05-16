@@ -16,13 +16,21 @@ UInputManager::UInputManager()
 
 	MaxBufferTime = 0.5;
 	LastAction = InputAction::NoAction;
+
+	
 	Player = static_cast <APlayerCharacter*>(GetOwner());
 	if(Player != nullptr)
 	{
 		MovementComponent = Player->MovementComponent;
-	} else
+
+		if(MovementComponent == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("MovementComponent is NULL!!!"));
+		}
+	}
+	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player is Null"));
+		UE_LOG(LogTemp, Warning, TEXT("Player is NullA"));
 	}
 }
 
@@ -31,6 +39,20 @@ UInputManager::UInputManager()
 void UInputManager::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	Player = static_cast <APlayerCharacter*>(GetOwner());
+	if(Player != nullptr)
+	{
+		MovementComponent = Player->MovementComponent;
+		if(MovementComponent == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("MovementComponent is NULL!!!"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player is NullB"));
+	}
 }
 
 
@@ -43,20 +65,23 @@ void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	{
 		Player->CurrentDashCooldown -= DeltaTime;
 	}
+	
 	if (Player->CurrentMeleeFollowUpTime > 0)
 	{
 		Player->CurrentMeleeFollowUpTime -= DeltaTime;
-	} else if (Player->CurrentMeleeFollowUpTime <= 0 && Player->MeleeComboCount != 0)
+	}
+	else if (Player->CurrentMeleeFollowUpTime <= 0 && Player->MeleeComboCount != 0)
 	{
 		Player->MeleeComboCount = 0;
 		Player->MeleeStartFrame = 0;
 	}
+	
 	if (Player->CurrentAnimationDuration > 0)
 	{
 		Player->CurrentAnimationDuration -= DeltaTime;
-	//	UE_LOG(LogTemp, Warning, TEXT("Text,%f"), Player->CurrentAnimationDuration);
-		
-	} else if (InputBuffer.Num()>0)
+		//UE_LOG(LogTemp, Warning, TEXT("Text,%f"), Player->CurrentAnimationDuration);
+	}
+	else if (InputBuffer.Num()>0)
 	{
 		DoAction(InputBuffer.Last());
 		InputBuffer.Empty();
@@ -151,11 +176,11 @@ void UInputManager::DoAction(InputAction _InputAction)
 		break;
 	case InputAction::RangedAbility:
 		LastAction = InputAction::RangedAbility;
-		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnRangedKeyPressed();
+		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Ranged);
 		break;
 	case InputAction::SpecialAbility:
 		LastAction = InputAction::SpecialAbility;
-		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnSpecialKeyPressed();
+		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Special);
 		break;
 	default:
 		break;

@@ -23,7 +23,7 @@ void UPierce::InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel
 	}
 }
 
-void UPierce::OnEnemyHit(AChar* Enemy)
+void UPierce::OnEnemyHit(ABaseCharacter* Enemy)
 {
 	Super::OnEnemyHit(Enemy);
 	

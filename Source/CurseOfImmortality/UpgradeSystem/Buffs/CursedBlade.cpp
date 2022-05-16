@@ -4,7 +4,6 @@
 #include "CursedBlade.h"
 #include "NiagaraComponent.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
-#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
 
 UCursedBlade::UCursedBlade()
 {
@@ -19,7 +18,7 @@ UCursedBlade::UCursedBlade()
 	BuffType = CursedBlade;
 }
 
-void UCursedBlade::InitializeBuff(int Level, AChar* _Owner)
+void UCursedBlade::InitializeBuff(int Level, ABaseCharacter* _Owner)
 {
 	Super::InitializeBuff(Level, _Owner);
 	ParticleSystem = SetupVfx(UpperPoint);

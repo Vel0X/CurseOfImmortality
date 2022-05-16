@@ -3,8 +3,8 @@
 
 #include "BaseAbility.h"
 #include "BaseUpgrade.h"
-#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
 #include "NiagaraCommon.h"
+#include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "Niagara/Public/NiagaraComponent.h"
 
 // Sets default values
@@ -34,7 +34,7 @@ void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
 
 
 	
-	if(OtherActor->GetClass()->IsChildOf(AChar::StaticClass()))
+	if(OtherActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
 	{
 		if(!CanInteract)
 		{
@@ -42,7 +42,7 @@ void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
 			return;
 		}
 		
-		AChar* OtherChar = static_cast<AChar*>(OtherActor);
+		ABaseCharacter* OtherChar = static_cast<ABaseCharacter*>(OtherActor);
 		if(Caster == OtherChar)
 		{
 			return;
@@ -163,7 +163,7 @@ void ABaseAbility::DestroyAbility()
 	Destroy();
 }
 
-void ABaseAbility::InitializeAbility(int _AbilityHandle, AChar* _Caster, int Level)
+void ABaseAbility::InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level)
 {
 	Caster = _Caster;
 }

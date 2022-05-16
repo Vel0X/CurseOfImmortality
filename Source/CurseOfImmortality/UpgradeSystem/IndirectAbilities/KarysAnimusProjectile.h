@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/RangedAbility.h"
-#include "UObject/Object.h"
 #include "KarysAnimusProjectile.generated.h"
 
 class USphereComponent;

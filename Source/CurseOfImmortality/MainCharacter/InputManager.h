@@ -59,9 +59,11 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void SetupPlayerInput(UInputComponent* InputComponent);
-	
+
+	UPROPERTY(EditAnywhere)
 	APlayerCharacter *Player;
 
+	UPROPERTY(EditAnywhere)
 	UCharacterMovement *MovementComponent;
 
 	FVector MoveInput;
