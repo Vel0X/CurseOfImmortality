@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "ObjectFactory.generated.h"
 
+class UDamageObject;
+class UDamageSpecification;
 class UUpgradeList;
 UCLASS()
 class CURSEOFIMMORTALITY_API AObjectFactory : public AActor
@@ -19,6 +21,8 @@ public:
 	virtual void BeginPlay() override;
 
 	UBaseBuff* GetBuff(EBuff BuffName) const;
+
+	UDamageObject* GetDamageObject(UDamageSpecification* Specification) const;
 
 	UPROPERTY(EditAnywhere)
 	UUpgradeList* PossibleUpgrades;

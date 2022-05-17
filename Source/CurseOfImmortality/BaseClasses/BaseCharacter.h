@@ -113,6 +113,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	UCapsuleComponent* CapsuleComponent;
 
+	UPROPERTY(EditAnywhere)
+	TArray<UPrimitiveComponent*> HitBoxes;
+
 private:
 	int ActiveParticleEffectHandle = 0;
 };

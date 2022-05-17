@@ -19,6 +19,7 @@
  *
  */
 
+class ABaseCharacter;
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CURSEOFIMMORTALITY_API UDamageComponent : public UActorComponent
 {
@@ -29,7 +30,22 @@ public:
 	UDamageComponent();
 
 	UPROPERTY(EditAnywhere)
-	TMap<UShapeComponent*, UDamageObject*> DamagingComponents;
+	TArray<FComponentReference> References;
+
+	UPROPERTY(EditAnywhere)
+	TArray<UDamageSpecification*> DamageObjects;
 	
-	void SetupDamageComponent(UShapeComponent* Component, UDamageObject* DamageObject);
+	UPROPERTY(EditAnywhere)
+	TMap<UPrimitiveComponent*, UDamageObject*> DamagingComponents;
+	
+	void BeginPlay() override;
+
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void ConvertInterface();
+
+	void OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter);
+
+	
+	void SetupDamageComponent(UPrimitiveComponent* Component, UDamageObject* DamageObject);
 };

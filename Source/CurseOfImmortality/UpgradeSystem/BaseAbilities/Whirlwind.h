@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CurseOfImmortality/BaseClasses/DamageComponent.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/SpecialAbility.h"
 #include "Whirlwind.generated.h"
 
+class USphereComponent;
 class UNiagaraComponent;
 /**
  * 
@@ -20,9 +20,11 @@ public:
 	// Sets default values for this actor's properties
 	AWhirlwind();
 
+	virtual void BeginPlay() override;
+	
 	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* ParticleSystem;
 
 	UPROPERTY(EditAnywhere)
-	UDamageComponent* DamageComponent;
+	USphereComponent* Collider;
 };

@@ -363,6 +363,12 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 	const FRotator Rotation = GetOwner()->GetActorRotation();
 	
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class, &Location, &Rotation));
+
+	if(AbilityInstance == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned!"));
+		return;
+	}
 	AbilityInstance->InitializeAbility(AbilityMapHandle, static_cast<ABaseCharacter*>(GetOwner()), Ability.Level);
 	AbilityInstance->OnAbilityCreation();
 	//AbilityInstance->AbilityType
