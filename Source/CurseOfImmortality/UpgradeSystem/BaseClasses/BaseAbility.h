@@ -9,6 +9,7 @@
 //DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityStart, int);
 //DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityEnd, int);
 
+class UDamageComponent;
 class ABaseCharacter;
 class AChar;
 class UBaseUpgrade;
@@ -42,6 +43,9 @@ protected:
 
 
 public:
+
+	void CheckCollisions();
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -72,4 +76,9 @@ private:
 	int AbilityHandle;
 	FScriptDelegate OverlapDelegate;
 
+	UPROPERTY(EditAnywhere)
+	TArray<UPrimitiveComponent*> HitBoxes;
+
+	UPROPERTY(EditAnywhere)
+	UDamageComponent* DamageComponent;
 };

@@ -50,6 +50,21 @@ void ABaseCharacter::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Stats were not properly initialized"));
 	}
+
+	TArray<UActorComponent*> HBs;
+	GetComponents(UPrimitiveComponent::StaticClass(), HBs);
+	for (const auto Component : HBs)
+	{
+
+		//add all primitive Components that generate Overlap Events and that are part of body hitbox of the character (determined by the Collision Profile)
+		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
+		if(PrimitiveComponent->GetGenerateOverlapEvents() && PrimitiveComponent->GetCollisionProfileName() == "Character")
+		{
+			HitBoxes.Add(PrimitiveComponent);
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Character %s contains %i Colliders"), *DisplayName, HitBoxes.Num());
 }
 
 // Called every frame
