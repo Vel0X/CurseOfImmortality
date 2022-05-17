@@ -3,7 +3,7 @@
 
 #include "KarysAnimusProjectile.h"
 
-#include "GameController.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "NiagaraComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/KismetMathLibrary.h"

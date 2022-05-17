@@ -2,13 +2,13 @@
 
 
 #include "ShatteredImpact.h"
-#include "GameController.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "Kismet/KismetMathLibrary.h"
 
-void UShatteredImpact::OnEnemyHit()
+void UShatteredImpact::OnEnemyHit(ABaseCharacter* Enemy)
 {
-	Super::OnEnemyHit();
+	Super::OnEnemyHit(Enemy);
 	ABaseAbility* Owner = static_cast<ABaseAbility*>(GetOwner());
 
 	if(!Owner->CanInteract)

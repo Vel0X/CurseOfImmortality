@@ -11,7 +11,7 @@ class UNiagaraComponent;
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API AWhirlwind : public ASpecialAbility
+class CURSEOFIMMORTALITY_API AWhirlwind final : public ASpecialAbility
 {
 	GENERATED_BODY()
 

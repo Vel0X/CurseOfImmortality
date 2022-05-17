@@ -3,6 +3,10 @@
 
 #include "RangedAbility.h"
 
+void ARangedAbility::OnInteraction(ABaseAbility* OtherAbility)
+{
+}
+
 void ARangedAbility::BeginPlay()
 {
 	Super::BeginPlay();

@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseCharacter.h"
+#include "Components/CapsuleComponent.h"
+#include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "BaseEnemyPawn.generated.h"
 
 /**

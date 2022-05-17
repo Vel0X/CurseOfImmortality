@@ -3,7 +3,7 @@
 
 #include "ArcaneWhisper.h"
 
-#include "GameController.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "NiagaraComponent.h"
 
 static TArray<AActor*> HitActors;
@@ -13,9 +13,9 @@ void AArcaneWhisper::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AArcaneWhisper::InitializeAbility(int _AbilityHandle, AActor* Caster, int Level)
+void AArcaneWhisper::InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level)
 {
-	Super::InitializeAbility(_AbilityHandle, Caster, Level);
+	Super::InitializeAbility(_AbilityHandle, _Caster, Level);
 	HitActors.Empty();
 }
 
@@ -71,7 +71,7 @@ void AArcaneWhisper::OnAbilityCreation()
 void AArcaneWhisper::AfterInitialization()
 {
 	Super::AfterInitialization();
-	delayedAfterInit = true;
+	bDelayedAfterInit = true;
 	UE_LOG(LogTemp, Warning, TEXT("AFTER INIT"));
 
 
@@ -81,7 +81,7 @@ void AArcaneWhisper::Tick(float DeltaSeconds)
 {
 
 	Super::Tick(DeltaSeconds);
-	if(delayedAfterInit)
+	if(bDelayedAfterInit)
 	{
 		if(Target)
 		{
@@ -103,7 +103,7 @@ void AArcaneWhisper::Tick(float DeltaSeconds)
 		{
 			Destroy(); //regular Destroy, as the Ability basically has not even spawned yet
 		}
-		delayedAfterInit = false;
+		bDelayedAfterInit = false;
 	}
 }
 

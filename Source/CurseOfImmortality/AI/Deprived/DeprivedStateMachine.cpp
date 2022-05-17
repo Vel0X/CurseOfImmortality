@@ -4,7 +4,7 @@
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 
 #include "DeprivedPawn.h"
-#include "PlayerCharacter.h"
+#include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/State.h"
@@ -14,6 +14,7 @@
 #include "States/DeprivedNormalAttack.h"
 #include "States/DeprivedRecover.h"
 #include "States/DeprivedRunning.h"
+#include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 
 UDeprivedStateMachine::UDeprivedStateMachine()
 {

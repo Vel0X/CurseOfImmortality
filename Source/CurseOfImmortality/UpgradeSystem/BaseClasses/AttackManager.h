@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UpgradeSpecification.h"
-#include "Components/ActorComponent.h"
 #include "CurseOfImmortality/UpgradeSystem/IndirectAbilities/ArcaneReplicatorTurret.h"
+#include "Components/ActorComponent.h"
+#include "DataAssets/UpgradeList.h"
+#include "DataAssets/UpgradeSpecification.h"
 #include "AttackManager.generated.h"
 
 
@@ -88,7 +89,7 @@ struct FPooledEntry
 	int Weight;
 };
 
-UCLASS()
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CURSEOFIMMORTALITY_API UAttackManager : public UActorComponent
 {
 	GENERATED_BODY()
@@ -97,10 +98,9 @@ public:
 	// Sets default values for this actor's properties
 	UAttackManager();
 
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	void OnRangedKeyPressed();
-	void OnSpecialKeyPressed();
+
+	void OnKeyPressed(EAbilityType Type);
 	
 	void SortActiveUpgrades(bool Verbose = false);
 	
@@ -130,23 +130,15 @@ protected:
 	void CleanupAbility(int AbilityHandle);
 	
 public:
-	//UPROPERTY(EditAnywhere)
-	//FActiveAbility ActiveRangedAbility;
-	
-	//UPROPERTY(EditAnywhere)
-	//FActiveAbility  ActiveSpecialAbility;
-
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EAbilityType>, FActiveAbility> ActiveAbilities;
 	
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EUpgradeName>, FActiveUpgrade> ActiveUpgrades;
+
 	
 	UPROPERTY(EditAnywhere)
-	TMap<TEnumAsByte<EUpgradeName>,UUpgradeSpecification*> PossibleUpgrades;
-
-	UPROPERTY(EditAnywhere)
-	TMap<TEnumAsByte<EUpgradeName>,UAbilitySpecification*> PossibleAbilities;
+	UUpgradeList* PossibleUpgrades;
 
 	UPROPERTY(EditAnywhere)
 	TArray<FPooledEntry> Pool;
@@ -158,6 +150,7 @@ public:
 	//Blueprint Actors, that get spawned with Upgrades need to be defined in an actor, since the BP-Assets can only be assigned via UI
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AArcaneReplicatorTurret> ArcaneReplicatorTurretBP;
+	
 private:
 	int AbilityMapHandle = 0;
 

@@ -2,7 +2,7 @@
 
 
 #include "SealOfCongruence.h"
-#include "GameController.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "Kismet/KismetMathLibrary.h"
 

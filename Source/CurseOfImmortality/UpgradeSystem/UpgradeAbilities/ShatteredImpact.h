@@ -15,7 +15,7 @@ class CURSEOFIMMORTALITY_API UShatteredImpact : public UBaseUpgrade
 	GENERATED_BODY()
 
 public:
-	virtual void OnEnemyHit() override;
+	virtual void OnEnemyHit(ABaseCharacter* Enemy) override;
 	virtual void InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel) override;
 
 private:

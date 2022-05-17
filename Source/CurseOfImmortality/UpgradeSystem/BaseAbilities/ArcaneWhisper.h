@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API AArcaneWhisper : public ARangedAbility
+class CURSEOFIMMORTALITY_API AArcaneWhisper final : public ARangedAbility
 {
 	GENERATED_BODY()
 
@@ -18,7 +18,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void AfterInitialization() override;
 	virtual void OnAbilityCreation() override;
-	virtual void InitializeAbility(int _AbilityHandle, AActor* Caster, int Level) override;
+	virtual void InitializeAbility(int _AbilityHandle, ABaseCharacter* Caster, int Level) override;
 	virtual void Tick(float DeltaSeconds) override;
 
 protected:
@@ -27,7 +27,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float BounceRange = 700;
 
-	bool delayedAfterInit = false;
+	bool bDelayedAfterInit = false;
 	UPROPERTY(EditAnywhere)
 	FVector SpawnLocation = FVector::Zero();
 };

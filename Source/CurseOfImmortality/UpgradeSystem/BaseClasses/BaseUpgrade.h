@@ -4,8 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "BaseAbility.h"
+#include "RangedAbility.h"
 #include "Components/ActorComponent.h"
 #include "BaseUpgrade.generated.h"
+
+class AChar;
+class ABaseAbility;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CURSEOFIMMORTALITY_API UBaseUpgrade : public UActorComponent
@@ -25,7 +29,10 @@ public:
 	virtual void OnAbilityEnd(int AbilityHandle);
 
 	UFUNCTION()
-	virtual void OnEnemyHit();
+	virtual void OnEnemyHit(ABaseCharacter* Enemy);
+
+	UFUNCTION()
+	virtual void OnAbilityHit(ARangedAbility* Ability);
 	
 	TEnumAsByte<EAbilityType> RestrictedTo;
 

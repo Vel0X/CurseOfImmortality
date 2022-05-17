@@ -14,10 +14,10 @@ class CURSEOFIMMORTALITY_API ASpecialAbility : public ABaseAbility
 {
 	GENERATED_BODY()
 public:
-	virtual void InitializeAbility(int _AbilityHandle, AActor* Caster, int Level) override;
+	virtual void InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level) override;
 
 	UPROPERTY(EditAnywhere)
 	AActor* Parent;
 protected:
-	void Tick(float DeltaSeconds) override;
+	virtual void Tick(float DeltaSeconds) override;
 };

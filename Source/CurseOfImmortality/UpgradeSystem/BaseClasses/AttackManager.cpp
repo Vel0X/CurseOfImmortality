@@ -1,8 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AttackManager.h"
-#include "AbilitySpecification.h"
-#include "GameController.h"
+
+#include "PersistentWorldManager.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
+#include "DataAssets/AbilitySpecification.h"
 
 //#define GAME_INSTANCE static_cast<UGameController*>(GetGameInstance())
 
@@ -13,23 +15,6 @@ UAttackManager::UAttackManager()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
-void UAttackManager::BeginPlay()
-{
-	Super::BeginPlay();
-	
-	static_cast<UGameController*>(GetOwner()->GetGameInstance())->BindAbilityController(this);
-	
-	UpdateAbilityPool();
-	SortActiveUpgrades();
-
-}
-
-void UAttackManager::CleanupAbility(int AbilityHandle)
-{
-}
-
-// Called every frame
 void UAttackManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -47,6 +32,20 @@ void UAttackManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 }
 
 
+// Called when the game starts or when spawned
+void UAttackManager::BeginPlay()
+{
+	Super::BeginPlay();
+	static_cast<UGameController*>(GetOwner()->GetGameInstance())->BindAbilityController(this);
+	FPersistentWorldManager::AttackManager = this;
+	UpdateAbilityPool();
+	SortActiveUpgrades();
+
+}
+
+void UAttackManager::CleanupAbility(int AbilityHandle)
+{
+}
 
 void UAttackManager::SortActiveUpgrades(bool Verbose)
 {
@@ -94,7 +93,7 @@ void UAttackManager::UpdateAbilityPool()
 
 	Pool.Empty();
 	
-	for (const auto Tuple : PossibleAbilities)
+	for (const auto Tuple : PossibleUpgrades->PossibleBaseAbilities)
 	{
 		const auto PossibleAbilityName = Tuple.Key;
 		const auto PossibleAbility = Tuple.Value;
@@ -134,7 +133,7 @@ void UAttackManager::UpdateAbilityPool()
 	}
 	
 
-	for (const auto Tuple : PossibleUpgrades)
+	for (const auto Tuple : PossibleUpgrades->PossibleUpgradeAbilities)
 	{
 		const auto PossibleUpgradeName = Tuple.Key;
 		const auto PossibleUpgrade = Tuple.Value;
@@ -192,6 +191,7 @@ void UAttackManager::UpdateAbilityPool()
 
 void UAttackManager::PickThreeFromPool(bool Verbose)
 {
+	
 	int PoolSize = 0;
 	
 	for (const auto Entry : Pool)
@@ -230,13 +230,13 @@ void UAttackManager::PickThreeFromPool(bool Verbose)
 		for (int i = 0; i < SelectedPoolEntries.Num(); ++i)
 		{
 			const auto Name = Pool[SelectedPoolEntries[i]].Name;
-			if(PossibleAbilities.Contains(Name))
+			if(PossibleUpgrades->PossibleBaseAbilities.Contains(Name))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("%s"), *PossibleAbilities[Name]->DisplayName);
+				UE_LOG(LogTemp, Warning, TEXT("%s"), *PossibleUpgrades->PossibleBaseAbilities[Name]->DisplayName);
 			}
-			else if(PossibleUpgrades.Contains(Name))
+			else if(PossibleUpgrades->PossibleUpgradeAbilities.Contains(Name))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("%s"), *PossibleUpgrades[Name]->DisplayName);
+				UE_LOG(LogTemp, Warning, TEXT("%s"), *PossibleUpgrades->PossibleUpgradeAbilities[Name]->DisplayName);
 			}
 			else
 			{
@@ -244,10 +244,12 @@ void UAttackManager::PickThreeFromPool(bool Verbose)
 			}
 		}
 	}
+	
 }
 
 void UAttackManager::GetUpgrade(const int Index)
 {
+	
 	if(Index >= SelectedPoolEntries.Num())
 	{
 		UE_LOG(LogTemp, Error, TEXT("Index %i is out of bounds"), Index);
@@ -280,9 +282,9 @@ void UAttackManager::GetUpgrade(const int Index)
 		}
 		else
 		{
-			if(PossibleUpgrades.Contains(Entry.Name))
+			if(PossibleUpgrades->PossibleUpgradeAbilities.Contains(Entry.Name))
 			{
-				ActiveUpgrades.Add( Entry.Name,FActiveUpgrade(PossibleUpgrades[Entry.Name], 1));
+				ActiveUpgrades.Add( Entry.Name,FActiveUpgrade(PossibleUpgrades->PossibleUpgradeAbilities[Entry.Name], 1));
 			}
 			else
 			{
@@ -325,9 +327,9 @@ void UAttackManager::GetUpgrade(const int Index)
 		}
 		else
 		{
-			if(PossibleAbilities.Contains(Entry.Name))
+			if(PossibleUpgrades->PossibleBaseAbilities.Contains(Entry.Name))
 			{
-				ActiveAbilities.Add(PossibleAbilities[Entry.Name]->AbilityType, FActiveAbility(PossibleAbilities[Entry.Name], 1));
+				ActiveAbilities.Add(PossibleUpgrades->PossibleBaseAbilities[Entry.Name]->AbilityType, FActiveAbility(PossibleUpgrades->PossibleBaseAbilities[Entry.Name], 1));
 			}
 			else
 			{
@@ -339,6 +341,7 @@ void UAttackManager::GetUpgrade(const int Index)
 
 	SortActiveUpgrades(true);
 	UpdateAbilityPool();
+	
 }
 
 void UAttackManager::PrintCurrentlyActive()
@@ -350,29 +353,22 @@ void UAttackManager::PrintCurrentlyActive()
 		UE_LOG(LogTemp, Warning, TEXT("UpgradeAbility: %s Level %i"), *Tuple.Value.Specification->DisplayName, Tuple.Value.Level);
 }
 
-void UAttackManager::OnRangedKeyPressed()
+void UAttackManager::OnKeyPressed(EAbilityType Type)
 {
-	if(ActiveAbilities.Contains(Ranged) && CheckCooldown(Ranged))
-		SpawnAbility(ActiveAbilities[Ranged]);
-}
-
-
-void UAttackManager::OnSpecialKeyPressed()
-{
-	if(ActiveAbilities.Contains(Special) && CheckCooldown(Special))
-		SpawnAbility(ActiveAbilities[Special]);
+	if(ActiveAbilities.Contains(Type) && CheckCooldown(Type))
+		SpawnAbility(ActiveAbilities[Type]);
 }
 
 void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 {
-	auto loc = GetOwner()->GetActorLocation();
-	auto rot = GetOwner()->GetActorRotation();
-	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class, &loc, &rot));
-	AbilityInstance->InitializeAbility(AbilityMapHandle, GetOwner(), Ability.Level);
-	AbilityInstance->OnAbilityCreation();
-
-	//AbilityInstance->AbilityType
+	const FVector Location = GetOwner()->GetActorLocation();
+	const FRotator Rotation = GetOwner()->GetActorRotation();
 	
+	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class, &Location, &Rotation));
+	AbilityInstance->InitializeAbility(AbilityMapHandle, static_cast<ABaseCharacter*>(GetOwner()), Ability.Level);
+	AbilityInstance->OnAbilityCreation();
+	//AbilityInstance->AbilityType
+
 	for (const auto Tuple : ActiveUpgrades)
 	{
 
@@ -384,7 +380,8 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 
 				continue;
 			}
-		}	
+		}
+		UE_LOG(LogTemp, Error, TEXT("Added %s"), *Tuple.Value.Specification->DisplayName);
 		AbilityInstance->AddUpgrade(Tuple.Value.Specification->Class, Tuple.Value.Level);
 	}
 	AbilityInstance->AfterInitialization();

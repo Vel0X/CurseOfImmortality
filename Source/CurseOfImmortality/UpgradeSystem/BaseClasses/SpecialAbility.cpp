@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "SpecialAbility.h"
+#include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 
-
-void ASpecialAbility::InitializeAbility(int _AbilityHandle, AActor* Caster, int Level)
+void ASpecialAbility::InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level)
 {
+	Super::InitializeAbility(_AbilityHandle, Caster, Level);
 	Parent = Caster;
 }
 
