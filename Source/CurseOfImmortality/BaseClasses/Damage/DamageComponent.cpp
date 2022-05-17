@@ -90,3 +90,14 @@ void UDamageComponent::SetupDamageComponent(UPrimitiveComponent* Component, UDam
 	}
 	*/
 }
+
+void UDamageComponent::ResetAllHitCharacters()
+{
+	for (auto Tuple : DamagingComponents)
+	{
+		if(Tuple.Value != nullptr)
+		{
+			Tuple.Value->HitCharacters.Empty();			
+		}
+	}
+}

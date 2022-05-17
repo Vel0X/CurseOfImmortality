@@ -28,6 +28,7 @@ APlayerCharacter::APlayerCharacter() : ABaseCharacter()
 	InputManager = CreateDefaultSubobject<UInputManager>(TEXT("InputManager"));
 	AttackManager = CreateDefaultSubobject<UAttackManager>(TEXT("AttackManager"));
 	StateMachine = CreateDefaultSubobject<UStateMachine>(TEXT("StateMachine"));
+	DamageComponent = CreateDefaultSubobject<UDamageComponent>("DamageComponent");
 }
  
 
@@ -37,6 +38,7 @@ void APlayerCharacter::Setup()
 	Super::Setup();
 	FPersistentWorldManager::PlayerCharacter = this;
 	SetupInputComponent();
+	DamageComponent->ConvertInterface();
 }
 
 

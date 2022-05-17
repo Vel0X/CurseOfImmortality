@@ -44,8 +44,11 @@ public:
 
 	void ConvertInterface();
 
+	UFUNCTION(BlueprintCallable)
 	void OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter);
 
 	
 	void SetupDamageComponent(UPrimitiveComponent* Component, UDamageObject* DamageObject);
+
+	void ResetAllHitCharacters();
 };

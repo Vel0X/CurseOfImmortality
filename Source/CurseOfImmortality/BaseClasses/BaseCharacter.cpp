@@ -15,8 +15,9 @@ ABaseCharacter::ABaseCharacter()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	RootComponent = CreateDefaultSubobject<UCapsuleComponent>("Root");
-	CapsuleComponent = static_cast<UCapsuleComponent*>(RootComponent);
+	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("Root");
+	SetRootComponent(CapsuleComponent);
+	//CapsuleComponent = static_cast<UCapsuleComponent*>(RootComponent);
 	MovementComponent = CreateDefaultSubobject<UCharacterMovement>("CharacterMovement");
 
 	
@@ -78,10 +79,6 @@ void ABaseCharacter::Tick(float DeltaTime)
 	}
 }
 
-void ABaseCharacter::ReceiveDamage(float Damage)
-{
-	Health -= Damage;
-}
 
 void ABaseCharacter::Setup()
 {
@@ -95,7 +92,7 @@ void ABaseCharacter::DealDamage(float Damage, ABaseCharacter *EnemyCharacter)
 
 void ABaseCharacter::OnDeath()
 {
-	//Do stuff
+	Destroy();
 }
 
 
@@ -178,12 +175,24 @@ void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 	}
 }
 
+
+
+void ABaseCharacter::ReceiveDamage(float Damage)
+{
+	Health -= Damage;
+}
+
 void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Verbose)
 {
 	CurrentHealth -= Amount;
 	if(Verbose)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: Char Health is at %f Max Health %f"), CurrentHealth, Stats[EStats::Health]);
+	}
+
+	if(CurrentHealth <= 0.0f)
+	{
+		OnDeath();
 	}
 
 

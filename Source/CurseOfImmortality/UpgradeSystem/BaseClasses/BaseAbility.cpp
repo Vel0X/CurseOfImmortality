@@ -82,6 +82,7 @@ void ABaseAbility::CheckCollisions()
 
 void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
 {
+	/*
 	if(OtherActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
 	{
 		if(!CanInteract)
@@ -133,6 +134,7 @@ void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
 
 	}
 	//Handling hitting other Abilities
+	*/
 }
 
 void ABaseAbility::OnAbilityCreation()

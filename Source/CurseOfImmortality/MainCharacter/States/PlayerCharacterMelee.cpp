@@ -12,7 +12,7 @@ void UPlayerCharacterMelee::OnStateEnter(UStateMachine* StateMachine)
 
 	Controller = Cast<UPlayerCharacterStateMachine>(StateMachine);
 	SelfRef = Controller->GetSelfRef();
-
+	SelfRef->DamageComponent->ResetAllHitCharacters();
 	switch(SelfRef->MeleeComboCount)
 	{
 	case 0:
