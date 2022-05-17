@@ -43,7 +43,7 @@ void ADeprivedPawn::ReceiveDamage(float Damage)
 	{
 		Dead = true;
 		StateMachine->DestroyComponent();
-		GetCollisionCapsule()->SetCollisionProfileName(TEXT("NoCollision"));
+		CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
 	}
 }
 

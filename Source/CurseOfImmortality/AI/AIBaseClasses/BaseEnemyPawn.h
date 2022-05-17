@@ -14,14 +14,4 @@ UCLASS()
 class CURSEOFIMMORTALITY_API ABaseEnemyPawn : public ABaseCharacter
 {
 	GENERATED_BODY()
-public:
-	ABaseEnemyPawn();
-
-private:
-	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* CollisionCapsule;
-
-	//Getter and Setter
-public:
-	UCapsuleComponent* GetCollisionCapsule() const;
 };

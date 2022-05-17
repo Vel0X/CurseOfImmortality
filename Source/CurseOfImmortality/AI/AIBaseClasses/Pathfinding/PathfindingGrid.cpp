@@ -3,7 +3,7 @@
 
 #include "PathfindingGrid.h"
 
-#include "GameController.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
 
 APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(30, 30)
 {

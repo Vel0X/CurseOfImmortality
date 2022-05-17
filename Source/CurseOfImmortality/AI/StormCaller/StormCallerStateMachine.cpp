@@ -57,5 +57,5 @@ void UStormCallerStateMachine::FocusOnPlayer()
 	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 
 	const FRotator LookAtRotation = FRotator(0.f, Target.Rotation().Yaw, 0.f);
-	SelfRef->GetCollisionCapsule()->SetWorldRotation(LookAtRotation);
+	SelfRef->CapsuleComponent->SetWorldRotation(LookAtRotation);
 }

@@ -3,9 +3,11 @@
 
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedRunning.h"
 
-#include "GameController.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
+#include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 
 void UDeprivedRunning::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -45,9 +47,24 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	FVector LeftVectorSelf(RightVectorSelf.operator-());
 	FVector RightVectorPlayer(Player->GetActorRightVector());
 	FVector LeftVectorPlayer(RightVectorPlayer.operator-());
-	FVector StartPointLeft(LeftVectorSelf * SelfRef->GetCollisionCapsule()->GetUnscaledCapsuleRadius() + OwnLocation);
+	FVector StartPointLeft(LeftVectorSelf * SelfRef->CapsuleComponent->GetUnscaledCapsuleRadius() + OwnLocation);
+	if (!Player)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
+		return;
+	}
+	if (!Player->CapsuleComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("CapsuleComponent is Missing"));
+		return;
+	}
+	if (!Player->CapsuleComponent->GetUnscaledCapsuleRadius())
+	{
+		UE_LOG(LogTemp, Error, TEXT("GetUnscaledCapsuleRadius is Missing"));
+		return;
+	}
 	FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
-	FVector StartPointRight(RightVectorSelf * SelfRef->GetCollisionCapsule()->GetUnscaledCapsuleRadius() + OwnLocation);
+	FVector StartPointRight(RightVectorSelf * SelfRef->CapsuleComponent->GetUnscaledCapsuleRadius() + OwnLocation);
 	FVector EndPointRight(RightVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
 
 	FHitResult HitMid;
@@ -69,7 +86,8 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 		if (PathfindingTimer <= 0)
 		{
 			Path.Empty();
-			auto Grid = static_cast<UGameController*>(Controller->GetOwner()->GetGameInstance())->GetPathfindingGrid();
+			APathfindingGrid* Grid = Cast<UGameController>(Controller->GetOwner()->GetGameInstance())->
+				GetPathfindingGrid();
 
 			if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, false))
 			{

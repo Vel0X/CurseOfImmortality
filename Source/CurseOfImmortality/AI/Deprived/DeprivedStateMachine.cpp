@@ -15,6 +15,7 @@
 #include "States/DeprivedRecover.h"
 #include "States/DeprivedRunning.h"
 #include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
+#include "CurseOfImmortality/BaseClasses/GameController.h"
 
 UDeprivedStateMachine::UDeprivedStateMachine()
 {
@@ -42,7 +43,6 @@ void UDeprivedStateMachine::BeginPlay()
 
 	//Initialise References
 	SelfRef = Cast<ADeprivedPawn>(GetOwner());
-	Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetPawn());
 
 	//Initialise States
 	Idle = NewObject<UDeprivedIdle>();
@@ -76,13 +76,21 @@ void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed)
 
 void UDeprivedStateMachine::FocusOnPlayer()
 {
-	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
-	if (!Player) { UE_LOG(LogTemp, Error, TEXT("No Player in Deprived StateMachine")); }
+	if (!SelfRef)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine"));
+		return;
+	}
+	if (!Player)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Player in Deprived StateMachine"));
+		return;
+	}
 	const FVector PlayerLocation = Player->GetActorLocation();
 	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 
 	const FRotator LookAtRotation = FRotator(0.f, Target.Rotation().Yaw, 0.f);
-	SelfRef->GetCollisionCapsule()->SetWorldRotation(LookAtRotation);
+	SelfRef->CapsuleComponent->SetWorldRotation(LookAtRotation);
 }
 
 void UDeprivedStateMachine::FocusOnPath(FVector PathLocation, float DeltaTime)
@@ -96,7 +104,7 @@ void UDeprivedStateMachine::FocusOnPath(FVector PathLocation, float DeltaTime)
 	const FRotator LookAtRotation(
 		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 270.f).Rotation());
 
-	SelfRef->GetCollisionCapsule()->SetWorldRotation(LookAtRotation);
+	SelfRef->CapsuleComponent->SetWorldRotation(LookAtRotation);
 }
 
 //Getter and Setter

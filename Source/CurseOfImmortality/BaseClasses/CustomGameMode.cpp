@@ -4,6 +4,7 @@
 #include "CustomGameMode.h"
 
 #include "GameController.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "CurseOfImmortality/UpgradeSystem/Buffs/Bleed.h"

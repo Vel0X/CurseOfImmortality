@@ -15,10 +15,9 @@ ABaseCharacter::ABaseCharacter()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	RootComponent = CreateDefaultSubobject<UCapsuleComponent>("Root");
-	CapsuleComponent = static_cast<UCapsuleComponent*>(RootComponent);
+	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("Root");
+	SetRootComponent(CapsuleComponent);
 	MovementComponent = CreateDefaultSubobject<UCharacterMovement>("CharacterMovement");
-
 	
 	UpperAttachmentPoint = CreateDefaultSubobject<USceneComponent>("UpperAttachmentPoint");
 	UpperAttachmentPoint->SetupAttachment(RootComponent);

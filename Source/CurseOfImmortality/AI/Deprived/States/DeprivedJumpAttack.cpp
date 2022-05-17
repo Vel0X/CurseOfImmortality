@@ -24,7 +24,7 @@ void UDeprivedJumpAttack::OnStateEnter(UStateMachine* StateMachine)
 
 	SelfRef->Jump = true;
 
-	SelfRef->GetCollisionCapsule()->SetCollisionProfileName(TEXT("IgnoreOnlyPawn"));
+	SelfRef->CapsuleComponent->SetCollisionProfileName(TEXT("IgnoreOnlyPawn"));
 }
 
 void UDeprivedJumpAttack::OnStateExit()
@@ -36,7 +36,7 @@ void UDeprivedJumpAttack::OnStateExit()
 	}
 
 	Controller->GetSelfRef()->Jump = false;
-	Controller->GetSelfRef()->GetCollisionCapsule()->SetCollisionProfileName(TEXT("Enemy"));
+	Controller->GetSelfRef()->CapsuleComponent->SetCollisionProfileName(TEXT("Enemy"));
 
 	LocationSet = false;
 	SelfRef->CurrentJumpAttackChargeTime = SelfRef->JumpAttackChargeTime;
