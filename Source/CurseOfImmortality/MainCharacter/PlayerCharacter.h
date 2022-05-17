@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "PlayerCharacter.generated.h"
 
+class UPlayerAnim;
 class UInputManager;
 class UAttackManager;
 class UStateMachine;

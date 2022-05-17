@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "InputManager.generated.h"
 
+class UPlayerAnim;
 class UCharacterMovement;
 
 UENUM()
@@ -50,7 +51,7 @@ protected:
 	void Dash();
 
 	TArray<InputAction> InputBuffer;
-
+	
 	UPROPERTY(EditAnywhere)
 	float MaxBufferTime;
 	

@@ -2,6 +2,8 @@
 
 
 #include "InputManager.h"
+
+#include "PlayerAnim.h"
 #include "PlayerCharacter.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
@@ -19,6 +21,7 @@ UInputManager::UInputManager()
 
 	
 	Player = static_cast <APlayerCharacter*>(GetOwner());
+	
 	if(Player != nullptr)
 	{
 		MovementComponent = Player->MovementComponent;
@@ -30,7 +33,7 @@ UInputManager::UInputManager()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player is NullA"));
+		UE_LOG(LogTemp, Warning, TEXT("Player is Null"));
 	}
 }
 
@@ -60,7 +63,7 @@ void UInputManager::BeginPlay()
 void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	
 	if (Player->CurrentDashCooldown > 0)
 	{
 		Player->CurrentDashCooldown -= DeltaTime;
@@ -86,7 +89,6 @@ void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 		DoAction(InputBuffer.Last());
 		InputBuffer.Empty();
 	}
-	
 }
 
 //Called to bind functionality to input
@@ -160,7 +162,6 @@ void UInputManager::AddToBuffer(InputAction _InputAction)
 
 void UInputManager::DoAction(InputAction _InputAction)
 {
-	UE_LOG(LogTemp, Display, TEXT("Used Action"));
 	switch (_InputAction)
 	{
 	case InputAction::Dash:
@@ -168,19 +169,60 @@ void UInputManager::DoAction(InputAction _InputAction)
 		{
 			LastAction = InputAction::Dash;
 			//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnDashKeyPressed();
+			UE_LOG(LogTemp, Display, TEXT("Used Dash"));
 		}
 		break;
 	case InputAction::MeleeAbility:
-		LastAction = InputAction::MeleeAbility;
-		//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnMeleeKeyPressed();
+
+		if(Player->MeleeComboCount!=0)
+		{
+			LastAction = InputAction::MeleeAbility;
+			//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnMeleeKeyPressed();
+			UE_LOG(LogTemp, Display, TEXT("Used Melee"));
+		} else
+		{
+			if (UAnimInstance *AnimInst = Player->SkeletalMesh->GetAnimInstance())
+			{
+				UPlayerAnim* playerAnim = static_cast<UPlayerAnim*>(Player->SkeletalMesh->GetAnimInstance());
+				if(playerAnim->AnimationFinished)
+				{
+					LastAction = InputAction::MeleeAbility;
+					//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnMeleeKeyPressed();
+					UE_LOG(LogTemp, Display, TEXT("Used Melee"));
+				}
+			}
+		}
+		
 		break;
 	case InputAction::RangedAbility:
-		LastAction = InputAction::RangedAbility;
-		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Ranged);
+	    if(Player->AttackManager->CheckCooldown(Ranged))
+	    {
+	    	if (UAnimInstance *AnimInst = Player->SkeletalMesh->GetAnimInstance())
+	    	{
+	    		UPlayerAnim* playerAnim = static_cast<UPlayerAnim*>(Player->SkeletalMesh->GetAnimInstance());
+	    		if(playerAnim->AnimationFinished)
+	    		{
+	    			LastAction = InputAction::RangedAbility;
+	    			static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Ranged);
+	    			UE_LOG(LogTemp, Display, TEXT("Used Ranged"));
+	    		}
+	    	}
+	    }
 		break;
 	case InputAction::SpecialAbility:
-		LastAction = InputAction::SpecialAbility;
-		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Special);
+		if(Player->AttackManager->CheckCooldown(Special))
+		{
+			if (UAnimInstance *AnimInst = Player->SkeletalMesh->GetAnimInstance())
+			{
+				UPlayerAnim* playerAnim = static_cast<UPlayerAnim*>(Player->SkeletalMesh->GetAnimInstance());
+				if(playerAnim->AnimationFinished)
+				{
+					LastAction = InputAction::SpecialAbility;
+					static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Special);
+					UE_LOG(LogTemp, Display, TEXT("Used Special"));
+				}
+			}
+		}
 		break;
 	default:
 		break;

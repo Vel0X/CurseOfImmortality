@@ -12,35 +12,29 @@ void UPlayerCharacterMelee::OnStateEnter(UStateMachine* StateMachine)
 
 	Controller = Cast<UPlayerCharacterStateMachine>(StateMachine);
 	SelfRef = Controller->GetSelfRef();
-	
-	
-	UE_LOG(LogTemp, Warning, TEXT("Combo,%i"), SelfRef->MeleeComboCount);
 
 	switch(SelfRef->MeleeComboCount)
 	{
 	case 0:
 		{
 			SelfRef->CurrentAnimationDuration = SelfRef->MeleeDuration1;
-			SelfRef->MeleeComboCount += 1;
+			SelfRef->MeleeComboCount = 1;
 			SelfRef->MeleeStartFrame = 0;
+			break;
 		}
 	case 1:
 		{
 			SelfRef->CurrentAnimationDuration = SelfRef->MeleeDuration2;
-			SelfRef->MeleeComboCount += 1;
+			SelfRef->MeleeComboCount = 2;
 			SelfRef->MeleeStartFrame = 2.4 - (SelfRef->MeleeDuration3+SelfRef->MeleeDuration2);
+			break;
 		}
 	case 2:
 		{
 			SelfRef->CurrentAnimationDuration = SelfRef->MeleeDuration3;
 			SelfRef->MeleeComboCount = 0;
 			SelfRef->MeleeStartFrame = 2.4 - (SelfRef->MeleeDuration3);
-		}
-	default:
-		{
-			SelfRef->CurrentAnimationDuration = SelfRef->MeleeDuration1;
-			SelfRef->MeleeComboCount += 1;
-			SelfRef->MeleeStartFrame = 0;
+			break;
 		}
 	}
 	
@@ -48,7 +42,6 @@ void UPlayerCharacterMelee::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef->CurrentMeleeFollowUpTime = SelfRef->MeleeFollowUpTime;
 	
 	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = Cast<APlayerCharacter>(SelfRef)->MovementSpeedWhileAttacking;
-	UE_LOG(LogTemp, Warning, TEXT("Anim,%f"), SelfRef->CurrentAnimationDuration);
 
 	UE_LOG(LogTemp, Warning, TEXT("Melee State Entered"));
 }
