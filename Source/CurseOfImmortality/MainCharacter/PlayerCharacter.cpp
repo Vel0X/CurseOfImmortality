@@ -2,11 +2,11 @@
 
 
 #include "PlayerCharacter.h"
-#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/StateMachine.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 
 // Sets default values
@@ -28,6 +28,7 @@ APlayerCharacter::APlayerCharacter() : ABaseCharacter()
 	InputManager = CreateDefaultSubobject<UInputManager>(TEXT("InputManager"));
 	AttackManager = CreateDefaultSubobject<UAttackManager>(TEXT("AttackManager"));
 	StateMachine = CreateDefaultSubobject<UStateMachine>(TEXT("StateMachine"));
+	DamageComponent = CreateDefaultSubobject<UDamageComponent>("DamageComponent");
 }
  
 
@@ -35,8 +36,9 @@ APlayerCharacter::APlayerCharacter() : ABaseCharacter()
 void APlayerCharacter::Setup()
 {
 	Super::Setup();
-	static_cast<UGameController*>(GetOwner()->GetGameInstance())->BindPlayerCharacter(this);
+	FPersistentWorldManager::PlayerCharacter = this;
 	SetupInputComponent();
+	DamageComponent->ConvertInterface();
 }
 
 

@@ -17,6 +17,7 @@ ABaseCharacter::ABaseCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("Root");
 	SetRootComponent(CapsuleComponent);
+	//CapsuleComponent = static_cast<UCapsuleComponent*>(RootComponent);
 	MovementComponent = CreateDefaultSubobject<UCharacterMovement>("CharacterMovement");
 	
 	UpperAttachmentPoint = CreateDefaultSubobject<USceneComponent>("UpperAttachmentPoint");
@@ -49,6 +50,21 @@ void ABaseCharacter::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Stats were not properly initialized"));
 	}
+
+	TArray<UActorComponent*> HBs;
+	GetComponents(UPrimitiveComponent::StaticClass(), HBs);
+	for (const auto Component : HBs)
+	{
+
+		//add all primitive Components that generate Overlap Events and that are part of body hitbox of the character (determined by the Collision Profile)
+		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
+		if(PrimitiveComponent->GetGenerateOverlapEvents() && PrimitiveComponent->GetCollisionProfileName() == "Character")
+		{
+			HitBoxes.Add(PrimitiveComponent);
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Character %s contains %i Colliders"), *DisplayName, HitBoxes.Num());
 }
 
 // Called every frame
@@ -60,11 +76,6 @@ void ABaseCharacter::Tick(float DeltaTime)
 		Buffs[i]->OnBuffTick(DeltaTime);
 
 	}
-}
-
-void ABaseCharacter::ReceiveDamage(float Damage)
-{
-	Health -= Damage;
 }
 
 void ABaseCharacter::Setup()
@@ -79,9 +90,8 @@ void ABaseCharacter::DealDamage(float Damage, ABaseCharacter *EnemyCharacter)
 
 void ABaseCharacter::OnDeath()
 {
-	//Do stuff
+	Destroy();
 }
-
 
 void ABaseCharacter::RecalculateStats()
 {
@@ -162,6 +172,11 @@ void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 	}
 }
 
+void ABaseCharacter::ReceiveDamage(float Damage)
+{
+	Health -= Damage;
+}
+
 void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Verbose)
 {
 	CurrentHealth -= Amount;
@@ -170,7 +185,11 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: Char Health is at %f Max Health %f"), CurrentHealth, Stats[EStats::Health]);
 	}
 
-
+	if(CurrentHealth <= 0.0f)
+	{
+		OnDeath();
+	}
+	
 	//notify all buffs of the damage taken
 	
 	for (int i = 0; i < Buffs.Num(); ++i)
@@ -210,7 +229,6 @@ UNiagaraComponent* ABaseCharacter::SetupBuffVfx(UNiagaraSystem* Vfx, const EAtta
 		AttachmentLocation = LowerAttachmentPoint;
 		break;
 	}
-
 	
 	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(Vfx, AttachmentLocation, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
 	NiagaraComp->AttachToComponent(AttachmentLocation, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));

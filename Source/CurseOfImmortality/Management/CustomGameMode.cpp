@@ -3,6 +3,7 @@
 
 #include "CustomGameMode.h"
 
+#include "PersistentWorldManager.h"
 #include "GameController.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
@@ -16,19 +17,19 @@ void ACustomGameMode::SpawnEnemy()
 
 void ACustomGameMode::AttackManager_PickThreeFromPool() const
 {
-	const auto AM = static_cast<UGameController*>(GetGameInstance())->GetAttackManager();
+	const auto AM = FPersistentWorldManager::AttackManager;
 	AM->PickThreeFromPool(true);
 }
 
 void ACustomGameMode::AttackManager_GetUpgrade(const int Index) const
 {
-	const auto AM = static_cast<UGameController*>(GetGameInstance())->GetAttackManager();
+	const auto AM = FPersistentWorldManager::AttackManager;
 	AM->GetUpgrade(Index);
 }
 
 void ACustomGameMode::AttackManager_PrintCurrentlyActive() const
 {
-	const auto AM = static_cast<UGameController*>(GetGameInstance())->GetAttackManager();
+	const auto AM = FPersistentWorldManager::AttackManager;
 	AM->PrintCurrentlyActive();
 }
 
@@ -61,10 +62,16 @@ void ACustomGameMode::Pathfinding_GenerateNavmesh()
 
 void ACustomGameMode::AddBuffToPlayer(int BuffID) const
 {
-	const auto AM = static_cast<UGameController*>(GetGameInstance())->GetAttackManager();
-	const auto MainChar = static_cast<UGameController*>(GetGameInstance())->GetPlayerCharacter();
+	const auto AM = FPersistentWorldManager::AttackManager;
+	const auto MainChar = FPersistentWorldManager::PlayerCharacter;
+	const auto ObjectFactory = FPersistentWorldManager::ObjectFactory;
+
+	/*
+	ObjectFactory->GetBuff()
+	
 	const auto B = AM->PossibleUpgrades->Buffs[BuffID];
 	
 	MainChar->AddBuff(NewObject<UBaseBuff>(B->StaticClass(), B));
+	*/
 }
 

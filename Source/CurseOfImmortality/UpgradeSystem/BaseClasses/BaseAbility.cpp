@@ -4,7 +4,9 @@
 #include "BaseAbility.h"
 #include "BaseUpgrade.h"
 #include "NiagaraCommon.h"
+#include "Components/ShapeComponent.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
+#include "CurseOfImmortality/BaseClasses/Damage/DamageComponent.h"
 #include "Niagara/Public/NiagaraComponent.h"
 
 // Sets default values
@@ -12,6 +14,10 @@ ABaseAbility::ABaseAbility()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	DamageComponent = CreateDefaultSubobject<UDamageComponent>("DamageComponent");
+
+
 }
 
 
@@ -24,16 +30,59 @@ void ABaseAbility::BeginPlay()
 	OnActorBeginOverlap.AddDynamic( this, &ABaseAbility::OnEnemyHit);
 	//UE_LOG(LogTemp, Warning, TEXT("AbilityInstance was spawned (Base)"));
 	//OnActorBeginOverlap.AddDynamic(this, &ABaseAbility::AtOverlap);
+	
+	//get all the colliders and store them in an array
+	TArray<UActorComponent*> HBs;
+	GetComponents(UPrimitiveComponent::StaticClass(), HBs);
+	for (const auto Component : HBs)
+	{
+
+		//add all primitive Components that generate Overlap Events
+		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
+		if(PrimitiveComponent->GetGenerateOverlapEvents())
+		{
+			HitBoxes.Add(PrimitiveComponent);
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Ability contains %i Colliders"), HitBoxes.Num());
+
+	DamageComponent->ConvertInterface();
 
 
 }
 
+void ABaseAbility::CheckCollisions()
+{
+	TArray<AActor*> OverlappingActors;
+	GetOverlappingActors(OverlappingActors);
+
+	//UE_LOG(LogTemp, Warning, TEXT("Number of overlapping Actors: %i"), OverlappingActors.Num());
+
+	for (auto OverlappingActor : OverlappingActors)
+	{
+		if(OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
+		{
+			ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
+			auto CharacterHitboxes = OverlappingCharacter->HitBoxes;
+
+			for (const auto AbilityHitbox : HitBoxes)
+			{
+				for (const auto CharacterHitbox : CharacterHitboxes)
+				{
+					if(AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
+					{
+						DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter);
+					}
+				}
+			}
+		}
+	}
+}
+
 void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
 {
-	
-
-
-	
+	/*
 	if(OtherActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
 	{
 		if(!CanInteract)
@@ -85,6 +134,7 @@ void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
 
 	}
 	//Handling hitting other Abilities
+	*/
 }
 
 void ABaseAbility::OnAbilityCreation()
@@ -101,6 +151,8 @@ void ABaseAbility::Tick(float DeltaTime)
 		DestroyAbility();
 	}
 	CanInteract = true;
+
+	CheckCollisions();
 }
 
 void ABaseAbility::AfterInitialization()

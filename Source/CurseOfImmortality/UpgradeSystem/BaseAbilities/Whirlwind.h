@@ -6,6 +6,7 @@
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/SpecialAbility.h"
 #include "Whirlwind.generated.h"
 
+class USphereComponent;
 class UNiagaraComponent;
 /**
  * 
@@ -19,7 +20,11 @@ public:
 	// Sets default values for this actor's properties
 	AWhirlwind();
 
-	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* Vfx;
+	virtual void BeginPlay() override;
 	
+	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* ParticleSystem;
+
+	UPROPERTY(EditAnywhere)
+	USphereComponent* Collider;
 };

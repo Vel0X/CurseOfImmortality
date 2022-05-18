@@ -7,9 +7,11 @@
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
+#include "CurseOfImmortality/BaseClasses/Damage/DamageComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "PlayerCharacter.generated.h"
 
+class UPlayerAnim;
 class UInputManager;
 class UAttackManager;
 class UStateMachine;
@@ -104,5 +106,7 @@ public:
 		UAttackManager* AttackManager;
 	UPROPERTY(EditAnywhere)
 		UStateMachine* StateMachine;
+	UPROPERTY(EditAnywhere)
+	UDamageComponent* DamageComponent;
 	
 };

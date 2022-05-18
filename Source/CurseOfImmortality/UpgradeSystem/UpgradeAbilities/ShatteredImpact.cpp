@@ -2,7 +2,7 @@
 
 
 #include "ShatteredImpact.h"
-#include "CurseOfImmortality/BaseClasses/GameController.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -16,7 +16,7 @@ void UShatteredImpact::OnEnemyHit(ABaseCharacter* Enemy)
 		return;
 	}
 	
-	const UAttackManager* AttackManager = static_cast<UGameController*>(GetOwner()->GetGameInstance())->GetAttackManager();
+	const UAttackManager* AttackManager = FPersistentWorldManager::AttackManager;
 
 	UE_LOG(LogTemp, Warning, TEXT("OnEnemyHitTriggered"));
 	

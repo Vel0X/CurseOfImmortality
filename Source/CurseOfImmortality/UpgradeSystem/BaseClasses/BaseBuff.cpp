@@ -2,10 +2,12 @@
 
 
 #include "BaseBuff.h"
-#include "NiagaraSystem.h"
-#include "PersistentWorldManager.h"
+
+#include "AttackManager.h"
 #include "BaseAbility.h"
 #include "NiagaraComponent.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
+#include "DataAssets/BuffSpecification.h"
 
 // Sets default values for this component's properties
 UBaseBuff::UBaseBuff()
@@ -52,6 +54,20 @@ void UBaseBuff::OnBuffTick(float DeltaTime)
 void UBaseBuff::OnBuffEnd()
 {
 	
+}
+
+void UBaseBuff::SetupBuff(UBuffSpecification* Specification)
+{
+	DisplayName = Specification->DisplayName;
+	BuffType = Specification->BuffType;
+	BuffDuration = Specification->BuffDuration;
+	//ParticleSystem = Specification->ParticleSystem;
+	Stackable = Specification->Stackable;
+	CustomBuffEnd = Specification->CustomBuffEnd;
+	InheritRotation = Specification->InheritRotation;
+	StatModifier = Specification->StatModifier;
+	RefreshOnNew = Specification->RefreshOnNew;
+	StatModifications = Specification->StatModifications;
 }
 
 void UBaseBuff::InitializeBuff(int Level, ABaseCharacter* _Owner)

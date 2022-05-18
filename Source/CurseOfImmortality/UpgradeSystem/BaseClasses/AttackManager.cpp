@@ -2,8 +2,7 @@
 
 #include "AttackManager.h"
 
-#include "PersistentWorldManager.h"
-#include "CurseOfImmortality/BaseClasses/GameController.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "DataAssets/AbilitySpecification.h"
 
 //#define GAME_INSTANCE static_cast<UGameController*>(GetGameInstance())
@@ -36,7 +35,6 @@ void UAttackManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 void UAttackManager::BeginPlay()
 {
 	Super::BeginPlay();
-	static_cast<UGameController*>(GetOwner()->GetGameInstance())->BindAbilityController(this);
 	FPersistentWorldManager::AttackManager = this;
 	UpdateAbilityPool();
 	SortActiveUpgrades();
@@ -365,6 +363,12 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 	const FRotator Rotation = GetOwner()->GetActorRotation();
 	
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class, &Location, &Rotation));
+
+	if(AbilityInstance == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned!"));
+		return;
+	}
 	AbilityInstance->InitializeAbility(AbilityMapHandle, static_cast<ABaseCharacter*>(GetOwner()), Ability.Level);
 	AbilityInstance->OnAbilityCreation();
 	//AbilityInstance->AbilityType

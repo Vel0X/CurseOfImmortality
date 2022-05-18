@@ -7,7 +7,6 @@
 #include "NiagaraSystem.h"
 #include "UpgradeSpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
-#include "UObject/Object.h"
 #include "UpgradeList.generated.h"
 
 /**
@@ -26,7 +25,7 @@ public:
 	TMap<TEnumAsByte<EUpgradeName>,UUpgradeSpecification*> PossibleUpgradeAbilities;
 
 	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<UBaseBuff>> Buffs;
+	TMap<TEnumAsByte<EBuff>, UBuffSpecification*> Buffs;
 
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EBuff>, UNiagaraSystem*> BuffVFX;

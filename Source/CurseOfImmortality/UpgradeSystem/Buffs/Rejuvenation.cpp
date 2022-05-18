@@ -3,7 +3,7 @@
 
 #include "Rejuvenation.h"
 
-#include "CurseOfImmortality/UpgradeSystem/GameDummy/Char.h"
+#include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 
 URejuvenation::URejuvenation()
 {

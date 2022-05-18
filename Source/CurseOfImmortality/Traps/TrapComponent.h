@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "UpgradeStack.generated.h"
+#include "TrapComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CURSEOFIMMORTALITY_API UUpgradeStack : public UActorComponent
+class CURSEOFIMMORTALITY_API UTrapComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UUpgradeStack();
+	UTrapComponent();
 
 protected:
 	// Called when the game starts

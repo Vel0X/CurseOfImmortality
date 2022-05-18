@@ -4,6 +4,7 @@
 #include "Whirlwind.h"
 
 #include "NiagaraComponent.h"
+#include "Components/SphereComponent.h"
 
 AWhirlwind::AWhirlwind()
 {
@@ -11,6 +12,14 @@ AWhirlwind::AWhirlwind()
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>("RootComponent");
 
-	Vfx = CreateDefaultSubobject<UNiagaraComponent>("Vfx");
-	Vfx->SetupAttachment(RootComponent);
+	ParticleSystem = CreateDefaultSubobject<UNiagaraComponent>("Vfx");
+	ParticleSystem->SetupAttachment(RootComponent);
+
+	Collider = CreateDefaultSubobject<USphereComponent>("SphereCollider");
+	Collider->SetupAttachment(RootComponent);
+}
+
+void AWhirlwind::BeginPlay()
+{
+	Super::BeginPlay();
 }

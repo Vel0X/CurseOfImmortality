@@ -31,3 +31,13 @@ enum EAttachmentPoint
 	CenterPoint,
 	LowerPoint
 };
+
+UENUM()
+enum ETrapTypes
+{
+	Spikes,
+	Saws,
+	Turrets,
+	Arrows,
+	All
+};
