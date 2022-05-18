@@ -15,6 +15,8 @@ void UDeprivedNormalAttack::OnStateEnter(UStateMachine* StateMachine)
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
+	SelfRef->DamageComponent->ResetAllHitCharacters();
+
 	SelfRef->NormalAttack = true;
 
 	if (Verbose)
@@ -50,6 +52,9 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 
 	if (LeftHandCanAttack)
 	{
+		SelfRef->DamageComponent->ResetAllHitCharacters();
+		LeftHandCanAttack = false;
+/*
 		TArray<AActor*> OverlappingActors;
 		SelfRef->NormalAttackSphereLeft->GetOverlappingActors(OverlappingActors);
 
@@ -61,10 +66,13 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 				SelfRef->DealDamage(SelfRef->DamageNormalAttack, Player);
 				LeftHandCanAttack = false;
 			};
-		}
+		}*/
 	}
 	if (RightHandCanAttack)
 	{
+		SelfRef->DamageComponent->ResetAllHitCharacters();
+		RightHandCanAttack = false;
+/*
 		//UE_LOG(LogTemp, Warning, TEXT("Right Hand Can Attack"))
 
 		TArray<AActor*> OverlappingActors;
@@ -79,6 +87,7 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 				RightHandCanAttack = false;
 			};
 		}
+		*/
 	}
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) > SelfRef->MinDistNormalAttack)

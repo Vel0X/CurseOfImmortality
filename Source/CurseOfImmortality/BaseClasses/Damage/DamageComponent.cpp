@@ -114,3 +114,15 @@ void UDamageComponent::ResetAllHitCharacters()
 		}
 	}
 }
+
+void UDamageComponent::ToggleHitbox(UPrimitiveComponent* Hitbox)
+{
+	if(DamagingHitboxes.Contains(Hitbox))
+	{
+		Hitbox->SetGenerateOverlapEvents(!Hitbox->GetGenerateOverlapEvents());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Toggled Hitbox, that is not registered in DamageComponent!"));
+	}
+}

@@ -59,4 +59,7 @@ public:
 	void SetupDamageComponent(UPrimitiveComponent* Component, UDamageObject* DamageObject);
 
 	void ResetAllHitCharacters();
+
+	UFUNCTION(BlueprintCallable)
+	void ToggleHitbox(UPrimitiveComponent* Hitbox);
 };

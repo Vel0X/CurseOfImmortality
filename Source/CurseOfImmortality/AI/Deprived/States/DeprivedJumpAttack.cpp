@@ -23,6 +23,7 @@ void UDeprivedJumpAttack::OnStateEnter(UStateMachine* StateMachine)
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
+	SelfRef->DamageComponent->ResetAllHitCharacters();
 
 	SelfRef->Jump = true;
 
