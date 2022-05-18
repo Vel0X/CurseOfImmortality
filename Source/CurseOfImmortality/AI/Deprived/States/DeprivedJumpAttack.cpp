@@ -3,6 +3,8 @@
 
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedJumpAttack.h"
 
+#include <string>
+
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
@@ -24,7 +26,7 @@ void UDeprivedJumpAttack::OnStateEnter(UStateMachine* StateMachine)
 
 	SelfRef->Jump = true;
 
-	SelfRef->CapsuleComponent->SetCollisionProfileName(TEXT("IgnoreOnlyPawn"));
+	// SelfRef->CapsuleComponent->SetCollisionProfileName(TEXT("IgnoreOnlyPawn"));
 }
 
 void UDeprivedJumpAttack::OnStateExit()
@@ -36,7 +38,7 @@ void UDeprivedJumpAttack::OnStateExit()
 	}
 
 	Controller->GetSelfRef()->Jump = false;
-	Controller->GetSelfRef()->CapsuleComponent->SetCollisionProfileName(TEXT("Enemy"));
+	// Controller->GetSelfRef()->CapsuleComponent->SetCollisionProfileName(TEXT("Character"));
 
 	LocationSet = false;
 	SelfRef->CurrentJumpAttackChargeTime = SelfRef->JumpAttackChargeTime;
@@ -52,7 +54,7 @@ void UDeprivedJumpAttack::OnStateUpdate(float DeltaTime)
 
 	TArray<AActor*> OverlappingActors;
 	SelfRef->JumpAttackSphere->GetOverlappingActors(OverlappingActors);
-	
+
 	if (!OverlappingActors.IsEmpty())
 	{
 		for (AActor* OverlappingActor : OverlappingActors)

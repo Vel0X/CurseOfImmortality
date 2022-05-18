@@ -3,7 +3,8 @@
 
 #include "PathfindingGrid.h"
 
-#include "CurseOfImmortality/BaseClasses/GameController.h"
+#include <CurseOfImmortality/Management/PersistentWorldManager.h>
+
 
 APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(30, 30)
 {
@@ -69,7 +70,7 @@ void APathfindingGrid::BeginPlay()
 {
 	Super::BeginPlay();
 
-	static_cast<UGameController*>(GetGameInstance())->BindPathfindingGrid(this);
+	FPersistentWorldManager::PathfindingGrid = this;
 }
 
 void APathfindingGrid::PrintGrid()

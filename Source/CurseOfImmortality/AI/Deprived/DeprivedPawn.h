@@ -17,7 +17,7 @@ class CURSEOFIMMORTALITY_API ADeprivedPawn : public ABaseEnemyPawn
 {
 	GENERATED_BODY()
 
-	virtual void ReceiveDamage(float Damage) override;
+	virtual void OnDeath() override;
 
 public:
 	ADeprivedPawn();

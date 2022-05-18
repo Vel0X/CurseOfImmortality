@@ -3,6 +3,7 @@
 
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "DeprivedPawn.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
@@ -15,7 +16,6 @@
 #include "States/DeprivedRecover.h"
 #include "States/DeprivedRunning.h"
 #include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
-#include "CurseOfImmortality/BaseClasses/GameController.h"
 
 UDeprivedStateMachine::UDeprivedStateMachine()
 {
@@ -25,7 +25,12 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
                                           FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	if (!Player)
+	{
+		Player = FPersistentWorldManager::PlayerCharacter;
+		CurrentState = Idle;
+		CurrentState->OnStateEnter(this);
+	}
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
 	if (!CurrentState) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
 
@@ -59,9 +64,6 @@ void UDeprivedStateMachine::BeginPlay()
 	HitPlayer->Verbose = true;
 	Recover->Verbose = true;
 	NormalAttack->Verbose = true;
-
-	CurrentState = Idle;
-	CurrentState->OnStateEnter(this);
 }
 
 void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed)
@@ -71,6 +73,7 @@ void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed)
 	Target.Z = 0.f;
 	Target.Normalize();
 
+	
 	SelfRef->MovementComponent->SetDirection(Target, Speed);
 }
 

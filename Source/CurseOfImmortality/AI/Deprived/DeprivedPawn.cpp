@@ -34,17 +34,11 @@ ADeprivedPawn::ADeprivedPawn()
 	CurrentJumpAttackDuration = JumpAttackDuration;
 }
 
-void ADeprivedPawn::ReceiveDamage(float Damage)
+void ADeprivedPawn::OnDeath()
 {
-	Super::ReceiveDamage(Damage);
-
-	Health -= Damage;
-	if (Health <= 0)
-	{
-		Dead = true;
-		StateMachine->DestroyComponent();
-		CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
-	}
+	Dead = true;
+	StateMachine->DestroyComponent();
+	CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
 void ADeprivedPawn::DealDamage(float Damage, ABaseCharacter* EnemyCharacter)

@@ -4,10 +4,10 @@
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedRunning.h"
 
 #include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
-#include "CurseOfImmortality/BaseClasses/GameController.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UDeprivedRunning::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -40,54 +40,36 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	}
 
 	const FVector PlayerLocation = Player->GetActorLocation();
-	const FVector TargetPlayer = PlayerLocation - SelfRef->GetActorLocation();
 
-	FVector OwnLocation(SelfRef->GetActorLocation());
-	FVector RightVectorSelf(SelfRef->GetActorRightVector());
-	FVector LeftVectorSelf(RightVectorSelf.operator-());
-	FVector RightVectorPlayer(Player->GetActorRightVector());
-	FVector LeftVectorPlayer(RightVectorPlayer.operator-());
-	FVector StartPointLeft(LeftVectorSelf * SelfRef->CapsuleComponent->GetUnscaledCapsuleRadius() + OwnLocation);
-	if (!Player)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
-		return;
-	}
-	if (!Player->CapsuleComponent)
-	{
-		UE_LOG(LogTemp, Error, TEXT("CapsuleComponent is Missing"));
-		return;
-	}
-	if (!Player->CapsuleComponent->GetUnscaledCapsuleRadius())
-	{
-		UE_LOG(LogTemp, Error, TEXT("GetUnscaledCapsuleRadius is Missing"));
-		return;
-	}
-	FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
-	FVector StartPointRight(RightVectorSelf * SelfRef->CapsuleComponent->GetUnscaledCapsuleRadius() + OwnLocation);
-	FVector EndPointRight(RightVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
+	// FVector OwnLocation(SelfRef->GetActorLocation());
+	// FVector RightVectorSelf(SelfRef->GetActorRightVector());
+	// FVector LeftVectorSelf(RightVectorSelf.operator-());
+	// FVector RightVectorPlayer(Player->GetActorRightVector());
+	// FVector LeftVectorPlayer(RightVectorPlayer.operator-());
+	// FVector StartPointLeft(LeftVectorSelf * SelfRef->CapsuleComponent->GetUnscaledCapsuleRadius() + OwnLocation);
+	// FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
+	// FVector StartPointRight(RightVectorSelf * SelfRef->CapsuleComponent->GetUnscaledCapsuleRadius() + OwnLocation);
 
 	FHitResult HitMid;
-	FHitResult HitLeft;
-	FHitResult HitRight;
+	// FHitResult HitLeft;
+	// FHitResult HitRight;
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(Player);
 	CollisionParams.AddIgnoredActor(SelfRef);
 
 	Controller->GetWorld()->LineTraceSingleByChannel(HitMid, SelfRef->GetActorLocation(), Player->GetActorLocation(),
 	                                                 ECC_Pawn, CollisionParams);
-	Controller->GetWorld()->LineTraceSingleByChannel(HitLeft, StartPointLeft, EndPointLeft,
-	                                                 ECC_Pawn, CollisionParams);
-	Controller->GetWorld()->LineTraceSingleByChannel(HitRight, StartPointRight, EndPointLeft,
-	                                                 ECC_Pawn, CollisionParams);
+	// Controller->GetWorld()->LineTraceSingleByChannel(HitLeft, StartPointLeft, EndPointLeft,
+	//                                                  ECC_Pawn, CollisionParams);
+	// Controller->GetWorld()->LineTraceSingleByChannel(HitRight, StartPointRight, EndPointLeft,
+	//                                                  ECC_Pawn, CollisionParams);
 
-	if (HitMid.bBlockingHit || HitLeft.bBlockingHit || HitRight.bBlockingHit)
+	if (HitMid.bBlockingHit)
 	{
 		if (PathfindingTimer <= 0)
 		{
 			Path.Empty();
-			APathfindingGrid* Grid = Cast<UGameController>(Controller->GetOwner()->GetGameInstance())->
-				GetPathfindingGrid();
+			APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
 
 			if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, false))
 			{

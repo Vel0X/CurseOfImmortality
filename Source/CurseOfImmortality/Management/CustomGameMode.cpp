@@ -4,7 +4,6 @@
 #include "CustomGameMode.h"
 
 #include "PersistentWorldManager.h"
-#include "GameController.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
@@ -35,14 +34,14 @@ void ACustomGameMode::AttackManager_PrintCurrentlyActive() const
 
 void ACustomGameMode::Pathfinding_GetPath(int SX, int SY, int EX, int EY)
 {
-	const auto PF = static_cast<UGameController*>(GetGameInstance())->GetPathfindingGrid();
+	const auto PF = FPersistentWorldManager::PathfindingGrid;
 	TArray<FPfNode*> Path;
 	PF->GetPath(SX, SY, EX, EY, Path, true);
 }
 
 void ACustomGameMode::Pathfinding_GetPathWS(float StartX, float StartY, float EndX, float EndY)
 {
-	const auto PF = static_cast<UGameController*>(GetGameInstance())->GetPathfindingGrid();
+	const auto PF = FPersistentWorldManager::PathfindingGrid;
 	TArray<FVector> Path;
 
 	PF->GetPathWorldSpace(FVector(StartX, StartY, 0.0f), FVector(EndX, EndY, 0.0f), Path, true);
@@ -50,13 +49,13 @@ void ACustomGameMode::Pathfinding_GetPathWS(float StartX, float StartY, float En
 
 void ACustomGameMode::Pathfinding_ToggleWalkable(int X, int Y)
 {
-	const auto PF = static_cast<UGameController*>(GetGameInstance())->GetPathfindingGrid();
+	const auto PF = FPersistentWorldManager::PathfindingGrid;
 	PF->ToggleWalkable(X, Y);
 }
 
 void ACustomGameMode::Pathfinding_GenerateNavmesh()
 {
-	const auto PF = static_cast<UGameController*>(GetGameInstance())->GetPathfindingGrid();
+	const auto PF = FPersistentWorldManager::PathfindingGrid;
 	PF->GenerateNavmesh();
 }
 

@@ -58,7 +58,6 @@ void UInputManager::BeginPlay()
 	}
 }
 
-
 // Called every frame
 void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
