@@ -51,21 +51,7 @@ void UDeprivedJumpAttack::OnStateExit()
 void UDeprivedJumpAttack::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
-
-	TArray<AActor*> OverlappingActors;
-	SelfRef->JumpAttackSphere->GetOverlappingActors(OverlappingActors);
-
-	if (!OverlappingActors.IsEmpty())
-	{
-		for (AActor* OverlappingActor : OverlappingActors)
-		{
-			if (Cast<APlayerCharacter>(OverlappingActor))
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Do Dmg to Player in State Jump Attack");
-			};
-		}
-	}
-
+	
 	JumpDestination.Z = 0;
 	OwnLocation = SelfRef->GetActorLocation();
 	OwnLocation.Z = 0;
@@ -111,7 +97,7 @@ void UDeprivedJumpAttack::Jump(float DeltaTime) const
 
 	if (LocationSet)
 	{
-		Controller->MoveToTarget(JumpDestination, SelfRef->JumpAttackSpeed * CurveValue);
+		Controller->MoveToTarget(JumpDestination, SelfRef->JumpAttackSpeed * CurveValue, DeltaTime);
 	}
 	else
 	{

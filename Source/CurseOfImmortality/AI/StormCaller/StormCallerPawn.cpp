@@ -17,3 +17,10 @@ AStormCallerPawn::AStormCallerPawn()
 
 	CurrentAttackCoolDown = AttackCoolDown;
 }
+
+void AStormCallerPawn::OnDeath()
+{
+	Dead = true;
+	StateMachine->DestroyComponent();
+	CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
+}

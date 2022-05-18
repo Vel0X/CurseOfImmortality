@@ -18,6 +18,8 @@ class CURSEOFIMMORTALITY_API AStormCallerPawn : public ABaseEnemyPawn
 
 public:
 	AStormCallerPawn();
+	
+	void OnDeath();
 
 	//Sates
 	UPROPERTY(BlueprintReadWrite)

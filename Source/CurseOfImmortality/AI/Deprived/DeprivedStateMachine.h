@@ -23,7 +23,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	void MoveToTarget(FVector Target, float Speed);
+	void MoveToTarget(FVector Target, float Speed, float DeltaTime);
 	void FocusOnPlayer();
 	void FocusOnPath(FVector PathLocation, float DeltaTime);
 

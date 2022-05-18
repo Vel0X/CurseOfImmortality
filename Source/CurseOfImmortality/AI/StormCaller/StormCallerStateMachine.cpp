@@ -6,6 +6,7 @@
 #include "StormCallerPawn.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "States/StormCallerAttack.h"
 #include "States/StormCallerIdle.h"
 
@@ -18,9 +19,18 @@ void UStormCallerStateMachine::TickComponent(float DeltaTime, ELevelTick TickTyp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	CurrentState->OnStateUpdate(DeltaTime);
-	FocusOnPlayer();
-	SelfRef->CurrentAttackCoolDown -= DeltaTime;
+	if (!Player)
+	{
+		Player = FPersistentWorldManager::PlayerCharacter;
+		CurrentState = Idle;
+		CurrentState->OnStateEnter(this);
+	}
+	if (!SelfRef->Dead)
+	{
+		CurrentState->OnStateUpdate(DeltaTime);
+		FocusOnPlayer();
+		SelfRef->CurrentAttackCoolDown -= DeltaTime;
+	}
 }
 
 AStormCallerPawn* UStormCallerStateMachine::GetSelfRef() const
@@ -39,14 +49,11 @@ void UStormCallerStateMachine::BeginPlay()
 
 	//Initialise References
 	SelfRef = Cast<AStormCallerPawn>(GetOwner());
-	Player = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetPawn());
 
 	//Initialise States
 	Idle = NewObject<UStormCallerIdle>();
 	Attack = NewObject<UStormCallerAttack>();
-
-	CurrentState = Idle;
-	CurrentState->OnStateEnter(this);
+	
 }
 
 void UStormCallerStateMachine::FocusOnPlayer()

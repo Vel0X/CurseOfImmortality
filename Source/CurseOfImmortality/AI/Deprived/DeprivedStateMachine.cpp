@@ -58,23 +58,25 @@ void UDeprivedStateMachine::BeginPlay()
 	NormalAttack = NewObject<UDeprivedNormalAttack>();
 
 	//Log States
-	Idle->Verbose = true;
-	Running->Verbose = true;
-	JumpAttack->Verbose = true;
-	HitPlayer->Verbose = true;
-	Recover->Verbose = true;
-	NormalAttack->Verbose = true;
+	// Idle->Verbose = true;
+	// Running->Verbose = true;
+	// JumpAttack->Verbose = true;
+	// HitPlayer->Verbose = true;
+	// Recover->Verbose = true;
+	// NormalAttack->Verbose = true;
 }
 
-void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed)
+void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float DeltaTime )
 {
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
 	Target = Target - SelfRef->GetActorLocation();
 	Target.Z = 0.f;
 	Target.Normalize();
-
 	
-	SelfRef->MovementComponent->SetDirection(Target, Speed);
+	// SelfRef->MovementComponent->SetDirection(Target, Speed);
+	
+	FVector MoveDir(SelfRef->GetActorLocation() + Target * DeltaTime * Speed);
+	SelfRef->SetActorLocation(MoveDir, true);
 }
 
 void UDeprivedStateMachine::FocusOnPlayer()
