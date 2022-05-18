@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DamageObject.generated.h"
+#include "AIDamageObject.generated.h"
 
 class USphereComponent;
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class CURSEOFIMMORTALITY_API UDamageObject : public UActorComponent
+class CURSEOFIMMORTALITY_API UAIDamageObject : public UActorComponent
 {
 	GENERATED_BODY()
 
@@ -15,7 +15,7 @@ class CURSEOFIMMORTALITY_API UDamageObject : public UActorComponent
 
 public:
 	// Sets default values for this component's properties
-	UDamageObject();
+	UAIDamageObject();
 	void SetUp(float _Duration, bool bNoDot, float _DamageRadius, FVector _SpawnLocation, float _Damage);
 
 protected:
@@ -25,7 +25,7 @@ protected:
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
+							   FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
 	float Duration;

@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "DamageObject.h"
+#include "AIDamageObject.h"
 
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "Components/SphereComponent.h"
 
 // Sets default values for this component's properties
-UDamageObject::UDamageObject()
+UAIDamageObject::UAIDamageObject()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -17,14 +17,13 @@ UDamageObject::UDamageObject()
 }
 
 // Called when the game starts
-void UDamageObject::BeginPlay()
+void UAIDamageObject::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-
 // Called every frame
-void UDamageObject::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UAIDamageObject::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (SetupComplete)
@@ -46,12 +45,13 @@ void UDamageObject::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	}
 }
 
-void UDamageObject::DealDamageToPawns() const
+void UAIDamageObject::DealDamageToPawns() const
 {
 	TArray<AActor*> OverlappingActors;
 	DamageSphere->GetOverlappingActors(OverlappingActors);
 
-	UE_LOG(LogTemp, Warning, TEXT("The boolean value is %s"), ( OverlappingActors.IsEmpty() ? TEXT("true") : TEXT("false") ));
+	UE_LOG(LogTemp, Warning, TEXT("The boolean value is %s"),
+	       ( OverlappingActors.IsEmpty() ? TEXT("true") : TEXT("false") ));
 	// UE_LOG(LogTemp, Warning, TEXT("%f"), DamageSphere->GetUnscaledSphereRadius());
 	// UE_LOG(LogTemp, Warning, TEXT("%s"), *DamageSphere->GetComponentLocation().ToString());
 	// UE_LOG(LogTemp, Warning, TEXT("%s"), DamageSphere->GetCollisionEnabled());
@@ -68,9 +68,9 @@ void UDamageObject::DealDamageToPawns() const
 	}
 }
 
-void UDamageObject::SetUp(const float _Duration, const bool bNoDot, const float _DamageRadius,
-                          const FVector _SpawnLocation,
-                          const float _Damage)
+void UAIDamageObject::SetUp(const float _Duration, const bool bNoDot, const float _DamageRadius,
+                            const FVector _SpawnLocation,
+                            const float _Damage)
 {
 	this->Duration = _Duration;
 	this->NoDot = bNoDot;
