@@ -47,6 +47,8 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
 		{
+			GetOwner()->SetActorRotation(Direction.Rotation());
+
 			if (Cast<APlayerCharacter>(GetOwner())->Melee)
 			{
 				if (UKismetMathLibrary::Acos(FVector::DotProduct(GetOwner()->GetActorForwardVector(), Direction)) < 1.5)
@@ -74,8 +76,6 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 		{
 			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed;
 		}
-		UE_LOG(LogTemp, Warning, TEXT("%f"), MovementSpeed);
-
 		GetOwner()->AddActorWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed,
 		                                true);
 		//RootComponent->AddWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed, true);

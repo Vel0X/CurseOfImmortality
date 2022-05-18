@@ -106,7 +106,4 @@ public:
 		UAttackManager* AttackManager;
 	UPROPERTY(EditAnywhere)
 		UStateMachine* StateMachine;
-	UPROPERTY(EditAnywhere)
-	UDamageComponent* DamageComponent;
-	
 };

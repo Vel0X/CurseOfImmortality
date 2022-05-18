@@ -68,6 +68,9 @@ public:
 	bool CanInteract = false;
 	UPROPERTY(EditAnywhere)
 	float RelativeSize = 1.0f;
+
+	UPROPERTY(EditAnywhere)
+	UDamageComponent* DamageComponent;
 protected:
 	UPROPERTY(EditAnywhere)
 	TArray<UBaseUpgrade*> UpgradeStack;
@@ -79,6 +82,5 @@ private:
 	UPROPERTY(EditAnywhere)
 	TArray<UPrimitiveComponent*> HitBoxes;
 
-	UPROPERTY(EditAnywhere)
-	UDamageComponent* DamageComponent;
+
 };

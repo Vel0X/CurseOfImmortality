@@ -23,9 +23,9 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere)
-	AActor* Target;
+	ABaseCharacter* Target;
 	UPROPERTY(EditAnywhere)
-	float BounceRange = 700;
+	float BounceRange = 2000;
 
 	bool bDelayedAfterInit = false;
 	UPROPERTY(EditAnywhere)

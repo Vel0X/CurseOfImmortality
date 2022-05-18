@@ -5,6 +5,7 @@
 #include "CharacterMovement.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Components/CapsuleComponent.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/BaseStatSpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/Utility/DetachedParticleActor.h"
@@ -19,6 +20,7 @@ ABaseCharacter::ABaseCharacter()
 	SetRootComponent(CapsuleComponent);
 	//CapsuleComponent = static_cast<UCapsuleComponent*>(RootComponent);
 	MovementComponent = CreateDefaultSubobject<UCharacterMovement>("CharacterMovement");
+	DamageComponent = CreateDefaultSubobject<UDamageComponent>("DamageObject");
 	
 	UpperAttachmentPoint = CreateDefaultSubobject<USceneComponent>("UpperAttachmentPoint");
 	UpperAttachmentPoint->SetupAttachment(RootComponent);
@@ -27,6 +29,10 @@ ABaseCharacter::ABaseCharacter()
 	LowerAttachmentPoint = CreateDefaultSubobject<USceneComponent>("LowerAttachmentPoint");
 	LowerAttachmentPoint->SetupAttachment(RootComponent);
 	
+}
+
+ABaseCharacter::~ABaseCharacter()
+{
 }
 
 // Called when the game starts or when spawned
@@ -51,6 +57,7 @@ void ABaseCharacter::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Stats were not properly initialized"));
 	}
 
+	//Add all Body Hitboxes
 	TArray<UActorComponent*> HBs;
 	GetComponents(UPrimitiveComponent::StaticClass(), HBs);
 	for (const auto Component : HBs)
@@ -58,13 +65,26 @@ void ABaseCharacter::BeginPlay()
 
 		//add all primitive Components that generate Overlap Events and that are part of body hitbox of the character (determined by the Collision Profile)
 		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
-		if(PrimitiveComponent->GetGenerateOverlapEvents() && PrimitiveComponent->GetCollisionProfileName() == "Character")
+		if(PrimitiveComponent->GetCollisionProfileName() == "Character")
 		{
-			HitBoxes.Add(PrimitiveComponent);
+			BodyHitboxes.Add(PrimitiveComponent);
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Character %s contains %i Colliders"), *DisplayName, HitBoxes.Num());
+	//Add all Damage Hitboxes
+	for (const auto Component : HBs)
+	{
+
+		//add all primitive Components that generate Overlap Events
+		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
+		if(PrimitiveComponent->GetCollisionProfileName() == "Ability")
+		{
+			DamageHitboxes.Add(PrimitiveComponent);
+		}
+	}
+	
+	DamageComponent->ConvertInterface();
+	FPersistentWorldManager::RegisterCharacter(this);
 }
 
 // Called every frame
@@ -74,7 +94,36 @@ void ABaseCharacter::Tick(float DeltaTime)
 	for (int i = Buffs.Num() - 1; i >= 0; --i)
 	{
 		Buffs[i]->OnBuffTick(DeltaTime);
+	}
 
+	CheckCollisions();
+}
+
+void ABaseCharacter::CheckCollisions()
+{
+	TArray<AActor*> OverlappingActors;
+	GetOverlappingActors(OverlappingActors);
+
+	//UE_LOG(LogTemp, Warning, TEXT("Number of overlapping Actors: %i"), OverlappingActors.Num());
+
+	for (auto OverlappingActor : OverlappingActors)
+	{
+		if(OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
+		{
+			ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
+			auto CharacterHitboxes = OverlappingCharacter->BodyHitboxes;
+
+			for (const auto DamageHitbox : DamageHitboxes)
+			{
+				for (const auto CharacterHitbox : CharacterHitboxes)
+				{
+					if(DamageHitbox->IsOverlappingComponent(CharacterHitbox))
+					{
+						DamageComponent->OnCharacterHit(DamageHitbox, OverlappingCharacter);
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -90,6 +139,7 @@ void ABaseCharacter::DealDamage(float Damage, ABaseCharacter *EnemyCharacter)
 
 void ABaseCharacter::OnDeath()
 {
+	FPersistentWorldManager::DeRegisterCharacter(this);
 	Destroy();
 }
 
@@ -182,7 +232,7 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 	CurrentHealth -= Amount;
 	if(Verbose)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: Char Health is at %f Max Health %f"), CurrentHealth, Stats[EStats::Health]);
+		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: %s Health is at %f Max Health %f"), *DisplayName, CurrentHealth, Stats[EStats::Health]);
 	}
 
 	if(CurrentHealth <= 0.0f)

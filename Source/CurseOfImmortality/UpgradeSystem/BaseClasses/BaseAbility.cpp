@@ -27,7 +27,7 @@ void ABaseAbility::BeginPlay()
 {
 	Super::BeginPlay();
 	RemainingAbilityLifetime = AbilityLifetime;
-	OnActorBeginOverlap.AddDynamic( this, &ABaseAbility::OnEnemyHit);
+	//OnActorBeginOverlap.AddDynamic( this, &ABaseAbility::OnEnemyHit);
 	//UE_LOG(LogTemp, Warning, TEXT("AbilityInstance was spawned (Base)"));
 	//OnActorBeginOverlap.AddDynamic(this, &ABaseAbility::AtOverlap);
 	
@@ -39,7 +39,7 @@ void ABaseAbility::BeginPlay()
 
 		//add all primitive Components that generate Overlap Events
 		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
-		if(PrimitiveComponent->GetGenerateOverlapEvents())
+		if(PrimitiveComponent->GetCollisionProfileName() == "Ability")
 		{
 			HitBoxes.Add(PrimitiveComponent);
 		}
@@ -64,7 +64,17 @@ void ABaseAbility::CheckCollisions()
 		if(OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
 		{
 			ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
-			auto CharacterHitboxes = OverlappingCharacter->HitBoxes;
+
+			if(Caster == nullptr)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
+				continue;
+			}
+			
+			if(OverlappingCharacter->Faction == Caster->Faction)
+				continue;
+			
+			auto CharacterHitboxes = OverlappingCharacter->BodyHitboxes;
 
 			for (const auto AbilityHitbox : HitBoxes)
 			{

@@ -41,4 +41,7 @@ public:
 
 	UFUNCTION(Exec, Category = ExecFunctions)
 	void AddBuffToPlayer(int BuffID) const;
+
+
+	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };

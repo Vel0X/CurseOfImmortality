@@ -22,7 +22,7 @@ void UDamageComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	for (const auto Tuple : DamagingComponents)
+	for (const auto Tuple : DamagingHitboxes)
 	{
 		if(Tuple.Value != nullptr)
 		{
@@ -37,12 +37,14 @@ void UDamageComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UDamageComponent::ConvertInterface()
 {
-	for (int i = 0; i < References.Num(); ++i)
+
+	//convert all the HitboxReferences into actual component references and initialize all the DamageObjects using the ObjectFactory and the DamageSpecification
+	for (int i = 0; i < DamagingHitboxReferences.Num(); ++i)
 	{
-		const auto Component = References[i].GetComponent(GetOwner());
+		const auto Component = DamagingHitboxReferences[i].GetComponent(GetOwner());
 		if(Component == nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("%s is not the name of a component on this actor!"), *References[i].ComponentProperty.ToString());
+			UE_LOG(LogTemp, Warning, TEXT("%s is not the name of a component on this actor!"), *DamagingHitboxReferences[i].ComponentProperty.ToString());
 			continue;
 		}
 
@@ -53,28 +55,39 @@ void UDamageComponent::ConvertInterface()
 			UE_LOG(LogTemp, Warning, TEXT("%s does not reference a Primitive Component"));
 			continue;
 		}
-		auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(DamageObjects[i]);
-		DamagingComponents.Add(Primitive, DamageObject);
+		auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(DamagingHitboxDamageSpecifications[i]);
+		DamagingHitboxes.Add(Primitive, DamageObject);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Converted %i of %i References to DamagingComponents"), DamagingComponents.Num(), References.Num());
+	UE_LOG(LogTemp, Warning, TEXT("Converted %i of %i References to DamagingComponents"), DamagingHitboxes.Num(), DamagingHitboxReferences.Num());
+
+	for (int i = 0; i < DirectDamageSpecifications.Num(); ++i)
+	{
+		auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(DirectDamageSpecifications[i]);
+		DirectDamageObjects.Add(DamageObject);
+	}
 }
 
 void UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter)
 {
-	if(!DamagingComponents.Contains(DamageComponentOverlap))
+	if(!DamagingHitboxes.Contains(DamageComponentOverlap))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("The Hitbox is not contained"));
 		return;
 	}
 
-	if(DamagingComponents[DamageComponentOverlap] == nullptr)
+	if(DamagingHitboxes[DamageComponentOverlap] == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("DamageComponent is null!"));
 		return;
 	}
 
-	DamagingComponents[DamageComponentOverlap]->DealDamage(HitCharacter);
+	DamagingHitboxes[DamageComponentOverlap]->DealDamage(HitCharacter);
 	//HitCharacter->TakeDmg(DamagingComponents[DamageComponentOverlap]->Damage, nullptr, nullptr, true);
+}
+
+void UDamageComponent::DirectCharacterHit(int Index, ABaseCharacter* HitCharacter)
+{
+	DirectDamageObjects[Index]->DealDamage(HitCharacter);
 }
 
 void UDamageComponent::SetupDamageComponent(UPrimitiveComponent* Component, UDamageObject* DamageObject)
@@ -93,7 +106,7 @@ void UDamageComponent::SetupDamageComponent(UPrimitiveComponent* Component, UDam
 
 void UDamageComponent::ResetAllHitCharacters()
 {
-	for (auto Tuple : DamagingComponents)
+	for (auto Tuple : DamagingHitboxes)
 	{
 		if(Tuple.Value != nullptr)
 		{

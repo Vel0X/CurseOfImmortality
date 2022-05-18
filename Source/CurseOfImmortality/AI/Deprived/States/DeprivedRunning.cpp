@@ -64,7 +64,7 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	// Controller->GetWorld()->LineTraceSingleByChannel(HitRight, StartPointRight, EndPointLeft,
 	//                                                  ECC_Pawn, CollisionParams);
 
-	if (HitMid.bBlockingHit)
+	if (/*HitMid.bBlockingHit*/false)
 	{
 		if (PathfindingTimer <= 0)
 		{

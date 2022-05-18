@@ -7,6 +7,7 @@
 #include "GameFramework/Pawn.h"
 #include "BaseCharacter.generated.h"
 
+class UDamageComponent;
 class UCapsuleComponent;
 class UBaseStatSpecification;
 class UNiagaraSystem;
@@ -24,6 +25,8 @@ public:
 	// Sets default values for this pawn's properties
 	ABaseCharacter();
 
+	virtual ~ABaseCharacter();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -32,6 +35,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void CheckCollisions();
+	
 	virtual void Setup();
 
 	virtual void ReceiveDamage(float Damage);
@@ -43,6 +48,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UCharacterMovement* MovementComponent;
+
+	UPROPERTY(EditAnywhere)
+	UDamageComponent* DamageComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float Health;
@@ -102,6 +110,9 @@ public:
 	FString DisplayName = "";
 
 	UPROPERTY(EditAnywhere)
+	TEnumAsByte<EFaction> Faction;
+
+	UPROPERTY(EditAnywhere)
 	USceneComponent* UpperAttachmentPoint;
 
 	UPROPERTY(EditAnywhere)
@@ -114,8 +125,12 @@ public:
 	UCapsuleComponent* CapsuleComponent;
 
 	UPROPERTY(EditAnywhere)
-	TArray<UPrimitiveComponent*> HitBoxes;
+	TArray<UPrimitiveComponent*> BodyHitboxes;
+
+	UPROPERTY(EditAnywhere)
+	TArray<UPrimitiveComponent*> DamageHitboxes;
 
 private:
+	
 	int ActiveParticleEffectHandle = 0;
 };

@@ -42,6 +42,12 @@ void AArcaneWhisper::OnAbilityCreation()
 	float ClosestDistance = 1000000.0f;
 	for (int i = 0; i < Enemies.Num(); ++i)
 	{
+		if(Enemies[i] == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ENEMY WAS NULL"));
+			continue;
+		}
+		
 		if(HitActors.Contains(Enemies[i]))
 			continue;
 		const float Distance = FVector::Distance(Enemies[i]->GetActorLocation(), GetActorLocation());
@@ -59,6 +65,7 @@ void AArcaneWhisper::OnAbilityCreation()
 	if(ClosestIndex != -1)
 	{
 		Target = Enemies[ClosestIndex];
+		DamageComponent->DirectCharacterHit(0, Target);
 		HitActors.Add(Target);
 	}
 

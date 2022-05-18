@@ -41,3 +41,10 @@ enum ETrapTypes
 	Arrows,
 	All
 };
+
+UENUM()
+enum EFaction
+{
+	Friendly,
+	Enemy
+};

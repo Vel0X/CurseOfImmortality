@@ -57,7 +57,7 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 		{
 			if (Cast<APlayerCharacter>(OverlappingActor))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Damage Left"))
+				//UE_LOG(LogTemp, Warning, TEXT("Damage Left"))
 				SelfRef->DealDamage(SelfRef->DamageNormalAttack, Player);
 				LeftHandCanAttack = false;
 			};
@@ -65,7 +65,7 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 	}
 	if (RightHandCanAttack)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Right Hand Can Attack"))
+		//UE_LOG(LogTemp, Warning, TEXT("Right Hand Can Attack"))
 
 		TArray<AActor*> OverlappingActors;
 		SelfRef->NormalAttackSphereRight->GetOverlappingActors(OverlappingActors);
@@ -74,7 +74,7 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 		{
 			if (Cast<APlayerCharacter>(OverlappingActor))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Damage Right"))
+				//UE_LOG(LogTemp, Warning, TEXT("Damage Right"))
 				SelfRef->DealDamage(SelfRef->DamageNormalAttack, Player);
 				RightHandCanAttack = false;
 			};

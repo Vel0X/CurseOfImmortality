@@ -74,3 +74,9 @@ void ACustomGameMode::AddBuffToPlayer(int BuffID) const
 	*/
 }
 
+void ACustomGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	FPersistentWorldManager::Clear();
+}
+

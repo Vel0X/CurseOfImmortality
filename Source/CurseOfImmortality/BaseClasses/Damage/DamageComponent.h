@@ -30,13 +30,19 @@ public:
 	UDamageComponent();
 
 	UPROPERTY(EditAnywhere)
-	TArray<FComponentReference> References;
+	TArray<FComponentReference> DamagingHitboxReferences;
 
 	UPROPERTY(EditAnywhere)
-	TArray<UDamageSpecification*> DamageObjects;
+	TArray<UDamageSpecification*> DamagingHitboxDamageSpecifications;
 	
 	UPROPERTY(EditAnywhere)
-	TMap<UPrimitiveComponent*, UDamageObject*> DamagingComponents;
+	TMap<UPrimitiveComponent*, UDamageObject*> DamagingHitboxes;
+
+	UPROPERTY(EditAnywhere)
+	TArray<UDamageSpecification*> DirectDamageSpecifications;
+
+	UPROPERTY()
+	TArray<UDamageObject*> DirectDamageObjects;
 	
 	void BeginPlay() override;
 
@@ -47,6 +53,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter);
 
+	//manually trigger a damage object
+	void DirectCharacterHit(int Index, ABaseCharacter* HitCharacter);
 	
 	void SetupDamageComponent(UPrimitiveComponent* Component, UDamageObject* DamageObject);
 
