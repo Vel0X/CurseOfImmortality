@@ -103,27 +103,27 @@ void UInputManager::SetupPlayerInput(UInputComponent* InputComponent)
 
 void UInputManager::MoveForward(float Value)
 {
-	if (!Player->Dash)
+	if(Player->Idle || Player->Melee || Player->Running)
 	{
-		if (Value != 0 && LastAction == InputAction::NoAction)
-		{
-			LastAction = InputAction::Running;
-		}
-		MoveInput.X = Value;
-		MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
+			if (Value != 0 && LastAction == InputAction::NoAction)
+			{
+				LastAction = InputAction::Running;
+			}
+			MoveInput.X = Value;
+			MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
 	}
 }
 
 void UInputManager::MoveRight(float Value)
 {
-	if (!Player->Dash)
+	if(Player->Idle || Player->Melee || Player->Running)
 	{
-		if (Value != 0 && LastAction == InputAction::NoAction)
-		{
-			LastAction = InputAction::Running;
-		}
-		MoveInput.Y = Value;
-		MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
+			if (Value != 0 && LastAction == InputAction::NoAction)
+			{
+				LastAction = InputAction::Running;
+			}
+			MoveInput.Y = Value;
+			MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
 	}
 }
 

@@ -26,14 +26,14 @@ void UPlayerCharacterMelee::OnStateEnter(UStateMachine* StateMachine)
 		{
 			SelfRef->CurrentAnimationDuration = SelfRef->MeleeDuration2;
 			SelfRef->MeleeComboCount = 2;
-			SelfRef->MeleeStartFrame = 2.4 - (SelfRef->MeleeDuration3+SelfRef->MeleeDuration2);
+			SelfRef->MeleeStartFrame = 1.2 - (SelfRef->MeleeDuration3+SelfRef->MeleeDuration2);
 			break;
 		}
 	case 2:
 		{
 			SelfRef->CurrentAnimationDuration = SelfRef->MeleeDuration3;
 			SelfRef->MeleeComboCount = 0;
-			SelfRef->MeleeStartFrame = 2.4 - (SelfRef->MeleeDuration3);
+			SelfRef->MeleeStartFrame = 1.2 - (SelfRef->MeleeDuration3);
 			break;
 		}
 	}

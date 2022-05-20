@@ -37,17 +37,18 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 	if (DirectionSet)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Text,%d"), Direction.Length());
-		if (Direction.Length() < 0.65)
+		if (Direction.Length() < 0.3)
 		{
 			DirectionSet = false;
 			return;
 		}
 
+		float SpeedDep = Direction.Length();
 		Direction.Normalize();
 
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
 		{
-			GetOwner()->SetActorRotation(Direction.Rotation());
+			//GetOwner()->SetActorRotation(Direction.Rotation());
 
 			if (Cast<APlayerCharacter>(GetOwner())->Melee)
 			{
