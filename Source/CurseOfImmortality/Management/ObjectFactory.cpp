@@ -33,3 +33,8 @@ UDamageObject* AObjectFactory::GetDamageObject(UDamageSpecification* Specificati
 	return DamageObjectInstance;
 }
 
+ABaseCharacter* AObjectFactory::SpawnCharacter(EEnemy Character)
+{
+	return nullptr;
+}
+

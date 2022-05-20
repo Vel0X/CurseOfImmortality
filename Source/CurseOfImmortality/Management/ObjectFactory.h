@@ -24,6 +24,8 @@ public:
 
 	UDamageObject* GetDamageObject(UDamageSpecification* Specification) const;
 
+	ABaseCharacter* SpawnCharacter(EEnemy Character);
+
 	UPROPERTY(EditAnywhere)
 	UUpgradeList* PossibleUpgrades;
 };

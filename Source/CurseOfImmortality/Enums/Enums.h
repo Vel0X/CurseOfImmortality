@@ -48,3 +48,11 @@ enum EFaction
 	Friendly,
 	Enemy
 };
+
+UENUM()
+enum EEnemy
+{
+	Deprived,
+	Stormcaller,
+	MawOfSothros
+};
