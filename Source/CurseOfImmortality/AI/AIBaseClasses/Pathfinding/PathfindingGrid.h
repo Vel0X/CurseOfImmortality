@@ -94,7 +94,7 @@ struct FPfNode
 
 	int X = 0, Y = 0;
 	FPfNode* CameFrom;
-	int H = 0, G = 0, S = 0;
+	int H = 0, G = 0, S = 0, Heat = 0;
 	bool IsWalkable = true;
 };
 
@@ -105,25 +105,31 @@ class CURSEOFIMMORTALITY_API APathfindingGrid : public AActor, public TBaseGrid<
 
 public:
 	APathfindingGrid();
-	virtual void Print() override;
-
-	virtual bool ShouldTickIfViewportsOnly() const override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
+	virtual void Print() override;
+	virtual bool ShouldTickIfViewportsOnly() const override;
+
 	void PrintGrid();
-	bool GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path, bool Verbose = false);
-	bool GetPathWorldSpace(FVector Start, FVector End, TArray<FVector>& WorldSpacePath, bool Verbose = false);
-	FPfNode* GetRandomNodeInNavMesh();
+	void ToggleWalkable(int X, int Y);
 
 	UFUNCTION(BlueprintCallable)
 	void GenerateNavmesh();
+	UFUNCTION(BlueprintCallable)
+	void GenerateHeatMap();
 
-	int CalculateDistance(int StartX, int StartY, int EndX, int EndY) const;
-	FPfNode* GetLowestCostNode(TArray<FPfNode*>& OpenList);
-	void ToggleWalkable(int X, int Y);
+
+	bool GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path, bool Verbose = false);
+	bool GetPathWorldSpace(FVector Start, FVector End, TArray<FVector>& WorldSpacePath, bool Verbose = false);
 	bool CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path, bool Verbose = false);
 	bool GetCoordinatesFromWorldPosition(const FVector WorldPosition, int& X, int& Y) const;
 	bool GetWorldPositionFromCoordinates(const int X, const int Y, FVector& WorldPosition) const;
+
+	int CalculateDistance(int StartX, int StartY, int EndX, int EndY) const;
+
+	FPfNode* GetRandomNodeInNavMesh();
+	FPfNode* GetLowestCostNode(TArray<FPfNode*>& OpenList);
+
 	TArray<FVector> ConvertPathToWorldSpace(const TArray<FPfNode*>& Path, bool Verbose = false) const;
 
 	UPROPERTY(EditAnywhere)

@@ -57,10 +57,24 @@ void APathfindingGrid::Tick(float DeltaSeconds)
 			{
 				FVector WorldPosition;
 				GetWorldPositionFromCoordinates(x, y, WorldPosition);
-				FColor Green = FColor(30, 255, 50, 80);
-				FColor Red = FColor(255, 40, 50, 80);
-				FColor C = GetValue(x, y).IsWalkable ? Green : Red;
-				DrawDebugSolidBox(GetWorld(), WorldPosition, FVector(CellSize * 0.5f, CellSize * 0.5f, 0.1f), C, false);
+				FColor Color;
+				if (GetValue(x, y).IsWalkable)
+				{
+					if (GetValue(x, y).Heat >= 90)
+					{
+						Color = FColor(255, 128, 50, 80);
+					}
+					else
+					{
+						Color = FColor(0, 255, 0, 80);
+					}
+				}
+				else
+				{
+					Color = FColor(255, 0, 50, 80);
+				}
+				DrawDebugSolidBox(GetWorld(), WorldPosition, FVector(CellSize * 0.5f, CellSize * 0.5f, 0.1f), Color,
+				                  false);
 			}
 		}
 	}
@@ -85,10 +99,6 @@ void APathfindingGrid::PrintGrid()
 			s += C;
 			s += '|';
 		}
-
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *s);
-
-		//p
 	}
 }
 
@@ -199,12 +209,33 @@ bool APathfindingGrid::GetPathWorldSpace(FVector Start, FVector End, TArray<FVec
 
 FPfNode* APathfindingGrid::GetRandomNodeInNavMesh()
 {
-	int RandomX = FMath::RandRange(0, Width);
-	int RandomY = FMath::RandRange(0, Height);
+	const int RandomX = FMath::RandRange(0, Width);
+	const int RandomY = FMath::RandRange(0, Height);
 
 	FPfNode* RandomNode = &GetValue(RandomX, RandomY);
 
 	return RandomNode;
+}
+
+void APathfindingGrid::GenerateHeatMap()
+{
+	for (int x = 0; x < Width; ++x)
+	{
+		for (int y = 0; y < Height; ++y)
+		{
+			if (!GetValue(x, y).IsWalkable)
+			{
+				TArray<FPfNode*> Neighbours = GetNeighbors(x, y);
+				for (FPfNode* Neighbour : Neighbours)
+				{
+					if (Neighbour->IsWalkable)
+					{
+						Neighbour->Heat = 100;
+					}
+				}
+			}
+		}
+	}
 }
 
 void APathfindingGrid::GenerateNavmesh()
@@ -213,24 +244,20 @@ void APathfindingGrid::GenerateNavmesh()
 	{
 		for (int y = 0; y < Height; ++y)
 		{
-			FHitResult R;
+			FHitResult Hit;
 			FVector WorldPosition;
 			GetWorldPositionFromCoordinates(x, y, WorldPosition);
 			FVector StartPosition = WorldPosition + FVector(0, 0, 1000);
-			FCollisionQueryParams P = FCollisionQueryParams();
-			if (GetWorld()->LineTraceSingleByChannel(R, StartPosition, WorldPosition,
-			                                         ECollisionChannel::ECC_WorldStatic, P))
+			FCollisionQueryParams CollisionQuery = FCollisionQueryParams();
+			if (GetWorld()->
+				LineTraceSingleByChannel(Hit, StartPosition, WorldPosition, ECC_WorldStatic, CollisionQuery))
 			{
-				if (!Cast<APawn>(R.GetActor()))
+				if (!Cast<APawn>(Hit.GetActor()))
 				{
-					TArray<FPfNode*> NodesToToggle = GetNeighbors(x, y);
-					for (FPfNode* Node : NodesToToggle)
+					if (&GetValue(x, y).IsWalkable)
 					{
-						if (Node->IsWalkable)
-						{
-							ToggleWalkable(Node->X, Node->Y);
-						}
-					}
+						ToggleWalkable(x, y);
+					};
 				}
 			}
 		}

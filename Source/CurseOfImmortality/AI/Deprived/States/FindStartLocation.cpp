@@ -80,8 +80,6 @@ void UFindStartLocation::OnStateUpdate(float DeltaTime)
 		PlayerLocation.Z = 0;
 		OwnLocation.Z = 0;
 
-		UE_LOG(LogTemp, Warning, TEXT("%f"), FVector::Dist(OwnLocation, RandomLocation))
-
 		if (FVector::Dist(OwnLocation, PlayerLocation) < SelfRef->DistJumpAttack)
 		{
 			Controller->Transition(Controller->Running, Controller);
