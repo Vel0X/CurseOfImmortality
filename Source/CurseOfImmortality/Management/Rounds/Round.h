@@ -17,7 +17,7 @@ class URoundSpecification;
  *
  *
  * Spawning Locations of Enemies:
- * For each enemy a spawning behaviour can be specified (SpawningBehaviour Class). In Object Factory there is a SpawnEnemy Overload, that uses this specification
+ * For each enemy a spawning behaviour can be specified (Overriding GetSpawnPosition in your Enemy Class). In Object Factory there is a SpawnEnemy Overload, that uses this specification
  * Assortments can choose to spawn their Enemies directly without a SpawningBehaviour
  *
  * Assortments as their own classes?

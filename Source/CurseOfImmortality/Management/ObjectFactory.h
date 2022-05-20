@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
 #include "CurseOfImmortality/Enemies/EnemySpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
 #include "GameFramework/Actor.h"
@@ -34,7 +35,10 @@ public:
 	UDamageObject* GetDamageObject(const UDamageSpecification* Specification) const;
 
 	UFUNCTION(BlueprintCallable)
-	ABaseCharacter* SpawnCharacter(EEnemy Character, const FVector Location, const FRotator Rotation) const;
+	ABaseEnemyPawn* SpawnEnemyCustomSpawnBehaviour(EEnemy Character) const;
+	
+	UFUNCTION(BlueprintCallable)
+	ABaseEnemyPawn* SpawnEnemy(EEnemy Character, const FVector Location, const FRotator Rotation) const;
 
 	UFUNCTION(BlueprintCallable)
 	ABaseAbility* SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation, const ABaseCharacter* Caster) const;

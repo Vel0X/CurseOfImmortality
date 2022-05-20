@@ -14,4 +14,8 @@ UCLASS()
 class CURSEOFIMMORTALITY_API ABaseEnemyPawn : public ABaseCharacter
 {
 	GENERATED_BODY()
+
+
+public:
+	virtual bool GetSpawnPosition(FVector& Position, FRotator& Rotation);
 };

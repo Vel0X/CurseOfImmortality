@@ -14,7 +14,12 @@
 void ACustomGameMode::SpawnEnemy(int Index, const float X, const float Y, const float Z)
 {
 	const FVector Location = FVector(X, Y, Z);
-	FPersistentWorldManager::ObjectFactory->SpawnCharacter(static_cast<EEnemy>(Index), Location, FRotator::ZeroRotator);
+	FPersistentWorldManager::ObjectFactory->SpawnEnemy(static_cast<EEnemy>(Index), Location, FRotator::ZeroRotator);
+}
+
+void ACustomGameMode::SpawnEnemyCustomSpawnBehaviour(int Index)
+{
+	FPersistentWorldManager::ObjectFactory->SpawnEnemyCustomSpawnBehaviour(static_cast<EEnemy>(Index));
 }
 
 void ACustomGameMode::SpawnEnemyByName(const FString Index, const float X, const float Y, const float Z)
@@ -30,7 +35,22 @@ void ACustomGameMode::SpawnEnemyByName(const FString Index, const float X, const
 	else if(IndexToLower == "mawofsothros")
 		E = MawOfSothros;
 
-	FPersistentWorldManager::ObjectFactory->SpawnCharacter(E, Location, FRotator::ZeroRotator);
+	FPersistentWorldManager::ObjectFactory->SpawnEnemy(E, Location, FRotator::ZeroRotator);
+}
+
+void ACustomGameMode::SpawnEnemyByNameCustomSpawnBehaviour(FString Index)
+{
+	EEnemy E = {};
+	const FString IndexToLower = Index.ToLower();
+	if(IndexToLower == "deprived")
+		E = Deprived;
+	else if(IndexToLower == "stormcaller")
+		E = Stormcaller;
+	else if(IndexToLower == "mawofsothros")
+		E = MawOfSothros;
+
+	FPersistentWorldManager::ObjectFactory->SpawnEnemyCustomSpawnBehaviour(E);
+
 }
 
 void ACustomGameMode::AttackManager_PickThreeFromPool()

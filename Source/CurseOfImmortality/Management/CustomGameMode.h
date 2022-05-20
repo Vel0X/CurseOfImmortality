@@ -19,7 +19,13 @@ public:
 	static void SpawnEnemy(int Index, float X, float Y, float Z);
 
 	UFUNCTION(Exec, Category = ExecFunctions)
+	static void SpawnEnemyCustomSpawnBehaviour(int Index);
+
+	UFUNCTION(Exec, Category = ExecFunctions)
 	static void SpawnEnemyByName(FString Index, float X, float Y, float Z);
+
+	UFUNCTION(Exec, Category = ExecFunctions)
+	static void SpawnEnemyByNameCustomSpawnBehaviour(FString Index);
 	
 	UFUNCTION(Exec, Category = ExecFunctions)
 	static void AttackManager_PickThreeFromPool();

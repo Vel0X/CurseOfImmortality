@@ -77,15 +77,9 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed;
 		}
 
-		FHitResult* Result = new FHitResult();
 		GetOwner()->AddActorWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed,
-		                                true, Result);
-		if(Result != nullptr)
-		{
-			UE_LOG(LogTemp, Error, TEXT("Text,%s"), *Result->ToString());
-		}
+		                                true);
 
-		delete Result;
 		//RootComponent->AddWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed, true);
 		DirectionSet = false;
 

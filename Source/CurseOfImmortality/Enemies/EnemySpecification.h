@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
-#include "UObject/Object.h"
 #include "EnemySpecification.generated.h"
 
 /**
@@ -23,8 +23,8 @@ public:
 	TEnumAsByte<EEnemy> Type;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<ABaseCharacter> Class;
-
+	TSubclassOf<ABaseEnemyPawn> Class;
+	
 	UPROPERTY(EditAnywhere)
 	int PowerLevel = 0;
 };

@@ -64,7 +64,31 @@ UDamageObject* AObjectFactory::GetDamageObject(const UDamageSpecification* Speci
 	return DamageObjectInstance;
 }
 
-ABaseCharacter* AObjectFactory::SpawnCharacter(const EEnemy Character, const FVector Location, const FRotator Rotation) const
+ABaseEnemyPawn* AObjectFactory::SpawnEnemyCustomSpawnBehaviour(const EEnemy Character) const
+{
+	if(!Spawnables->Enemies.Contains(Character))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Character exists in EEnemy, but not in Spawnables List"));
+		return nullptr;
+	}
+
+	const UEnemySpecification* Specification = Spawnables->Enemies[Character];
+
+	if(Specification == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Character has no Specification set in Spawnables List"));
+		return nullptr;
+	}
+
+	FVector Location = FVector::Zero();
+	FRotator Rotation = FRotator::ZeroRotator;
+	ABaseEnemyPawn* CharacterInstance = Cast<ABaseEnemyPawn>(GetWorld()->SpawnActor(Specification->Class, &Location, &Rotation));
+
+	CharacterInstance->GetSpawnPosition(Location, Rotation);
+	return CharacterInstance;
+}
+
+ABaseEnemyPawn* AObjectFactory::SpawnEnemy(const EEnemy Character, const FVector Location, const FRotator Rotation) const
 {
 	
 	if(!Spawnables->Enemies.Contains(Character))
@@ -81,7 +105,7 @@ ABaseCharacter* AObjectFactory::SpawnCharacter(const EEnemy Character, const FVe
 		return nullptr;
 	}
 
-	ABaseCharacter* CharacterInstance = Cast<ABaseCharacter>(GetWorld()->SpawnActor(Specification->Class, &Location, &Rotation));
+	ABaseEnemyPawn* CharacterInstance = Cast<ABaseEnemyPawn>(GetWorld()->SpawnActor(Specification->Class, &Location, &Rotation));
 	return CharacterInstance;
 }
 
