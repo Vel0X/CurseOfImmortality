@@ -41,30 +41,30 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 
 	const FVector PlayerLocation = Player->GetActorLocation();
 
-	// FVector OwnLocation(SelfRef->GetActorLocation());
-	// FVector RightVectorSelf(SelfRef->GetActorRightVector());
-	// FVector LeftVectorSelf(RightVectorSelf.operator-());
-	// FVector RightVectorPlayer(Player->GetActorRightVector());
-	// FVector LeftVectorPlayer(RightVectorPlayer.operator-());
-	// FVector StartPointLeft(LeftVectorSelf * SelfRef->CapsuleComponent->GetUnscaledCapsuleRadius() + OwnLocation);
-	// FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
-	// FVector StartPointRight(RightVectorSelf * SelfRef->CapsuleComponent->GetUnscaledCapsuleRadius() + OwnLocation);
+	FVector OwnLocation(SelfRef->GetActorLocation());
+	FVector RightVectorSelf(SelfRef->GetActorRightVector());
+	FVector LeftVectorSelf(RightVectorSelf.operator-());
+	FVector RightVectorPlayer(Player->GetActorRightVector());
+	FVector LeftVectorPlayer(RightVectorPlayer.operator-());
+	FVector StartPointLeft(LeftVectorSelf * SelfRef->CapsuleComponent->GetUnscaledCapsuleRadius() + OwnLocation);
+	FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
+	FVector StartPointRight(RightVectorSelf * SelfRef->CapsuleComponent->GetUnscaledCapsuleRadius() + OwnLocation);
 
 	FHitResult HitMid;
-	// FHitResult HitLeft;
-	// FHitResult HitRight;
+	FHitResult HitLeft;
+	FHitResult HitRight;
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(Player);
 	CollisionParams.AddIgnoredActor(SelfRef);
 
 	Controller->GetWorld()->LineTraceSingleByChannel(HitMid, SelfRef->GetActorLocation(), Player->GetActorLocation(),
 	                                                 ECC_Pawn, CollisionParams);
-	// Controller->GetWorld()->LineTraceSingleByChannel(HitLeft, StartPointLeft, EndPointLeft,
-	//                                                  ECC_Pawn, CollisionParams);
-	// Controller->GetWorld()->LineTraceSingleByChannel(HitRight, StartPointRight, EndPointLeft,
-	//                                                  ECC_Pawn, CollisionParams);
+	Controller->GetWorld()->LineTraceSingleByChannel(HitLeft, StartPointLeft, EndPointLeft,
+	                                                 ECC_Pawn, CollisionParams);
+	Controller->GetWorld()->LineTraceSingleByChannel(HitRight, StartPointRight, EndPointLeft,
+	                                                 ECC_Pawn, CollisionParams);
 
-	if (/*HitMid.bBlockingHit*/false)
+	if (HitMid.bBlockingHit)
 	{
 		if (PathfindingTimer <= 0)
 		{

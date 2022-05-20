@@ -16,6 +16,7 @@
 #include "States/DeprivedRecover.h"
 #include "States/DeprivedRunning.h"
 #include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
+#include "States/FindStartLocation.h"
 
 UDeprivedStateMachine::UDeprivedStateMachine()
 {
@@ -28,7 +29,7 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	if (!Player)
 	{
 		Player = FPersistentWorldManager::PlayerCharacter;
-		CurrentState = Idle;
+		CurrentState = FindStartLocation;
 		CurrentState->OnStateEnter(this);
 	}
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
@@ -56,6 +57,7 @@ void UDeprivedStateMachine::BeginPlay()
 	HitPlayer = NewObject<UDeprivedHitPlayer>();
 	Recover = NewObject<UDeprivedRecover>();
 	NormalAttack = NewObject<UDeprivedNormalAttack>();
+	FindStartLocation = NewObject<UFindStartLocation>();
 
 	//Log States
 	// Idle->Verbose = true;
@@ -64,17 +66,18 @@ void UDeprivedStateMachine::BeginPlay()
 	// HitPlayer->Verbose = true;
 	// Recover->Verbose = true;
 	// NormalAttack->Verbose = true;
+	// FindStartLocation->Verbose = true;
 }
 
-void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float DeltaTime )
+void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float DeltaTime)
 {
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
 	Target = Target - SelfRef->GetActorLocation();
 	Target.Z = 0.f;
 	Target.Normalize();
-	
+
 	// SelfRef->MovementComponent->SetDirection(Target, Speed);
-	
+
 	FVector MoveDir(SelfRef->GetActorLocation() + Target * DeltaTime * Speed);
 	SelfRef->SetActorLocation(MoveDir, true);
 }
@@ -105,7 +108,6 @@ void UDeprivedStateMachine::FocusOnPath(FVector PathLocation, float DeltaTime)
 	FVector Target = PathLocation - SelfRefLocation;
 
 	Target.Z = 0;
-
 	const FRotator LookAtRotation(
 		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 270.f).Rotation());
 

@@ -89,7 +89,7 @@ struct FPfNode
 		H = 999999;
 		G = 999999;
 		S = 999999;
-		CameFrom = nullptr; 
+		CameFrom = nullptr;
 	}
 
 	int X = 0, Y = 0;
@@ -113,6 +113,7 @@ public:
 	void PrintGrid();
 	bool GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path, bool Verbose = false);
 	bool GetPathWorldSpace(FVector Start, FVector End, TArray<FVector>& WorldSpacePath, bool Verbose = false);
+	FPfNode* GetRandomNodeInNavMesh();
 
 	UFUNCTION(BlueprintCallable)
 	void GenerateNavmesh();

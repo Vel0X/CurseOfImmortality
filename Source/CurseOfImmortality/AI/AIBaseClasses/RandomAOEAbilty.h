@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "RandomAOEAbilty.generated.h"
 
-
+class UAbilitySpecification;
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class CURSEOFIMMORTALITY_API URandomAOEAbilty : public UActorComponent
 {
@@ -25,7 +25,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	void StartAbility();
+	void StartAbility(UAbilitySpecification* AbilitySpecification);
 
 private:
 	UPROPERTY(EditAnywhere)

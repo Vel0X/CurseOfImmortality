@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 #include "StormCallerPawn.generated.h"
 
 class UStormCallerStateMachine;
@@ -18,8 +19,11 @@ class CURSEOFIMMORTALITY_API AStormCallerPawn : public ABaseEnemyPawn
 
 public:
 	AStormCallerPawn();
-	
+
 	void OnDeath();
+
+	UPROPERTY(EditAnywhere)
+	UAbilitySpecification* AbilitySpecification;
 
 	//Sates
 	UPROPERTY(BlueprintReadWrite)
@@ -43,7 +47,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="Base Stats")
 	float AttackCoolDown = 10.f;
 	float CurrentAttackCoolDown;
-	
+
 	//Ranges
 	UPROPERTY(EditAnywhere, Category="Ranges")
 	float AwakeRange = 1000.f;

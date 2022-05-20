@@ -15,7 +15,7 @@ AStormCallerPawn::AStormCallerPawn()
 
 	StormCast = CreateDefaultSubobject<URandomAOEAbilty>("Storm Call");
 
-	CurrentAttackCoolDown = AttackCoolDown;
+	CurrentAttackCoolDown = 5.62f; //Animation Duration Raising Arms
 }
 
 void AStormCallerPawn::OnDeath()

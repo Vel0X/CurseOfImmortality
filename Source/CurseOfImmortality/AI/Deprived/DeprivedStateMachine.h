@@ -40,6 +40,8 @@ public:
 	UState* HitPlayer;
 	UPROPERTY(BlueprintReadOnly)
 	UState* NormalAttack;
+	UPROPERTY()
+	UState* FindStartLocation;
 
 	//Getter
 	ADeprivedPawn* GetSelfRef() const;

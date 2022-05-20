@@ -16,7 +16,10 @@ void UStormCallerAttack::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->Attack = true;
-	UE_LOG(LogTemp, Warning, TEXT("Attack State Entered"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Attack State Entered"))
+	}
 }
 
 void UStormCallerAttack::OnStateExit()
@@ -30,7 +33,7 @@ void UStormCallerAttack::OnStateUpdate(float DeltaTime)
 
 	if (SelfRef->CurrentAttackCoolDown <= 0)
 	{
-		SelfRef->StormCast->StartAbility();
+		SelfRef->StormCast->StartAbility(SelfRef->AbilitySpecification);
 		SelfRef->CurrentAttackCoolDown = SelfRef->AttackCoolDown;
 	}
 }

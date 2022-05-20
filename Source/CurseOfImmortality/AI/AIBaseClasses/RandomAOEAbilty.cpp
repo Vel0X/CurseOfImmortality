@@ -4,6 +4,8 @@
 #include "RandomAOEAbilty.h"
 
 #include "AIDamageObject.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -26,7 +28,7 @@ void URandomAOEAbilty::BeginPlay()
 	// ...
 }
 
-void URandomAOEAbilty::StartAbility()
+void URandomAOEAbilty::StartAbility(UAbilitySpecification* AbilitySpecification)
 {
 	FVector PlayerLocation = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetPawn()->GetActorLocation();
 	PlayerLocation.Z = 0;
@@ -37,6 +39,20 @@ void URandomAOEAbilty::StartAbility()
 		FVector RandomPoint3D(RandomPoint, 0);
 
 		FVector DamageFieldLocation = PlayerLocation + RandomPoint3D;
+
+		if(AbilitySpecification == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("No Abiltiy Specification in Random AOE Ability!"));
+			return;
+		}
+	
+		ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(AbilitySpecification->Class, &DamageFieldLocation, &FRotator::ZeroRotator));
+
+		if(AbilityInstance == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned in Random AOE Ability!"));
+			return;
+		}
 
 		UAIDamageObject* DamageObject = NewObject<UAIDamageObject>(this);
 		DamageObject->RegisterComponent();

@@ -197,6 +197,16 @@ bool APathfindingGrid::GetPathWorldSpace(FVector Start, FVector End, TArray<FVec
 	return false;
 }
 
+FPfNode* APathfindingGrid::GetRandomNodeInNavMesh()
+{
+	int RandomX = FMath::RandRange(0, Width);
+	int RandomY = FMath::RandRange(0, Height);
+
+	FPfNode* RandomNode = &GetValue(RandomX, RandomY);
+
+	return RandomNode;
+}
+
 void APathfindingGrid::GenerateNavmesh()
 {
 	for (int x = 0; x < Width; ++x)

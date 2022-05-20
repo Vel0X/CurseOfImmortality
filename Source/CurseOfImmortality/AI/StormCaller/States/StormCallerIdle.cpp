@@ -14,20 +14,26 @@ void UStormCallerIdle::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->Idle = true;
-	UE_LOG(LogTemp, Warning, TEXT("Idle State Entered"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Idle State Entered"))
+	}
 }
 
 void UStormCallerIdle::OnStateExit()
 {
 	Super::OnStateExit();
 	SelfRef->Idle = false;
-	UE_LOG(LogTemp, Warning, TEXT("Exit Idle State"))
+	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Exit Idle State"))
+	}
 }
 
 void UStormCallerIdle::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
-	
+
 	const FVector PlayerLocation = Player->GetActorLocation();
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->AwakeRange)
