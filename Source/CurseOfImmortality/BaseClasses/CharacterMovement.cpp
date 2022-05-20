@@ -76,8 +76,21 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 		{
 			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed;
 		}
+		FHitResult* Result = new FHitResult();
 		GetOwner()->AddActorWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed,
-		                                true);
+										true, Result);
+		if(Result != nullptr)
+		{
+			if (Result->GetActor()!= GetOwner() && Result->GetActor()!= nullptr)
+			{
+				FVector UndesiredMotion = Result->ImpactNormal * (FVector::DotProduct(Direction, Result->ImpactNormal));
+				
+				GetOwner()->AddActorWorldOffset((Direction-UndesiredMotion) * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed,
+										false);
+			}
+		}
+
+		delete Result;
 		//RootComponent->AddWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed, true);
 		DirectionSet = false;
 	}

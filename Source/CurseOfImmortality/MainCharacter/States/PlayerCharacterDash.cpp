@@ -42,5 +42,18 @@ void UPlayerCharacterDash::OnStateUpdate(float DeltaTime)
 		SelfRef->InputManager->LastAction = InputAction::NoAction;
 		Controller->Transition(Controller->Idle, Controller);
 	}
-	SelfRef->GetRootComponent()->AddWorldOffset(SelfRef->GetActorForwardVector() * DeltaTime * SelfRef->DashSpeed, true);
+	//SelfRef->GetRootComponent()->AddWorldOffset(SelfRef->GetActorForwardVector() * DeltaTime * SelfRef->DashSpeed, true);
+	FHitResult* Result = new FHitResult();
+	SelfRef->AddActorWorldOffset(SelfRef->GetActorForwardVector() * DeltaTime * SelfRef->DashSpeed,
+									true, Result);
+	if(Result != nullptr)
+	{
+		if (Result->GetActor()!= SelfRef && Result->GetActor()!= nullptr)
+		{
+			FVector UndesiredMotion = Result->ImpactNormal * (FVector::DotProduct(SelfRef->GetActorForwardVector(), Result->ImpactNormal));
+				
+			SelfRef->AddActorWorldOffset((SelfRef->GetActorForwardVector()-UndesiredMotion) * DeltaTime * SelfRef->DashSpeed,
+									false);
+		}
+	}
 }
