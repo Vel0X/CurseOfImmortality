@@ -4,9 +4,9 @@
 #include "CharacterMovement.h"
 #include "BaseCharacter.h"
 #include "VectorTypes.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/AIDamageObject.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
-#include "EntitySystem/MovieSceneComponentDebug.h"
 
 
 // Sets default values for this component's properties
@@ -76,10 +76,19 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 		{
 			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed;
 		}
+
+		FHitResult* Result = new FHitResult();
 		GetOwner()->AddActorWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed,
-		                                true);
+		                                true, Result);
+		if(Result != nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Text,%s"), *Result->ToString());
+		}
+
+		delete Result;
 		//RootComponent->AddWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed, true);
 		DirectionSet = false;
+
 	}
 }
 

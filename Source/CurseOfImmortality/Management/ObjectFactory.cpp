@@ -17,7 +17,25 @@ void AObjectFactory::BeginPlay()
 	Super::BeginPlay();
 	FPersistentWorldManager::ObjectFactory = this;
 }
- 
+
+UEnemySpecification* AObjectFactory::GetSpecification(const EEnemy Enemy) const
+{
+	if(Spawnables->Enemies.Contains(Enemy))
+		return Spawnables->Enemies[Enemy];
+
+	UE_LOG(LogTemp, Error, TEXT("No Specification defined for Enemy"));
+	return nullptr;
+}
+
+UAssortmentSpecification* AObjectFactory::GetSpecification(EAssortment Assortment) const
+{
+	if(Spawnables->Assortments.Contains(Assortment))
+		return Spawnables->Assortments[Assortment];
+
+	UE_LOG(LogTemp, Error, TEXT("No Specification defined for Assortment"));
+	return nullptr;
+}
+
 UBaseBuff* AObjectFactory::GetBuff(const EBuff BuffName) const
 {
 	if(!Spawnables->Buffs.Contains(BuffName))
@@ -55,18 +73,42 @@ ABaseCharacter* AObjectFactory::SpawnCharacter(const EEnemy Character, const FVe
 		return nullptr;
 	}
 
-	const TSubclassOf<ABaseCharacter> CharacterClass = Spawnables->Enemies[Character];
+	const UEnemySpecification* Specification = Spawnables->Enemies[Character];
 
-	if(CharacterClass == nullptr)
+	if(Specification == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Character has no Specification set in Spawnables List"));
 		return nullptr;
 	}
 
-	ABaseCharacter* CharacterInstance = Cast<ABaseCharacter>(GetWorld()->SpawnActor(CharacterClass, &Location, &Rotation));
+	ABaseCharacter* CharacterInstance = Cast<ABaseCharacter>(GetWorld()->SpawnActor(Specification->Class, &Location, &Rotation));
 	return CharacterInstance;
 }
 
-ABaseAbility* AObjectFactory::SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation) const
+ABaseAbility* AObjectFactory::SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation, const ABaseCharacter* Caster) const
 {
+	if(!Spawnables->PossibleBaseAbilities.Contains(Ability))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Ability exists in EUpgradeName, but not in Spawnables List"));
+		return nullptr;
+	}
+
+	const UAbilitySpecification* AbilitySpecification = Spawnables->PossibleBaseAbilities[Ability];
+
+	if(AbilitySpecification == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Ability has no Specification set in Spawnables List"));
+		return nullptr;
+	}	
+	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(AbilitySpecification->Class, &Location, &Rotation));
+
+	if(AbilityInstance == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned!"));
+		return nullptr;
+	}
+	//AbilityInstance->InitializeAbility(0, static_cast<ABaseCharacter*>(GetOwner()), Ability.Level);
+	//AbilityInstance->OnAbilityCreation();
+	//AbilityInstance->AbilityType
+	return AbilityInstance;
 }

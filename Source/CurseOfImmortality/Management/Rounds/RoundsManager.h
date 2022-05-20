@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Round.h"
 #include "GameFramework/Actor.h"
 #include "RoundsManager.generated.h"
 
@@ -22,4 +23,9 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	
+
+	UPROPERTY(EditAnywhere)
+	URound* ActiveRound;
 };

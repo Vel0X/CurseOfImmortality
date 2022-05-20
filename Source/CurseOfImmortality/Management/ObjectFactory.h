@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/Enemies/EnemySpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
 #include "GameFramework/Actor.h"
 #include "ObjectFactory.generated.h"
 
+class UAssortmentSpecification;
 class UDamageObject;
 class UDamageSpecification;
 class USpawnablesList;
@@ -21,13 +23,21 @@ public:
 
 	virtual void BeginPlay() override;
 
+	UEnemySpecification* GetSpecification(EEnemy Enemy) const;
+
+	UAssortmentSpecification* GetSpecification(EAssortment Assortment) const;
+
+	UFUNCTION(BlueprintCallable)
 	UBaseBuff* GetBuff(EBuff BuffName) const;
 
+	UFUNCTION(BlueprintCallable)
 	UDamageObject* GetDamageObject(const UDamageSpecification* Specification) const;
 
+	UFUNCTION(BlueprintCallable)
 	ABaseCharacter* SpawnCharacter(EEnemy Character, const FVector Location, const FRotator Rotation) const;
 
-	ABaseAbility* SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation) const;
+	UFUNCTION(BlueprintCallable)
+	ABaseAbility* SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation, const ABaseCharacter* Caster) const;
 	
 	UPROPERTY(EditAnywhere)
 	USpawnablesList* Spawnables;

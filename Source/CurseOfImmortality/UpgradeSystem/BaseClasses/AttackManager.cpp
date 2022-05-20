@@ -359,9 +359,12 @@ void UAttackManager::OnKeyPressed(EAbilityType Type)
 
 void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 {
-	const FVector Location = GetOwner()->GetActorLocation();
-	const FRotator Rotation = GetOwner()->GetActorRotation();
+	ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwner());
 	
+	const FVector Location = Owner->GetActorLocation();
+	const FRotator Rotation = Owner->GetActorRotation();
+	//FPersistentWorldManager::ObjectFactory->SpawnAbility(Ability.Specification->AbilityName, Location, Rotation, Owner);
+
 	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class, &Location, &Rotation));
 
 	if(AbilityInstance == nullptr)

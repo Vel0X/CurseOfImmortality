@@ -89,3 +89,10 @@ enum EUpgradeOrder
 	AttributeSetter,
 	AttributeReader
 };
+
+UENUM()
+enum EAssortment
+{
+	StormcallerCircle,
+	DeprivedMob
+};

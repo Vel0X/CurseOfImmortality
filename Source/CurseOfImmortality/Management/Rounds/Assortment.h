@@ -3,13 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RoundSpecification.generated.h"
+#include "UObject/Object.h"
+#include "Assortment.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API URoundSpecification : public UDataAsset
+class CURSEOFIMMORTALITY_API UAssortment : public UObject
 {
 	GENERATED_BODY()
+
+	
 };

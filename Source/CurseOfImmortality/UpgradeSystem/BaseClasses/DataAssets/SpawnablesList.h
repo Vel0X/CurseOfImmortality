@@ -6,6 +6,8 @@
 #include "AbilitySpecification.h"
 #include "NiagaraSystem.h"
 #include "UpgradeSpecification.h"
+#include "CurseOfImmortality/Enemies/EnemySpecification.h"
+#include "CurseOfImmortality/Management/Rounds/DataAssets/AssortmentSpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
 #include "SpawnablesList.generated.h"
 
@@ -31,5 +33,8 @@ public:
 	TMap<TEnumAsByte<EBuff>, UNiagaraSystem*> BuffVFX;
 
 	UPROPERTY(EditAnywhere)
-	TMap<TEnumAsByte<EEnemy>, TSubclassOf<ABaseCharacter>> Enemies;
+	TMap<TEnumAsByte<EEnemy>, UEnemySpecification*> Enemies;
+
+	UPROPERTY(EditAnywhere)
+	TMap<TEnumAsByte<EAssortment>, UAssortmentSpecification*> Assortments;
 };
