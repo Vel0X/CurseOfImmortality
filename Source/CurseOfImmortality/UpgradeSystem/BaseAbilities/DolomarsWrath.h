@@ -17,12 +17,11 @@ class CURSEOFIMMORTALITY_API ADolomarsWrath : public ABaseAbility
 	GENERATED_BODY()
 	// Sets default values for this actor's properties
 	ADolomarsWrath();
-	
+
 	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* ParticleSystem;
 
+public:
 	UPROPERTY(EditAnywhere)
 	USphereComponent* Collider;
 };
-
-

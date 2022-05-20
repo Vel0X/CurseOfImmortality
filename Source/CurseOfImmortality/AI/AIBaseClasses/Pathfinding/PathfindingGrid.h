@@ -94,7 +94,7 @@ struct FPfNode
 
 	int X = 0, Y = 0;
 	FPfNode* CameFrom;
-	int H = 0, G = 0, S = 0, Heat = 0;
+	int H = 0, G = 0, S = 0, StaticHeat = 0, DynamicHeat = 0;
 	bool IsWalkable = true;
 };
 
@@ -116,12 +116,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GenerateNavmesh();
 	UFUNCTION(BlueprintCallable)
-	void GenerateHeatMap();
-
+	void GenerateStaticHeatMap();
+	UFUNCTION(BlueprintCallable)
+	void GenerateDynamicHeatMap();
 
 	bool GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path, bool Verbose = false);
 	bool GetPathWorldSpace(FVector Start, FVector End, TArray<FVector>& WorldSpacePath, bool Verbose = false);
-	bool CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path, bool Verbose = false);
+	bool CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path, bool Verbose = false) const;
 	bool GetCoordinatesFromWorldPosition(const FVector WorldPosition, int& X, int& Y) const;
 	bool GetWorldPositionFromCoordinates(const int X, const int Y, FVector& WorldPosition) const;
 
@@ -130,11 +131,19 @@ public:
 	FPfNode* GetRandomNodeInNavMesh();
 	FPfNode* GetLowestCostNode(TArray<FPfNode*>& OpenList);
 
+	TArray<FHitResult> TraceNodes(ECollisionChannel CollisionChannel, int X, int Y) const;
+
 	TArray<FVector> ConvertPathToWorldSpace(const TArray<FPfNode*>& Path, bool Verbose = false) const;
+	TArray<FVector> GetPointsInNode(const int X, const int Y) const;
+
 
 	UPROPERTY(EditAnywhere)
 	float CellSize = 100.0f;
 
 	UPROPERTY(EditAnywhere)
 	bool ShowNavGrid = false;
+
+	UPROPERTY(EditAnywhere)
+	TEnumAsByte<ECollisionChannel> DynamicTraceChanel;
 };
+

@@ -22,7 +22,7 @@ APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(30, 30)
 void APathfindingGrid::Print()
 {
 	TBaseGrid<FPfNode>::Print();
-	auto node = GetValue(2, 2);
+	const auto node = GetValue(2, 2);
 	UE_LOG(LogTemp, Warning, TEXT("VALUE %d"), node.X);
 }
 
@@ -60,13 +60,25 @@ void APathfindingGrid::Tick(float DeltaSeconds)
 				FColor Color;
 				if (GetValue(x, y).IsWalkable)
 				{
-					if (GetValue(x, y).Heat >= 90)
+					if (GetValue(x, y).StaticHeat >= 25 || GetValue(x, y).DynamicHeat >= 25)
 					{
-						Color = FColor(255, 128, 50, 80);
+						Color = FColor(255, 128, 0, 80);
+					}
+					else if (GetValue(x, y).StaticHeat >= 12 || GetValue(x, y).DynamicHeat >= 12)
+					{
+						Color = FColor(255, 255, 0, 80);
+					}
+					else if (GetValue(x, y).StaticHeat >= 6)
+					{
+						Color = FColor(128, 255, 0, 80);
+					}
+					else if (GetValue(x, y).StaticHeat >= 3)
+					{
+						Color = FColor(0, 255, 0, 80);
 					}
 					else
 					{
-						Color = FColor(0, 255, 0, 80);
+						Color = FColor(0, 255, 128, 80);
 					}
 				}
 				else
@@ -95,7 +107,7 @@ void APathfindingGrid::PrintGrid()
 
 		for (int x = 0; x < Width; ++x)
 		{
-			char C = GetValue(x, y).IsWalkable ? '0' : 'X';
+			const char C = GetValue(x, y).IsWalkable ? '0' : 'X';
 			s += C;
 			s += '|';
 		}
@@ -120,7 +132,7 @@ bool APathfindingGrid::GetPath(int StartX, int StartY, int EndX, int EndY, TArra
 	int CurrentIterations = 0;
 
 	FPfNode* StartNode = &GetValue(StartX, StartY);
-	FPfNode* EndNode = &GetValue(EndX, EndY);
+	const FPfNode* EndNode = &GetValue(EndX, EndY);
 	StartNode->G = 0;
 	StartNode->H = CalculateDistance(StartX, StartY, EndX, EndY);
 	StartNode->S = StartNode->H;
@@ -155,7 +167,8 @@ bool APathfindingGrid::GetPath(int StartX, int StartY, int EndX, int EndY, TArra
 				continue;
 			}
 
-			const int TempGCost = Current->G + CalculateDistance(Current->X, Current->Y, Neighbor->X, Neighbor->Y);
+			const int TempGCost = Current->G + CalculateDistance(Current->X, Current->Y, Neighbor->X, Neighbor->Y) +
+				Neighbor->StaticHeat + Neighbor->DynamicHeat;
 
 			if (TempGCost < Neighbor->G)
 			{
@@ -217,7 +230,33 @@ FPfNode* APathfindingGrid::GetRandomNodeInNavMesh()
 	return RandomNode;
 }
 
-void APathfindingGrid::GenerateHeatMap()
+void APathfindingGrid::GenerateDynamicHeatMap()
+{
+	for (int x = 0; x < Width; ++x)
+	{
+		for (int y = 0; y < Height; ++y)
+		{
+			GetValue(x, y).DynamicHeat = 0;
+		}
+	}
+	TArray Enemies(FPersistentWorldManager::GetEnemies());
+
+	for (ABaseCharacter* Enemy : Enemies)
+	{
+		int X, Y;
+		if (GetCoordinatesFromWorldPosition(Enemy->GetActorLocation(), X, Y))
+		{
+			GetValue(X, Y).DynamicHeat = 25;
+			TArray Neighbors(GetNeighbors(X, Y));
+			for (FPfNode* Neighbor : Neighbors)
+			{
+				Neighbor->DynamicHeat = GetValue(X, Y).DynamicHeat / 2;
+			}
+		}
+	}
+}
+
+void APathfindingGrid::GenerateStaticHeatMap()
 {
 	for (int x = 0; x < Width; ++x)
 	{
@@ -230,7 +269,18 @@ void APathfindingGrid::GenerateHeatMap()
 				{
 					if (Neighbour->IsWalkable)
 					{
-						Neighbour->Heat = 100;
+						Neighbour->StaticHeat = 25;
+					}
+				}
+			}
+			if (GetValue(x, y).StaticHeat > 5)
+			{
+				TArray<FPfNode*> Neighbours = GetNeighbors(x, y);
+				for (FPfNode* Neighbour : Neighbours)
+				{
+					if (Neighbour->StaticHeat < GetValue(x, y).StaticHeat)
+					{
+						Neighbour->StaticHeat = GetValue(x, y).StaticHeat / 2;
 					}
 				}
 			}
@@ -277,13 +327,13 @@ int APathfindingGrid::CalculateDistance(const int StartX, const int StartY, cons
 
 FPfNode* APathfindingGrid::GetLowestCostNode(TArray<FPfNode*>& OpenList)
 {
-	int lowest = OpenList[0]->S;
+	int Lowest = OpenList[0]->S;
 	FPfNode* LowestNode = OpenList[0];
 	for (FPfNode* Node : OpenList)
 	{
-		if (Node->S < lowest)
+		if (Node->S < Lowest)
 		{
-			lowest = Node->S;
+			Lowest = Node->S;
 			LowestNode = Node;
 		}
 	}
@@ -296,10 +346,26 @@ void APathfindingGrid::ToggleWalkable(int X, int Y)
 	Node->IsWalkable = !Node->IsWalkable;
 }
 
-bool APathfindingGrid::CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path, bool Verbose)
+TArray<FHitResult> APathfindingGrid::TraceNodes(ECollisionChannel CollisionChannel, int X, int Y) const
+{
+	TArray<FHitResult> Hits;
+	TArray EndPoints(GetPointsInNode(X, Y));
+
+	for (auto EndPoint : EndPoints)
+	{
+		FHitResult Hit;
+		FVector StartPosition = EndPoint + FVector(0, 0, 1000);
+		FCollisionQueryParams CollisionQuery = FCollisionQueryParams();
+		GetWorld()->LineTraceSingleByChannel(Hit, StartPosition, EndPoint, ECC_WorldStatic, CollisionQuery);
+		Hits.Add(Hit);
+	}
+	return Hits;
+}
+
+bool APathfindingGrid::CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path, const bool Verbose) const
 {
 	Path.Add(EndNode);
-	FPfNode* Current = EndNode;
+	const FPfNode* Current = EndNode;
 	while (Current->CameFrom != nullptr)
 	{
 		Path.Add(Current->CameFrom);
@@ -357,4 +423,21 @@ TArray<FVector> APathfindingGrid::ConvertPathToWorldSpace(const TArray<FPfNode*>
 		}
 	}
 	return WorldSpacePath;
+}
+
+TArray<FVector> APathfindingGrid::GetPointsInNode(const int X, const int Y) const
+{
+	TArray<FVector> Points;
+	FVector Origin = GetActorLocation();
+	for (int WidthValue = 0.25; WidthValue <= 0.75; WidthValue += 0.5)
+	{
+		for (int HeightValue = 0.25; HeightValue <= 0.75; HeightValue += 0.5)
+		{
+			Origin.X += (X + WidthValue) * CellSize;
+			Origin.Y += (Y + HeightValue) * CellSize;
+
+			Points.Add(Origin);
+		}
+	}
+	return Points;
 }

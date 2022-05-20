@@ -4,6 +4,9 @@
 #include "RandomAOEAbilty.h"
 
 #include "AIDamageObject.h"
+#include "Components/SphereComponent.h"
+#include "CurseOfImmortality/AI/StormCaller/StormCallerPawn.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseAbilities/DolomarsWrath.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 #include "Kismet/GameplayStatics.h"
@@ -40,23 +43,21 @@ void URandomAOEAbilty::StartAbility(UAbilitySpecification* AbilitySpecification)
 
 		FVector DamageFieldLocation = PlayerLocation + RandomPoint3D;
 
-		if(AbilitySpecification == nullptr)
+		if (AbilitySpecification == nullptr)
 		{
 			UE_LOG(LogTemp, Error, TEXT("No Abiltiy Specification in Random AOE Ability!"));
 			return;
 		}
-	
-		ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(AbilitySpecification->Class, &DamageFieldLocation, &FRotator::ZeroRotator));
 
-		if(AbilityInstance == nullptr)
+		ADolomarsWrath* AbilityInstance = Cast<ADolomarsWrath>(
+			GetWorld()->SpawnActor(AbilitySpecification->Class, &DamageFieldLocation, &FRotator::ZeroRotator));
+		AbilityInstance->Collider->SetSphereRadius(DamageField);
+
+		if (AbilityInstance == nullptr)
 		{
 			UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned in Random AOE Ability!"));
 			return;
 		}
-
-		UAIDamageObject* DamageObject = NewObject<UAIDamageObject>(this);
-		DamageObject->RegisterComponent();
-		DamageObject->SetUp(DamageDuration, false, DamageField, DamageFieldLocation, Damage);
 	}
 }
 
