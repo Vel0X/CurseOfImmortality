@@ -9,7 +9,8 @@
 
 class UDamageObject;
 class UDamageSpecification;
-class UUpgradeList;
+class USpawnablesList;
+
 UCLASS()
 class CURSEOFIMMORTALITY_API AObjectFactory : public AActor
 {
@@ -22,11 +23,13 @@ public:
 
 	UBaseBuff* GetBuff(EBuff BuffName) const;
 
-	UDamageObject* GetDamageObject(UDamageSpecification* Specification) const;
+	UDamageObject* GetDamageObject(const UDamageSpecification* Specification) const;
 
-	ABaseCharacter* SpawnCharacter(EEnemy Character);
+	ABaseCharacter* SpawnCharacter(EEnemy Character, const FVector Location, const FRotator Rotation) const;
 
+	ABaseAbility* SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation) const;
+	
 	UPROPERTY(EditAnywhere)
-	UUpgradeList* PossibleUpgrades;
+	USpawnablesList* Spawnables;
 };
 

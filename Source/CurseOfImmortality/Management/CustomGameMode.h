@@ -10,38 +10,41 @@
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API ACustomGameMode : public AGameMode
+class CURSEOFIMMORTALITY_API ACustomGameMode final : public AGameMode
 {
 	GENERATED_BODY()
 
 public:
 	UFUNCTION(Exec, Category = ExecFunctions)
-	void SpawnEnemy();
+	static void SpawnEnemy(int Index, float X, float Y, float Z);
 
 	UFUNCTION(Exec, Category = ExecFunctions)
-	void AttackManager_PickThreeFromPool() const;
+	static void SpawnEnemyByName(FString Index, float X, float Y, float Z);
+	
+	UFUNCTION(Exec, Category = ExecFunctions)
+	static void AttackManager_PickThreeFromPool();
 
 	UFUNCTION(Exec, Category = ExecFunctions)
-	void AttackManager_GetUpgrade(int Index) const;
+	static void AttackManager_GetUpgrade(int Index);
 
 	UFUNCTION(Exec, Category = ExecFunctions)
-	void AttackManager_PrintCurrentlyActive() const;
+	static void AttackManager_PrintCurrentlyActive();
 
 	UFUNCTION(Exec, Category= ExecFunctions)
-	void Pathfinding_GetPath(int SX, int SY, int EX, int EY);
+	static void Pathfinding_GetPath(int SX, int SY, int EX, int EY);
 
 	UFUNCTION(Exec, Category= ExecFunctions)
-	void Pathfinding_GetPathWS(float StartX, float StartY, float EndX, float EndY);
+	static void Pathfinding_GetPathWS(float StartX, float StartY, float EndX, float EndY);
 	
 	UFUNCTION(Exec, Category= ExecFunctions)
-	void Pathfinding_ToggleWalkable(int X, int Y);
+	static void Pathfinding_ToggleWalkable(int X, int Y);
 	
 	UFUNCTION(Exec, Category= ExecFunctions)
-	void Pathfinding_GenerateNavmesh();
+	static void Pathfinding_GenerateNavmesh();
 
 	UFUNCTION(Exec, Category = ExecFunctions)
-	void AddBuffToPlayer(int BuffID) const;
+	static void AddBuffToPlayer(int BuffID);
 
 
-	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };

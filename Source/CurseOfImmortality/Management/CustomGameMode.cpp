@@ -9,24 +9,43 @@
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "CurseOfImmortality/UpgradeSystem/Buffs/Bleed.h"
 
-void ACustomGameMode::SpawnEnemy()
+
+
+void ACustomGameMode::SpawnEnemy(int Index, const float X, const float Y, const float Z)
 {
-	GLog->Log("Spawning Enemy");
+	const FVector Location = FVector(X, Y, Z);
+	FPersistentWorldManager::ObjectFactory->SpawnCharacter(static_cast<EEnemy>(Index), Location, FRotator::ZeroRotator);
 }
 
-void ACustomGameMode::AttackManager_PickThreeFromPool() const
+void ACustomGameMode::SpawnEnemyByName(const FString Index, const float X, const float Y, const float Z)
+{
+	const FVector Location = FVector(X, Y, Z);
+
+	EEnemy E = {};
+	const FString IndexToLower = Index.ToLower();
+	if(IndexToLower == "deprived")
+		E = Deprived;
+	else if(IndexToLower == "stormcaller")
+		E = Stormcaller;
+	else if(IndexToLower == "mawofsothros")
+		E = MawOfSothros;
+
+	FPersistentWorldManager::ObjectFactory->SpawnCharacter(E, Location, FRotator::ZeroRotator);
+}
+
+void ACustomGameMode::AttackManager_PickThreeFromPool()
 {
 	const auto AM = FPersistentWorldManager::AttackManager;
 	AM->PickThreeFromPool(true);
 }
 
-void ACustomGameMode::AttackManager_GetUpgrade(const int Index) const
+void ACustomGameMode::AttackManager_GetUpgrade(const int Index)
 {
 	const auto AM = FPersistentWorldManager::AttackManager;
 	AM->GetUpgrade(Index);
 }
 
-void ACustomGameMode::AttackManager_PrintCurrentlyActive() const
+void ACustomGameMode::AttackManager_PrintCurrentlyActive()
 {
 	const auto AM = FPersistentWorldManager::AttackManager;
 	AM->PrintCurrentlyActive();
@@ -59,7 +78,7 @@ void ACustomGameMode::Pathfinding_GenerateNavmesh()
 	PF->GenerateNavmesh();
 }
 
-void ACustomGameMode::AddBuffToPlayer(int BuffID) const
+void ACustomGameMode::AddBuffToPlayer(int BuffID)
 {
 	const auto AM = FPersistentWorldManager::AttackManager;
 	const auto MainChar = FPersistentWorldManager::PlayerCharacter;

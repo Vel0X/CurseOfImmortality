@@ -56,3 +56,36 @@ enum EEnemy
 	Stormcaller,
 	MawOfSothros
 };
+
+UENUM()
+enum EUpgradeName
+{
+	SwordSlash,
+	Fireball,
+	ArcaneWhisper,
+	KarysAnimus,
+	Whirlwind,
+	ArcaneReplicatorTurret,
+	KarysAnimusProjectile,
+	SpellbladeProjectile,
+	Behemoth,
+	Hemorrhage,
+	CursemarkOfDoom, //does this need to be on an ability
+	SharpendReflexes,
+	Spellblade,
+	BattleFrenzy,
+	FierceDetermination,
+	SealOfCongruence,
+	Pierce,         
+	ShatteredImpact,
+	SustainedFocus,
+	BerserkerFury,
+	ArcaneReplicator
+};
+
+UENUM()
+enum EUpgradeOrder
+{
+	AttributeSetter,
+	AttributeReader
+};
