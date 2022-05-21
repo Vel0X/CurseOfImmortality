@@ -44,6 +44,10 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 		}
 
 		float SpeedDep = Direction.Length();
+		if (SpeedDep > 1)
+		{
+			SpeedDep = 1;
+		}
 		Direction.Normalize();
 
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
@@ -70,12 +74,12 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 			if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
 			{
 				Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->
-					MovementSpeed;
+					MovementSpeed * SpeedDep;
 			}
 		}
 		else
 		{
-			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed;
+			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed * SpeedDep;
 		}
 		FHitResult* Result = new FHitResult();
 		GetOwner()->AddActorWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed,
@@ -87,7 +91,7 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 				FVector UndesiredMotion = Result->ImpactNormal * (FVector::DotProduct(Direction, Result->ImpactNormal));
 				
 				GetOwner()->AddActorWorldOffset((Direction-UndesiredMotion) * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed,
-										false);
+										true);
 			}
 		}
 

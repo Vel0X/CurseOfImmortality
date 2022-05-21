@@ -62,6 +62,15 @@ void UInputManager::BeginPlay()
 void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if(Player->Idle || Player->Melee || Player->Running)
+	{
+		if (MoveX != 0 && LastAction == InputAction::NoAction || MoveY != 0 && LastAction == InputAction::NoAction)
+		{
+			LastAction = InputAction::Running;
+		}
+		Move();
+	}
 	
 	if (Player->CurrentDashCooldown > 0)
 	{
@@ -103,7 +112,8 @@ void UInputManager::SetupPlayerInput(UInputComponent* InputComponent)
 
 void UInputManager::MoveForward(float Value)
 {
-	if(Player->Idle || Player->Melee || Player->Running)
+	MoveX = Value;
+	/*if(Player->Idle || Player->Melee || Player->Running)
 	{
 			if (Value != 0 && LastAction == InputAction::NoAction)
 			{
@@ -111,12 +121,13 @@ void UInputManager::MoveForward(float Value)
 			}
 			MoveInput.X = Value;
 			MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
-	}
+	}*/
 }
 
 void UInputManager::MoveRight(float Value)
 {
-	if(Player->Idle || Player->Melee || Player->Running)
+	MoveY = Value;
+	/*if(Player->Idle || Player->Melee || Player->Running)
 	{
 			if (Value != 0 && LastAction == InputAction::NoAction)
 			{
@@ -124,7 +135,7 @@ void UInputManager::MoveRight(float Value)
 			}
 			MoveInput.Y = Value;
 			MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
-	}
+	}*/
 }
 
 void UInputManager::MeleeAbility()
@@ -146,6 +157,14 @@ void UInputManager::Dash()
 {
 	DoAction(InputAction::Dash);
 }
+
+void UInputManager::Move()
+{
+	MoveInput.X = MoveX;
+	MoveInput.Y = MoveY;
+	MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
+}
+
 
 void UInputManager::AddToBuffer(InputAction _InputAction)
 {

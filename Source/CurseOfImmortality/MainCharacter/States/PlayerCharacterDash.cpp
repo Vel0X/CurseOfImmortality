@@ -53,7 +53,7 @@ void UPlayerCharacterDash::OnStateUpdate(float DeltaTime)
 			FVector UndesiredMotion = Result->ImpactNormal * (FVector::DotProduct(SelfRef->GetActorForwardVector(), Result->ImpactNormal));
 				
 			SelfRef->AddActorWorldOffset((SelfRef->GetActorForwardVector()-UndesiredMotion) * DeltaTime * SelfRef->DashSpeed,
-									false);
+									true);
 		}
 	}
 }
