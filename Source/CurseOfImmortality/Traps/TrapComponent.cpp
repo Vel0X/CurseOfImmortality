@@ -32,3 +32,9 @@ void UTrapComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// ...
 }
 
+void UTrapComponent::CheckActivation(ETrapTypes trapType, int prio)
+{
+	
+}
+
+

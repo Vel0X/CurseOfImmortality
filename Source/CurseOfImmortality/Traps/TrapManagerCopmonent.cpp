@@ -34,16 +34,16 @@ void UTrapManagerCopmonent::TickComponent(float DeltaTime, ELevelTick TickType, 
 
 void UTrapManagerCopmonent::UpgradeTrapsOfType(ETrapTypes Type)
 {
-	
+	UpgradeTraptype.Broadcast(Type, 0);
 }
 void UTrapManagerCopmonent::ActivateAllTrapsOfType(ETrapTypes Type)
 {
-	
+	ActivateTrapsOfType.Broadcast(Type, 0);
 }
 
 void UTrapManagerCopmonent::DeactivateAllTrapsOfType(ETrapTypes Type)
 {
-	
+	DeactivateTrapsOfType.Broadcast(Type, 0);
 }
 
 
