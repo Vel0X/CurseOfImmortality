@@ -5,6 +5,7 @@
 
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosPawn.h"
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosStateMachine.h"
+#include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 
 void UMawOfSothrosIdle::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -36,5 +37,25 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	Controller->FocusOnPlayer(DeltaTime);
+
+	FVector PlayerLocation = Player->GetActorLocation();
+	FVector OwnLocation = SelfRef->GetActorLocation();
+	FVector VectorToPlayer = PlayerLocation - OwnLocation;
+
+	const float Angle = Controller->CalculateAngleBetweenVectors(VectorToPlayer, SelfRef->GetActorForwardVector());
+	const float Dist = FVector::Dist(PlayerLocation, OwnLocation);
+
+	Controller->FocusOnPlayer(DeltaTime, Angle);
+
+	if (Angle < 20.f)
+	{
+		if (Dist > 1200.f)
+		{
+			Controller->MoveToTarget(PlayerLocation, 200.f, DeltaTime);
+		}
+		else
+		{
+			Controller->Transition(Controller->Vomit, Controller);
+		}
+	}
 }

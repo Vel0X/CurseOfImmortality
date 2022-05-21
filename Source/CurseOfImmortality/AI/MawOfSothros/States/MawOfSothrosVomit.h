@@ -9,9 +9,19 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class CURSEOFIMMORTALITY_API UMawOfSothrosVomit : public UMawOfSothrosBaseState
 {
 	GENERATED_BODY()
-	
+
+	virtual void OnStateEnter(UStateMachine* StateMachine) override;
+
+	virtual void OnStateExit() override;
+
+	UFUNCTION(BlueprintCallable)
+	void ActivateVomit();
+	UFUNCTION(BlueprintCallable)
+	void DeactivateVomit();
+	UFUNCTION(BlueprintCallable)
+	void TransitionToIdle();
 };

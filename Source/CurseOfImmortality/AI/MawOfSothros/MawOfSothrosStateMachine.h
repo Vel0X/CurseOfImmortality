@@ -21,12 +21,14 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	void MoveToTarget(FVector Target, float Speed, float DeltaTime);
-	void FocusOnPlayer(float DeltaTime);
+	void FocusOnPlayer(float DeltaTime, float Speed) const;
+
+	float CalculateAngleBetweenVectors(FVector VectorOne, FVector VectorTwo) const;
 
 	//States
 	UPROPERTY()
 	UState* Idle;
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	UState* Vomit;
 	UPROPERTY()
 	UState* GroundSlam;

@@ -62,11 +62,11 @@ void UMawOfSothrosStateMachine::MoveToTarget(FVector Target, float Speed, float 
 
 	// SelfRef->MovementComponent->SetDirection(Target, Speed);
 
-	FVector MoveDir(SelfRef->GetActorLocation() + Target * DeltaTime * Speed);
+	const FVector MoveDir(SelfRef->GetActorLocation() + Target * DeltaTime * Speed);
 	SelfRef->SetActorLocation(MoveDir, true);
 }
 
-void UMawOfSothrosStateMachine::FocusOnPlayer(float DeltaTime)
+void UMawOfSothrosStateMachine::FocusOnPlayer(const float DeltaTime, const float Speed) const
 {
 	if (!SelfRef)
 	{
@@ -81,11 +81,24 @@ void UMawOfSothrosStateMachine::FocusOnPlayer(float DeltaTime)
 	const FVector PlayerLocation = Player->GetActorLocation();
 	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 	const FRotator LookAtRotation(
-		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 45.f).Rotation());
+		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, Speed).Rotation());
 
 	const FRotator ZeroedRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
 
 	SelfRef->CapsuleComponent->SetWorldRotation(ZeroedRotation);
+}
+
+float UMawOfSothrosStateMachine::CalculateAngleBetweenVectors(FVector VectorOne, FVector VectorTwo) const
+{
+	VectorOne.Normalize();
+	VectorTwo.Normalize();
+
+	const float DotProduct = FVector::DotProduct(VectorOne, VectorTwo);
+
+	const float Angle = FMath::Acos(DotProduct);
+	float AngleInDegree = FMath::RadiansToDegrees(Angle);
+
+	return AngleInDegree;
 }
 
 AMawOfSothrosPawn* UMawOfSothrosStateMachine::GetSelfRef() const

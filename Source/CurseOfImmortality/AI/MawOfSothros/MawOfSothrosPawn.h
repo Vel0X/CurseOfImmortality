@@ -31,15 +31,16 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool Dead;
 
+	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* VomitUpperJaw;
+	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* VomitLowerJaw;
+
 private:
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	UMawOfSothrosStateMachine* StateMachine;
-	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* VomitUpperJaw;
-	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* VomitLowerJaw;
 	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* MawSmoke;
 };
