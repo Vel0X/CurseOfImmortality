@@ -8,7 +8,7 @@
 #include "StormCallerPawn.generated.h"
 
 class UStormCallerStateMachine;
-class URandomAOEAbilty;
+class URandomAOEAbility;
 /**
  * 
  */
@@ -39,7 +39,7 @@ public:
 	UStormCallerStateMachine* StateMachine;
 
 	UPROPERTY(EditAnywhere)
-	URandomAOEAbilty* StormCast;
+	URandomAOEAbility* StormCast;
 
 	//Base Stats
 	UPROPERTY(EditAnywhere, Category="Base Stats")

@@ -18,7 +18,7 @@ void UDeprivedIdle::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef->Idle = true;
 	if (Verbose)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Idle State Entered"))
+		UE_LOG(LogTemp, Warning, TEXT("Deprived Idle State Entered"))
 	}
 }
 
@@ -28,7 +28,7 @@ void UDeprivedIdle::OnStateExit()
 	SelfRef->Idle = false;
 	if (Verbose)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Exit Idle State"))
+		UE_LOG(LogTemp, Warning, TEXT("Deprived Exit Idle State"))
 	}
 }
 

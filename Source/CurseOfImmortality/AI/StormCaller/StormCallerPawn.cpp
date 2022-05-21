@@ -4,7 +4,7 @@
 #include "CurseOfImmortality/AI/StormCaller/StormCallerPawn.h"
 
 #include "StormCallerStateMachine.h"
-#include "CurseOfImmortality/AI/AIBaseClasses/RandomAOEAbilty.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/RandomAOEAbility.h"
 
 AStormCallerPawn::AStormCallerPawn()
 {
@@ -13,7 +13,7 @@ AStormCallerPawn::AStormCallerPawn()
 
 	StateMachine = CreateDefaultSubobject<UStormCallerStateMachine>("StateMachine");
 
-	StormCast = CreateDefaultSubobject<URandomAOEAbilty>("Storm Call");
+	StormCast = CreateDefaultSubobject<URandomAOEAbility>("Storm Call");
 
 	CurrentAttackCoolDown = 5.62f; //Animation Duration Raising Arms
 }
