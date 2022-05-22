@@ -58,11 +58,11 @@ public:
 
 	//Animation Durations
 	UPROPERTY(EditAnywhere, Category="time")
-	float MeleeDuration1 = 0.335f;
+	float MeleeDuration1 = 0.372f;
 	UPROPERTY(EditAnywhere, Category="Time")
-	float MeleeDuration2 = 0.24;
+	float MeleeDuration2 = 0.267f;
 	UPROPERTY(EditAnywhere, Category="Time")
-	float MeleeDuration3 = 0.625;
+	float MeleeDuration3 = 0.694f;
 	UPROPERTY(EditAnywhere, Category="Time")
 	float RangedDuration1 = 0.5166665f;
 	UPROPERTY(EditAnywhere, Category="Time")
@@ -106,4 +106,6 @@ public:
 		UAttackManager* AttackManager;
 	UPROPERTY(EditAnywhere)
 		UStateMachine* StateMachine;
+
+	UPlayerAnim* PlayerAnim;
 };

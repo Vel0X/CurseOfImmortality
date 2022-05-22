@@ -81,21 +81,8 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 		{
 			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed * SpeedDep;
 		}
-		FHitResult* Result = new FHitResult();
-		GetOwner()->AddActorWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed,
-										true, Result);
-		if(Result != nullptr)
-		{
-			if (Result->GetActor()!= GetOwner() && Result->GetActor()!= nullptr)
-			{
-				FVector UndesiredMotion = Result->ImpactNormal * (FVector::DotProduct(Direction, Result->ImpactNormal));
-				
-				GetOwner()->AddActorWorldOffset((Direction-UndesiredMotion) * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed,
-										true);
-			}
-		}
-
-		delete Result;
+		
+		MoveWithCorrection(Direction, DeltaTime, Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed);
 		//RootComponent->AddWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed, true);
 		DirectionSet = false;
 	}
@@ -124,3 +111,23 @@ void UCharacterMovement::SetDirection(FVector MoveInput, float MovementSpeedInpu
 		}
 	}
 }
+
+void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, float DeltaTime, float Speed)
+{
+	FHitResult* Result = new FHitResult();
+	GetOwner()->AddActorWorldOffset(DirectionToMove * DeltaTime * Speed,
+									true, Result);
+	if(Result != nullptr)
+	{
+		if (Result->GetActor()!= GetOwner() && Result->GetActor()!= nullptr)
+		{
+			FVector UndesiredMotion = Result->ImpactNormal * (FVector::DotProduct(DirectionToMove, Result->ImpactNormal));
+				
+			GetOwner()->AddActorWorldOffset((DirectionToMove-UndesiredMotion) * DeltaTime * Speed,
+									true);
+		}
+	}
+
+	delete Result;
+}
+

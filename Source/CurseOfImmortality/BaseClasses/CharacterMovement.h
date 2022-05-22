@@ -25,6 +25,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void SetDirection(FVector MoveInput, float MovementSpeedInput);
+
+	void MoveWithCorrection(FVector DirectionToMove, float DeltaTime, float Speed);
 	
 	float MovementSpeed;
 	
