@@ -6,6 +6,7 @@
 #include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
 #include "MawOfSothrosPawn.generated.h"
 
+class UAbilitySpecification;
 class UMawOfSothrosStateMachine;
 /**
  * 
@@ -32,15 +33,23 @@ public:
 	bool Dead;
 
 	UPROPERTY(EditAnywhere)
+	UAbilitySpecification* AbilitySpecification;
+
+	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* VomitUpperJaw;
 	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* VomitLowerJaw;
+	UPROPERTY(EditAnywhere)
+	USceneComponent* PuddleLowerSpawnLocation;
+	UPROPERTY(EditAnywhere)
+	USceneComponent* PuddleUpperSpawnLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UMawOfSothrosStateMachine* StateMachine;
 
 private:
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* Mesh;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
-	UMawOfSothrosStateMachine* StateMachine;
 	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* MawSmoke;
 };

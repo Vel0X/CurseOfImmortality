@@ -29,7 +29,7 @@ void URandomAOEAbility::StartAbility(UAbilitySpecification* AbilitySpecification
 			return;
 		}
 
-		ADolomarsWrath* AbilityInstance = Cast<ADolomarsWrath>(
+		const ADolomarsWrath* AbilityInstance = Cast<ADolomarsWrath>(
 			GetWorld()->SpawnActor(AbilitySpecification->Class, &DamageFieldLocation, &FRotator::ZeroRotator));
 		AbilityInstance->Collider->SetSphereRadius(DamageField);
 

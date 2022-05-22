@@ -17,7 +17,7 @@ class UBaseUpgrade;
 UENUM()
 enum EAbilityType
 {
-	None, 
+	None,
 	Melee,
 	Ranged,
 	Special
@@ -29,23 +29,21 @@ class CURSEOFIMMORTALITY_API ABaseAbility : public AActor
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this actor's properties
 	ABaseAbility();
-	
+
 	UFUNCTION(BlueprintCallable)
 	virtual void OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor);
 	virtual void OnAbilityCreation();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
 
 
 public:
-
 	void CheckCollisions();
-	
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -74,13 +72,12 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 	TArray<UBaseUpgrade*> UpgradeStack;
-private:
 	float RemainingAbilityLifetime;
+
+private:
 	int AbilityHandle;
 	FScriptDelegate OverlapDelegate;
 
 	UPROPERTY(EditAnywhere)
 	TArray<UPrimitiveComponent*> HitBoxes;
-
-
 };

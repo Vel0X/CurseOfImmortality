@@ -8,13 +8,23 @@
 
 AMawOfSothrosPawn::AMawOfSothrosPawn()
 {
+	StateMachine = CreateDefaultSubobject<UMawOfSothrosStateMachine>("State Machine");
+
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh");
 	Mesh->SetupAttachment(RootComponent);
-	StateMachine = CreateDefaultSubobject<UMawOfSothrosStateMachine>("StateMachine");
+	
+	PuddleUpperSpawnLocation = CreateDefaultSubobject<USceneComponent>("Upper Spawn Location");
+	PuddleUpperSpawnLocation->SetupAttachment(RootComponent);
+
+	PuddleLowerSpawnLocation = CreateDefaultSubobject<USceneComponent>("Lower Spawn Location");
+	PuddleLowerSpawnLocation->SetupAttachment(RootComponent);
+
 	VomitUpperJaw = CreateDefaultSubobject<UNiagaraComponent>("Vomit Upper Jaw");
-	VomitUpperJaw->SetupAttachment(Mesh, "UpperJaw");
+	VomitUpperJaw->SetupAttachment(Mesh, "Upper Jaw");
+	
 	VomitLowerJaw = CreateDefaultSubobject<UNiagaraComponent>("Vomit Lower Jaw");
-	VomitLowerJaw->SetupAttachment(Mesh, "LowerJaw");
+	VomitLowerJaw->SetupAttachment(Mesh, "Lower Jaw");
+	
 	MawSmoke = CreateDefaultSubobject<UNiagaraComponent>("Maw Smoke");
 	MawSmoke->SetupAttachment(Mesh);
 }

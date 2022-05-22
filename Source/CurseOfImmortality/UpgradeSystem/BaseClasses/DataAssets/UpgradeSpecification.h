@@ -31,7 +31,8 @@ enum EUpgradeName
 	SustainedFocus,
 	BerserkerFury,
 	ArcaneReplicator,
-	DolomarsWrath
+	DolomarsWrath,
+	SeaOfDarkness
 };
 
 UENUM()
