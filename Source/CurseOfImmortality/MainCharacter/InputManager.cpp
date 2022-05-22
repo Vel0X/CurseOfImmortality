@@ -62,6 +62,15 @@ void UInputManager::BeginPlay()
 void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if(Player->Idle || Player->Melee || Player->Running)
+	{
+		if (MoveX != 0 && LastAction == InputAction::NoAction || MoveY != 0 && LastAction == InputAction::NoAction)
+		{
+			LastAction = InputAction::Running;
+		}
+		Move();
+	}
 	
 	if (Player->CurrentDashCooldown > 0)
 	{
@@ -81,7 +90,6 @@ void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	if (Player->CurrentAnimationDuration > 0)
 	{
 		Player->CurrentAnimationDuration -= DeltaTime;
-		//UE_LOG(LogTemp, Warning, TEXT("Text,%f"), Player->CurrentAnimationDuration);
 	}
 	else if (InputBuffer.Num()>0)
 	{
@@ -103,28 +111,12 @@ void UInputManager::SetupPlayerInput(UInputComponent* InputComponent)
 
 void UInputManager::MoveForward(float Value)
 {
-	if (!Player->Dash)
-	{
-		if (Value != 0 && LastAction == InputAction::NoAction)
-		{
-			LastAction = InputAction::Running;
-		}
-		MoveInput.X = Value;
-		MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
-	}
+	MoveX = Value;
 }
 
 void UInputManager::MoveRight(float Value)
 {
-	if (!Player->Dash)
-	{
-		if (Value != 0 && LastAction == InputAction::NoAction)
-		{
-			LastAction = InputAction::Running;
-		}
-		MoveInput.Y = Value;
-		MovementComponent->SetDirection(MoveInput, Player->MovementSpeed);
-	}
+	MoveY = Value;
 }
 
 void UInputManager::MeleeAbility()
@@ -147,6 +139,14 @@ void UInputManager::Dash()
 	DoAction(InputAction::Dash);
 }
 
+void UInputManager::Move()
+{
+	MoveInput.X = MoveX;
+	MoveInput.Y = MoveY;
+	MovementComponent->SetDirection(MoveInput, Player->Stats[EStats::Movespeed]);
+}
+
+
 void UInputManager::AddToBuffer(InputAction _InputAction)
 {
 	if(Player->CurrentAnimationDuration <= 0 && InputBuffer.Num() == 0)
@@ -155,6 +155,7 @@ void UInputManager::AddToBuffer(InputAction _InputAction)
 	} else if (Player->CurrentAnimationDuration <= MaxBufferTime)
 	{
 		InputBuffer.Add(_InputAction);
+		
 		UE_LOG(LogTemp, Display, TEXT("Added Action to buffer"));
 	}
 }
@@ -180,15 +181,11 @@ void UInputManager::DoAction(InputAction _InputAction)
 			UE_LOG(LogTemp, Display, TEXT("Used Melee"));
 		} else
 		{
-			if (UAnimInstance *AnimInst = Player->SkeletalMesh->GetAnimInstance())
+			if(Player->PlayerAnim->AnimationFinished)
 			{
-				UPlayerAnim* playerAnim = static_cast<UPlayerAnim*>(Player->SkeletalMesh->GetAnimInstance());
-				if(playerAnim->AnimationFinished)
-				{
-					LastAction = InputAction::MeleeAbility;
-					//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnMeleeKeyPressed();
-					UE_LOG(LogTemp, Display, TEXT("Used Melee"));
-				}
+				LastAction = InputAction::MeleeAbility;
+				//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnMeleeKeyPressed();
+				UE_LOG(LogTemp, Display, TEXT("Used Melee"));
 			}
 		}
 		
@@ -196,30 +193,22 @@ void UInputManager::DoAction(InputAction _InputAction)
 	case InputAction::RangedAbility:
 	    if(Player->AttackManager->CheckCooldown(Ranged))
 	    {
-	    	if (UAnimInstance *AnimInst = Player->SkeletalMesh->GetAnimInstance())
+	    	if(Player->PlayerAnim->AnimationFinished)
 	    	{
-	    		UPlayerAnim* playerAnim = static_cast<UPlayerAnim*>(Player->SkeletalMesh->GetAnimInstance());
-	    		if(playerAnim->AnimationFinished)
-	    		{
-	    			LastAction = InputAction::RangedAbility;
-	    			static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Ranged);
-	    			UE_LOG(LogTemp, Display, TEXT("Used Ranged"));
-	    		}
+	    		LastAction = InputAction::RangedAbility;
+	    		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Ranged);
+	    		UE_LOG(LogTemp, Display, TEXT("Used Ranged"));
 	    	}
 	    }
 		break;
 	case InputAction::SpecialAbility:
 		if(Player->AttackManager->CheckCooldown(Special))
 		{
-			if (UAnimInstance *AnimInst = Player->SkeletalMesh->GetAnimInstance())
+			if(Player->PlayerAnim->AnimationFinished)
 			{
-				UPlayerAnim* playerAnim = static_cast<UPlayerAnim*>(Player->SkeletalMesh->GetAnimInstance());
-				if(playerAnim->AnimationFinished)
-				{
-					LastAction = InputAction::SpecialAbility;
-					static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Special);
-					UE_LOG(LogTemp, Display, TEXT("Used Special"));
-				}
+				LastAction = InputAction::SpecialAbility;
+				static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Special);
+				UE_LOG(LogTemp, Display, TEXT("Used Special"));
 			}
 		}
 		break;
