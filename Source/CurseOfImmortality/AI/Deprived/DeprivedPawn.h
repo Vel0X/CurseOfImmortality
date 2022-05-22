@@ -23,6 +23,8 @@ public:
 	ADeprivedPawn();
 
 	virtual void DealDamage(float Damage, ABaseCharacter* EnemyCharacter) override;
+	UFUNCTION(BlueprintCallable)
+	void ToggleDashEffect();
 
 	//States
 	UPROPERTY(BlueprintReadWrite)
@@ -53,6 +55,8 @@ public:
 	TArray<USphereComponent*> NormalAttackSphereArray;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UDeprivedStateMachine* StateMachine;
+	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* DashEffect;
 
 	//Base Stats
 	UPROPERTY(EditAnywhere, Category="Base Stats")

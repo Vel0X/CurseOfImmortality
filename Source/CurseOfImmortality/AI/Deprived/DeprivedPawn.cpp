@@ -3,6 +3,7 @@
 
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 
+#include "NiagaraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -27,6 +28,9 @@ ADeprivedPawn::ADeprivedPawn()
 
 	StateMachine = CreateDefaultSubobject<UDeprivedStateMachine>("StateMachine");
 
+	DashEffect = CreateDefaultSubobject<UNiagaraComponent>("Dash Effect");
+	DashEffect->SetupAttachment(Mesh, "DashEffectSocket");
+
 	CurrentJumpAttackCoolDown = 0.f;
 	CurrentJumpAttackChargeTime = JumpAttackChargeTime;
 	CurrentRecoverDuration = RecoverDuration;
@@ -45,4 +49,16 @@ void ADeprivedPawn::DealDamage(float Damage, ABaseCharacter* EnemyCharacter)
 {
 	Super::DealDamage(Damage, EnemyCharacter);
 	EnemyCharacter->ReceiveDamage(Damage);
+}
+
+void ADeprivedPawn::ToggleDashEffect()
+{
+	if (DashEffect->IsActive())
+	{
+		DashEffect->Deactivate();
+	}
+	else
+	{
+		DashEffect->Activate();
+	}
 }
