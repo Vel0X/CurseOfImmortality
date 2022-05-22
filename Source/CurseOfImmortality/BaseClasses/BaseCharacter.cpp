@@ -224,7 +224,7 @@ void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 
 void ABaseCharacter::ReceiveDamage(float Damage)
 {
-	Health -= Damage;
+	CurrentHealth -= Damage;
 }
 
 void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Verbose)

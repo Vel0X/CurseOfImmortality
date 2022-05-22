@@ -72,7 +72,7 @@ void UDeprivedJumpAttack::SetLocation()
 	PlayerLocation = Player->GetActorLocation();
 	FVector PlayerForwardDir(
 		Player->GetActorForwardVector() * (SelfRef->PlayerForwardVector * (Player->CurrentMovementSpeed / Player->
-			MovementSpeed)) +
+			Stats[EStats::Movespeed])) +
 		PlayerLocation);
 	OwnLocation = SelfRef->GetActorLocation();
 

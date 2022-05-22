@@ -32,8 +32,5 @@ public:
 	
 	FVector Direction;
 	bool DirectionSet;
-
-	UPROPERTY(EditAnywhere)
-	USceneComponent* RootComponent;
 	
 };

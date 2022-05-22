@@ -50,11 +50,6 @@ void APlayerCharacter::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
-void APlayerCharacter::ReceiveDamage(float Damage)
-{
-	Super::ReceiveDamage(Damage);
-}
-
 void APlayerCharacter::DealDamage(float Damage, ABaseCharacter *EnemyCharacter)
 {
 	Super::DealDamage(Damage, EnemyCharacter);

@@ -52,15 +52,12 @@ public:
 	UPROPERTY(EditAnywhere)
 	UDamageComponent* DamageComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float Health;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Current")
+	float CurrentMovementSpeed = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float MovementSpeed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float CurrentMovementSpeed;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Current")
+	float CurrentHealth;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	bool Died;
 
@@ -98,9 +95,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TMap<int, UNiagaraComponent*> ActiveParticleEffects;
 	
-	float CurrentHealth = 0.0f;
-	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UBaseStatSpecification* BaseStats;
 
 	UPROPERTY(EditAnywhere)

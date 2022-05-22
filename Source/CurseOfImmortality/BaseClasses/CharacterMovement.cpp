@@ -6,7 +6,6 @@
 #include "VectorTypes.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
-#include "EntitySystem/MovieSceneComponentDebug.h"
 
 
 // Sets default values for this component's properties
@@ -24,7 +23,6 @@ UCharacterMovement::UCharacterMovement()
 void UCharacterMovement::BeginPlay()
 {
 	Super::BeginPlay();
-	RootComponent = GetOwner()->GetRootComponent();
 }
 
 
@@ -52,7 +50,6 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
 		{
-			//GetOwner()->SetActorRotation(Direction.Rotation());
 
 			if (Cast<APlayerCharacter>(GetOwner())->Melee)
 			{
@@ -67,23 +64,22 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 			}
 		}
 		GetOwner()->SetActorRotation(Direction.Rotation());
-		//RootComponent->SetWorldRotation(Direction.Rotation());
 
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
 		{
 			if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
 			{
 				Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->
-					MovementSpeed * SpeedDep;
+					Stats[EStats::Movespeed] * SpeedDep;
 			}
 		}
 		else
 		{
-			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->MovementSpeed * SpeedDep;
+			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->Stats[EStats::Movespeed] * SpeedDep;
 		}
 		
 		MoveWithCorrection(Direction, DeltaTime, Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed);
-		//RootComponent->AddWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed, true);
+		
 		DirectionSet = false;
 	}
 }
@@ -93,7 +89,6 @@ void UCharacterMovement::SetDirection(FVector MoveInput, float MovementSpeedInpu
 {
 	if (!(MoveInput.IsZero() && Direction.IsZero()))
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Text,%s"), *MoveInput.ToString());
 		MovementSpeed = MovementSpeedInput;
 		Direction = MoveInput;
 		DirectionSet = true;
