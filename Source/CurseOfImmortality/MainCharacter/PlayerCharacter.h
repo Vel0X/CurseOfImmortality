@@ -36,7 +36,6 @@ protected:
 public:
 	
 	virtual void Tick(float DeltaTime) override;
-	virtual void DealDamage(float Damage, ABaseCharacter *EnemyCharacter) override;
 	virtual void OnDeath() override;
 	
 	//States

@@ -38,12 +38,7 @@ public:
 	void CheckCollisions();
 	
 	virtual void Setup();
-
-	virtual void ReceiveDamage(float Damage);
 	
-	UFUNCTION(BlueprintCallable, Category = "Damage")
-	virtual void DealDamage(float Damage, ABaseCharacter *EnemyCharacter);
-
 	virtual void OnDeath();
 
 	UPROPERTY(EditAnywhere)
@@ -57,9 +52,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Current")
 	float CurrentHealth;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	bool Died;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	bool Immune;
@@ -95,10 +87,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	TMap<int, UNiagaraComponent*> ActiveParticleEffects;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UBaseStatSpecification* BaseStats;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TMap<TEnumAsByte<EStats>, float> Stats;
 
 	UPROPERTY(EditAnywhere)
