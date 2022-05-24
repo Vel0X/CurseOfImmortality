@@ -106,11 +106,15 @@ void ABaseCharacter::CheckCollisions()
 
 	//UE_LOG(LogTemp, Warning, TEXT("Number of overlapping Actors: %i"), OverlappingActors.Num());
 
-	for (auto OverlappingActor : OverlappingActors)
+	for (const auto OverlappingActor : OverlappingActors)
 	{
-		if(OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
+		if(OverlappingActor->GetClass()->IsChildOf(StaticClass()))
 		{
 			ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
+
+			if(OverlappingCharacter->Faction == Faction)
+				continue;
+			
 			auto CharacterHitboxes = OverlappingCharacter->BodyHitboxes;
 
 			for (const auto DamageHitbox : DamageHitboxes)

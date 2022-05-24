@@ -35,7 +35,7 @@ void AArena::BeginPlay()
 //maybe use an array for gates, but might be tricky, since the gates are components
 USceneComponent* AArena::GetRandomGate() const
 {
-	switch (const int Rand = FMath::RandRange(0,4))
+	switch (FMath::RandRange(0,4))
 	{
 	case 0:
 		return Gate1;
