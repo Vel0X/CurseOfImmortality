@@ -9,6 +9,7 @@
 #include "GameFramework/Actor.h"
 #include "ObjectFactory.generated.h"
 
+class URound;
 class UAssortmentSpecification;
 class UDamageObject;
 class UDamageSpecification;
@@ -24,16 +25,26 @@ public:
 
 	virtual void BeginPlay() override;
 
+	//retrieve Specifications based on enums
+	
 	UEnemySpecification* GetSpecification(EEnemy Enemy) const;
 
 	UAssortmentSpecification* GetSpecification(EAssortment Assortment) const;
 
+	//instantiate UObjects
+	
 	UFUNCTION(BlueprintCallable)
 	UBaseBuff* GetBuff(EBuff BuffName) const;
 
 	UFUNCTION(BlueprintCallable)
 	UDamageObject* GetDamageObject(const UDamageSpecification* Specification) const;
 
+	UFUNCTION(BlueprintCallable)
+	URound* GetRound(const int Index) const;
+
+
+	//spawn actors
+	
 	UFUNCTION(BlueprintCallable)
 	ABaseEnemyPawn* SpawnEnemyCustomSpawnBehaviour(EEnemy Character) const;
 	

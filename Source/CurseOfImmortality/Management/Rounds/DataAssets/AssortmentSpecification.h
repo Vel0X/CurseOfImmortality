@@ -17,6 +17,9 @@ class CURSEOFIMMORTALITY_API UAssortmentSpecification : public UDataAsset
 
 public:
 	UPROPERTY(EditAnywhere)
+	FString DisplayName;
+	
+	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EEnemy>, int> Enemies;
 
 	UPROPERTY(EditAnywhere)

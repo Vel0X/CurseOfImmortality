@@ -26,6 +26,9 @@ public:
 
 	UFUNCTION(Exec, Category = ExecFunctions)
 	static void SpawnEnemyByNameCustomSpawnBehaviour(FString Index);
+
+	UFUNCTION(Exec, Category = ExecFunctions)
+	static void StartRound(const int Index);
 	
 	UFUNCTION(Exec, Category = ExecFunctions)
 	static void AttackManager_PickThreeFromPool();

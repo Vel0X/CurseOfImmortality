@@ -53,6 +53,18 @@ void ACustomGameMode::SpawnEnemyByNameCustomSpawnBehaviour(FString Index)
 
 }
 
+void ACustomGameMode::StartRound(const int Index)
+{
+	if(FPersistentWorldManager::RoundsManager != nullptr)
+	{
+		FPersistentWorldManager::RoundsManager->StartRound(Index);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("RoundManager was NULL"));
+	}
+}
+
 void ACustomGameMode::AttackManager_PickThreeFromPool()
 {
 	const auto AM = FPersistentWorldManager::AttackManager;

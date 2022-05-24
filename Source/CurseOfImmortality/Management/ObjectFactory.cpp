@@ -64,6 +64,17 @@ UDamageObject* AObjectFactory::GetDamageObject(const UDamageSpecification* Speci
 	return DamageObjectInstance;
 }
 
+URound* AObjectFactory::GetRound(const int Index) const
+{
+	if(Index >= 0 && Index < Spawnables->RoundSpecifications.Num())
+	{
+		URound* Round = NewObject<URound>();
+		Round->SetupRound(Spawnables->RoundSpecifications[Index]);
+		return Round;
+	}
+	return nullptr;
+}
+
 ABaseEnemyPawn* AObjectFactory::SpawnEnemyCustomSpawnBehaviour(const EEnemy Character) const
 {
 	if(!Spawnables->Enemies.Contains(Character))

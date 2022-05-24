@@ -7,6 +7,7 @@
 #include "NiagaraSystem.h"
 #include "UpgradeSpecification.h"
 #include "CurseOfImmortality/Enemies/EnemySpecification.h"
+#include "CurseOfImmortality/Management/Rounds/Round.h"
 #include "CurseOfImmortality/Management/Rounds/DataAssets/AssortmentSpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
 #include "SpawnablesList.generated.h"
@@ -37,4 +38,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EAssortment>, UAssortmentSpecification*> Assortments;
+
+	UPROPERTY(EditAnywhere)
+	TArray<URoundSpecification*> RoundSpecifications;
 };

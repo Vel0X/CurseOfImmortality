@@ -1,7 +1,9 @@
 ﻿#pragma once
 #include "ObjectFactory.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
+#include "CurseOfImmortality/Arena/Arena.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
+#include "Rounds/RoundsManager.h"
 
 class FPersistentWorldManager
 {
@@ -10,6 +12,8 @@ public:
 	static APlayerCharacter* PlayerCharacter;
 	static AObjectFactory* ObjectFactory;
 	static APathfindingGrid* PathfindingGrid;
+	static ARoundsManager* RoundsManager;
+	static AArena* Arena;
 
 	static TArray<ABaseCharacter*> GetEnemies()
 	{
@@ -57,6 +61,8 @@ public:
 		AttackManager = nullptr;
 		PlayerCharacter = nullptr;
 		ObjectFactory = nullptr;
+		RoundsManager = nullptr;
+		Arena = nullptr;
 	}
 
 private:

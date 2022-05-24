@@ -24,7 +24,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
+	void StartRound(const int Index);
 
 	UPROPERTY(EditAnywhere)
 	URound* ActiveRound;

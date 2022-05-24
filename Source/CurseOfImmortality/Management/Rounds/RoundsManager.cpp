@@ -3,6 +3,8 @@
 
 #include "RoundsManager.h"
 
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
+
 
 // Sets default values
 ARoundsManager::ARoundsManager()
@@ -15,12 +17,29 @@ ARoundsManager::ARoundsManager()
 void ARoundsManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	FPersistentWorldManager::RoundsManager = this;
 }
 
 // Called every frame
 void ARoundsManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if(ActiveRound != nullptr)
+	{
+		ActiveRound->RoundTick(DeltaTime);
+	}
+}
+
+void ARoundsManager::StartRound(const int Index)
+{
+	ActiveRound = FPersistentWorldManager::ObjectFactory->GetRound(Index);
+	if(ActiveRound != nullptr)
+	{
+		ActiveRound->BeginRound(true);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Round was NULL"));
+	}
 }
 

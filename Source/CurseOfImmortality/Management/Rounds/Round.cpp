@@ -6,7 +6,12 @@
 #include "DataAssets/AssortmentSpecification.h"
 #include "DataAssets/RoundSpecification.h"
 
-void URound::BeginRound()
+void URound::SetupRound(URoundSpecification* _Specification)
+{
+	Specification = _Specification;
+}
+
+void URound::BeginRound(bool Verbose)
 {
 	float TotalEnemyWeight = 0.0f;
 	float TotalAssortmentWeight = 0.0f;
@@ -20,7 +25,7 @@ void URound::BeginRound()
 	int CurrentPowerLevel = 0;
 	while(CurrentPowerLevel < Specification->TargetPowerlevel)
 	{
-		const float CurrentPowerLevelRatio = CurrentPowerLevel/Specification->TargetPowerlevel;
+		const float CurrentPowerLevelRatio = (float)(CurrentPowerLevel)/(float)(Specification->TargetPowerlevel);
 
 		//select new Assortment
 		if(CurrentPowerLevelRatio < Specification->AssortmentRatio)
@@ -83,10 +88,37 @@ void URound::BeginRound()
 			CurrentPowerLevel += EnemySpecification->PowerLevel; //EnemyPowerLevel
 		}
 	}
+
+	if(Verbose)
+	{
+		for (auto Tuple : EnemiesToSpawn)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[Enemy] Round contains %i of %s"), Tuple.Value, *FPersistentWorldManager::ObjectFactory->GetSpecification(Tuple.Key)->DisplayName);
+		}
+
+		for (auto Tuple : AssortmentsToSpawn)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[Assortment] Round contains %i of %s"), Tuple.Value, *FPersistentWorldManager::ObjectFactory->GetSpecification(Tuple.Key)->DisplayName);
+		}
+	}
 }
 
 void URound::RoundTick(float DeltaTime)
 {
+	StageTime += DeltaTime;
+	
+	if(CalculateRemainingPowerLevel() < Specification->PowerLevelTransitionThreshhold[CurrentStage] || StageTime > Specification->TimeTransitionThreshhold[CurrentStage])
+	{
+		CurrentStage++;
+		StageTime = 0.0f;
+
+		if(CurrentStage >= Specification->Stages)
+		{
+			//end the Round
+		}
+	}
+	
+	
 	
 }
 

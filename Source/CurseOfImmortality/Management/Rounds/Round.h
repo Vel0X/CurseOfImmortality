@@ -29,7 +29,8 @@ class CURSEOFIMMORTALITY_API URound : public UObject
 	GENERATED_BODY()
 
 public:
-	void BeginRound();
+	void SetupRound(URoundSpecification* _Specification);
+	void BeginRound(bool Verbose = false);
 	void RoundTick(float DeltaTime);
 	void EndRound();
 
@@ -48,4 +49,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EEnemy>, int> EnemiesToSpawn;
+
+	int CurrentStage = 0;
+	float StageTime = 0.0f;
 };

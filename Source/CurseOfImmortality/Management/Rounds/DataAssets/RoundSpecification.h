@@ -42,7 +42,14 @@ public:
 	int TargetPowerlevel;
 
 	/**
-	 * the time, when to initiate the next stage of the round, based on the current remaining powerlevel
+	 * How many stages the round has
+	 */
+	UPROPERTY(EditAnywhere)
+	int Stages;
+	
+	/**
+	 * the time, when to initiate the next stage of the round, based on the current remaining powerlevel.
+	 * Length needs to be the same as Stages
 	 */
 	UPROPERTY(EditAnywhere)
 	TArray<int> PowerLevelTransitionThreshhold; 
@@ -50,7 +57,8 @@ public:
 	
 	/**
 	 * the time, when to initiate the next stage of the round, based on the remaining time
-	 */
+	* Length needs to be the same as Stages
+	*/
 	UPROPERTY(EditAnywhere)
 	TArray<float> TimeTransitionThreshhold; 
 };
