@@ -24,6 +24,7 @@ void UPlayerCharacterRunning::OnStateExit()
 {
 	Super::OnStateExit();
 	SelfRef->Running = false;
+	SelfRef->CurrentMovementSpeed = 0;
 	if (Verbose)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Exit Running State"))

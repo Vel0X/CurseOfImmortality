@@ -132,11 +132,6 @@ void ABaseCharacter::Setup()
 	
 }
 
-void ABaseCharacter::DealDamage(float Damage, ABaseCharacter *EnemyCharacter)
-{
-	EnemyCharacter->ReceiveDamage(Damage);
-}
-
 void ABaseCharacter::OnDeath()
 {
 	FPersistentWorldManager::DeRegisterCharacter(this);
@@ -220,11 +215,6 @@ void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 			RecalculateStats();
 		}
 	}
-}
-
-void ABaseCharacter::ReceiveDamage(float Damage)
-{
-	Health -= Damage;
 }
 
 void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Verbose)

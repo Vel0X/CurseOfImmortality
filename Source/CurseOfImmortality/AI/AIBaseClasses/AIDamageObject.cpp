@@ -55,7 +55,7 @@ void UAIDamageObject::DealDamageToPawns() const
 		if (ABaseCharacter* OtherPawn = Cast<ABaseCharacter>(OverlappingActor))
 		{
 			ABaseCharacter* SelfRef = Cast<ABaseCharacter>(GetOwner());
-			SelfRef->DealDamage(Damage, OtherPawn);
+			//SelfRef->DealDamage(Damage, OtherPawn);
 			UE_LOG(LogTemp, Warning, TEXT("Damage Dealt"))
 		}
 	}

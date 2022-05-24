@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "CurseOfImmortality/Enums/Enums.h"
 #include "TrapComponent.generated.h"
 
 
@@ -15,6 +16,12 @@ class CURSEOFIMMORTALITY_API UTrapComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UTrapComponent();
+	UPROPERTY(BlueprintReadOnly)
+	bool TrapIsActive = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int Prio = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TEnumAsByte<ETrapTypes> TrapType;
 
 protected:
 	// Called when the game starts
@@ -23,6 +30,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UFUNCTION(Exec)
+	void CheckActivation(TEnumAsByte<ETrapTypes> OthertrapType, int priority);
+	UFUNCTION(Exec)
+	void CheckDeactivation(TEnumAsByte<ETrapTypes> OthertrapType, int priority);
 
 		
 };

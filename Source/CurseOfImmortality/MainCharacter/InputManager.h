@@ -50,6 +50,11 @@ protected:
 	
 	void Dash();
 
+	void Move();
+
+	float MoveX = 0;
+	float MoveY = 0;
+
 	TArray<InputAction> InputBuffer;
 	
 	UPROPERTY(EditAnywhere)

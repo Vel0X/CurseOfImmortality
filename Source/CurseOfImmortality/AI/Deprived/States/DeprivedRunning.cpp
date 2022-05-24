@@ -87,7 +87,7 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	else
 	{
 		Controller->FocusOnPlayer();
-		Controller->MoveToTarget(PlayerLocation, SelfRef->MovementSpeed, DeltaTime);
+		Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[EStats::Movespeed], DeltaTime);
 		if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
 		{
 			Controller->Transition(Controller->NormalAttack, Controller);
@@ -106,7 +106,7 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 
 void UDeprivedRunning::FollowPath(float DeltaTime)
 {
-	Controller->MoveToTarget(Path[PathIndex], SelfRef->MovementSpeed, DeltaTime);
+	Controller->MoveToTarget(Path[PathIndex], SelfRef->Stats[EStats::Movespeed], DeltaTime);
 	FVector L(SelfRef->GetActorLocation());
 	L.Z = 0;
 	Controller->FocusOnPath(Path[PathIndex], DeltaTime);

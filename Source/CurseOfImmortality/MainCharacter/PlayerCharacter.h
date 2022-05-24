@@ -36,8 +36,6 @@ protected:
 public:
 	
 	virtual void Tick(float DeltaTime) override;
-	virtual void ReceiveDamage(float Damage) override;
-	virtual void DealDamage(float Damage, ABaseCharacter *EnemyCharacter) override;
 	virtual void OnDeath() override;
 	
 	//States
@@ -58,27 +56,27 @@ public:
 
 	//Animation Durations
 	UPROPERTY(EditAnywhere, Category="time")
-	float MeleeDuration1 = 0.67f;
+	float MeleeDuration1 = 0.372f;
 	UPROPERTY(EditAnywhere, Category="Time")
-	float MeleeDuration2 = 0.48;
+	float MeleeDuration2 = 0.267f;
 	UPROPERTY(EditAnywhere, Category="Time")
-	float MeleeDuration3 = 1.25;
+	float MeleeDuration3 = 0.694f;
 	UPROPERTY(EditAnywhere, Category="Time")
-	float RangedDuration1 = 1.033333f;
+	float RangedDuration1 = 0.5166665f;
 	UPROPERTY(EditAnywhere, Category="Time")
-	float SpecialDuration1 = 1.066667f;
+	float SpecialDuration1 = 0.5333335f;
 	UPROPERTY(EditAnywhere, Category="Time")
-	float DashDuration1 = 0.3f;
+	float DashDuration1 = 0.15f;
 
 	//Cooldowns
 	UPROPERTY(EditAnywhere, Category="Time")
-	float DashCooldown = 3;
+	float DashCooldown = 1.5f;
 
 	UPROPERTY(EditAnywhere, Category="Time")
-	float MeleeFollowUpTime = 1;
+	float MeleeFollowUpTime = 0.5;
 	
 	UPROPERTY(EditAnywhere, Category="Stats")
-	float DashSpeed = 2500;
+	float DashSpeed = 4000;
 	
 	float CurrentAnimationDuration;
 	float CurrentDashCooldown;
@@ -106,4 +104,6 @@ public:
 		UAttackManager* AttackManager;
 	UPROPERTY(EditAnywhere)
 		UStateMachine* StateMachine;
+
+	UPlayerAnim* PlayerAnim;
 };

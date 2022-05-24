@@ -19,6 +19,8 @@ void UTrapComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	TrapIsActive = true;
+
 	// ...
 	
 }
@@ -31,4 +33,21 @@ void UTrapComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 	// ...
 }
+
+void UTrapComponent::CheckActivation(TEnumAsByte<ETrapTypes> OtherTrapType, int prio)
+{
+	if(OtherTrapType == TrapType && prio <= Prio || OtherTrapType == ETrapTypes::All )
+	{
+		TrapIsActive = true;
+	}
+}
+
+void UTrapComponent::CheckDeactivation(TEnumAsByte<ETrapTypes> OtherTrapType = ETrapTypes::All, int prio = 0)
+{
+	if(OtherTrapType == TrapType && prio <= Prio || OtherTrapType == ETrapTypes::All)
+	{
+		TrapIsActive = false;
+	}
+}
+
 

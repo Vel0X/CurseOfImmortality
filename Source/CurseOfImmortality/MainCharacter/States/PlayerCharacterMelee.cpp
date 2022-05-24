@@ -13,7 +13,7 @@ void UPlayerCharacterMelee::OnStateEnter(UStateMachine* StateMachine)
 	Controller = Cast<UPlayerCharacterStateMachine>(StateMachine);
 	SelfRef = Controller->GetSelfRef();
 	SelfRef->DamageComponent->ResetAllHitCharacters();
-	switch (SelfRef->MeleeComboCount)
+	switch(SelfRef->MeleeComboCount)
 	{
 	case 0:
 		{
@@ -26,25 +26,28 @@ void UPlayerCharacterMelee::OnStateEnter(UStateMachine* StateMachine)
 		{
 			SelfRef->CurrentAnimationDuration = SelfRef->MeleeDuration2;
 			SelfRef->MeleeComboCount = 2;
-			SelfRef->MeleeStartFrame = 2.4 - (SelfRef->MeleeDuration3 + SelfRef->MeleeDuration2);
+			SelfRef->MeleeStartFrame = 1.333f - (SelfRef->MeleeDuration3+SelfRef->MeleeDuration2);
 			break;
 		}
 	case 2:
 		{
 			SelfRef->CurrentAnimationDuration = SelfRef->MeleeDuration3;
 			SelfRef->MeleeComboCount = 0;
-			SelfRef->MeleeStartFrame = 2.4 - (SelfRef->MeleeDuration3);
+			SelfRef->MeleeStartFrame = 1.333f - (SelfRef->MeleeDuration3);
 			break;
 		}
 	}
-
+	
 	SelfRef->Melee = true;
 	SelfRef->CurrentMeleeFollowUpTime = SelfRef->MeleeFollowUpTime;
-
-	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = Cast<APlayerCharacter>(SelfRef)->
-		MovementSpeedWhileAttacking;
+	
+	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = Cast<APlayerCharacter>(SelfRef)->MovementSpeedWhileAttacking;
 
 	if (Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Melee State Entered"));
+	}
+	if(Verbose)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Melee State Entered"));
 	}
@@ -54,8 +57,7 @@ void UPlayerCharacterMelee::OnStateExit()
 {
 	Super::OnStateExit();
 	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = 0;
-	UCapsuleComponent* HitBox = Cast<UCapsuleComponent>(SelfRef->GetDefaultSubobjectByName(TEXT("SwordHitbox")));
-	//TODO NEED TO FIND BETTER SOLUTION
+	UCapsuleComponent* HitBox = Cast<UCapsuleComponent>(SelfRef->GetDefaultSubobjectByName(TEXT("SwordHitbox"))); //TODO NEED TO FIND BETTER SOLUTION
 	HitBox->SetGenerateOverlapEvents(false);
 	SelfRef->Melee = false;
 
@@ -63,13 +65,17 @@ void UPlayerCharacterMelee::OnStateExit()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Exit Melee State"))
 	}
+	if(Verbose)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Exit Melee State"))	
+	}
 }
 
 void UPlayerCharacterMelee::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
-
-	if (Controller->GetSelfRef()->InputManager->LastAction == InputAction::Dash && SelfRef->CurrentDashCooldown <= 0)
+	
+	if(Controller->GetSelfRef()->InputManager->LastAction == InputAction::Dash && SelfRef->CurrentDashCooldown <= 0)
 	{
 		Controller->Transition(Controller->Dash, Controller);
 	}
