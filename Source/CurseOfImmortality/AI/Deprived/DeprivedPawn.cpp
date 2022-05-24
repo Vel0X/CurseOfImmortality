@@ -41,8 +41,8 @@ void ADeprivedPawn::OnDeath()
 	CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
-void ADeprivedPawn::DealDamage(float Damage, ABaseCharacter* EnemyCharacter)
+/*void ADeprivedPawn::DealDamage(float Damage, ABaseCharacter* EnemyCharacter)
 {
 	Super::DealDamage(Damage, EnemyCharacter);
 	EnemyCharacter->ReceiveDamage(Damage);
-}
+}*/

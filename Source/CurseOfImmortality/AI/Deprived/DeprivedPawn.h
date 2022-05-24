@@ -22,8 +22,6 @@ class CURSEOFIMMORTALITY_API ADeprivedPawn : public ABaseEnemyPawn
 public:
 	ADeprivedPawn();
 
-	virtual void DealDamage(float Damage, ABaseCharacter* EnemyCharacter) override;
-
 	//States
 	UPROPERTY(BlueprintReadWrite)
 	bool Idle = false;

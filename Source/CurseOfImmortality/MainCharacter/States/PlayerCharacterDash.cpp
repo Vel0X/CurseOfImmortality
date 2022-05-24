@@ -3,6 +3,8 @@
 
 #include "PlayerCharacterDash.h"
 
+#include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
+#include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
@@ -36,11 +38,10 @@ void UPlayerCharacterDash::OnStateExit()
 void UPlayerCharacterDash::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
-	
 	if (SelfRef->CurrentAnimationDuration <= 0)
 	{
 		SelfRef->InputManager->LastAction = InputAction::NoAction;
 		Controller->Transition(Controller->Idle, Controller);
 	}
-	SelfRef->GetRootComponent()->AddWorldOffset(SelfRef->GetActorForwardVector() * DeltaTime * SelfRef->DashSpeed, true);
+	SelfRef->MovementComponent->MoveWithCorrection(SelfRef->GetActorForwardVector(), DeltaTime, SelfRef->DashSpeed);
 }

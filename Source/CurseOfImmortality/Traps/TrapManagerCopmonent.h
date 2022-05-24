@@ -16,6 +16,11 @@ class CURSEOFIMMORTALITY_API UTrapManagerCopmonent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UTrapManagerCopmonent();
+	DECLARE_EVENT_TwoParams( OwningType, TrapEvent, ETrapTypes, int )
+
+	TrapEvent ActivateTrapsOfType;
+	TrapEvent DeactivateTrapsOfType;
+	TrapEvent UpgradeTraptype;
 
 protected:
 	// Called when the game starts

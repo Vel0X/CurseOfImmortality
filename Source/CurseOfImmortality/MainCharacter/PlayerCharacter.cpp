@@ -2,6 +2,7 @@
 
 
 #include "PlayerCharacter.h"
+#include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
@@ -28,6 +29,7 @@ APlayerCharacter::APlayerCharacter() : ABaseCharacter()
 	InputManager = CreateDefaultSubobject<UInputManager>(TEXT("InputManager"));
 	AttackManager = CreateDefaultSubobject<UAttackManager>(TEXT("AttackManager"));
 	StateMachine = CreateDefaultSubobject<UStateMachine>(TEXT("StateMachine"));
+	
 }
  
 
@@ -36,6 +38,7 @@ void APlayerCharacter::Setup()
 {
 	Super::Setup();
 	FPersistentWorldManager::PlayerCharacter = this;
+	PlayerAnim = static_cast<UPlayerAnim*>(SkeletalMesh->GetAnimInstance());
 	SetupInputComponent();
 	//DamageComponent->ConvertInterface();
 }
@@ -45,16 +48,6 @@ void APlayerCharacter::Setup()
 void APlayerCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-}
-
-void APlayerCharacter::ReceiveDamage(float Damage)
-{
-	Super::ReceiveDamage(Damage);
-}
-
-void APlayerCharacter::DealDamage(float Damage, ABaseCharacter *EnemyCharacter)
-{
-	Super::DealDamage(Damage, EnemyCharacter);
 }
 
 void APlayerCharacter::OnDeath()

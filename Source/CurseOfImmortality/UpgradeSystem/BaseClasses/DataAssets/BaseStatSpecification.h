@@ -16,7 +16,7 @@ class CURSEOFIMMORTALITY_API UBaseStatSpecification final : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TMap<TEnumAsByte<EStats>, float> BaseStats = {
 		{Health, 10.0f},
 		{PhysicalDamage, 10.0f},
