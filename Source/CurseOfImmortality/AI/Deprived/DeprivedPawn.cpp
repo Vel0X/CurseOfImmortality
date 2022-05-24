@@ -3,6 +3,7 @@
 
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 
+#include "NiagaraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -42,12 +43,6 @@ void ADeprivedPawn::OnDeath()
 	Dead = true;
 	StateMachine->DestroyComponent();
 	CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
-}
-
-void ADeprivedPawn::DealDamage(float Damage, ABaseCharacter* EnemyCharacter)
-{
-	Super::DealDamage(Damage, EnemyCharacter);
-	EnemyCharacter->ReceiveDamage(Damage);
 }
 
 void ADeprivedPawn::ToggleDashEffect()

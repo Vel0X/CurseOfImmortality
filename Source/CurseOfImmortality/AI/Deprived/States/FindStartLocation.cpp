@@ -63,7 +63,7 @@ void UFindStartLocation::OnStateUpdate(float DeltaTime)
 	}
 	else
 	{
-		Controller->MoveToTarget(Path[PathIndex], SelfRef->MovementSpeed, DeltaTime);
+		Controller->MoveToTarget(Path[PathIndex], SelfRef->CurrentMovementSpeed, DeltaTime);
 		FVector L(SelfRef->GetActorLocation());
 		L.Z = 0;
 		Controller->FocusOnPath(Path[PathIndex], DeltaTime);
