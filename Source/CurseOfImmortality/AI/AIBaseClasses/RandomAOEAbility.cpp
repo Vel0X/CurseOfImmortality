@@ -11,7 +11,7 @@
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 #include "Kismet/GameplayStatics.h"
 
-void URandomAOEAbility::StartAbility(UAbilitySpecification* AbilitySpecification)
+void URandomAOEAbility::StartAbility(UAbilitySpecification* AbilitySpecification, ABaseCharacter* Caster)
 {
 	FVector PlayerLocation = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetPawn()->GetActorLocation();
 	PlayerLocation.Z = 0;
@@ -29,9 +29,11 @@ void URandomAOEAbility::StartAbility(UAbilitySpecification* AbilitySpecification
 			return;
 		}
 
-		const ADolomarsWrath* AbilityInstance = Cast<ADolomarsWrath>(
+		ADolomarsWrath* AbilityInstance = Cast<ADolomarsWrath>(
 			GetWorld()->SpawnActor(AbilitySpecification->Class, &DamageFieldLocation, &FRotator::ZeroRotator));
 		AbilityInstance->Collider->SetSphereRadius(DamageField);
+
+		AbilityInstance->InitializeAbility(1, Caster, 1);
 
 		if (AbilityInstance == nullptr)
 		{

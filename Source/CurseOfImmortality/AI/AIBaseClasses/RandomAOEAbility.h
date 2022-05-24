@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "RandomAOEAbility.generated.h"
 
 class UAbilitySpecification;
@@ -13,7 +14,7 @@ class CURSEOFIMMORTALITY_API URandomAOEAbility : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	void StartAbility(UAbilitySpecification* AbilitySpecification);
+	void StartAbility(UAbilitySpecification* AbilitySpecification, ABaseCharacter* Caster);
 
 private:
 	UPROPERTY(EditAnywhere)

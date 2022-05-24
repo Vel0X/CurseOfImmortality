@@ -58,11 +58,15 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	CollisionParams.AddIgnoredActor(SelfRef);
 
 	Controller->GetWorld()->LineTraceSingleByChannel(HitMid, SelfRef->GetActorLocation(), Player->GetActorLocation(),
-	                                                 ECC_Pawn, CollisionParams);
+	                                                 ECC_GameTraceChannel3, CollisionParams);
 	Controller->GetWorld()->LineTraceSingleByChannel(HitLeft, StartPointLeft, EndPointLeft,
 	                                                 ECC_Pawn, CollisionParams);
 	Controller->GetWorld()->LineTraceSingleByChannel(HitRight, StartPointRight, EndPointLeft,
 	                                                 ECC_Pawn, CollisionParams);
+	if (HitMid.GetActor())
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s"), *HitMid.GetActor()->GetName());
+	}
 
 	if (HitMid.bBlockingHit)
 	{

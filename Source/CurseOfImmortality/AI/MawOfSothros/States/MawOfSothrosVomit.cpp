@@ -6,6 +6,7 @@
 #include "NiagaraComponent.h"
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosPawn.h"
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosStateMachine.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseAbilities/SeaOfDarkness.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 
 void UMawOfSothrosVomit::OnStateEnter(UStateMachine* StateMachine)
@@ -45,13 +46,24 @@ void UMawOfSothrosVomit::OnStateUpdate(float DeltaTime)
 		if (SpawnFrequency <= 0)
 		{
 			SpawnFrequency = 0.5f;
-			FVector SpawnLocation;
-			SpawnLocation = SelfRef->PuddleLowerSpawnLocation->GetComponentLocation();
-			SelfRef->GetWorld()->SpawnActor(SelfRef->AbilitySpecification->Class,
-			                                &SpawnLocation, &FRotator::ZeroRotator);
+
+			FVector SpawnLocation(SelfRef->PuddleLowerSpawnLocation->GetComponentLocation());
+			ASeaOfDarkness* AbilityInstance = Cast<ASeaOfDarkness>(SelfRef->GetWorld()->SpawnActor(
+				SelfRef->AbilitySpecification->Class,
+				&SpawnLocation, &FRotator::ZeroRotator));
+			if (!AbilityInstance) { return; }
+			AbilityInstance->InitializeAbility(1, SelfRef, 1);
+
 			SpawnLocation = SelfRef->PuddleUpperSpawnLocation->GetComponentLocation();
-			SelfRef->GetWorld()->SpawnActor(SelfRef->AbilitySpecification->Class,
-			                                &SpawnLocation, &FRotator::ZeroRotator);
+			AbilityInstance = Cast<ASeaOfDarkness>(SelfRef->GetWorld()->SpawnActor(
+				SelfRef->AbilitySpecification->Class,
+				&SpawnLocation, &FRotator::ZeroRotator));
+			if (!AbilityInstance) { return; }
+			AbilityInstance->InitializeAbility(1, SelfRef, 1);
+
+			for (int index = 0; index < 2; ++index)
+			{
+			}
 		}
 		SpawnFrequency -= DeltaTime;
 	}

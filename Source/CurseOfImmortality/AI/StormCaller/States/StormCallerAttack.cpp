@@ -31,9 +31,12 @@ void UStormCallerAttack::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	if (SelfRef->CurrentAttackCoolDown <= 0)
+	if (WaitForAnimation)
 	{
-		SelfRef->StormCast->StartAbility(SelfRef->AbilitySpecification);
-		SelfRef->CurrentAttackCoolDown = SelfRef->AttackCoolDown;
+		if (SelfRef->CurrentAttackCoolDown <= 0)
+		{
+			SelfRef->StormCast->StartAbility(SelfRef->AbilitySpecification, SelfRef);
+			SelfRef->CurrentAttackCoolDown = SelfRef->AttackCoolDown;
+		}
 	}
 }

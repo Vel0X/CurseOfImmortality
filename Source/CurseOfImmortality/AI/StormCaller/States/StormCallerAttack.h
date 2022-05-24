@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class CURSEOFIMMORTALITY_API UStormCallerAttack : public UStormCallerBaseState
 {
 	GENERATED_BODY()
@@ -19,5 +19,8 @@ class CURSEOFIMMORTALITY_API UStormCallerAttack : public UStormCallerBaseState
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
-	
+
+public:
+	UPROPERTY(BlueprintReadWrite)
+	bool WaitForAnimation;
 };

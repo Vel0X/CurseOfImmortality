@@ -51,7 +51,7 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 	{
 		if (Dist > 1200.f)
 		{
-			Controller->MoveToTarget(PlayerLocation, 200.f, DeltaTime);
+			Controller->MoveToTarget(PlayerLocation, SelfRef->CurrentMovementSpeed, DeltaTime);
 		}
 		else
 		{

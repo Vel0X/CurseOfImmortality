@@ -19,14 +19,15 @@ class CURSEOFIMMORTALITY_API UStormCallerStateMachine : public UStateMachine
 public:
 	UStormCallerStateMachine();
 
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	void FocusOnPlayer();
 
 	//States
 	UPROPERTY()
 	UState* Idle;
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	UState* Attack;
 
 	//Getter
@@ -42,5 +43,4 @@ private:
 	AStormCallerPawn* SelfRef;
 	UPROPERTY()
 	ABaseCharacter* Player;
-	
 };
