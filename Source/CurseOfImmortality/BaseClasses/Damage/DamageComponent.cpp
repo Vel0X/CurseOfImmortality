@@ -30,7 +30,8 @@ void UDamageComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("DamageObject is null (Tick)"));
+			if(FPersistentWorldManager::GetLogLevel(DamageComponent))
+				UE_LOG(LogTemp, Warning, TEXT("DamageObject is null (Tick)"));
 		}
 	}
 }
@@ -44,7 +45,8 @@ void UDamageComponent::ConvertInterface()
 		const auto Component = DamagingHitboxReferences[i].GetComponent(GetOwner());
 		if(Component == nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("%s is not the name of a component on this actor!"), *DamagingHitboxReferences[i].ComponentProperty.ToString());
+			if(FPersistentWorldManager::GetLogLevel(DamageComponent))
+				UE_LOG(LogTemp, Warning, TEXT("%s is not the name of a component on this actor!"), *DamagingHitboxReferences[i].ComponentProperty.ToString());
 			continue;
 		}
 
@@ -52,13 +54,16 @@ void UDamageComponent::ConvertInterface()
 
 		if(Primitive == nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("%s does not reference a Primitive Component"));
+			if(FPersistentWorldManager::GetLogLevel(DamageComponent))
+				UE_LOG(LogTemp, Warning, TEXT("%s does not reference a Primitive Component"));
 			continue;
 		}
 		auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(DamagingHitboxDamageSpecifications[i]);
 		DamagingHitboxes.Add(Primitive, DamageObject);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Converted %i of %i References to DamagingComponents"), DamagingHitboxes.Num(), DamagingHitboxReferences.Num());
+
+	if(FPersistentWorldManager::GetLogLevel(DamageComponent))
+		UE_LOG(LogTemp, Warning, TEXT("Converted %i of %i References to DamagingComponents"), DamagingHitboxes.Num(), DamagingHitboxReferences.Num());
 
 	for (int i = 0; i < DirectDamageSpecifications.Num(); ++i)
 	{
@@ -71,13 +76,15 @@ void UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponent
 {
 	if(!DamagingHitboxes.Contains(DamageComponentOverlap))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("The Hitbox is not contained"));
+		if(FPersistentWorldManager::GetLogLevel(DamageComponent))
+			UE_LOG(LogTemp, Warning, TEXT("The Hitbox is not contained"));
 		return;
 	}
 
 	if(DamagingHitboxes[DamageComponentOverlap] == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("DamageComponent is null!"));
+		if(FPersistentWorldManager::GetLogLevel(DamageComponent))
+			UE_LOG(LogTemp, Warning, TEXT("DamageComponent is null!"));
 		return;
 	}
 
@@ -123,6 +130,7 @@ void UDamageComponent::ToggleHitbox(UPrimitiveComponent* Hitbox)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Toggled Hitbox, that is not registered in DamageComponent!"));
+		if(FPersistentWorldManager::GetLogLevel(DamageComponent))
+			UE_LOG(LogTemp, Warning, TEXT("Toggled Hitbox, that is not registered in DamageComponent!"));
 	}
 }

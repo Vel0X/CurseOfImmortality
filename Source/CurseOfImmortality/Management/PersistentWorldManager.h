@@ -54,6 +54,36 @@ public:
 		}
 	}
 
+	static void SetLogLevel(const FString Key, const bool Value)
+	{
+		const FString LowerKey = Key.ToLower();
+		if(Logs.Contains(LowerKey))
+		{
+			Logs[LowerKey] = Value;
+		}
+	}
+
+	static bool GetLogLevel(const ELog Log)
+	{
+		switch (Log)
+		{
+		case Round:
+			return ReturnIfContains("round");
+		
+		case PlayerStateMachine:
+			return ReturnIfContains("playerstatemachine");
+
+		case DamageComponent:
+			return ReturnIfContains("damagecomponent");
+		}
+		return false;
+	}
+
+	static bool ReturnIfContains(const FString Key)
+	{
+		return Logs.Contains(Key) ? Logs[Key] : false;
+	}
+
 	static void Clear()
 	{
 		Enemies.Empty();
@@ -68,4 +98,6 @@ public:
 private:
 	static TArray<ABaseCharacter*> Enemies;
 	static TArray<ABaseCharacter*> Friendly;
+
+	static TMap<FString, bool> Logs;
 };

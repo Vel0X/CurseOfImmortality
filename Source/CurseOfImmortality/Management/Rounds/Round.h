@@ -30,8 +30,9 @@ class CURSEOFIMMORTALITY_API URound : public UObject
 
 public:
 	void SetupRound(URoundSpecification* _Specification);
-	void BeginRound(bool Verbose = false);
+	void BeginRound();
 	void RoundTick(float DeltaTime);
+	void SpawnEnemies();
 	void EndRound();
 
 	int CalculateRemainingPowerLevel();
@@ -50,6 +51,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EEnemy>, int> EnemiesToSpawn;
 
+	int RoundPowerLevel = 0;
 	int CurrentStage = 0;
 	float StageTime = 0.0f;
+
+	bool RoundActive = false;
 };
+

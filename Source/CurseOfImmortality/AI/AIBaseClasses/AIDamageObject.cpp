@@ -50,8 +50,8 @@ void UAIDamageObject::DealDamageToPawns() const
 	TArray<AActor*> OverlappingActors;
 	DamageSphere->GetOverlappingActors(OverlappingActors);
 
-	UE_LOG(LogTemp, Warning, TEXT("The boolean value is %s"),
-	       ( OverlappingActors.IsEmpty() ? TEXT("true") : TEXT("false") ));
+	//UE_LOG(LogTemp, Warning, TEXT("The boolean value is %s"),
+	//       ( OverlappingActors.IsEmpty() ? TEXT("true") : TEXT("false") ));
 	// UE_LOG(LogTemp, Warning, TEXT("%f"), DamageSphere->GetUnscaledSphereRadius());
 	// UE_LOG(LogTemp, Warning, TEXT("%s"), *DamageSphere->GetComponentLocation().ToString());
 	// UE_LOG(LogTemp, Warning, TEXT("%s"), DamageSphere->GetCollisionEnabled());

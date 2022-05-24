@@ -5,6 +5,7 @@
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UPlayerCharacterMelee::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -43,10 +44,8 @@ void UPlayerCharacterMelee::OnStateEnter(UStateMachine* StateMachine)
 	
 	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = Cast<APlayerCharacter>(SelfRef)->MovementSpeedWhileAttacking;
 
-	if(Verbose)
-	{
+	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Melee State Entered"));
-	}
 }
 
 void UPlayerCharacterMelee::OnStateExit()
@@ -56,10 +55,9 @@ void UPlayerCharacterMelee::OnStateExit()
 	UCapsuleComponent* HitBox = Cast<UCapsuleComponent>(SelfRef->GetDefaultSubobjectByName(TEXT("SwordHitbox"))); //TODO NEED TO FIND BETTER SOLUTION
 	HitBox->SetGenerateOverlapEvents(false);
 	SelfRef->Melee = false;
-	if(Verbose)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Exit Melee State"))	
-	}
+
+	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
+		UE_LOG(LogTemp, Warning, TEXT("Exit Melee State"))
 }
 
 void UPlayerCharacterMelee::OnStateUpdate(float DeltaTime)

@@ -8,3 +8,8 @@ ARoundsManager* FPersistentWorldManager::RoundsManager = nullptr;
 AArena* FPersistentWorldManager::Arena = nullptr;
 TArray<ABaseCharacter*> FPersistentWorldManager::Enemies = TArray<ABaseCharacter*>();
 TArray<ABaseCharacter*> FPersistentWorldManager::Friendly = TArray<ABaseCharacter*>();
+TMap<FString, bool> FPersistentWorldManager::Logs = {
+			{"round", false},
+			{"playerstatemachine", false},
+			{"damagecomponent", false}
+};

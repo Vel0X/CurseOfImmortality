@@ -125,6 +125,11 @@ void ACustomGameMode::AddBuffToPlayer(int BuffID)
 	*/
 }
 
+void ACustomGameMode::SetLogLevel(const FString Key, const bool Log)
+{
+	FPersistentWorldManager::SetLogLevel(Key, Log);
+}
+
 void ACustomGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);

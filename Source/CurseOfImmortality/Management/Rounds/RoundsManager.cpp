@@ -26,7 +26,14 @@ void ARoundsManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if(ActiveRound != nullptr)
 	{
-		ActiveRound->RoundTick(DeltaTime);
+		if(ActiveRound->RoundActive)
+		{
+			ActiveRound->RoundTick(DeltaTime);
+		}
+		else
+		{
+			//Initiate next round?	
+		}
 	}
 }
 
@@ -35,7 +42,7 @@ void ARoundsManager::StartRound(const int Index)
 	ActiveRound = FPersistentWorldManager::ObjectFactory->GetRound(Index);
 	if(ActiveRound != nullptr)
 	{
-		ActiveRound->BeginRound(true);
+		ActiveRound->BeginRound();
 	}
 	else
 	{

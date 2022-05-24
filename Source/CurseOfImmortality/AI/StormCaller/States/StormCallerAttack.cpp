@@ -16,7 +16,7 @@ void UStormCallerAttack::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->Attack = true;
-	UE_LOG(LogTemp, Warning, TEXT("Attack State Entered"))
+	//UE_LOG(LogTemp, Warning, TEXT("Attack State Entered"))
 }
 
 void UStormCallerAttack::OnStateExit()

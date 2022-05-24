@@ -14,14 +14,14 @@ void UStormCallerIdle::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->Idle = true;
-	UE_LOG(LogTemp, Warning, TEXT("Idle State Entered"))
+	//UE_LOG(LogTemp, Warning, TEXT("Idle State Entered"))
 }
 
 void UStormCallerIdle::OnStateExit()
 {
 	Super::OnStateExit();
 	SelfRef->Idle = false;
-	UE_LOG(LogTemp, Warning, TEXT("Exit Idle State"))
+	//UE_LOG(LogTemp, Warning, TEXT("Exit Idle State"))
 }
 
 void UStormCallerIdle::OnStateUpdate(float DeltaTime)

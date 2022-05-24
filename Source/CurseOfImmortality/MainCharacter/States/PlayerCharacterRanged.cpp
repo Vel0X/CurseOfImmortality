@@ -5,6 +5,7 @@
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UPlayerCharacterRanged::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -17,10 +18,9 @@ void UPlayerCharacterRanged::OnStateEnter(UStateMachine* StateMachine)
 
 	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = 0;
 	
-	if (Verbose)
-	{
+	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Ranged State Entered"))
-	}
+	
 }
 
 void UPlayerCharacterRanged::OnStateExit()

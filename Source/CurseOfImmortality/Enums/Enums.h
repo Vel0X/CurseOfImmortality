@@ -96,3 +96,11 @@ enum EAssortment
 	StormcallerCircle,
 	DeprivedMob
 };
+
+UENUM()
+enum ELog
+{
+	Round,
+	PlayerStateMachine,
+	DamageComponent
+};

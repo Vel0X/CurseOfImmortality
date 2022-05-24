@@ -15,6 +15,7 @@ void UDamageObject::DealDamage(ABaseCharacter* Character)
 {
 	if(!HitCharacters.Contains(Character))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("DMG"));
 		Character->TakeDmg(Damage, nullptr, nullptr, true);
 		HitCharacters.Add(Character);
 	}

@@ -54,6 +54,8 @@ public:
 	UFUNCTION(Exec, Category = ExecFunctions)
 	static void AddBuffToPlayer(int BuffID);
 
+	UFUNCTION(Exec, Category = ExecFunctions)
+	static void SetLogLevel(FString Key, bool Log);
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };

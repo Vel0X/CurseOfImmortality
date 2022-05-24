@@ -8,6 +8,7 @@
 #include "CurseOfImmortality/MainCharacter/PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UPlayerCharacterDash::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -19,20 +20,17 @@ void UPlayerCharacterDash::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef->Dash = true;
 	SelfRef->CurrentAnimationDuration = SelfRef->DashDuration1;
 	SelfRef->CurrentDashCooldown = SelfRef->DashCooldown;
-	if (Verbose)
-	{
+	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Dash State Entered"))
-	}
+	
 }
 
 void UPlayerCharacterDash::OnStateExit()
 {
 	Super::OnStateExit();
 	SelfRef->Dash = false;
-	if (Verbose)
-	{
+	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Exit Dash State"))
-	}
 }
 
 void UPlayerCharacterDash::OnStateUpdate(float DeltaTime)
