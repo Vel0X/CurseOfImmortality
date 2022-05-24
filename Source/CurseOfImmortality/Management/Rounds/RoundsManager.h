@@ -26,6 +26,8 @@ public:
 
 	void StartRound(const int Index);
 
+	void OnEnemyDied(ABaseEnemyPawn* Enemy);
+
 	UPROPERTY(EditAnywhere)
 	URound* ActiveRound;
 };

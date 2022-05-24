@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/Enums/Enums.h"
+#include "CurseOfImmortality/Management/Rounds/Assortments/Assortment.h"
 #include "UObject/Object.h"
 #include "AssortmentSpecification.generated.h"
 
@@ -18,6 +19,9 @@ class CURSEOFIMMORTALITY_API UAssortmentSpecification : public UDataAsset
 public:
 	UPROPERTY(EditAnywhere)
 	FString DisplayName;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UAssortment> Class;
 	
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EEnemy>, int> Enemies;

@@ -54,6 +54,8 @@ void URound::BeginRound()
 				return;
 			}
 
+			//UAssortment* AssortmentInstance = FPersistentWorldManager::ObjectFactory->SpawnAssortment(Assortment);
+			//CurrentPowerLevel += AssortmentInstance->CalculatePowerLevel();
 			//FIRST instantiate assortment and then retrieve the PowerLevel from it
 			CurrentPowerLevel += AssortmentSpecification->PowerLevel; //EnemyPowerLevel
 		}
@@ -89,8 +91,10 @@ void URound::BeginRound()
 		}
 	}
 
+	CurrentStage = 0;
+	StageTime = 0.0f;
 	RoundPowerLevel = CurrentPowerLevel;
-	RoundActive = true;
+	SpawnsRemaining = true;
 	
 	if(FPersistentWorldManager::GetLogLevel(Round))
 	{
@@ -108,33 +112,36 @@ void URound::BeginRound()
 
 void URound::RoundTick(float DeltaTime)
 {
-	if(!RoundActive)
+	if(ActiveEnemies.Num() == 0)
+	{
+		
+	}
+	
+	if(!SpawnsRemaining)
 		return;
 	
 	StageTime += DeltaTime;
-	
 	if(CalculateRemainingPowerLevel() < Specification->PowerLevelTransitionThreshhold[CurrentStage] || StageTime > Specification->TimeTransitionThreshhold[CurrentStage])
 	{
 		CurrentStage++;
 		StageTime = 0.0f;
 
 		SpawnEnemies();
-
-		if(FPersistentWorldManager::GetLogLevel(Round))
-			UE_LOG(LogTemp, Warning, TEXT("Transitioned into Stage %i"), CurrentStage);
-
+		
 		if(CurrentStage >= Specification->Stages)
 		{
 			//end the Round
 			if(FPersistentWorldManager::GetLogLevel(Round))
-				UE_LOG(LogTemp, Warning, TEXT("Ended Round"));
+				UE_LOG(LogTemp, Warning, TEXT("All Enemies of the Round are spawned"));
 			
-			RoundActive = false;
+			SpawnsRemaining = false;
+		}
+		else
+		{
+			if(FPersistentWorldManager::GetLogLevel(Round))
+				UE_LOG(LogTemp, Warning, TEXT("Transitioned into Stage %i"), CurrentStage);
 		}
 	}
-	
-	
-	
 }
 
 void URound::EndRound()
@@ -142,9 +149,22 @@ void URound::EndRound()
 	
 }
 
+void URound::OnEnemyDeath(ABaseEnemyPawn* Enemy)
+{
+	ActiveEnemies.Remove(Enemy);
+}
+
 int URound::CalculateRemainingPowerLevel()
 {
-	return 2;
+	int RemainingPowerLevel = 0;
+	for (const auto Enemy : ActiveEnemies)
+	{
+		if(Enemy != nullptr)
+		{
+			RemainingPowerLevel += Enemy->PowerLevel;
+		}
+	}
+	return RemainingPowerLevel;
 }
 
 
@@ -161,32 +181,48 @@ void URound::SpawnEnemies()
 	//spawn enemies and assortments
 	while(CurrentPowerLevel < StagePowerLevel && CurrentIter < MaxIter)
 	{
-		/*
+		
 		const bool SpawnAssortment = FMath::RandBool();
 
-			const int Num = FMath::RandRange(0, AssortmentsToSpawn.Num()-1);
+		if(SpawnAssortment)
+		{
+			
+			if(AssortmentsToSpawn.Num() == 0)
+				continue;
+			
+			const int Rand = FMath::RandRange(0, AssortmentsToSpawn.Num()-1);
 			TArray<TEnumAsByte<EAssortment>> Keys;
 			AssortmentsToSpawn.GenerateKeyArray(Keys);
-			if(AssortmentsToSpawn[Keys[Num]] > 0)
+			const EAssortment Assortment = Keys[Rand];
+			if(AssortmentsToSpawn[Assortment] > 0)
 			{
 				//Spawn Assortment
-				FPersistentWorldManager::ObjectFactory->SpawnEnemy()
-				AssortmentsToSpawn[Keys[Num]] -= 1;
+				UAssortment* AssortmentInstance = FPersistentWorldManager::ObjectFactory->SpawnAssortment(Assortment);
+				TArray<ABaseEnemyPawn*> AssortmentEnemies = AssortmentInstance->SpawnAssortment();
+				ActiveEnemies.Append(AssortmentEnemies);
+				AssortmentsToSpawn[Assortment] -= 1;
+				CurrentPowerLevel += AssortmentInstance->CalculatePowerLevel();
+				//AssortmentsToSpawn[Assortment]] -= 1;
 			}
-		*/
-	
-		const int Rand = FMath::RandRange(0, EnemiesToSpawn.Num()-1);
-		TArray<TEnumAsByte<EEnemy>> Keys;
-		EnemiesToSpawn.GenerateKeyArray(Keys);
-		const EEnemy Enemy = Keys[Rand];
-		if(EnemiesToSpawn[Enemy] > 0)
-		{
-			//Spawn Assortment
-			ABaseEnemyPawn* EnemyInstance = FPersistentWorldManager::ObjectFactory->SpawnEnemyCustomSpawnBehaviour(Enemy);
-			EnemiesToSpawn[Enemy] -= 1;
-			CurrentPowerLevel += FPersistentWorldManager::ObjectFactory->GetSpecification(Enemy)->PowerLevel;
 		}
-
+		else
+		{
+			if(EnemiesToSpawn.Num() == 0)
+				continue;
+			
+			const int Rand = FMath::RandRange(0, EnemiesToSpawn.Num()-1);
+			TArray<TEnumAsByte<EEnemy>> Keys;
+			EnemiesToSpawn.GenerateKeyArray(Keys);
+			const EEnemy Enemy = Keys[Rand];
+			if(EnemiesToSpawn[Enemy] > 0)
+			{
+				//Spawn Assortment
+				ABaseEnemyPawn* EnemyInstance = FPersistentWorldManager::ObjectFactory->SpawnEnemyCustomSpawnBehaviour(Enemy);
+				ActiveEnemies.Add(EnemyInstance);
+				EnemiesToSpawn[Enemy] -= 1;
+				CurrentPowerLevel += EnemyInstance->PowerLevel;
+			}
+		}
 		CurrentIter++;
 	}
 }

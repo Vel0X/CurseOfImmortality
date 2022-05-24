@@ -7,6 +7,7 @@
 #include "CurseOfImmortality/Enemies/EnemySpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
 #include "GameFramework/Actor.h"
+#include "Rounds/Assortments/Assortment.h"
 #include "ObjectFactory.generated.h"
 
 class URound;
@@ -50,6 +51,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	ABaseEnemyPawn* SpawnEnemy(EEnemy Character, const FVector Location, const FRotator Rotation) const;
+
+	UFUNCTION(BlueprintCallable)
+	UAssortment* SpawnAssortment(EAssortment Assortment) const;
 
 	UFUNCTION(BlueprintCallable)
 	ABaseAbility* SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation, const ABaseCharacter* Caster) const;

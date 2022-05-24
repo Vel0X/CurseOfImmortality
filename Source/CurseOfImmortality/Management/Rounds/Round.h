@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
 #include "CurseOfImmortality/Enums/Enums.h"
 #include "UObject/Object.h"
 #include "Round.generated.h"
@@ -34,6 +35,7 @@ public:
 	void RoundTick(float DeltaTime);
 	void SpawnEnemies();
 	void EndRound();
+	void OnEnemyDeath(ABaseEnemyPawn* Enemy);
 
 	int CalculateRemainingPowerLevel();
 
@@ -43,7 +45,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<UAssortmentSpecification*> RemainingAssortments;
 	UPROPERTY(EditAnywhere)
-	TArray<ABaseCharacter*> ActiveEnemies;
+	TArray<ABaseEnemyPawn*> ActiveEnemies;
 
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EAssortment>, int> AssortmentsToSpawn;
@@ -55,6 +57,6 @@ public:
 	int CurrentStage = 0;
 	float StageTime = 0.0f;
 
-	bool RoundActive = false;
+	bool SpawnsRemaining = false;
 };
 

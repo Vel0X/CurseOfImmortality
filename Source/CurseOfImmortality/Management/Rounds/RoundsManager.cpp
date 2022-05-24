@@ -26,7 +26,7 @@ void ARoundsManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if(ActiveRound != nullptr)
 	{
-		if(ActiveRound->RoundActive)
+		if(ActiveRound->SpawnsRemaining)
 		{
 			ActiveRound->RoundTick(DeltaTime);
 		}
@@ -47,6 +47,14 @@ void ARoundsManager::StartRound(const int Index)
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Round was NULL"));
+	}
+}
+
+void ARoundsManager::OnEnemyDied(ABaseEnemyPawn* Enemy)
+{
+	if(ActiveRound != nullptr)
+	{
+		ActiveRound->OnEnemyDeath(Enemy);
 	}
 }
 

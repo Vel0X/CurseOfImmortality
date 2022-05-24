@@ -17,7 +17,7 @@ void UPlayerCharacterRanged::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef->CurrentAnimationDuration = SelfRef->RangedDuration1;
 
 	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = 0;
-	
+
 	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Ranged State Entered"))
 	

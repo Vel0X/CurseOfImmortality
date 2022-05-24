@@ -16,5 +16,5 @@ class CURSEOFIMMORTALITY_API UStormcallerCircleAssortment : public UAssortment
 	GENERATED_BODY()
 
 public:
-	virtual void SpawnAssortment() override;
+	virtual TArray<ABaseEnemyPawn*> SpawnAssortment() override;
 };

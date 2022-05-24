@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/Enums/Enums.h"
 #include "UObject/Object.h"
 #include "Assortment.generated.h"
 
+class ABaseEnemyPawn;
+class UAssortmentSpecification;
 /**
  * 
  */
@@ -15,14 +18,14 @@ class CURSEOFIMMORTALITY_API UAssortment : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void SpawnAssortment();
+	virtual TArray<ABaseEnemyPawn*> SpawnAssortment();
 
 
 	/**
 	 * Transfer the Values from the Specification into the member variables of the Assortment
 	 *
 	 */
-	void Initialize();
+	void Initialize(const UAssortmentSpecification* AssortmentSpecification);
 
 
 	/**
@@ -32,6 +35,8 @@ public:
 	void Determine();
 
 
-	void CalculatePowerLevel();
+	int CalculatePowerLevel();
+
+	TMap<TEnumAsByte<EEnemy>, int> EnemiesMap;
 
 };

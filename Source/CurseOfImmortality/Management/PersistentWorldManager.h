@@ -49,6 +49,16 @@ public:
 			break;
 		case EFaction::Enemy:
 			Enemies.Remove(Character);
+
+			if(RoundsManager != nullptr)
+			{
+				ABaseEnemyPawn* E = Cast<ABaseEnemyPawn>(Character);
+				if(E != nullptr)
+				{
+					RoundsManager->OnEnemyDied(E);
+				}
+			}
+			
 			break;
 		default: ;
 		}

@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/CapsuleComponent.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "BaseEnemyPawn.generated.h"
 
+class UEnemySpecification;
 /**
  * 
  */
@@ -18,4 +18,9 @@ class CURSEOFIMMORTALITY_API ABaseEnemyPawn : public ABaseCharacter
 
 public:
 	virtual bool GetSpawnPosition(FVector& Position, FRotator& Rotation);
+
+	void Init(const UEnemySpecification* Specification);
+	
+	UPROPERTY(EditAnywhere)
+	int PowerLevel;
 };

@@ -96,6 +96,7 @@ ABaseEnemyPawn* AObjectFactory::SpawnEnemyCustomSpawnBehaviour(const EEnemy Char
 	ABaseEnemyPawn* CharacterInstance = Cast<ABaseEnemyPawn>(GetWorld()->SpawnActor(Specification->Class, &Location, &Rotation));
 
 	CharacterInstance->GetSpawnPosition(Location, Rotation);
+	CharacterInstance->Init(Specification);
 	return CharacterInstance;
 }
 
@@ -117,7 +118,30 @@ ABaseEnemyPawn* AObjectFactory::SpawnEnemy(const EEnemy Character, const FVector
 	}
 
 	ABaseEnemyPawn* CharacterInstance = Cast<ABaseEnemyPawn>(GetWorld()->SpawnActor(Specification->Class, &Location, &Rotation));
+	CharacterInstance->Init(Specification);
 	return CharacterInstance;
+}
+
+UAssortment* AObjectFactory::SpawnAssortment(EAssortment Assortment) const
+{
+	if(!Spawnables->Assortments.Contains(Assortment))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Assortment exists in EAssortment, but not in Spawnables List"));
+		return nullptr;
+	}
+
+	const UAssortmentSpecification* AssortmentSpecification = Spawnables->Assortments[Assortment];
+
+	if(AssortmentSpecification == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Assortment has no Specification set in Spawnables List"));
+		return nullptr;
+	}
+	
+	UAssortment* AssortmentInstance = NewObject<UAssortment>(AssortmentSpecification->Class->StaticClass(), AssortmentSpecification->Class);
+	AssortmentInstance->Initialize(AssortmentSpecification);
+	return AssortmentInstance;
+
 }
 
 ABaseAbility* AObjectFactory::SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation, const ABaseCharacter* Caster) const
