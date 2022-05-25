@@ -16,7 +16,7 @@ class CURSEOFIMMORTALITY_API UTrapManagerCopmonent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UTrapManagerCopmonent();
-	DECLARE_EVENT_TwoParams( OwningType, TrapEvent, ETrapTypes, int )
+	DECLARE_EVENT_TwoParams( OwningType, TrapEvent, TEnumAsByte<ETrapTypes>, int )
 
 	TrapEvent ActivateTrapsOfType;
 	TrapEvent DeactivateTrapsOfType;
@@ -30,9 +30,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void ActivateAllTrapsOfType(ETrapTypes Type);
-	void DeactivateAllTrapsOfType(ETrapTypes Type);
-	void UpgradeTrapsOfType(ETrapTypes Type);
+	void ActivateAllTrapsOfType(TEnumAsByte<ETrapTypes> Type);
+	void DeactivateAllTrapsOfType(TEnumAsByte<ETrapTypes> Type);
+	void UpgradeTrapsOfType(TEnumAsByte<ETrapTypes> Type);
 
 	
 		
