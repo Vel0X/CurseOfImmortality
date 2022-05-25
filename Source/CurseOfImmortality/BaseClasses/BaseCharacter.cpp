@@ -138,8 +138,19 @@ void ABaseCharacter::Setup()
 
 void ABaseCharacter::OnDeath()
 {
+	//Deactivate all Damage and BodyHitboxes
+	for (auto DamageHitbox : DamageHitboxes)
+		DamageHitbox->DestroyComponent();
+
+	for (auto BodyHitBox : BodyHitboxes)
+		BodyHitBox->DestroyComponent();
+
+	DamageHitboxes.Empty();
+	BodyHitboxes.Empty();
+	
+	Dead = true;
 	FPersistentWorldManager::DeRegisterCharacter(this);
-	Destroy();
+	//Destroy();
 }
 
 void ABaseCharacter::RecalculateStats()

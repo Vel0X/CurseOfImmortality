@@ -30,8 +30,6 @@ public:
 	bool Idle = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool Attack = false;
-	UPROPERTY(BlueprintReadWrite)
-	bool Dead = false;
 
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* Mesh;

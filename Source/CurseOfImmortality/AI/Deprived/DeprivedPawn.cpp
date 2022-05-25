@@ -40,10 +40,9 @@ ADeprivedPawn::ADeprivedPawn()
 
 void ADeprivedPawn::OnDeath()
 {
-	Super::OnDeath(); //need to find a solution to not destroy enemy, but still execute regular OnDeath code
-	Dead = true;
+	Super::OnDeath();
 	StateMachine->DestroyComponent();
-	CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	//CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
 void ADeprivedPawn::ToggleDashEffect()

@@ -65,7 +65,7 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	                                                 ECC_Pawn, CollisionParams);
 	if (HitMid.GetActor())
 	{
-		UE_LOG(LogTemp, Error, TEXT("%s"), *HitMid.GetActor()->GetName());
+		//UE_LOG(LogTemp, Error, TEXT("%s"), *HitMid.GetActor()->GetName());
 	}
 
 	if (HitMid.bBlockingHit)

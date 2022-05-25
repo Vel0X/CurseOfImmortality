@@ -40,8 +40,6 @@ public:
 	bool HitPlayer = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool NormalAttack = false;
-	UPROPERTY(BlueprintReadWrite)
-	bool Dead = false;
 
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* Mesh;

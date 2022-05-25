@@ -114,7 +114,8 @@ void URound::BeginRound()
 void URound::RoundTick(float DeltaTime)
 {
 	//Either the Round has not been started or all enemies are defeated
-	if(ActiveEnemies.Num() == 0)
+	const int RemainingPowerLevel = CalculateRemainingPowerLevel();
+	if(RemainingPowerLevel == 0)
 	{
 		RoundOngoing = false;
 		EndRound();
@@ -125,7 +126,7 @@ void URound::RoundTick(float DeltaTime)
 		return;
 	
 	StageTime += DeltaTime;
-	if(CalculateRemainingPowerLevel() < Specification->PowerLevelTransitionThreshhold[CurrentStage] || StageTime > Specification->TimeTransitionThreshhold[CurrentStage])
+	if(RemainingPowerLevel < Specification->PowerLevelTransitionThreshhold[CurrentStage] || StageTime > Specification->TimeTransitionThreshhold[CurrentStage])
 	{
 		CurrentStage++;
 		StageTime = 0.0f;
@@ -151,11 +152,21 @@ void URound::RoundTick(float DeltaTime)
 void URound::EndRound()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Round was ended"));
+	for (auto Enemy : ActiveEnemies)
+	{
+		if(Enemy != nullptr)
+		{
+			if(!Enemy->Dead)
+				Enemy->OnDeath();
+			
+			Enemy->Destroy();
+		}
+	}
 }
 
 void URound::OnEnemyDeath(ABaseEnemyPawn* Enemy)
 {
-	ActiveEnemies.Remove(Enemy);
+	//ActiveEnemies.Remove(Enemy);
 }
 
 
@@ -163,9 +174,11 @@ void URound::OnEnemyDeath(ABaseEnemyPawn* Enemy)
 int URound::CalculateRemainingPowerLevel()
 {
 	int RemainingPowerLevel = 0;
+
+	//sum all enemies that are valid and alive
 	for (const auto Enemy : ActiveEnemies)
 	{
-		if(Enemy != nullptr)
+		if(Enemy != nullptr && !Enemy->Dead)
 		{
 			RemainingPowerLevel += Enemy->PowerLevel;
 		}

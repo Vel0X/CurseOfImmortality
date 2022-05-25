@@ -56,6 +56,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	bool Immune;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+	bool Dead;
 
 	
 	/**

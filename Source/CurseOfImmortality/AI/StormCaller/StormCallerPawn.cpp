@@ -4,6 +4,7 @@
 #include "CurseOfImmortality/AI/StormCaller/StormCallerPawn.h"
 
 #include "StormCallerStateMachine.h"
+#include "Components/CapsuleComponent.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/RandomAOEAbility.h"
 
 AStormCallerPawn::AStormCallerPawn()
@@ -18,10 +19,9 @@ AStormCallerPawn::AStormCallerPawn()
 
 void AStormCallerPawn::OnDeath()
 {
-	Super::OnDeath(); //Fix!!!
-	Dead = true;
+	Super::OnDeath();
 	StateMachine->DestroyComponent();
-	CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	//CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
 bool AStormCallerPawn::GetSpawnPosition(FVector& Position, FRotator& Rotation)

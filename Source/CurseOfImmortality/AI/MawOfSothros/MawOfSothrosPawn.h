@@ -29,8 +29,6 @@ public:
 	bool ChargeAttack;
 	UPROPERTY(BlueprintReadWrite)
 	bool GroundSlam;
-	UPROPERTY(BlueprintReadWrite)
-	bool Dead;
 
 	UPROPERTY(EditAnywhere)
 	UAbilitySpecification* AbilitySpecification;
