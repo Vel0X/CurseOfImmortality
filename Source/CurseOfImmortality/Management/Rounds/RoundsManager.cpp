@@ -6,32 +6,69 @@
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 
-// Sets default values
 ARoundsManager::ARoundsManager()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
 void ARoundsManager::BeginPlay()
 {
+	UE_LOG(LogTemp, Error, TEXT("BeginPlay"));
 	Super::BeginPlay();
-	FPersistentWorldManager::RoundsManager = this;
+
+	if(FPersistentWorldManager::GetControlFlag(AutomaticRoundIncrement))
+	{
+		StartRound(CurrentRoundIndex);
+	}
 }
 
-// Called every frame
+
+
+
+
+void ARoundsManager::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	//UE_LOG(LogTemp, Error, TEXT("PostInitComponents"));
+
+	FPersistentWorldManager::RoundsManager = this;
+
+	/*
+	if(GetWorld())
+	{
+		if(GetWorld()->WorldType == EWorldType::Game)
+		{
+			UE_LOG(LogTemp, Error, TEXT("%s - PostInitProperties=Game"), *GetName());
+		}
+		if(GetWorld()->WorldType == EWorldType::PIE)
+		{
+			UE_LOG(LogTemp, Error, TEXT("%s - PostInitProperties=PlayInEditor"), *GetName());
+		}
+		if(GetWorld()->WorldType == EWorldType::Editor)
+		{
+			UE_LOG(LogTemp, Error, TEXT("%s - PostInitProperties=Editor"), *GetName());
+		}
+	}
+	*/
+}
+
 void ARoundsManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if(ActiveRound != nullptr)
 	{
-		if(ActiveRound->SpawnsRemaining)
+		if(ActiveRound->RoundOngoing)
 		{
 			ActiveRound->RoundTick(DeltaTime);
 		}
 		else
 		{
+			ActiveRound->ConditionalBeginDestroy();
+			if(FPersistentWorldManager::GetControlFlag(AutomaticRoundIncrement))
+			{
+				CurrentRoundIndex++;
+				StartRound(CurrentRoundIndex);
+			}
 			//Initiate next round?	
 		}
 	}
@@ -39,18 +76,27 @@ void ARoundsManager::Tick(float DeltaTime)
 
 void ARoundsManager::StartRound(const int Index)
 {
+	UE_LOG(LogTemp, Error, TEXT("Trying to Start Round %i"), Index);
+
+	if(!FPersistentWorldManager::ObjectFactory)
+	{
+		UE_LOG(LogTemp, Error, TEXT("NEED TO FIX ORDER OF INITIALIZATION"));
+		return;
+	}
 	ActiveRound = FPersistentWorldManager::ObjectFactory->GetRound(Index);
 	if(ActiveRound != nullptr)
 	{
 		ActiveRound->BeginRound();
+		CurrentRoundIndex = Index;
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Round was NULL"));
 	}
+
 }
 
-void ARoundsManager::OnEnemyDied(ABaseEnemyPawn* Enemy)
+void ARoundsManager::OnEnemyDied(ABaseEnemyPawn* Enemy) const
 {
 	if(ActiveRound != nullptr)
 	{

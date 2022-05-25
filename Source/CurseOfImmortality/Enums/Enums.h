@@ -104,3 +104,9 @@ enum ELog
 	PlayerStateMachine,
 	DamageComponent
 };
+
+UENUM()
+enum EControlFlag
+{
+	AutomaticRoundIncrement
+};

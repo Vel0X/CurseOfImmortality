@@ -57,5 +57,10 @@ public:
 	UFUNCTION(Exec, Category = ExecFunctions)
 	static void SetLogLevel(FString Key, bool Log);
 
+	UFUNCTION(Exec, Category = ExecFunctions)
+	static void SetControlFlag(FString Flag, bool Value);
+
+	virtual void PostInitializeComponents() override;
+	
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };

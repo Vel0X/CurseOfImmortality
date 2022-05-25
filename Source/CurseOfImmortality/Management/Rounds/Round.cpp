@@ -95,6 +95,7 @@ void URound::BeginRound()
 	StageTime = 0.0f;
 	RoundPowerLevel = CurrentPowerLevel;
 	SpawnsRemaining = true;
+	RoundOngoing = true;
 	
 	if(FPersistentWorldManager::GetLogLevel(Round))
 	{
@@ -112,9 +113,12 @@ void URound::BeginRound()
 
 void URound::RoundTick(float DeltaTime)
 {
+	//Either the Round has not been started or all enemies are defeated
 	if(ActiveEnemies.Num() == 0)
 	{
-		
+		RoundOngoing = false;
+		EndRound();
+		return;
 	}
 	
 	if(!SpawnsRemaining)
@@ -146,7 +150,7 @@ void URound::RoundTick(float DeltaTime)
 
 void URound::EndRound()
 {
-	
+	UE_LOG(LogTemp, Warning, TEXT("Round was ended"));
 }
 
 void URound::OnEnemyDeath(ABaseEnemyPawn* Enemy)

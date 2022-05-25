@@ -64,6 +64,25 @@ public:
 		}
 	}
 
+	static void SetControlFlag(const FString Key, const bool Value)
+	{
+		const FString LowerKey = Key.ToLower();
+		if(ControlFlags.Contains(LowerKey))
+		{
+			ControlFlags[LowerKey] = Value;
+		}
+	}
+	
+	static bool GetControlFlag(const EControlFlag Flag)
+	{
+		switch (Flag)
+		{
+		case AutomaticRoundIncrement:
+			return ReturnIfControlflagsContains("automaticroundincrement");
+		}
+		return false;
+	}
+	
 	static void SetLogLevel(const FString Key, const bool Value)
 	{
 		const FString LowerKey = Key.ToLower();
@@ -94,6 +113,14 @@ public:
 		return Logs.Contains(Key) ? Logs[Key] : false;
 	}
 
+	static bool ReturnIfControlflagsContains(const FString Key)
+	{
+		return ControlFlags.Contains(Key) ? ControlFlags[Key] : false;
+	}
+
+	/**
+	 * @brief Invalidate all of the pointers when the game ends
+	 */
 	static void Clear()
 	{
 		Enemies.Empty();
@@ -110,4 +137,5 @@ private:
 	static TArray<ABaseCharacter*> Friendly;
 
 	static TMap<FString, bool> Logs;
+	static TMap<FString, bool> ControlFlags;
 };

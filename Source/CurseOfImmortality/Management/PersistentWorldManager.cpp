@@ -13,3 +13,7 @@ TMap<FString, bool> FPersistentWorldManager::Logs = {
 			{"playerstatemachine", false},
 			{"damagecomponent", false}
 };
+
+TMap<FString, bool> FPersistentWorldManager::ControlFlags = {
+	{"automaticroundincrement", false}
+};

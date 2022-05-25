@@ -15,6 +15,11 @@ AObjectFactory::AObjectFactory()
 void AObjectFactory::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AObjectFactory::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
 	FPersistentWorldManager::ObjectFactory = this;
 }
 

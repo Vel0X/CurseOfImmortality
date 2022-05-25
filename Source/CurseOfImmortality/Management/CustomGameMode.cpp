@@ -130,6 +130,17 @@ void ACustomGameMode::SetLogLevel(const FString Key, const bool Log)
 	FPersistentWorldManager::SetLogLevel(Key, Log);
 }
 
+void ACustomGameMode::SetControlFlag(const FString Flag, const bool Value)
+{
+	FPersistentWorldManager::SetControlFlag(Flag, Value);
+}
+
+void ACustomGameMode::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	//Set Flags from Config
+}
+
 void ACustomGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
