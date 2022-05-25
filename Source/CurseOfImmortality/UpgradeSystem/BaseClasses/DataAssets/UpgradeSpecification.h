@@ -3,44 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/Enums/Enums.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseUpgrade.h"
 #include "Engine/DataAsset.h"
 #include "UpgradeSpecification.generated.h"
 
-UENUM()
-enum EUpgradeName
-{
-	SwordSlash,
-	Fireball,
-	ArcaneWhisper,
-	KarysAnimus,
-	Whirlwind,
-	ArcaneReplicatorTurret,
-	KarysAnimusProjectile,
-	SpellbladeProjectile,
-	Behemoth,
-	Hemorrhage,
-	CursemarkOfDoom, //does this need to be on an ability
-	SharpendReflexes,
-	Spellblade,
-	BattleFrenzy,
-	FierceDetermination,
-	SealOfCongruence,
-	Pierce,         
-	ShatteredImpact,
-	SustainedFocus,
-	BerserkerFury,
-	ArcaneReplicator,
-	DolomarsWrath,
-	SeaOfDarkness
-};
 
-UENUM()
-enum EUpgradeOrder
-{
-	AttributeSetter,
-	AttributeReader
-};
 
 /**
  * 

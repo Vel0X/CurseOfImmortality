@@ -18,7 +18,17 @@ AStormCallerPawn::AStormCallerPawn()
 
 void AStormCallerPawn::OnDeath()
 {
+	Super::OnDeath(); //Fix!!!
 	Dead = true;
 	StateMachine->DestroyComponent();
 	CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
+}
+
+bool AStormCallerPawn::GetSpawnPosition(FVector& Position, FRotator& Rotation)
+{
+	const float X = FMath::FRandRange(-900.0f, 900.0f);
+	const float Y = FMath::FRandRange(-900.0f, 900.0f);
+	Position = FVector(X,Y, 100.0f);
+	SetActorLocation(Position);
+	return true;
 }

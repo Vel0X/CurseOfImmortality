@@ -3,7 +3,7 @@
 
 #include "CurseOfImmortality/AI/StormCaller/States/StormCallerAttack.h"
 
-#include "CurseOfImmortality/AI/AIBaseClasses/RandomAOEAbility.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/RandomAOEAbilty.h"
 #include "CurseOfImmortality/AI/StormCaller/StormCallerPawn.h"
 #include "CurseOfImmortality/AI/StormCaller/StormCallerStateMachine.h"
 

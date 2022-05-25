@@ -43,12 +43,7 @@ void UPlayerCharacterMelee::OnStateEnter(UStateMachine* StateMachine)
 	
 	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = Cast<APlayerCharacter>(SelfRef)->MovementSpeedWhileAttacking;
 
-	if (Verbose)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Melee State Entered"));
-	}
-	if(Verbose)
-	{
+	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Melee State Entered"));
 	}
 }
@@ -61,14 +56,8 @@ void UPlayerCharacterMelee::OnStateExit()
 	HitBox->SetGenerateOverlapEvents(false);
 	SelfRef->Melee = false;
 
-	if (Verbose)
-	{
+	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Exit Melee State"))
-	}
-	if(Verbose)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Exit Melee State"))	
-	}
 }
 
 void UPlayerCharacterMelee::OnStateUpdate(float DeltaTime)
@@ -84,4 +73,5 @@ void UPlayerCharacterMelee::OnStateUpdate(float DeltaTime)
 		Controller->GetSelfRef()->InputManager->LastAction = InputAction::NoAction;
 		Controller->Transition(Controller->Idle, Controller);
 	}
+
 }

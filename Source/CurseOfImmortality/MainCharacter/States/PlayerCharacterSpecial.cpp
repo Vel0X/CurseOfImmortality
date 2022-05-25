@@ -5,6 +5,7 @@
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UPlayerCharacterSpecial::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -18,20 +19,18 @@ void UPlayerCharacterSpecial::OnStateEnter(UStateMachine* StateMachine)
 	
 	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = 0;
 
-	if (Verbose)
-	{
+	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Special State Entered"))
-	}
+	
 }
 
 void UPlayerCharacterSpecial::OnStateExit()
 {
 	Super::OnStateExit();
 	SelfRef->Special = false;
-	if (Verbose)
-	{
+	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Exit Special State"))
-	}
+	
 }
 
 void UPlayerCharacterSpecial::OnStateUpdate(float DeltaTime)

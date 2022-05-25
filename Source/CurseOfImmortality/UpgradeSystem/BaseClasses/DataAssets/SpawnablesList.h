@@ -6,14 +6,17 @@
 #include "AbilitySpecification.h"
 #include "NiagaraSystem.h"
 #include "UpgradeSpecification.h"
+#include "CurseOfImmortality/Enemies/EnemySpecification.h"
+#include "CurseOfImmortality/Management/Rounds/Round.h"
+#include "CurseOfImmortality/Management/Rounds/DataAssets/AssortmentSpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
-#include "UpgradeList.generated.h"
+#include "SpawnablesList.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API UUpgradeList final : public UDataAsset
+class CURSEOFIMMORTALITY_API USpawnablesList final : public UDataAsset
 {
 	GENERATED_BODY()
 
@@ -29,4 +32,13 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EBuff>, UNiagaraSystem*> BuffVFX;
+
+	UPROPERTY(EditAnywhere)
+	TMap<TEnumAsByte<EEnemy>, UEnemySpecification*> Enemies;
+
+	UPROPERTY(EditAnywhere)
+	TMap<TEnumAsByte<EAssortment>, UAssortmentSpecification*> Assortments;
+
+	UPROPERTY(EditAnywhere)
+	TArray<URoundSpecification*> RoundSpecifications;
 };

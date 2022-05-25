@@ -12,11 +12,7 @@
  * (With correct Setup only Collider-Components on this Actor should have OnOverlap enabled and )
  *
  *
- *
- *
- *
- *
- *
+ 
  */
 
 class ABaseCharacter;

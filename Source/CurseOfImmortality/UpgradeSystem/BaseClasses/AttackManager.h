@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/UpgradeSystem/IndirectAbilities/ArcaneReplicatorTurret.h"
 #include "Components/ActorComponent.h"
-#include "DataAssets/UpgradeList.h"
+#include "DataAssets/SpawnablesList.h"
 #include "DataAssets/UpgradeSpecification.h"
 #include "AttackManager.generated.h"
 
@@ -138,7 +138,7 @@ public:
 
 	
 	UPROPERTY(EditAnywhere)
-	UUpgradeList* PossibleUpgrades;
+	USpawnablesList* PossibleUpgrades;
 
 	UPROPERTY(EditAnywhere)
 	TArray<FPooledEntry> Pool;
