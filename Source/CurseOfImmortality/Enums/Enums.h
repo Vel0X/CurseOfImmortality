@@ -70,17 +70,20 @@ enum EUpgradeName
 	SpellbladeProjectile,
 	Behemoth,
 	Hemorrhage,
-	CursemarkOfDoom, //does this need to be on an ability
+	CursemarkOfDoom,
+	//does this need to be on an ability
 	SharpendReflexes,
 	Spellblade,
 	BattleFrenzy,
 	FierceDetermination,
 	SealOfCongruence,
-	Pierce,         
+	Pierce,
 	ShatteredImpact,
 	SustainedFocus,
 	BerserkerFury,
-	ArcaneReplicator
+	ArcaneReplicator,
+	DolomarsWrath,
+	SeaOfDarkness
 };
 
 UENUM()
