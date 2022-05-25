@@ -9,9 +9,10 @@ AArena* FPersistentWorldManager::Arena = nullptr;
 TArray<ABaseCharacter*> FPersistentWorldManager::Enemies = TArray<ABaseCharacter*>();
 TArray<ABaseCharacter*> FPersistentWorldManager::Friendly = TArray<ABaseCharacter*>();
 TMap<FString, bool> FPersistentWorldManager::Logs = {
-			{"round", false},
-			{"playerstatemachine", false},
-			{"damagecomponent", false}
+	{"round", false},
+	{"playerstatemachine", false},
+	{"mawstatemachine", false},
+	{"damagecomponent", false}
 };
 
 TMap<FString, bool> FPersistentWorldManager::ControlFlags = {

@@ -105,6 +105,7 @@ enum ELog
 {
 	Round,
 	PlayerStateMachine,
+	MawStateMachine,
 	DamageComponent
 };
 

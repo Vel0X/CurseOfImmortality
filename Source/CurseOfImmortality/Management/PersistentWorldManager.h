@@ -20,7 +20,7 @@ public:
 		return Enemies;
 	}
 
-	
+
 	static TArray<ABaseCharacter*> GetFriendly()
 	{
 		return Friendly;
@@ -28,7 +28,7 @@ public:
 
 	static void RegisterCharacter(ABaseCharacter* Character)
 	{
-		switch(Character->Faction)
+		switch (Character->Faction)
 		{
 		case EFaction::Friendly:
 			Friendly.Add(Character);
@@ -42,7 +42,7 @@ public:
 
 	static void DeRegisterCharacter(ABaseCharacter* Character)
 	{
-		switch(Character->Faction)
+		switch (Character->Faction)
 		{
 		case EFaction::Friendly:
 			Friendly.Remove(Character);
@@ -50,15 +50,15 @@ public:
 		case EFaction::Enemy:
 			Enemies.Remove(Character);
 
-			if(RoundsManager != nullptr)
+			if (RoundsManager != nullptr)
 			{
 				ABaseEnemyPawn* E = Cast<ABaseEnemyPawn>(Character);
-				if(E != nullptr)
+				if (E != nullptr)
 				{
 					RoundsManager->OnEnemyDied(E);
 				}
 			}
-			
+
 			break;
 		default: ;
 		}
@@ -67,12 +67,12 @@ public:
 	static void SetControlFlag(const FString Key, const bool Value)
 	{
 		const FString LowerKey = Key.ToLower();
-		if(ControlFlags.Contains(LowerKey))
+		if (ControlFlags.Contains(LowerKey))
 		{
 			ControlFlags[LowerKey] = Value;
 		}
 	}
-	
+
 	static bool GetControlFlag(const EControlFlag Flag)
 	{
 		switch (Flag)
@@ -82,11 +82,11 @@ public:
 		}
 		return false;
 	}
-	
+
 	static void SetLogLevel(const FString Key, const bool Value)
 	{
 		const FString LowerKey = Key.ToLower();
-		if(Logs.Contains(LowerKey))
+		if (Logs.Contains(LowerKey))
 		{
 			Logs[LowerKey] = Value;
 		}
@@ -98,12 +98,15 @@ public:
 		{
 		case Round:
 			return ReturnIfContains("round");
-		
+
 		case PlayerStateMachine:
 			return ReturnIfContains("playerstatemachine");
 
 		case DamageComponent:
 			return ReturnIfContains("damagecomponent");
+
+		case MawStateMachine:
+			return ReturnIfContains("mawstatemachine");
 		}
 		return false;
 	}

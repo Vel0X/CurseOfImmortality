@@ -44,11 +44,11 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 
 	const float Angle = Controller->CalculateAngleBetweenVectors(VectorToPlayer, SelfRef->GetActorForwardVector());
 	const float Dist = FVector::Dist(PlayerLocation, OwnLocation);
-
-	Controller->FocusOnPlayer(DeltaTime, Angle);
-
+	
 	if (Angle < 20.f)
 	{
+		Controller->FocusOnPlayer(DeltaTime, Angle);
+
 		if (Dist > 1200.f)
 		{
 			Controller->MoveToTarget(PlayerLocation, SelfRef->CurrentMovementSpeed, DeltaTime);
@@ -57,5 +57,20 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 		{
 			Controller->Transition(Controller->Vomit, Controller);
 		}
+	}
+	else if (Angle > 130.f)
+	{
+		if (Dist < 400.f)
+		{
+			Controller->Transition(Controller->TailSweep, Controller);
+		}
+		else
+		{
+			Controller->FocusOnPlayer(DeltaTime, Angle);
+		}
+	}
+	else
+	{
+		Controller->FocusOnPlayer(DeltaTime, Angle);
 	}
 }
