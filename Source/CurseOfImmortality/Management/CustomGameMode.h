@@ -13,6 +13,13 @@ UCLASS()
 class CURSEOFIMMORTALITY_API ACustomGameMode final : public AGameMode
 {
 	GENERATED_BODY()
+public:
+	virtual void PostInitializeComponents() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
+/////////////////////////////////////////////////////////////////////
+///-------------------------COMMANDS---------------------------------
+////////////////////////////////////////////////////////////////////////
 
 public:
 	UFUNCTION(Exec, Category = ExecFunctions)
@@ -60,7 +67,5 @@ public:
 	UFUNCTION(Exec, Category = ExecFunctions)
 	static void SetControlFlag(FString Flag, bool Value);
 
-	virtual void PostInitializeComponents() override;
-	
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 };

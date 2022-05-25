@@ -158,6 +158,8 @@ void URound::OnEnemyDeath(ABaseEnemyPawn* Enemy)
 	ActiveEnemies.Remove(Enemy);
 }
 
+
+
 int URound::CalculateRemainingPowerLevel()
 {
 	int RemainingPowerLevel = 0;

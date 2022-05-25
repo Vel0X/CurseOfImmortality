@@ -22,8 +22,13 @@ void ARoundsManager::BeginPlay()
 	}
 }
 
+void ARoundsManager::Restart()
+{
+	if(ActiveRound != nullptr)
+		ActiveRound->EndRound(); //clear all the enemies from the current round
 
-
+	CurrentRoundIndex = 0;
+}
 
 
 void ARoundsManager::PostInitializeComponents()
@@ -69,7 +74,6 @@ void ARoundsManager::Tick(float DeltaTime)
 				CurrentRoundIndex++;
 				StartRound(CurrentRoundIndex);
 			}
-			//Initiate next round?	
 		}
 	}
 }
@@ -103,4 +107,3 @@ void ARoundsManager::OnEnemyDied(ABaseEnemyPawn* Enemy) const
 		ActiveRound->OnEnemyDeath(Enemy);
 	}
 }
-

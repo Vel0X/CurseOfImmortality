@@ -224,11 +224,10 @@ void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Verbose)
 {
 	CurrentHealth -= Amount;
-	if(Verbose)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: %s Health is at %f Max Health %f"), *DisplayName, CurrentHealth, Stats[EStats::Health]);
-	}
 
+	if(FPersistentWorldManager::GetLogLevel(ELog::DamageComponent))
+		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: %s Health is at %f Max Health %f"), *DisplayName, CurrentHealth, Stats[EStats::Health]);
+	
 	if(CurrentHealth <= 0.0f)
 	{
 		OnDeath();

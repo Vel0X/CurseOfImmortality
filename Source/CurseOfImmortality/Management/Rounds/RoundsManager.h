@@ -8,6 +8,8 @@
 #include "RoundsManager.generated.h"
 
 /**
+ * Manages the GameFlow
+ *
  * Manages the flow of the Rounds and the rounds themselves
  *
  */
@@ -29,6 +31,9 @@ protected:
 	
 
 public:
+
+	void Restart();
+	
 	/**
 	 * Tick the ActiveRound and check wether its over or not. If it is and AutomaticRoundIncrement is active, try to start the next round
 	 */
@@ -36,6 +41,9 @@ public:
 
 	/**
 	 * Try to start a round. The Index looks into an array specified in the Spawnables DataAsset, that holds all spawnable Objects
+	 *
+	 * Will be automatically used when a round is over and AutomaticRoundIncrement is active
+	 * Can be manually called (maybe better, so the player can choose himself, when to start a new round)
 	 */
 	void StartRound(const int Index);
 

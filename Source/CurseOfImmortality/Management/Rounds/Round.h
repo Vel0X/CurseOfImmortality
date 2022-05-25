@@ -49,7 +49,8 @@ public:
 	void SpawnEnemies();
 
 	/**
-	 * Cleanup the round after it is over
+	 * Cleanup the round after it is over, removing all the dead enemies.
+	 * If the player died during the round, the active enemies will also be deleted
 	 */
 	void EndRound();
 
@@ -57,7 +58,7 @@ public:
 	 * Notification that an enemy was defeated. If it belonged to round, remove the enemy from it. Necessary to determine when the round is over
 	 */
 	void OnEnemyDeath(ABaseEnemyPawn* Enemy);
-
+		
 	/**
 	 * Sum up the powerlevel of all the currently active powerlevel
 	 */
