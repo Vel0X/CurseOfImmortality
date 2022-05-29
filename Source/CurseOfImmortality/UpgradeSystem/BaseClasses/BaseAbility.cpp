@@ -45,11 +45,8 @@ void ABaseAbility::BeginPlay()
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Ability contains %i Colliders"), HitBoxes.Num());
-
+	//UE_LOG(LogTemp, Warning, TEXT("Ability contains %i Colliders"), HitBoxes.Num());
 	DamageComponent->ConvertInterface();
-
-
 }
 
 void ABaseAbility::CheckCollisions()
@@ -59,12 +56,17 @@ void ABaseAbility::CheckCollisions()
 
 	//UE_LOG(LogTemp, Warning, TEXT("Number of overlapping Actors: %i"), OverlappingActors.Num());
 
+	bool EnemyHit = false;
 	for (auto OverlappingActor : OverlappingActors)
 	{
 		if(OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
 		{
 			ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
 
+			if(InitialCollisions.Contains(OverlappingCharacter))
+				continue;
+			
+			
 			if(Caster == nullptr)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
@@ -73,6 +75,8 @@ void ABaseAbility::CheckCollisions()
 			
 			if(OverlappingCharacter->Faction == Caster->Faction)
 				continue;
+
+			EnemyHit = true;
 			
 			auto CharacterHitboxes = OverlappingCharacter->BodyHitboxes;
 
@@ -83,11 +87,19 @@ void ABaseAbility::CheckCollisions()
 					if(AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
 					{
 						DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter);
+						for (const auto Upgrade : UpgradeStack)
+						{
+							Upgrade->OnEnemyHit(OverlappingCharacter);
+						}
 					}
 				}
 			}
 		}
 	}
+	
+	if(EnemyHit && DestroyOnEnemyHit)
+		DestroyAbility();
+	
 }
 
 void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
@@ -160,7 +172,53 @@ void ABaseAbility::Tick(float DeltaTime)
 	{
 		DestroyAbility();
 	}
-	CanInteract = true;
+	if(!CanInteract)
+	{
+		if(IgnoreInitialCollisions)
+		{
+			CanInteract = true;
+			return;
+		}
+		
+		//Initial Collision Check
+		TArray<AActor*> OverlappingActors;
+		GetOverlappingActors(OverlappingActors);
+
+		//UE_LOG(LogTemp, Warning, TEXT("Number of overlapping Actors: %i"), OverlappingActors.Num());
+
+		for (auto OverlappingActor : OverlappingActors)
+		{
+			if(OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
+			{
+				ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
+		
+				if(Caster == nullptr)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
+					continue;
+				}
+			
+				if(OverlappingCharacter->Faction == Caster->Faction)
+					continue;
+			
+				auto CharacterHitboxes = OverlappingCharacter->BodyHitboxes;
+
+				for (const auto AbilityHitbox : HitBoxes)
+				{
+					for (const auto CharacterHitbox : CharacterHitboxes)
+					{
+						if(AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
+						{
+							InitialCollisions.Add(OverlappingCharacter);
+						}
+					}
+				}
+			}
+		}
+
+		//UE_LOG(LogTemp, Warning, TEXT("Hit %i Actors in Start"), InitialCollisions.Num());
+		CanInteract = true;
+	}
 
 	CheckCollisions();
 }
@@ -183,6 +241,7 @@ void ABaseAbility::AfterInitialization()
 	const FVector NewScale = FVector(RelativeSize, RelativeSize, RelativeSize);
 	SetActorScale3D(NewScale);
 
+	/*
 	TArray<AActor*> Overlapping;
 	GetOverlappingActors(Overlapping);
 	UE_LOG(LogTemp, Warning, TEXT("Overlapping %i"), Overlapping.Num());
@@ -191,6 +250,7 @@ void ABaseAbility::AfterInitialization()
 	{
 		OnEnemyHit(this, Actor);
 	}
+	*/
 }
 
 void ABaseAbility::DestroyAbility()

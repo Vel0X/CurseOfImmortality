@@ -27,7 +27,6 @@ void UAttackManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			//Tuple.Value -= DeltaTime;
 		}
 	}
-
 }
 
 
@@ -90,6 +89,7 @@ void UAttackManager::UpdateAbilityPool()
 	//some entries start with lower weights, that can be boosted by obtaining other upgrades
 
 	Pool.Empty();
+
 	
 	for (const auto Tuple : PossibleUpgrades->PossibleBaseAbilities)
 	{
@@ -126,7 +126,7 @@ void UAttackManager::UpdateAbilityPool()
 		{
 			Weight = 20;
 		}
-		Pool.Add(FPooledEntry(Tuple.Value->AbilityName, false, Weight));
+		Pool.Add(FPooledEntry(PossibleAbilityName, false, Weight));
 		//pool the ability with the appropriate weight
 	}
 	
@@ -245,6 +245,37 @@ void UAttackManager::PickThreeFromPool(bool Verbose)
 	
 }
 
+TArray<FDisplayInformation> UAttackManager::GetDisplayInformation()
+{
+	TArray<FDisplayInformation> DisplayInformation;
+	//Pool[SelectedPoolEntries[0]].Name;
+	for (int i = 0; i < SelectedPoolEntries.Num(); ++i)
+	{
+		auto Entry = Pool[SelectedPoolEntries[i]];
+		if(Entry.Type)
+		{
+			const auto Spec = PossibleUpgrades->PossibleUpgradeAbilities[Entry.Name];
+			if(Spec == nullptr)
+			{
+				UE_LOG(LogTemp, Error, TEXT("Something went wrong! Upgrade Specification was NULL"));
+				continue;
+			}
+			DisplayInformation.Add(FDisplayInformation(Spec->DisplayName, Spec->Description, Spec->Image));
+		}
+		else
+		{
+			const auto Spec = PossibleUpgrades->PossibleBaseAbilities[Entry.Name];
+			if(Spec == nullptr)
+			{
+				UE_LOG(LogTemp, Error, TEXT("Something went wrong! Ability Specification was NULL"));
+				continue;
+			}
+			DisplayInformation.Add(FDisplayInformation(Spec->DisplayName, Spec->Description, Spec->Image));
+		}
+	}
+	return DisplayInformation;
+}
+
 void UAttackManager::GetUpgrade(const int Index)
 {
 	
@@ -357,22 +388,32 @@ void UAttackManager::OnKeyPressed(EAbilityType Type)
 		SpawnAbility(ActiveAbilities[Type]);
 }
 
+
+
 void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 {
 	ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwner());
-	
-	const FVector Location = Owner->GetActorLocation();
+
 	const FRotator Rotation = Owner->GetActorRotation();
+	const FVector Location = Owner->GetActorLocation();
+
+	SpawnAbility(Ability, Location, Rotation);
+}
+
+void UAttackManager::SpawnAbility(FActiveAbility& Ability, FVector Position, FRotator Rotation)
+{
+	ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwner());
+	
 	//FPersistentWorldManager::ObjectFactory->SpawnAbility(Ability.Specification->AbilityName, Location, Rotation, Owner);
 
-	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class, &Location, &Rotation));
+	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class, &Position, &Rotation));
 
 	if(AbilityInstance == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned!"));
 		return;
 	}
-	AbilityInstance->InitializeAbility(AbilityMapHandle, static_cast<ABaseCharacter*>(GetOwner()), Ability.Level);
+	AbilityInstance->InitializeAbility(0, static_cast<ABaseCharacter*>(GetOwner()), Ability.Level);
 	AbilityInstance->OnAbilityCreation();
 	//AbilityInstance->AbilityType
 
@@ -395,7 +436,6 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 
 	//const FActiveAbility ActiveAbility = FActiveAbility(AbilityInstance, ActiveUpgrades);
 	//ActiveAbilities.Add(AbilityMapHandle, ActiveAbility);
-	AbilityMapHandle++;
 
 
 	//set Cooldown
@@ -408,18 +448,32 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 	Ability.CurrentCooldown = Ability.Specification->Cooldown[Ability.Level-1];
 }
 
-void UAttackManager::SpawnFromTemplate(ABaseAbility* Template) const
+void UAttackManager::SpawnAbility(EAbilityType Ability)
 {
-	SpawnFromTemplate(Template, Template->GetActorRotation());
+	if(ActiveAbilities.Contains(Ability) && CheckCooldown(Ability))
+		SpawnAbility(ActiveAbilities[Ability]);
 }
 
-void UAttackManager::SpawnFromTemplate(ABaseAbility* Template, const FRotator Rotator) const
+void UAttackManager::SpawnAbilityRotationSpecified(EAbilityType Ability, FVector Position, FRotator Rotation)
 {
-	const FVector Location = FVector::Zero();
+	if(ActiveAbilities.Contains(Ability) && CheckCooldown(Ability))
+		SpawnAbility(ActiveAbilities[Ability], Position, Rotation);
+}
+
+
+void UAttackManager::SpawnFromTemplate(ABaseAbility* Template) const
+{
+	SpawnFromTemplate(Template, Template->GetActorLocation(), Template->GetActorRotation());
+}
+
+void UAttackManager::SpawnFromTemplate(ABaseAbility* Template,const FVector Position, const FRotator Rotator) const
+{
+	//const FVector Location = FVector::Zero();
 	FActorSpawnParameters Parameters = FActorSpawnParameters();
 	Parameters.Template = Template;
-	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Template->GetClass(), &Location, &Rotator, Parameters));
-	AbilityInstance->SetActorLocation(Template->GetActorLocation());
+	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Template->GetClass(), &Position, &Rotator, Parameters));
+	AbilityInstance->SetActorLocation(Position);
+	AbilityInstance->SetActorRotation(Rotator);
 	AbilityInstance->OnAbilityCreation();
 	AbilityInstance->ResetLifetime();
 	AbilityInstance->AfterInitialization();

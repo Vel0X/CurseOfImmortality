@@ -6,14 +6,16 @@
 void ASpecialAbility::InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level)
 {
 	Super::InitializeAbility(_AbilityHandle, _Caster, Level);
-	Parent = _Caster;
+	Parent = _Caster->GetAttachmentLocation(AttachmentPoint);
 }
 
 void ASpecialAbility::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
 	if(Parent != nullptr)
-	{
-		SetActorLocation(Parent->GetActorLocation());
-	}
+		SetActorLocation(Parent->GetComponentLocation());
+	
+
+	//TODO: Need to implement Arcane Replicator as an ABaseCharacter
 }

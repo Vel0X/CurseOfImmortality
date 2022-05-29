@@ -3,6 +3,7 @@
 
 #include "CursedBlade.h"
 #include "NiagaraComponent.h"
+#include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
 
 UCursedBlade::UCursedBlade()
@@ -47,5 +48,4 @@ void UCursedBlade::OnTakeDamage(ABaseAbility* Ability)
 		}
 		Owner->RemoveBuff(this);
 	}
-
 }

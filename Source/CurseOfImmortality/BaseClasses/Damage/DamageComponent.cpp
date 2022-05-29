@@ -59,6 +59,19 @@ void UDamageComponent::ConvertInterface()
 			continue;
 		}
 		auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(DamagingHitboxDamageSpecifications[i]);
+
+		ABaseAbility* OwningAbility = Cast<ABaseAbility>(GetOwner());
+		if(OwningAbility != nullptr)
+		{
+			DamageObject->DamagingAbility = OwningAbility;
+			DamageObject->OwningChar = OwningAbility->Caster;
+		}
+		else
+		{
+			ABaseCharacter* OwningChar = Cast<ABaseCharacter>(GetOwner());
+			DamageObject->OwningChar = OwningChar;
+		}
+		
 		DamagingHitboxes.Add(Primitive, DamageObject);
 	}
 
@@ -68,6 +81,19 @@ void UDamageComponent::ConvertInterface()
 	for (int i = 0; i < DirectDamageSpecifications.Num(); ++i)
 	{
 		auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(DirectDamageSpecifications[i]);
+
+		ABaseAbility* OwningAbility = Cast<ABaseAbility>(GetOwner());
+		if(OwningAbility != nullptr)
+		{
+			DamageObject->DamagingAbility = OwningAbility;
+			DamageObject->OwningChar = OwningAbility->Caster;
+		}
+		else
+		{
+			ABaseCharacter* OwningChar = Cast<ABaseCharacter>(GetOwner());
+			DamageObject->OwningChar = OwningChar;
+		}
+		
 		DirectDamageObjects.Add(DamageObject);
 	}
 }

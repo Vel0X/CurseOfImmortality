@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseAbility.h"
+#include "CurseOfImmortality/Enums/Enums.h"
 #include "SpecialAbility.generated.h"
 
 /**
@@ -17,7 +18,10 @@ public:
 	virtual void InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level) override;
 
 	UPROPERTY(EditAnywhere)
-	AActor* Parent;
+	USceneComponent* Parent;
+
+	UPROPERTY(EditAnywhere)
+	TEnumAsByte<EAttachmentPoint> AttachmentPoint;
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 };

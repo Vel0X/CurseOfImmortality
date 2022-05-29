@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
 #include "UObject/Object.h"
 #include "DamageObject.generated.h"
 
@@ -27,4 +28,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TArray<ABaseCharacter*> HitCharacters;
+	UPROPERTY(EditAnywhere)
+	ABaseCharacter* OwningChar;
+
+	UPROPERTY(EditAnywhere)
+	ABaseAbility* DamagingAbility;
 };

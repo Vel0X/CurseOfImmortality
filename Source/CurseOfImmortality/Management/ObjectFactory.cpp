@@ -176,3 +176,16 @@ ABaseAbility* AObjectFactory::SpawnAbility(EUpgradeName Ability, const FVector L
 	//AbilityInstance->AbilityType
 	return AbilityInstance;
 }
+
+ADamageIndicator* AObjectFactory::SpawnDamageIndicator(FString Text, const FVector Location,
+	const FRotator Rotation) const
+{
+	if(Spawnables->DamageIndicator)
+	{
+		ADamageIndicator* DamageIndicatorInstance = Cast<ADamageIndicator>(GetWorld()->SpawnActor(Spawnables->DamageIndicator, &Location, &Rotation));
+		DamageIndicatorInstance->SetText(Text);
+		return DamageIndicatorInstance;
+	}
+
+	return nullptr;
+}

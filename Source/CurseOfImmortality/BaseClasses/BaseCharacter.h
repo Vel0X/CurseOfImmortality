@@ -83,6 +83,8 @@ public:
 	
 	void RemoveBuffVfx(const int Handle, const bool SpawnDetachedParticleActor = true);
 
+	USceneComponent* GetAttachmentLocation(EAttachmentPoint Point);
+	
 	UPROPERTY(EditAnywhere)
 	TArray<UBaseBuff*> Buffs;
 

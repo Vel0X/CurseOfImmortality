@@ -10,6 +10,7 @@
 #include "CurseOfImmortality/Management/Rounds/Round.h"
 #include "CurseOfImmortality/Management/Rounds/DataAssets/AssortmentSpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
+#include "CurseOfImmortality/UpgradeSystem/Utility/DamageIndicator.h"
 #include "SpawnablesList.generated.h"
 
 /**
@@ -41,4 +42,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TArray<URoundSpecification*> RoundSpecifications;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ADamageIndicator> DamageIndicator;
 };

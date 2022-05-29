@@ -6,6 +6,7 @@
 #include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
 #include "CurseOfImmortality/Enemies/EnemySpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
+#include "CurseOfImmortality/UpgradeSystem/Utility/DamageIndicator.h"
 #include "GameFramework/Actor.h"
 #include "Rounds/Assortments/Assortment.h"
 #include "ObjectFactory.generated.h"
@@ -69,6 +70,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ABaseAbility* SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation, const ABaseCharacter* Caster) const;
 
+	ADamageIndicator* SpawnDamageIndicator(FString Text, const FVector Location, const FRotator Rotation) const;
+	
 	/**
 	 * @brief DataAsset containing all of the Spawnable Actors, Components and UObjects. Should not be accessed directly, but using the object-specific functions
 	 */

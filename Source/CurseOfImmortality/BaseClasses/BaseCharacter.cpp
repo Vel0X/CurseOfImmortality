@@ -236,6 +236,10 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 {
 	CurrentHealth -= Amount;
 
+	FString Text = "";
+	Text.AppendInt(Amount);
+	ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(Text, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
+
 	if(FPersistentWorldManager::GetLogLevel(ELog::DamageComponent))
 		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: %s Health is at %f Max Health %f"), *DisplayName, CurrentHealth, Stats[EStats::Health]);
 	
@@ -269,20 +273,7 @@ void ABaseCharacter::Heal(float Amount, bool Verbose)
 
 UNiagaraComponent* ABaseCharacter::SetupBuffVfx(UNiagaraSystem* Vfx, const EAttachmentPoint AttachmentPoint, int& Handle)
 {
-	USceneComponent* AttachmentLocation = nullptr;
-	
-	switch (AttachmentPoint)
-	{
-	case UpperPoint:
-		AttachmentLocation = UpperAttachmentPoint;
-		break;
-	case CenterPoint:
-		AttachmentLocation = CenterAttachmentPoint;
-		break;
-	case LowerPoint:
-		AttachmentLocation = LowerAttachmentPoint;
-		break;
-	}
+	USceneComponent* AttachmentLocation = GetAttachmentLocation(AttachmentPoint);
 	
 	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(Vfx, AttachmentLocation, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
 	NiagaraComp->AttachToComponent(AttachmentLocation, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
@@ -313,4 +304,19 @@ void ABaseCharacter::RemoveBuffVfx(const int Handle, const bool SpawnDetachedPar
 	{
 		UE_LOG(LogTemp, Error, TEXT("INVALID HANDLE"));
 	}
+}
+
+USceneComponent* ABaseCharacter::GetAttachmentLocation(const EAttachmentPoint Point)
+{
+	
+	switch (Point)
+	{
+	case UpperPoint:
+		return UpperAttachmentPoint;
+	case CenterPoint:
+		return CenterAttachmentPoint;
+	case LowerPoint:
+		return LowerAttachmentPoint;
+	}
+	return nullptr;
 }

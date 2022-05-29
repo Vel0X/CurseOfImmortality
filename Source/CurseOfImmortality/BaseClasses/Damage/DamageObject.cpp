@@ -16,7 +16,7 @@ void UDamageObject::DealDamage(ABaseCharacter* Character)
 	if(!HitCharacters.Contains(Character))
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("DMG"));
-		Character->TakeDmg(Damage, nullptr, nullptr, true);
+		Character->TakeDmg(Damage, OwningChar, DamagingAbility, true);
 		HitCharacters.Add(Character);
 	}
 }

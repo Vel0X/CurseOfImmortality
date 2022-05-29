@@ -42,4 +42,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int InitialWeight = 100;
+
+	UPROPERTY(EditAnywhere)
+	FText Description;
+	
+	UPROPERTY(EditAnywhere)
+	UTexture2D* Image;
 };

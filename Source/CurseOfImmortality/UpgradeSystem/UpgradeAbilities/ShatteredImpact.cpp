@@ -11,6 +11,8 @@ void UShatteredImpact::OnEnemyHit(ABaseCharacter* Enemy)
 	Super::OnEnemyHit(Enemy);
 	ABaseAbility* Owner = static_cast<ABaseAbility*>(GetOwner());
 
+	FVector SpawnLocation = Enemy->GetAttachmentLocation(CenterPoint)->GetComponentLocation();
+
 	if(!Owner->CanInteract)
 	{
 		return;
@@ -35,7 +37,7 @@ void UShatteredImpact::OnEnemyHit(ABaseCharacter* Enemy)
 		for (int i = 0; i < AmountOfFragments; ++i)
 		{
 			const FRotator Rotation = UKismetMathLibrary::Conv_VectorToRotator(Direction);
-			AttackManager->SpawnFromTemplate(Owner, Rotation);
+			AttackManager->SpawnFromTemplate(Owner, SpawnLocation, Rotation);
 
 			Direction = OngoingRotator.RotateVector(Direction);
 		}

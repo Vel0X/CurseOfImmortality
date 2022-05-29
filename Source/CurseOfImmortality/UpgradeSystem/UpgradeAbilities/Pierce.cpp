@@ -26,11 +26,15 @@ void UPierce::InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel
 void UPierce::OnEnemyHit(ABaseCharacter* Enemy)
 {
 	Super::OnEnemyHit(Enemy);
+
+	if(HitCharacters.Contains(Enemy))
+		return;
 	
 	ABaseAbility* Owner = static_cast<ABaseAbility*>(GetOwner());
 	if(PiercesLeft > 0)
 	{
 		Owner->DestroyOnEnemyHit = false;
+		HitCharacters.Add(Enemy);
 		PiercesLeft--;
 	}
 	else

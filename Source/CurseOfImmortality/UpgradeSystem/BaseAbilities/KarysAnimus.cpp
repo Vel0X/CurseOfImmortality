@@ -46,8 +46,13 @@ void AKarysAnimus::Tick(float DeltaTime)
 		if(ProjectileClass != nullptr)
 		{
 			const FVector Location = GetActorLocation();
-			AActor* Projectile = GetWorld()->SpawnActor(ProjectileClass, &Location);
-		}
+			const FRotator Rotation = FRotator(0);
+			ABaseAbility* Projectile = Cast<ABaseAbility>(GetWorld()->SpawnActor(ProjectileClass, &Location, &Rotation));
+			if(Projectile != nullptr)
+			{
+				Projectile->InitializeAbility(0,Caster,1);
+			}
+		}	
 		
 		TimeUntilNextSpawn = SpawnInterval;
 	}

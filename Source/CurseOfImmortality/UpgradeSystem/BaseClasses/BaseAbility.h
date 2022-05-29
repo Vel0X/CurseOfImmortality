@@ -53,7 +53,6 @@ public:
 
 	virtual void AfterInitialization();
 
-public:
 	UPROPERTY(EditAnywhere)
 	ABaseCharacter* Caster;
 	UPROPERTY(EditAnywhere)
@@ -68,6 +67,9 @@ public:
 	float RelativeSize = 1.0f;
 
 	UPROPERTY(EditAnywhere)
+	bool IgnoreInitialCollisions = false;
+
+	UPROPERTY(EditAnywhere)
 	UDamageComponent* DamageComponent;
 protected:
 	UPROPERTY(EditAnywhere)
@@ -80,4 +82,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TArray<UPrimitiveComponent*> HitBoxes;
+
+	UPROPERTY(EditAnywhere)
+	TArray<ABaseCharacter*> InitialCollisions;
 };
