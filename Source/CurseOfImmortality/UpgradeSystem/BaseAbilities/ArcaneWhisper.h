@@ -18,7 +18,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void AfterInitialization() override;
 	virtual void OnAbilityCreation() override;
-	virtual void InitializeAbility(int _AbilityHandle, ABaseCharacter* Caster, int Level) override;
+	virtual void InitializeAbility(ABaseCharacter* Caster, int Level) override;
 	virtual void Tick(float DeltaSeconds) override;
 
 protected:

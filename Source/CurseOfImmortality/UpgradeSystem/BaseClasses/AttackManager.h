@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CurseOfImmortality/UpgradeSystem/IndirectAbilities/ArcaneReplicatorTurret.h"
 #include "Components/ActorComponent.h"
 #include "CurseOfImmortality/Enemies/ArcaneReplicator/ArcaneReplicatorCrab.h"
 #include "DataAssets/SpawnablesList.h"
@@ -165,7 +164,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	void CleanupAbility(int AbilityHandle);
 	
 public:
 	UPROPERTY(EditAnywhere)

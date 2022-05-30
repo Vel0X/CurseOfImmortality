@@ -47,5 +47,6 @@ void UCursedBlade::OnTakeDamage(ABaseAbility* Ability)
 			ParticleSystem->Deactivate();
 		}
 		Owner->RemoveBuff(this);
+		Owner->TakeDmg(20, nullptr, nullptr);
 	}
 }

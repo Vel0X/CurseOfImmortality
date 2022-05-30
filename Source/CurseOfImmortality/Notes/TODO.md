@@ -48,3 +48,10 @@
   - OnDamageTaken
   - OnAbilityUsed
 - Similar to Upgrade System
+
+
+
+# Random Stuff 
+
+- Better Sword Model and Texture (With unique Emissive Map, that can be scaled based on Attack Speed)
+- Damage Objects for all Abilities!!!

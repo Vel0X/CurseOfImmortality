@@ -40,10 +40,6 @@ void UAttackManager::BeginPlay()
 
 }
 
-void UAttackManager::CleanupAbility(int AbilityHandle)
-{
-}
-
 void UAttackManager::SortActiveUpgrades(bool Verbose)
 {
 	if(Verbose)
@@ -72,8 +68,8 @@ void UAttackManager::SortActiveUpgrades(bool Verbose)
 
 bool UAttackManager::CheckCooldown(const EAbilityType Ability)
 {
-	auto cd= ActiveAbilities[Ability].CurrentCooldown;
-	UE_LOG(LogTemp, Warning, TEXT("cd %f"), cd);
+	//const auto CD= ActiveAbilities[Ability].CurrentCooldown;
+	//UE_LOG(LogTemp, Warning, TEXT("cd %f"), CD);
 	return ActiveAbilities[Ability].CurrentCooldown <= 0.0f;
 }
 
@@ -392,7 +388,7 @@ void UAttackManager::OnKeyPressed(EAbilityType Type)
 
 void UAttackManager::SpawnAbility(FActiveAbility& Ability)
 {
-	ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwner());
+	const ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwner());
 
 	const FRotator Rotation = Owner->GetActorRotation();
 	const FVector Location = Owner->GetActorLocation();
@@ -406,14 +402,14 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability, FVector Position, FRo
 	
 	//FPersistentWorldManager::ObjectFactory->SpawnAbility(Ability.Specification->AbilityName, Location, Rotation, Owner);
 
-	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Ability.Specification->Class, &Position, &Rotation));
+	ABaseAbility* AbilityInstance = Cast<ABaseAbility>(GetWorld()->SpawnActor(Ability.Specification->Class, &Position, &Rotation));
 
 	if(AbilityInstance == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned!"));
 		return;
 	}
-	AbilityInstance->InitializeAbility(0, static_cast<ABaseCharacter*>(GetOwner()), Ability.Level);
+	AbilityInstance->InitializeAbility(Owner, Ability.Level);
 	AbilityInstance->OnAbilityCreation();
 	//AbilityInstance->AbilityType
 
@@ -421,15 +417,10 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability, FVector Position, FRo
 	{
 
 		//only upgrades that work with the AbilityType will be applied to the Ability
-		if(Tuple.Value.Specification->Application != None)
-		{
-			if(Tuple.Value.Specification->Application != Ability.Specification->AbilityType)
-			{
-
+		if(Tuple.Value.Specification->Application != None && Tuple.Value.Specification->Application != Ability.Specification->AbilityType)
 				continue;
-			}
-		}
-		UE_LOG(LogTemp, Error, TEXT("Added %s"), *Tuple.Value.Specification->DisplayName);
+		
+		//UE_LOG(LogTemp, Error, TEXT("Added %s"), *Tuple.Value.Specification->DisplayName);
 		AbilityInstance->AddUpgrade(Tuple.Value.Specification->Class, Tuple.Value.Level);
 	}
 	AbilityInstance->AfterInitialization();

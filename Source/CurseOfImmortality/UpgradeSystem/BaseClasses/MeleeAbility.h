@@ -15,7 +15,7 @@ class CURSEOFIMMORTALITY_API AMeleeAbility : public ABaseAbility
 	GENERATED_BODY()
 
 public:
-	virtual void InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level) override;
+	virtual void InitializeAbility(ABaseCharacter* _Caster, int Level) override;
 
 protected:
 	virtual void Tick(float DeltaSeconds) override;

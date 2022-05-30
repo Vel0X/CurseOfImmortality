@@ -87,10 +87,9 @@ void ABaseAbility::CheckCollisions()
 					if(AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
 					{
 						DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter);
-						for (const auto Upgrade : UpgradeStack)
-						{
-							Upgrade->OnEnemyHit(OverlappingCharacter);
-						}
+
+						OnCharacterHit(OverlappingCharacter);
+
 					}
 				}
 			}
@@ -100,6 +99,14 @@ void ABaseAbility::CheckCollisions()
 	if(EnemyHit && DestroyOnEnemyHit)
 		DestroyAbility();
 	
+}
+
+void ABaseAbility::OnCharacterHit(ABaseCharacter* OverlappingCharacter)
+{
+	for (const auto Upgrade : UpgradeStack)
+	{
+		Upgrade->OnEnemyHit(OverlappingCharacter);
+	}
 }
 
 void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
@@ -285,23 +292,14 @@ void ABaseAbility::DestroyAbility()
 	Destroy();
 }
 
-void ABaseAbility::InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level)
+void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level)
 {
 	Caster = _Caster;
 }
 
 void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel)
 {
-	/*
-	auto Upgrade = AddComponentByClass(Class, false, GetTransform(), false);
-
-	if(Upgrade == nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL after cast"));
-	}
-	*/
-	
-	UBaseUpgrade* Upgrade = static_cast<UBaseUpgrade*>(AddComponentByClass(Class, false, FTransform::Identity, false));
+	UBaseUpgrade* Upgrade = Cast<UBaseUpgrade>(AddComponentByClass(Class, false, FTransform::Identity, false));
 	if(Upgrade == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL after cast"));

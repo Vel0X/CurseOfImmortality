@@ -15,7 +15,7 @@ class CURSEOFIMMORTALITY_API ASpecialAbility : public ABaseAbility
 {
 	GENERATED_BODY()
 public:
-	virtual void InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level) override;
+	virtual void InitializeAbility(ABaseCharacter* _Caster, int Level) override;
 
 	UPROPERTY(EditAnywhere)
 	USceneComponent* Parent;

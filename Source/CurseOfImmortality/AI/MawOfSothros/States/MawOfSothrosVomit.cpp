@@ -52,14 +52,14 @@ void UMawOfSothrosVomit::OnStateUpdate(float DeltaTime)
 				SelfRef->AbilitySpecification->Class,
 				&SpawnLocation, &FRotator::ZeroRotator));
 			if (!AbilityInstance) { return; }
-			AbilityInstance->InitializeAbility(1, SelfRef, 1);
+			AbilityInstance->InitializeAbility(SelfRef, 1);
 
 			SpawnLocation = SelfRef->PuddleUpperSpawnLocation->GetComponentLocation();
 			AbilityInstance = Cast<ASeaOfDarkness>(SelfRef->GetWorld()->SpawnActor(
 				SelfRef->AbilitySpecification->Class,
 				&SpawnLocation, &FRotator::ZeroRotator));
 			if (!AbilityInstance) { return; }
-			AbilityInstance->InitializeAbility(1, SelfRef, 1);
+			AbilityInstance->InitializeAbility(SelfRef, 1);
 
 			for (int index = 0; index < 2; ++index)
 			{

@@ -44,12 +44,13 @@ protected:
 public:
 	void CheckCollisions();
 
+	void OnCharacterHit(ABaseCharacter* OverlappingCharacter);
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void DestroyAbility();
 
-	virtual void InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level);
+	virtual void InitializeAbility(ABaseCharacter* _Caster, int Level);
 
 	virtual void AfterInitialization();
 

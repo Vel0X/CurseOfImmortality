@@ -12,9 +12,9 @@ void AArcaneWhisper::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AArcaneWhisper::InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level)
+void AArcaneWhisper::InitializeAbility(ABaseCharacter* _Caster, int Level)
 {
-	Super::InitializeAbility(_AbilityHandle, _Caster, Level);
+	Super::InitializeAbility(_Caster, Level);
 	HitActors.Empty();
 }
 
@@ -23,20 +23,14 @@ void AArcaneWhisper::InitializeAbility(int _AbilityHandle, ABaseCharacter* _Cast
 void AArcaneWhisper::OnAbilityCreation()
 {
 	Super::OnAbilityCreation();
-	//AArcaneWhisper* P = static_cast<AArcaneWhisper*>(Caller);
-	//SetActorLocation(P->Target->GetActorLocation());
-	//GEngine->AddOnScreenDebugMessage(-1,200,FColor::Green,FString::Printf(TEXT("Hello %s"),*GetActorLocation().ToString()));
-
+	
 	if(SpawnLocation != FVector::ZeroVector)
-	{
 		SetActorLocation(SpawnLocation);
-	}
 	
 	SetActorRotation(FRotator::ZeroRotator);
 	Target = nullptr;
 	
-	TArray<ABaseCharacter*> Enemies = FPersistentWorldManager::GetEnemies(); //  static_cast<UGameController*>(GetGameInstance())->GetEnemies();
-	//UE_LOG(LogTemp, Warning, TEXT("HIT %d"), HitActors.Num());
+	TArray<ABaseCharacter*> Enemies = FPersistentWorldManager::GetEnemies();
 
 	int ClosestIndex = -1;
 	float ClosestDistance = 1000000.0f;
@@ -50,8 +44,9 @@ void AArcaneWhisper::OnAbilityCreation()
 		
 		if(HitActors.Contains(Enemies[i]))
 			continue;
+		
 		const float Distance = FVector::Distance(Enemies[i]->GetActorLocation(), GetActorLocation());
-		//UE_LOG(LogTemp, Warning, TEXT("DIST %f"), Distance);
+
 		if(Distance > BounceRange)
 			continue;
 		
@@ -93,17 +88,16 @@ void AArcaneWhisper::Tick(float DeltaSeconds)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("AFTER INIT SUCC"));
 
-			TArray<UNiagaraComponent*> Chil;
-			GetComponents<UNiagaraComponent>(Chil);
-			//UE_LOG(LogTemp, Warning, TEXT("NUM %d"), Chil.Num());
-			if(Chil.Num() > 0)
+			TArray<UNiagaraComponent*> NiagaraComponents;
+			GetComponents<UNiagaraComponent>(NiagaraComponents);
+			if(NiagaraComponents.Num() > 0)
 			{
-				Chil[0]->SetNiagaraVariableVec3("User.Target", Target->GetActorLocation());
+				NiagaraComponents[0]->SetNiagaraVariableVec3("User.Target", Target->GetActorLocation());
 			}
 			CanInteract = true;
 			DestroyOnEnemyHit = false;
 			SpawnLocation = Target->GetActorLocation();
-			OnEnemyHit(this, Target);
+			OnCharacterHit(Target);
 		}
 		else
 		{
