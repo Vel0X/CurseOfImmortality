@@ -19,6 +19,11 @@ class CURSEOFIMMORTALITY_API AMawOfSothrosPawn : public ABaseEnemyPawn
 public:
 	AMawOfSothrosPawn();
 
+	UFUNCTION(BlueprintCallable)
+	void ActivateVomit();
+	UFUNCTION(BlueprintCallable)
+	void DeactivateVomit();
+
 	//States
 	UPROPERTY(BlueprintReadWrite)
 	bool Idle;
@@ -30,40 +35,62 @@ public:
 	bool ChargeAttack;
 	UPROPERTY(BlueprintReadWrite)
 	bool GroundSlam;
+	UPROPERTY(BlueprintReadWrite)
+	bool AnimationEnd;
 
 	UPROPERTY(EditAnywhere)
 	UAbilitySpecification* AbilitySpecification;
 
 	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* VomitUpperJaw;
-	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* VomitLowerJaw;
-	UPROPERTY(EditAnywhere)
-	USceneComponent* PuddleLowerSpawnLocation;
-	UPROPERTY(EditAnywhere)
-	USceneComponent* PuddleUpperSpawnLocation;
-	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* UpperBodyCollision;
-	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* UpperLeftArmCollision;
-	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* LowerLeftArmCollision;
-	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* UpperRightArmCollision;
-	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* LowerRightArmCollision;
-	UPROPERTY(EditAnywhere)
-	USphereComponent* HeadCollision;
+	float AttackCooldown = 2.f;
+	float CurrentAttackCooldown;
 
-	UPROPERTY(EditAnywhere)
+	bool SpawnPuddle;
+
+	//Stats
+	UPROPERTY(EditAnywhere, Category="ChargeAttack")
+	float ChargeAttackTurnSpeed = 20.f;
+	UPROPERTY(EditAnywhere, Category="ChargeAttack")
+	float ChargeAttackMovementSpeed = 1500.f;
+	UPROPERTY(EditAnywhere, Category="Idle")
+	float DistRangedAttack = 1400.f;
+	UPROPERTY(EditAnywhere, Category="Idle")
+	float DistMeleeAttack = 700.f;
+
+	//Collisions
+	UPROPERTY(EditDefaultsOnly)
+	UNiagaraComponent* VomitUpperJaw;
+	UPROPERTY(EditDefaultsOnly)
+	UNiagaraComponent* VomitLowerJaw;
+	UPROPERTY(EditDefaultsOnly)
+	USceneComponent* PuddleLowerSpawnLocation;
+	UPROPERTY(EditDefaultsOnly)
+	USceneComponent* PuddleUpperSpawnLocation;
+	UPROPERTY(EditDefaultsOnly)
+	UCapsuleComponent* UpperBodyCollision;
+	UPROPERTY(EditDefaultsOnly)
+	UCapsuleComponent* UpperLeftArmCollision;
+	UPROPERTY(EditDefaultsOnly)
+	UCapsuleComponent* LowerLeftArmCollision;
+	UPROPERTY(EditDefaultsOnly)
+	UCapsuleComponent* UpperRightArmCollision;
+	UPROPERTY(EditDefaultsOnly)
+	UCapsuleComponent* LowerRightArmCollision;
+	UPROPERTY(EditDefaultsOnly)
+	USphereComponent* HeadCollision;
+	UPROPERTY(EditDefaultsOnly)
+	USphereComponent* TailDamageSphere;
+	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* SmokeDamageSphere;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UCapsuleComponent* ChargeAttackDamageCapsule;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UMawOfSothrosStateMachine* StateMachine;
+	UPROPERTY(EditDefaultsOnly)
+	USkeletalMeshComponent* Mesh;
 
 private:
-	UPROPERTY(EditAnywhere)
-	USkeletalMeshComponent* Mesh;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	UNiagaraComponent* MawSmoke;
 };

@@ -58,6 +58,15 @@ enum EEnemy
 };
 
 UENUM()
+enum EMawAttacks
+{
+	Vomit,
+	TailSweep,
+	GroundSlam,
+	ChargeAttack,
+};
+
+UENUM()
 enum EUpgradeName
 {
 	SwordSlash,

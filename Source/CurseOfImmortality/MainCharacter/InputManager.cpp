@@ -169,7 +169,7 @@ void UInputManager::DoAction(InputAction _InputAction)
 		{
 			LastAction = InputAction::Dash;
 			//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnDashKeyPressed();
-			UE_LOG(LogTemp, Display, TEXT("Used Dash"));
+			// UE_LOG(LogTemp, Display, TEXT("Used Dash"));
 		}
 		break;
 	case InputAction::MeleeAbility:
@@ -178,14 +178,14 @@ void UInputManager::DoAction(InputAction _InputAction)
 		{
 			LastAction = InputAction::MeleeAbility;
 			//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnMeleeKeyPressed();
-			UE_LOG(LogTemp, Display, TEXT("Used Melee"));
+			// UE_LOG(LogTemp, Display, TEXT("Used Melee"));
 		} else
 		{
 			if(Player->PlayerAnim->AnimationFinished)
 			{
 				LastAction = InputAction::MeleeAbility;
 				//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnMeleeKeyPressed();
-				UE_LOG(LogTemp, Display, TEXT("Used Melee"));
+				// UE_LOG(LogTemp, Display, TEXT("Used Melee"));
 			}
 		}
 		

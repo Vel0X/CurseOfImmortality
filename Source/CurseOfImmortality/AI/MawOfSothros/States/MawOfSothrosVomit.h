@@ -20,13 +20,7 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosVomit : public UMawOfSothrosBaseState
 
 	virtual void OnStateUpdate(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
-	void ActivateVomit();
-	UFUNCTION(BlueprintCallable)
-	void DeactivateVomit();
-	UFUNCTION(BlueprintCallable)
-	void TransitionToIdle();
-
-	bool SpawnPuddle;
 	float SpawnFrequency = 0;
+
+	EMawAttacks	AttackType = Vomit;
 };

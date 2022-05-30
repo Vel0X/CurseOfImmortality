@@ -19,4 +19,7 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosTailSweep : public UMawOfSothrosBaseSt
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
+
+public:
+	EMawAttacks AttackType = TailSweep;
 };

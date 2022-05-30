@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/State.h"
+#include "CurseOfImmortality/Enums/Enums.h"
 #include "MawOfSothrosBaseState.generated.h"
 
 class AMawOfSothrosPawn;
@@ -24,4 +25,6 @@ protected:
 	APlayerCharacter* Player;
 	UPROPERTY()
 	UMawOfSothrosStateMachine* Controller;
+
+	float Weight = 100;
 };

@@ -41,6 +41,26 @@ AMawOfSothrosPawn::AMawOfSothrosPawn()
 	LowerRightArmCollision->SetupAttachment(Mesh, "LowerRightArmCollisionSocket");
 	HeadCollision = CreateDefaultSubobject<USphereComponent>("Head Collision");
 	HeadCollision->SetupAttachment(Mesh, "HeadCollisionSocket");
+	TailDamageSphere = CreateDefaultSubobject<USphereComponent>("TailDamageSphere");
+	TailDamageSphere->SetupAttachment(Mesh, "TailDamageSphere");
 	SmokeDamageSphere = CreateDefaultSubobject<USphereComponent>("SmokeDamageSphere");
 	SmokeDamageSphere->SetupAttachment(Mesh);
+	ChargeAttackDamageCapsule = CreateDefaultSubobject<UCapsuleComponent>("ChargeAttackDamageCapsule");
+	ChargeAttackDamageCapsule->SetupAttachment(Mesh);
+}
+
+void AMawOfSothrosPawn::ActivateVomit()
+{
+	VomitLowerJaw->Activate();
+	VomitUpperJaw->Activate();
+
+	SpawnPuddle = true;
+}
+
+void AMawOfSothrosPawn::DeactivateVomit()
+{
+	VomitLowerJaw->Deactivate();
+	VomitUpperJaw->Deactivate();
+
+	SpawnPuddle = false;
 }

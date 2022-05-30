@@ -6,19 +6,22 @@
 #include "NiagaraComponent.h"
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosPawn.h"
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosStateMachine.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseAbilities/SeaOfDarkness.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 
 void UMawOfSothrosVomit::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
-
+	
 	Controller = Cast<UMawOfSothrosStateMachine>(StateMachine);
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
+	SelfRef->AnimationEnd = false;
 
 	SelfRef->Vomit = true;
-	if (Verbose)
+
+	if (FPersistentWorldManager::GetLogLevel(MawStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Maw Vomit State Entered"))
 	}
@@ -29,7 +32,10 @@ void UMawOfSothrosVomit::OnStateExit()
 	Super::OnStateExit();
 
 	SelfRef->Vomit = false;
-	if (Verbose)
+
+	SelfRef->CurrentAttackCooldown = SelfRef->AttackCooldown;
+
+	if (FPersistentWorldManager::GetLogLevel(MawStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Maw Vomit State Exit"))
 	}
@@ -39,9 +45,14 @@ void UMawOfSothrosVomit::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
+	if (SelfRef->AnimationEnd)
+	{
+		Controller->Transition(Controller->Idle, Controller);
+	}
+
 	Controller->FocusOnPlayer(DeltaTime, 90.f);
 
-	if (SpawnPuddle)
+	if (SelfRef->SpawnPuddle)
 	{
 		if (SpawnFrequency <= 0)
 		{
@@ -67,25 +78,4 @@ void UMawOfSothrosVomit::OnStateUpdate(float DeltaTime)
 		}
 		SpawnFrequency -= DeltaTime;
 	}
-}
-
-void UMawOfSothrosVomit::ActivateVomit()
-{
-	SelfRef->VomitLowerJaw->Activate();
-	SelfRef->VomitUpperJaw->Activate();
-
-	SpawnPuddle = true;
-}
-
-void UMawOfSothrosVomit::DeactivateVomit()
-{
-	SelfRef->VomitLowerJaw->Deactivate();
-	SelfRef->VomitUpperJaw->Deactivate();
-
-	SpawnPuddle = false;
-}
-
-void UMawOfSothrosVomit::TransitionToIdle()
-{
-	Controller->Transition(Controller->Idle, Controller);
 }
