@@ -13,5 +13,10 @@ UCLASS()
 class CURSEOFIMMORTALITY_API UMawOfSothrosTailSweep : public UMawOfSothrosBaseState
 {
 	GENERATED_BODY()
-	
+
+	virtual void OnStateEnter(UStateMachine* StateMachine) override;
+
+	virtual void OnStateExit() override;
+
+	virtual void OnStateUpdate(float DeltaTime) override;
 };

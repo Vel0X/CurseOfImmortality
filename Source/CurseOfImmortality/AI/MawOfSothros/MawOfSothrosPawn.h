@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/SphereComponent.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
 #include "MawOfSothrosPawn.generated.h"
 
@@ -41,7 +42,22 @@ public:
 	USceneComponent* PuddleLowerSpawnLocation;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* PuddleUpperSpawnLocation;
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* UpperBodyCollision;
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* UpperLeftArmCollision;
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* LowerLeftArmCollision;
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* UpperRightArmCollision;
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* LowerRightArmCollision;
+	UPROPERTY(EditAnywhere)
+	USphereComponent* HeadCollision;
 
+	UPROPERTY(EditAnywhere)
+	USphereComponent* SmokeDamageSphere;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UMawOfSothrosStateMachine* StateMachine;
 
