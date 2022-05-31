@@ -17,11 +17,11 @@ public:
 
 public:
 	// Called every frame
-	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner) override;
+	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter) override;
 	virtual void AddBuffStack() override;
 	virtual void OnBuffEnd() override;
 	virtual void OnBuffTick(float DeltaTime) override;
-	float TickInterval = 0.5f;
-	float DamageAmount = 10.0f;
+	float TickInterval = 0.2f;
+	float DamageAmount = 5.0f;
 	float TimeUntilNextTick = 0.0f;
 };

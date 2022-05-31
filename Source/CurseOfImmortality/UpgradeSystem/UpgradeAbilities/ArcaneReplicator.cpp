@@ -13,10 +13,10 @@ void UArcaneReplicator::InitializeUpgrade(ABaseAbility* _AbilityInstance, int Up
 	Super::InitializeUpgrade(_AbilityInstance, UpgradeLevel);
 }
 
-void UArcaneReplicator::OnAbilityStart(int AbilityHandle)
+void UArcaneReplicator::OnAbilityStart()
 {
-	Super::OnAbilityStart(AbilityHandle);
-	ASpecialAbility* Owner = static_cast<ASpecialAbility*>(GetOwner());
+	Super::OnAbilityStart();
+	ASpecialAbility* Owner = Cast<ASpecialAbility>(AbilityInstance);
 	if(Owner != nullptr)
 	{
 		

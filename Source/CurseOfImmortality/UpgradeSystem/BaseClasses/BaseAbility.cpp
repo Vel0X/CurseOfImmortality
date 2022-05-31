@@ -26,27 +26,7 @@ ABaseAbility::ABaseAbility()
 void ABaseAbility::BeginPlay()
 {
 	Super::BeginPlay();
-	RemainingAbilityLifetime = AbilityLifetime;
-	//OnActorBeginOverlap.AddDynamic( this, &ABaseAbility::OnEnemyHit);
-	//UE_LOG(LogTemp, Warning, TEXT("AbilityInstance was spawned (Base)"));
-	//OnActorBeginOverlap.AddDynamic(this, &ABaseAbility::AtOverlap);
-	
-	//get all the colliders and store them in an array
-	TArray<UActorComponent*> HBs;
-	GetComponents(UPrimitiveComponent::StaticClass(), HBs);
-	for (const auto Component : HBs)
-	{
 
-		//add all primitive Components that generate Overlap Events
-		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
-		if(PrimitiveComponent->GetCollisionProfileName() == "Ability")
-		{
-			HitBoxes.Add(PrimitiveComponent);
-		}
-	}
-
-	//UE_LOG(LogTemp, Warning, TEXT("Ability contains %i Colliders"), HitBoxes.Num());
-	DamageComponent->ConvertInterface();
 }
 
 void ABaseAbility::CheckCollisions()
@@ -86,12 +66,24 @@ void ABaseAbility::CheckCollisions()
 				{
 					if(AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
 					{
-						DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter);
-
-						OnCharacterHit(OverlappingCharacter);
-
+						if(DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter))
+							OnCharacterHit(OverlappingCharacter);
 					}
 				}
+
+				/*
+				if(OtherActor->GetClass()->IsChildOf(ARangedAbility::StaticClass()))
+				{
+					ARangedAbility* OtherAbility = static_cast<ARangedAbility*>(OtherActor);
+					UE_LOG(LogTemp, Error, TEXT("Hit other Ability"));
+					for (const auto Upgrade : UpgradeStack)
+					{
+						Upgrade->OnAbilityHit(OtherAbility);
+					}
+
+				}
+				*/
+				//Handling hitting other Abilities
 			}
 		}
 	}
@@ -107,63 +99,6 @@ void ABaseAbility::OnCharacterHit(ABaseCharacter* OverlappingCharacter)
 	{
 		Upgrade->OnEnemyHit(OverlappingCharacter);
 	}
-}
-
-void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
-{
-	/*
-	if(OtherActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
-	{
-		if(!CanInteract)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Hit Enemy during Initialization"));
-			return;
-		}
-		
-		ABaseCharacter* OtherChar = static_cast<ABaseCharacter*>(OtherActor);
-		if(Caster == OtherChar)
-		{
-			return;
-		}
-		OtherChar->TakeDmg(10,  Caster, this, false);
-
-
-		
-		UE_LOG(LogTemp, Warning, TEXT("Enemy was hit"));
-		for (const auto Upgrade : UpgradeStack)
-		{
-			if(Upgrade == nullptr)
-			{
-				UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL in list"));
-			}
-			else
-			{
-				Upgrade->OnEnemyHit(OtherChar);
-			}
-		}
-		
-
-		if(DestroyOnEnemyHit)
-		{
-			UE_LOG(LogTemp, Error, TEXT("Ability was destroyed on Enemyhit"));
-			DestroyAbility();
-		}
-
-		return;
-	}
-
-	if(OtherActor->GetClass()->IsChildOf(ARangedAbility::StaticClass()))
-	{
-		ARangedAbility* OtherAbility = static_cast<ARangedAbility*>(OtherActor);
-		UE_LOG(LogTemp, Error, TEXT("Hit other Ability"));
-		for (const auto Upgrade : UpgradeStack)
-		{
-			Upgrade->OnAbilityHit(OtherAbility);
-		}
-
-	}
-	//Handling hitting other Abilities
-	*/
 }
 
 void ABaseAbility::OnAbilityCreation()
@@ -240,7 +175,7 @@ void ABaseAbility::AfterInitialization()
 		}
 		else
 		{
-			Upgrade->OnAbilityStart(AbilityHandle);
+			Upgrade->OnAbilityStart();
 		}
 	}
 
@@ -272,7 +207,7 @@ void ABaseAbility::DestroyAbility()
 		}
 		else
 		{
-			Upgrade->OnAbilityEnd(AbilityHandle);
+			Upgrade->OnAbilityEnd();
 		}
 	}
 	//const UNiagaraComponent* vfx = FindComponentByClass<UNiagaraComponent>();
@@ -295,6 +230,28 @@ void ABaseAbility::DestroyAbility()
 void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level)
 {
 	Caster = _Caster;
+
+	RemainingAbilityLifetime = AbilityLifetime;
+	//OnActorBeginOverlap.AddDynamic( this, &ABaseAbility::OnEnemyHit);
+	//UE_LOG(LogTemp, Warning, TEXT("AbilityInstance was spawned (Base)"));
+	//OnActorBeginOverlap.AddDynamic(this, &ABaseAbility::AtOverlap);
+	
+	//get all the colliders and store them in an array
+	TArray<UActorComponent*> HBs;
+	GetComponents(UPrimitiveComponent::StaticClass(), HBs);
+	for (const auto Component : HBs)
+	{
+
+		//add all primitive Components that generate Overlap Events
+		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
+		if(PrimitiveComponent->GetCollisionProfileName() == "Ability")
+		{
+			HitBoxes.Add(PrimitiveComponent);
+		}
+	}
+
+	//UE_LOG(LogTemp, Warning, TEXT("Ability contains %i Colliders"), HitBoxes.Num());
+	DamageComponent->ConvertInterface();
 }
 
 void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel)

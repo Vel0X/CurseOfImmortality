@@ -11,7 +11,8 @@ TArray<ABaseCharacter*> FPersistentWorldManager::Friendly = TArray<ABaseCharacte
 TMap<FString, bool> FPersistentWorldManager::Logs = {
 			{"round", false},
 			{"playerstatemachine", false},
-			{"damagecomponent", false}
+			{"damagecomponent", false},
+			{"buff", false}
 };
 
 TMap<FString, bool> FPersistentWorldManager::ControlFlags = {

@@ -73,9 +73,6 @@ void AArcaneWhisper::AfterInitialization()
 {
 	Super::AfterInitialization();
 	bDelayedAfterInit = true;
-	UE_LOG(LogTemp, Warning, TEXT("AFTER INIT"));
-
-
 }
 
 void AArcaneWhisper::Tick(float DeltaSeconds)
@@ -86,8 +83,6 @@ void AArcaneWhisper::Tick(float DeltaSeconds)
 	{
 		if(Target)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("AFTER INIT SUCC"));
-
 			TArray<UNiagaraComponent*> NiagaraComponents;
 			GetComponents<UNiagaraComponent>(NiagaraComponents);
 			if(NiagaraComponents.Num() > 0)

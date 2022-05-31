@@ -11,14 +11,16 @@ void UDamageObject::SetupDamageObject(const UDamageSpecification* Specification)
 	Damage = Specification->Damage;
 }
 
-void UDamageObject::DealDamage(ABaseCharacter* Character)
+bool UDamageObject::DealDamage(ABaseCharacter* Character)
 {
 	if(!HitCharacters.Contains(Character))
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("DMG"));
 		Character->TakeDmg(Damage, OwningChar, DamagingAbility, true);
 		HitCharacters.Add(Character);
+		return true;
 	}
+	return false;
 }
 
 void UDamageObject::Tick(float DeltaTime)

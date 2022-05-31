@@ -18,11 +18,7 @@ void UBaseUpgrade::InitializeUpgrade(ABaseAbility* _AbilityInstance, int Upgrade
 {
 	if(_AbilityInstance)
 	{
-		//_AbilityInstance->OnAbilityStart.AddUObject(this, &UBaseUpgrade::OnAbilityStart);
-		//_AbilityInstance->OnAbilityEnd.AddUObject(this, &UBaseUpgrade::OnAbilityEnd);
 		AbilityInstance = _AbilityInstance; //grab a reference to the Ability (might not be needed since component should easily access it anyway)
-		//auto s = abilityInstance->OnAbilityStartDelegate.ToString<>();
-		//UE_LOG(LogTemp, Warning, TEXT("On Abilitystart was called in Base Upgrade"));
 	}
 }
 
@@ -36,12 +32,12 @@ void UBaseUpgrade::BeginPlay()
 	// ...
 }
 
-void UBaseUpgrade::OnAbilityStart(int AbilityHandle)
+void UBaseUpgrade::OnAbilityStart()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("On Abilitystart was called in Base Upgrade"));
 }
 
-void UBaseUpgrade::OnAbilityEnd(int AbilityHandle)
+void UBaseUpgrade::OnAbilityEnd()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("On Abilityend was called in Base Upgrade"));
 }

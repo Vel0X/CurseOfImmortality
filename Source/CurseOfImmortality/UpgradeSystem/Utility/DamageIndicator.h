@@ -24,7 +24,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SetText(FString Text) const;
+	void SetText(FString Text, FColor Color = FColor::White) const;
 	
 	UPROPERTY(EditAnywhere)
 	UTextRenderComponent* TextComponent;

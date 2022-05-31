@@ -3,6 +3,8 @@
 
 #include "SustainedFocus.h"
 
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
+
 void USustainedFocus::InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel)
 {
 	Super::InitializeUpgrade(_AbilityInstance, UpgradeLevel);
@@ -23,12 +25,11 @@ void USustainedFocus::InitializeUpgrade(ABaseAbility* _AbilityInstance, int Upgr
 	}
 }
 
-void USustainedFocus::OnAbilityStart(int AbilityHandle)
+void USustainedFocus::OnAbilityStart()
 {
-	Super::OnAbilityStart(AbilityHandle);
-	ABaseAbility* Owner = static_cast<ABaseAbility*>(GetOwner());
+	Super::OnAbilityStart();
 
-	Owner->AbilityLifetime *= DurationModifier;
-	Owner->ResetLifetime();
+	AbilityInstance->AbilityLifetime *= DurationModifier;
+	AbilityInstance->ResetLifetime();
 
 }

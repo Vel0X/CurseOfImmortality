@@ -98,23 +98,23 @@ void UDamageComponent::ConvertInterface()
 	}
 }
 
-void UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter)
+bool UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter)
 {
 	if(!DamagingHitboxes.Contains(DamageComponentOverlap))
 	{
 		if(FPersistentWorldManager::GetLogLevel(DamageComponent))
 			UE_LOG(LogTemp, Warning, TEXT("The Hitbox is not contained"));
-		return;
+		return false;
 	}
 
 	if(DamagingHitboxes[DamageComponentOverlap] == nullptr)
 	{
 		if(FPersistentWorldManager::GetLogLevel(DamageComponent))
 			UE_LOG(LogTemp, Warning, TEXT("DamageComponent is null!"));
-		return;
+		return false;
 	}
 
-	DamagingHitboxes[DamageComponentOverlap]->DealDamage(HitCharacter);
+	return DamagingHitboxes[DamageComponentOverlap]->DealDamage(HitCharacter);
 	//HitCharacter->TakeDmg(DamagingComponents[DamageComponentOverlap]->Damage, nullptr, nullptr, true);
 }
 

@@ -38,8 +38,9 @@ void ADamageIndicator::Tick(float DeltaTime)
 	}
 }
 
-void ADamageIndicator::SetText(const FString Text) const
+void ADamageIndicator::SetText(const FString Text, FColor Color) const
 {
 	const FText T = T.FromString(Text);
 	TextComponent->SetText(T);
+	TextComponent->SetTextRenderColor(Color);
 }

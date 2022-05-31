@@ -3,14 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
-#include "CurseOfImmortality/Enemies/EnemySpecification.h"
-#include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
-#include "CurseOfImmortality/UpgradeSystem/Utility/DamageIndicator.h"
+#include "CurseOfImmortality/Enums/Enums.h"
 #include "GameFramework/Actor.h"
-#include "Rounds/Assortments/Assortment.h"
 #include "ObjectFactory.generated.h"
 
+class ABaseCharacter;
+class ADamageIndicator;
+class ABaseAbility;
+class ABaseEnemyPawn;
+class UAssortment;
+class UBaseBuff;
+class UBuffSpecification;
+class UEnemySpecification;
 class URound;
 class UAssortmentSpecification;
 class UDamageObject;
@@ -31,6 +35,7 @@ public:
 	//retrieve Specifications based on enums
 	UEnemySpecification* GetSpecification(EEnemy Enemy) const;
 	UAssortmentSpecification* GetSpecification(EAssortment Assortment) const;
+	UBuffSpecification* GetSpecification(EBuff Buff) const;
 
 			///////////////////////////////////
 			///--------spawn uObjects----------
@@ -70,7 +75,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ABaseAbility* SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation, const ABaseCharacter* Caster) const;
 
-	ADamageIndicator* SpawnDamageIndicator(FString Text, const FVector Location, const FRotator Rotation) const;
+	ADamageIndicator* SpawnDamageIndicator(FString Text, FColor Color, const FVector Location, const FRotator Rotation) const;
 	
 	/**
 	 * @brief DataAsset containing all of the Spawnable Actors, Components and UObjects. Should not be accessed directly, but using the object-specific functions

@@ -25,7 +25,7 @@ public:
 	// Sets default values for this pawn's properties
 	ABaseCharacter();
 
-	virtual ~ABaseCharacter();
+	virtual ~ABaseCharacter() override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -65,7 +65,7 @@ public:
 	 */
 	void RecalculateStats();
 
-	void AddBuff(UBaseBuff* Buff);
+	void AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter);
 	void RemoveBuff(UBaseBuff* Buff);
 
 	/**
@@ -76,6 +76,8 @@ public:
 	 * @param Verbose Enable Logging
 	 */
 	void TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Verbose = false);
+
+	void OnDamageDealt(float Amount, ABaseCharacter* DamageRecipient);
 	
 	void Heal(float Amount, bool Verbose = false);
 	

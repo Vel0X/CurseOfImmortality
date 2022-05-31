@@ -110,19 +110,24 @@ void ACustomGameMode::Pathfinding_GenerateNavmesh()
 	PF->GenerateNavmesh();
 }
 
-void ACustomGameMode::AddBuffToPlayer(int BuffID)
+void ACustomGameMode::AddBuffToPlayer(FString Key)
 {
-	const auto AM = FPersistentWorldManager::AttackManager;
+	
 	const auto MainChar = FPersistentWorldManager::PlayerCharacter;
 	const auto ObjectFactory = FPersistentWorldManager::ObjectFactory;
 
-	/*
-	ObjectFactory->GetBuff()
+	EBuff Buff = {};
+	const FString IndexToLower = Key.ToLower();
+	if(IndexToLower == "soulflayer")
+		Buff = SoulFlayer;
+	else if(IndexToLower == "bleed")
+		Buff = Bleed;
+	else if(IndexToLower == "rejuvenation")
+		Buff = Rejuvenation;
+	UBaseBuff* BuffInstance = ObjectFactory->GetBuff(Buff);
+	BuffInstance->SetupBuff(ObjectFactory->GetSpecification(Buff));
+	MainChar->AddBuff(BuffInstance, nullptr);
 	
-	const auto B = AM->PossibleUpgrades->Buffs[BuffID];
-	
-	MainChar->AddBuff(NewObject<UBaseBuff>(B->StaticClass(), B));
-	*/
 }
 
 void ACustomGameMode::SetLogLevel(const FString Key, const bool Log)

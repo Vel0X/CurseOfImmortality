@@ -22,7 +22,7 @@ public:
 
 	void SetupDamageObject(const UDamageSpecification* Specification);
 
-	virtual void DealDamage(ABaseCharacter* Character);
+	virtual bool DealDamage(ABaseCharacter* Character);
 
 	virtual void Tick(float DeltaTime);
 
