@@ -23,14 +23,17 @@ struct FDisplayInformation
 	{
 	}
 
-	FDisplayInformation(const FString DisplayName, const FText Description, UTexture* Image)
-		:DisplayName(DisplayName), Description(Description), Image(Image)
+	FDisplayInformation(const FString DisplayName, const FText Application, const FText Description, UTexture* Image)
+		:DisplayName(DisplayName), Application(Application), Description(Description), Image(Image)
 	{
 	}
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString DisplayName;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText Application;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText Description;
 	

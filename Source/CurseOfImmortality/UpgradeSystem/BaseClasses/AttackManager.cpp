@@ -256,7 +256,27 @@ TArray<FDisplayInformation> UAttackManager::GetDisplayInformation()
 				UE_LOG(LogTemp, Error, TEXT("Something went wrong! Upgrade Specification was NULL"));
 				continue;
 			}
-			DisplayInformation.Add(FDisplayInformation(Spec->DisplayName, Spec->Description, Spec->Image));
+
+			FText Application = FText();
+			//Application
+			switch(Spec->Application)
+			{
+			case None:
+				Application = Application.FromString("Upgrade");
+				break;
+			case Melee:
+				Application = Application.FromString("Melee Only Upgrade");
+				break;
+			case Ranged:
+				Application = Application.FromString("Ranged Only Upgrade");
+				break;
+			case Special:
+				Application = Application.FromString("Special Only Upgrade");
+				break;
+			default: ;
+			}
+			
+			DisplayInformation.Add(FDisplayInformation(Spec->DisplayName, Application, Spec->Description, Spec->Image));
 		}
 		else
 		{
@@ -266,7 +286,24 @@ TArray<FDisplayInformation> UAttackManager::GetDisplayInformation()
 				UE_LOG(LogTemp, Error, TEXT("Something went wrong! Ability Specification was NULL"));
 				continue;
 			}
-			DisplayInformation.Add(FDisplayInformation(Spec->DisplayName, Spec->Description, Spec->Image));
+
+			FText Application = FText();
+			//Application
+			switch(Spec->AbilityType)
+			{
+			case Melee:
+				Application = Application.FromString("Melee Base Ability");
+				break;
+			case Ranged:
+				Application = Application.FromString("Ranged Base Ability");
+				break;
+			case Special:
+				Application = Application.FromString("Special Base Ability");
+				break;
+			default: ;
+			}
+			
+			DisplayInformation.Add(FDisplayInformation(Spec->DisplayName, Application, Spec->Description, Spec->Image));
 		}
 	}
 	return DisplayInformation;
