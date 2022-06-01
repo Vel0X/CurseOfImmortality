@@ -16,7 +16,7 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosIdle : public UMawOfSothrosBaseState
 {
 	GENERATED_BODY()
 
-	void AttackRandomizer(TArray<EMawAttacks> Attacks) const;
+	void AttackRandomizer(TArray<UMawOfSothrosBaseState*> Attacks) const;
 
 public:
 	virtual void OnStateEnter(UStateMachine* StateMachine) override;

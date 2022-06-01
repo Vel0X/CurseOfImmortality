@@ -14,6 +14,8 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosVomit : public UMawOfSothrosBaseState
 {
 	GENERATED_BODY()
 
+	UMawOfSothrosVomit();
+
 	virtual void OnStateEnter(UStateMachine* StateMachine) override;
 
 	virtual void OnStateExit() override;
@@ -21,6 +23,4 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosVomit : public UMawOfSothrosBaseState
 	virtual void OnStateUpdate(float DeltaTime) override;
 
 	float SpawnFrequency = 0;
-
-	EMawAttacks	AttackType = Vomit;
 };

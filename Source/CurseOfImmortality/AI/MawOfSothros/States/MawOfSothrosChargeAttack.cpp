@@ -7,6 +7,11 @@
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosStateMachine.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
+UMawOfSothrosChargeAttack::UMawOfSothrosChargeAttack()
+{
+	AttackType = ChargeAttack;
+}
+
 void UMawOfSothrosChargeAttack::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);

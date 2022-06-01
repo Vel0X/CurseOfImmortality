@@ -14,12 +14,11 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosTailSweep : public UMawOfSothrosBaseSt
 {
 	GENERATED_BODY()
 
+	UMawOfSothrosTailSweep();
+
 	virtual void OnStateEnter(UStateMachine* StateMachine) override;
 
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
-
-public:
-	EMawAttacks AttackType = TailSweep;
 };

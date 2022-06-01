@@ -18,6 +18,10 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosBaseState : public UState
 {
 	GENERATED_BODY()
 
+public:
+	int Weight = 100;
+	EMawAttacks AttackType;
+
 protected:
 	UPROPERTY()
 	AMawOfSothrosPawn* SelfRef;
@@ -25,6 +29,4 @@ protected:
 	APlayerCharacter* Player;
 	UPROPERTY()
 	UMawOfSothrosStateMachine* Controller;
-
-	float Weight = 100;
 };

@@ -14,12 +14,13 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosGroundSlam : public UMawOfSothrosBaseS
 {
 	GENERATED_BODY()
 
+	UMawOfSothrosGroundSlam();
+
 	virtual void OnStateEnter(UStateMachine* StateMachine) override;
 
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
 	
-public:
-	EMawAttacks AttackType = GroundSlam;
+
 };

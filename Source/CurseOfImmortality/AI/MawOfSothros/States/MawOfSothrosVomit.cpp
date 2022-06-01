@@ -10,6 +10,11 @@
 #include "CurseOfImmortality/UpgradeSystem/BaseAbilities/SeaOfDarkness.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 
+UMawOfSothrosVomit::UMawOfSothrosVomit()
+{
+	AttackType = Vomit;
+}
+
 void UMawOfSothrosVomit::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
