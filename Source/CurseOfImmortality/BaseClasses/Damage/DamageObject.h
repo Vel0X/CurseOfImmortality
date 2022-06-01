@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
 #include "UObject/Object.h"
 #include "DamageObject.generated.h"
 
@@ -21,10 +22,15 @@ public:
 
 	void SetupDamageObject(const UDamageSpecification* Specification);
 
-	virtual void DealDamage(ABaseCharacter* Character);
+	virtual bool DealDamage(ABaseCharacter* Character);
 
 	virtual void Tick(float DeltaTime);
 
 	UPROPERTY(EditAnywhere)
 	TArray<ABaseCharacter*> HitCharacters;
+	UPROPERTY(EditAnywhere)
+	ABaseCharacter* OwningChar;
+
+	UPROPERTY(EditAnywhere)
+	ABaseAbility* DamagingAbility;
 };

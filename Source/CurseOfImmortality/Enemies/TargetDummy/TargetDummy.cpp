@@ -21,6 +21,9 @@ void ATargetDummy::BeginPlay()
 void ATargetDummy::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	if(Static)
+		return;
 	
 	FVector CorrectedTarget = CurrentTarget;
 	CorrectedTarget.Z = 0.0f;

@@ -3,12 +3,14 @@
 
 #include "LingeringDamageObject.h"
 
-void ULingeringDamageObject::DealDamage(ABaseCharacter* Character)
+bool ULingeringDamageObject::DealDamage(ABaseCharacter* Character)
 {
 	if(TimeUntilNextHit <= 0.0f)
 	{
-		Super::DealDamage(Character);
+		return Super::DealDamage(Character);
 	}
+
+	return false;
 }
 
 void ULingeringDamageObject::Tick(float DeltaTime)

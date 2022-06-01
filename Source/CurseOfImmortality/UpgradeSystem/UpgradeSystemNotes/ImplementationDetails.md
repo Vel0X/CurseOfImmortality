@@ -24,9 +24,6 @@ It is here, that ``OnAbilityStart()`` gets called on all the UpgradeAbilities an
 to the Ability are made (e.g. scale it up, based on the ``RelativeSize`` Attribute)
 
 
-
-- ``OnAbilityCreation()``
-
 ## Base Upgrade
 
 the Base Class for all UpgradeAbilities. The Base Upgrade has multiple functions on it that get called at multiple stages in the

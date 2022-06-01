@@ -3,23 +3,22 @@
 
 #include "BaseBuff.h"
 
-#include "AttackManager.h"
 #include "BaseAbility.h"
 #include "NiagaraComponent.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "DataAssets/BuffSpecification.h"
 
-// Sets default values for this component's properties
 UBaseBuff::UBaseBuff()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-
-	// ...
 }
 
 void UBaseBuff::OnTakeDamage(ABaseAbility* Ability)
 {
+}
+
+void UBaseBuff::OnDealDamage(float Amount, ABaseCharacter* Recipient)
+{
+	
 }
 
 void UBaseBuff::AddBuffStack()
@@ -44,9 +43,9 @@ void UBaseBuff::OnBuffTick(float DeltaTime)
 		RemainingDuration -= DeltaTime;
 	}
 
-	if(!InheritRotation &&ParticleSystem != nullptr)
+	if(!InheritRotation &&ParticleSystemComponent != nullptr)
 	{
-		ParticleSystem->SetWorldRotation(FRotator::ZeroRotator);
+		ParticleSystemComponent->SetWorldRotation(FRotator::ZeroRotator);
 	}
 	
 }
@@ -61,7 +60,7 @@ void UBaseBuff::SetupBuff(UBuffSpecification* Specification)
 	DisplayName = Specification->DisplayName;
 	BuffType = Specification->BuffType;
 	BuffDuration = Specification->BuffDuration;
-	//ParticleSystem = Specification->ParticleSystem;
+	ParticleSystem = Specification->ParticleSystem;
 	Stackable = Specification->Stackable;
 	CustomBuffEnd = Specification->CustomBuffEnd;
 	InheritRotation = Specification->InheritRotation;
@@ -70,29 +69,21 @@ void UBaseBuff::SetupBuff(UBuffSpecification* Specification)
 	StatModifications = Specification->StatModifications;
 }
 
-void UBaseBuff::InitializeBuff(int Level, ABaseCharacter* _Owner)
+void UBaseBuff::InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter)
 {
 	Owner = _Owner;
+	Inflicter = _Inflicter;
 	RemainingDuration = BuffDuration;
 }
 
 UNiagaraComponent* UBaseBuff::SetupVfx(const EAttachmentPoint AttachmentPoint)
 {
-	auto VfxList = FPersistentWorldManager::AttackManager->PossibleUpgrades->BuffVFX;
-	if(!VfxList.Contains(BuffType))
+	if(ParticleSystem == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No VFX available"));
 		return nullptr;
 	}
 
-	if(VfxList[BuffType] == nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("No VFX Asset set for Buff %s"), *DisplayName);
-		return nullptr;
-	}
-
-	return Owner->SetupBuffVfx(VfxList[BuffType], AttachmentPoint, DefaultHandle);
-
+	return Owner->SetupBuffVfx(ParticleSystem, AttachmentPoint, DefaultHandle);
 }
 
 void UBaseBuff::DestroyVfx()

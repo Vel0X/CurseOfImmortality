@@ -3,25 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/Enums/Enums.h"
 #include "GameFramework/Actor.h"
 #include "BaseAbility.generated.h"
-
-//DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityStart, int);
-//DECLARE_EVENT_OneParam(ABaseAbility, FOnAbilityEnd, int);
 
 class UDamageComponent;
 class ABaseCharacter;
 class AChar;
 class UBaseUpgrade;
 
-UENUM()
-enum EAbilityType
-{
-	None,
-	Melee,
-	Ranged,
-	Special
-};
 
 
 UCLASS()
@@ -30,30 +20,22 @@ class CURSEOFIMMORTALITY_API ABaseAbility : public AActor
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	ABaseAbility();
 
-	UFUNCTION(BlueprintCallable)
-	virtual void OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor);
 	virtual void OnAbilityCreation();
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 
 public:
 	void CheckCollisions();
 
-	// Called every frame
+	void OnCharacterHit(ABaseCharacter* OverlappingCharacter);
 	virtual void Tick(float DeltaTime) override;
-
 	virtual void DestroyAbility();
-
-	virtual void InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level);
-
+	virtual void InitializeAbility(ABaseCharacter* _Caster, int Level);
 	virtual void AfterInitialization();
 
-public:
 	UPROPERTY(EditAnywhere)
 	ABaseCharacter* Caster;
 	UPROPERTY(EditAnywhere)
@@ -68,6 +50,9 @@ public:
 	float RelativeSize = 1.0f;
 
 	UPROPERTY(EditAnywhere)
+	bool IgnoreInitialCollisions = false;
+
+	UPROPERTY(EditAnywhere)
 	UDamageComponent* DamageComponent;
 protected:
 	UPROPERTY(EditAnywhere)
@@ -75,9 +60,11 @@ protected:
 	float RemainingAbilityLifetime;
 
 private:
-	int AbilityHandle;
 	FScriptDelegate OverlapDelegate;
 
 	UPROPERTY(EditAnywhere)
 	TArray<UPrimitiveComponent*> HitBoxes;
+
+	UPROPERTY(EditAnywhere)
+	TArray<ABaseCharacter*> InitialCollisions;
 };

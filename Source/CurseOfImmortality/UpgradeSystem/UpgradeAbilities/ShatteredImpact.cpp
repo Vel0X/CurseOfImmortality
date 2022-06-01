@@ -9,22 +9,21 @@
 void UShatteredImpact::OnEnemyHit(ABaseCharacter* Enemy)
 {
 	Super::OnEnemyHit(Enemy);
-	ABaseAbility* Owner = static_cast<ABaseAbility*>(GetOwner());
 
-	if(!Owner->CanInteract)
+	FVector SpawnLocation = Enemy->GetAttachmentLocation(CenterPoint)->GetComponentLocation();
+
+	if(!AbilityInstance->CanInteract)
 	{
 		return;
 	}
 	
 	const UAttackManager* AttackManager = FPersistentWorldManager::AttackManager;
-
-	UE_LOG(LogTemp, Warning, TEXT("OnEnemyHitTriggered"));
 	
 	if(SplitsRemaining > 0)
 	{
 		SplitsRemaining--;
 		
-		FVector Direction = Owner->GetActorForwardVector();
+		FVector Direction = AbilityInstance->GetActorForwardVector();
 
 		const float AnglePerProjectile = 360.0f / static_cast<float>(AmountOfFragments);
 		
@@ -35,7 +34,7 @@ void UShatteredImpact::OnEnemyHit(ABaseCharacter* Enemy)
 		for (int i = 0; i < AmountOfFragments; ++i)
 		{
 			const FRotator Rotation = UKismetMathLibrary::Conv_VectorToRotator(Direction);
-			AttackManager->SpawnFromTemplate(Owner, Rotation);
+			AttackManager->SpawnFromTemplate(AbilityInstance, SpawnLocation, Rotation);
 
 			Direction = OngoingRotator.RotateVector(Direction);
 		}

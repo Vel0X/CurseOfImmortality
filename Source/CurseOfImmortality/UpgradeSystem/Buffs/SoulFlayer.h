@@ -15,13 +15,10 @@ class CURSEOFIMMORTALITY_API USoulFlayer final : public UBaseBuff
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
-	USoulFlayer();
-
-	// Called every frame
-	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner) override;
+	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter) override;
 	virtual void OnBuffEnd() override;
 	virtual void OnBuffTick(float DeltaTime) override;
+	virtual void OnDealDamage(float Amount, ABaseCharacter* Recipient) override;
 
 public:
 	float TickInterval = 0.5f;
@@ -29,7 +26,7 @@ public:
 	float TimeUntilNextTick = 0.0f;
 
 	float DamageIncrease = 5.0f;
-	float MoveSpeedIncrease = 5.0f;
+	float MoveSpeedIncrease = 500.0f;
 
-	float HealAmount = 3.0f;
+	float HealPercentage = 0.5f;
 };

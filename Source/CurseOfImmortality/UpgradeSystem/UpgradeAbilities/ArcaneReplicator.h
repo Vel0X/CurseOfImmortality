@@ -17,7 +17,7 @@ class CURSEOFIMMORTALITY_API UArcaneReplicator : public UBaseUpgrade
 public:
 	virtual void InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel) override;
 protected:
-	virtual void OnAbilityStart(int AbilityHandle) override;
+	virtual void OnAbilityStart() override;
 
 //private:
 	//UPROPERTY(EditAnywhere)

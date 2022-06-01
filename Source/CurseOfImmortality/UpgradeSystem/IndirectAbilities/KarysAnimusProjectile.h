@@ -33,13 +33,13 @@ public:
 	USphereComponent* Collision;
 
 	UPROPERTY(EditAnywhere)
-	float MaxRange = 1000.0f;
+	float MaxRange = 100000.0f;
 	UPROPERTY(EditAnywhere)
 	float SpawnAngleVariation = 1.0f;
 	UPROPERTY(EditAnywhere)
-	float Speed = 20.0f;
+	float Speed = 100.0f;
 	UPROPERTY(EditAnywhere)
-	float RotationSpeed = 20.0f;
+	float RotationSpeed = 30.0f;
 	UPROPERTY()
 	AActor* Target;
 };

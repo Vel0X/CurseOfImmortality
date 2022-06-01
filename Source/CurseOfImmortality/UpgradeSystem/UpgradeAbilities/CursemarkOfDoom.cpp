@@ -11,10 +11,8 @@ void UCursemarkOfDoom::OnEnemyHit(ABaseCharacter* Enemy)
 	Super::OnEnemyHit(Enemy);
 
 	//apply the Cursemark Of Doom Buff on the Enemy
-	UE_LOG(LogTemp, Warning, TEXT("Add Cursed Blade Instance on Enemy Hit"));
-
 	const auto CursedBladeInstance = FPersistentWorldManager::ObjectFactory->GetBuff(CursedBlade);
-	Enemy->AddBuff(CursedBladeInstance);
+	Enemy->AddBuff(CursedBladeInstance, AbilityInstance->Caster);
 }
 
 void UCursemarkOfDoom::InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel)

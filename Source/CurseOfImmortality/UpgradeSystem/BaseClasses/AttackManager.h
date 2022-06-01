@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CurseOfImmortality/UpgradeSystem/IndirectAbilities/ArcaneReplicatorTurret.h"
 #include "Components/ActorComponent.h"
+#include "CurseOfImmortality/Enemies/ArcaneReplicator/ArcaneReplicatorCrab.h"
 #include "DataAssets/SpawnablesList.h"
 #include "DataAssets/UpgradeSpecification.h"
 #include "AttackManager.generated.h"
@@ -12,6 +12,35 @@
 
 class UUpgradeSpecification;
 class UAbilitySpecification;
+
+
+USTRUCT(BlueprintType)
+struct FDisplayInformation
+{
+	GENERATED_BODY()
+
+	FDisplayInformation(): DisplayName(""), Image(nullptr)
+	{
+	}
+
+	FDisplayInformation(const FString DisplayName, const FText Application, const FText Description, UTexture* Image)
+		:DisplayName(DisplayName), Application(Application), Description(Description), Image(Image)
+	{
+	}
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString DisplayName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText Application;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText Description;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UTexture* Image;
+	
+};
 
 USTRUCT()
 struct FActiveAbility
@@ -73,12 +102,11 @@ struct FPooledEntry
 	}
 
 	FPooledEntry(const TEnumAsByte<EUpgradeName>& Name, const bool bType, const int Weight)
-		: Name(Name),
+		:  Name(Name),
 		  Type(bType),
 		  Weight(Weight)
 	{
 	}
-
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EUpgradeName> Name;
 
@@ -107,8 +135,17 @@ public:
 	bool CheckCooldown(EAbilityType Ability);
 	
 	void SpawnAbility(FActiveAbility& Ability);
+
+	void SpawnAbility(FActiveAbility& Ability, FVector Position, FRotator Rotation);
+	
+	UFUNCTION(BlueprintCallable)
+	void SpawnAbility(EAbilityType Ability);
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnAbilityRotationSpecified(EAbilityType Ability, FVector Position, FRotator Rotation);
+	
 	void SpawnFromTemplate(ABaseAbility* Template) const;
-	void SpawnFromTemplate(ABaseAbility* Template, FRotator Rotator) const;
+	void SpawnFromTemplate(ABaseAbility* Template, FVector Position, FRotator Rotator) const;
 
 	/**
 	 * @brief
@@ -119,6 +156,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="AttackManager")
 	void PickThreeFromPool(bool Verbose = false);
 
+	UFUNCTION(BlueprintCallable)
+	TArray<FDisplayInformation> GetDisplayInformation();
+
 	UFUNCTION(BlueprintCallable, Category="AttackManager")
 	void GetUpgrade(int Index);
 
@@ -127,7 +167,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	void CleanupAbility(int AbilityHandle);
 	
 public:
 	UPROPERTY(EditAnywhere)
@@ -149,11 +188,8 @@ public:
 
 	//Blueprint Actors, that get spawned with Upgrades need to be defined in an actor, since the BP-Assets can only be assigned via UI
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<AArcaneReplicatorTurret> ArcaneReplicatorTurretBP;
+	TSubclassOf<AArcaneReplicatorCrab> ArcaneReplicatorTurretBP;
 	
-private:
-	int AbilityMapHandle = 0;
-
 	//UPROPERTY(EditAnywhere)
 	//TMap<TEnumAsByte<EAbilityType>, float> Cooldowns = TMap<TEnumAsByte<EAbilityType>, float>();
 };

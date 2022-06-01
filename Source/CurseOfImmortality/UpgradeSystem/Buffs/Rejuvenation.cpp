@@ -5,15 +5,6 @@
 
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 
-URejuvenation::URejuvenation()
-{
-	DisplayName = "Rejuvenation";
-	CurrentStacks = 1;
-	Stackable = true;
-	CustomBuffEnd = true;
-	StatModifier = false;
-}
-
 void URejuvenation::AddBuffStack()
 {
 	Super::AddBuffStack();

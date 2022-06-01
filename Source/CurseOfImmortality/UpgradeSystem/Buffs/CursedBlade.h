@@ -16,10 +16,8 @@ class CURSEOFIMMORTALITY_API UCursedBlade : public UBaseBuff
 
 	
 public:
-	// Sets default values for this component's properties
-	UCursedBlade();
 
-	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner) override;
+	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter) override;
 	virtual void OnBuffBegin() override;
 	virtual void OnBuffEnd() override;
 	virtual void OnTakeDamage(ABaseAbility* Ability) override;
