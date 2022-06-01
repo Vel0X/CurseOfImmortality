@@ -3,10 +3,12 @@
 
 #include "CursedBlade.h"
 #include "NiagaraComponent.h"
+#include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
 
 UCursedBlade::UCursedBlade()
 {
+	/*
 	DisplayName = "Cursed Blade";
 	BuffDuration = 5.0f;
 	RemainingDuration = BuffDuration;
@@ -16,12 +18,13 @@ UCursedBlade::UCursedBlade()
 	CustomBuffEnd = false;
 	StatModifier = false;
 	BuffType = CursedBlade;
+	*/
 }
 
-void UCursedBlade::InitializeBuff(int Level, ABaseCharacter* _Owner)
+void UCursedBlade::InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter)
 {
-	Super::InitializeBuff(Level, _Owner);
-	ParticleSystem = SetupVfx(UpperPoint);
+	Super::InitializeBuff(Level, _Owner, _Inflicter);
+	ParticleSystemComponent = SetupVfx(UpperPoint);
 }
 
 void UCursedBlade::OnBuffBegin()
@@ -40,12 +43,12 @@ void UCursedBlade::OnTakeDamage(ABaseAbility* Ability)
 	Super::OnTakeDamage(Ability);
 	if(Ability != nullptr && Ability->AbilityType == Melee)
 	{
-		if(ParticleSystem != nullptr)
+		if(ParticleSystemComponent != nullptr)
 		{
-			ParticleSystem->SetBoolParameter("User.Dissolve", true);
-			ParticleSystem->Deactivate();
+			ParticleSystemComponent->SetBoolParameter("User.Dissolve", true);
+			ParticleSystemComponent->Deactivate();
 		}
 		Owner->RemoveBuff(this);
+		Owner->TakeDmg(20, Inflicter, nullptr);
 	}
-
 }

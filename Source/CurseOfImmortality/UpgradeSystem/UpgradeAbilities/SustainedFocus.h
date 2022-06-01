@@ -15,7 +15,7 @@ class CURSEOFIMMORTALITY_API USustainedFocus : public UBaseUpgrade
 	GENERATED_BODY()
 
 	virtual void InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel) override;
-	virtual void OnAbilityStart(int AbilityHandle) override;
+	virtual void OnAbilityStart() override;
 
 private:
 	float DurationModifier = 1.25f;

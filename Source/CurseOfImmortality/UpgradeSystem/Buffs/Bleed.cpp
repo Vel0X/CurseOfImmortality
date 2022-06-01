@@ -3,8 +3,11 @@
 
 #include "Bleed.h"
 
+#include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
+
 UBleed::UBleed()
 {
+	/*
 	DisplayName = "Bleed";
 	BuffDuration = 5.0f;
 	RemainingDuration = BuffDuration;
@@ -15,12 +18,13 @@ UBleed::UBleed()
 	CustomBuffEnd = false;
 	StatModifier = false;
 	BuffType = Bleed;
+	*/
 }
 
-void UBleed::InitializeBuff(int Level, ABaseCharacter* _Owner)
+void UBleed::InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter)
 {
-	Super::InitializeBuff(Level, _Owner);
-	ParticleSystem = SetupVfx(UpperPoint);
+	Super::InitializeBuff(Level, _Owner, _Inflicter);
+	ParticleSystemComponent = SetupVfx(CenterPoint);
 }
 
 void UBleed::AddBuffStack()
@@ -43,7 +47,7 @@ void UBleed::OnBuffTick(float DeltaTime)
 	if(TimeUntilNextTick <= 0.0f)
 	{
 		//Deal Damage
-		Owner->TakeDmg(DamageAmount, nullptr, nullptr, true);
+		Owner->TakeDmg(DamageAmount, Inflicter, nullptr, true);
 		TimeUntilNextTick = TickInterval;
 	}
 	else

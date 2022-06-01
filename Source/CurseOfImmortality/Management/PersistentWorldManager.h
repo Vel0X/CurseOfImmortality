@@ -104,7 +104,10 @@ public:
 
 		case DamageComponent:
 			return ReturnIfContains("damagecomponent");
+		case Buff:
+			return ReturnIfContains("buff");
 		}
+
 		return false;
 	}
 

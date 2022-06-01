@@ -59,6 +59,19 @@ void UDamageComponent::ConvertInterface()
 			continue;
 		}
 		auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(DamagingHitboxDamageSpecifications[i]);
+
+		ABaseAbility* OwningAbility = Cast<ABaseAbility>(GetOwner());
+		if(OwningAbility != nullptr)
+		{
+			DamageObject->DamagingAbility = OwningAbility;
+			DamageObject->OwningChar = OwningAbility->Caster;
+		}
+		else
+		{
+			ABaseCharacter* OwningChar = Cast<ABaseCharacter>(GetOwner());
+			DamageObject->OwningChar = OwningChar;
+		}
+		
 		DamagingHitboxes.Add(Primitive, DamageObject);
 	}
 
@@ -68,27 +81,40 @@ void UDamageComponent::ConvertInterface()
 	for (int i = 0; i < DirectDamageSpecifications.Num(); ++i)
 	{
 		auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(DirectDamageSpecifications[i]);
+
+		ABaseAbility* OwningAbility = Cast<ABaseAbility>(GetOwner());
+		if(OwningAbility != nullptr)
+		{
+			DamageObject->DamagingAbility = OwningAbility;
+			DamageObject->OwningChar = OwningAbility->Caster;
+		}
+		else
+		{
+			ABaseCharacter* OwningChar = Cast<ABaseCharacter>(GetOwner());
+			DamageObject->OwningChar = OwningChar;
+		}
+		
 		DirectDamageObjects.Add(DamageObject);
 	}
 }
 
-void UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter)
+bool UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter)
 {
 	if(!DamagingHitboxes.Contains(DamageComponentOverlap))
 	{
 		if(FPersistentWorldManager::GetLogLevel(DamageComponent))
 			UE_LOG(LogTemp, Warning, TEXT("The Hitbox is not contained"));
-		return;
+		return false;
 	}
 
 	if(DamagingHitboxes[DamageComponentOverlap] == nullptr)
 	{
 		if(FPersistentWorldManager::GetLogLevel(DamageComponent))
 			UE_LOG(LogTemp, Warning, TEXT("DamageComponent is null!"));
-		return;
+		return false;
 	}
 
-	DamagingHitboxes[DamageComponentOverlap]->DealDamage(HitCharacter);
+	return DamagingHitboxes[DamageComponentOverlap]->DealDamage(HitCharacter);
 	//HitCharacter->TakeDmg(DamagingComponents[DamageComponentOverlap]->Damage, nullptr, nullptr, true);
 }
 

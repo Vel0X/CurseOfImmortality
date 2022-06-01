@@ -173,7 +173,7 @@ void ABaseCharacter::RecalculateStats()
 	}
 }
 
-void ABaseCharacter::AddBuff(UBaseBuff* Buff)
+void ABaseCharacter::AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter)
 {
 	int FoundIndex = -1;
 	for (int i = 0; i < Buffs.Num(); ++i)
@@ -194,12 +194,14 @@ void ABaseCharacter::AddBuff(UBaseBuff* Buff)
 			//if the Buff should renew when it is already present
 			if(Buff->RefreshOnNew)
 			{
-				Buffs[FoundIndex]->InitializeBuff(1, this);
-				UE_LOG(LogTemp, Warning, TEXT("%s was already present and was refreshed"), *Buff->DisplayName);
+				Buffs[FoundIndex]->InitializeBuff(1, this, Inflicter);
+				if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
+					UE_LOG(LogTemp, Warning, TEXT("%s was already present and was refreshed"), *Buff->DisplayName);
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("%s was already present and is not stackable"), *Buff->DisplayName);
+				if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
+					UE_LOG(LogTemp, Warning, TEXT("%s was already present and is not stackable"), *Buff->DisplayName);
 				return;
 			}
 		}
@@ -209,8 +211,9 @@ void ABaseCharacter::AddBuff(UBaseBuff* Buff)
 	else
 	{
 		Buffs.Add(Buff);
-		Buff->InitializeBuff(1,this);
-		UE_LOG(LogTemp, Warning, TEXT("%s was added"), *Buff->DisplayName);
+		Buff->InitializeBuff(1,this, Inflicter);
+		if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
+			UE_LOG(LogTemp, Warning, TEXT("%s was added"), *Buff->DisplayName);
 	}
 	
 	if(Buff->StatModifier)
@@ -222,7 +225,8 @@ void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 {
 	if(Buffs.Contains(Buff))
 	{
-	UE_LOG(LogTemp, Warning, TEXT("%s was removed"), *Buff->DisplayName);
+		if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
+			UE_LOG(LogTemp, Warning, TEXT("%s was removed"), *Buff->DisplayName);
 		Buffs.Remove(Buff);
 		Buff->OnBuffEnd();
 		if(Buff->StatModifier)
@@ -236,6 +240,14 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 {
 	CurrentHealth -= Amount;
 
+	FString Text = "";
+	Text.AppendInt(Amount);
+	ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(Text, FColor::Red, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
+
+	if(Dealer != nullptr && Dealer != this)
+	{
+		Dealer->OnDamageDealt(Amount, this); //Inform the DamageDealer
+	}
 	if(FPersistentWorldManager::GetLogLevel(ELog::DamageComponent))
 		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: %s Health is at %f Max Health %f"), *DisplayName, CurrentHealth, Stats[EStats::Health]);
 	
@@ -253,9 +265,22 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 	
 }
 
+void ABaseCharacter::OnDamageDealt(float Amount, ABaseCharacter* DamageRecipient)
+{
+	for (int i = 0; i < Buffs.Num(); ++i)
+	{
+		Buffs[i]->OnDealDamage(Amount, DamageRecipient);
+	}
+}
+
 void ABaseCharacter::Heal(float Amount, bool Verbose)
 {
 	CurrentHealth += Amount;
+
+	FString Text = "";
+	Text.AppendInt(Amount);
+	ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(Text, FColor::Green, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
+	
 	if(CurrentHealth > Stats[EStats::Health])
 	{
 		CurrentHealth = Stats[EStats::Health];
@@ -269,20 +294,7 @@ void ABaseCharacter::Heal(float Amount, bool Verbose)
 
 UNiagaraComponent* ABaseCharacter::SetupBuffVfx(UNiagaraSystem* Vfx, const EAttachmentPoint AttachmentPoint, int& Handle)
 {
-	USceneComponent* AttachmentLocation = nullptr;
-	
-	switch (AttachmentPoint)
-	{
-	case UpperPoint:
-		AttachmentLocation = UpperAttachmentPoint;
-		break;
-	case CenterPoint:
-		AttachmentLocation = CenterAttachmentPoint;
-		break;
-	case LowerPoint:
-		AttachmentLocation = LowerAttachmentPoint;
-		break;
-	}
+	USceneComponent* AttachmentLocation = GetAttachmentLocation(AttachmentPoint);
 	
 	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(Vfx, AttachmentLocation, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
 	NiagaraComp->AttachToComponent(AttachmentLocation, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
@@ -313,4 +325,19 @@ void ABaseCharacter::RemoveBuffVfx(const int Handle, const bool SpawnDetachedPar
 	{
 		UE_LOG(LogTemp, Error, TEXT("INVALID HANDLE"));
 	}
+}
+
+USceneComponent* ABaseCharacter::GetAttachmentLocation(const EAttachmentPoint Point)
+{
+	
+	switch (Point)
+	{
+	case UpperPoint:
+		return UpperAttachmentPoint;
+	case CenterPoint:
+		return CenterAttachmentPoint;
+	case LowerPoint:
+		return LowerAttachmentPoint;
+	}
+	return nullptr;
 }

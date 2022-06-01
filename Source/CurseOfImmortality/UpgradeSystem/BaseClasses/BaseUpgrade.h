@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseAbility.h"
-#include "RangedAbility.h"
 #include "Components/ActorComponent.h"
+#include "CurseOfImmortality/Enums/Enums.h"
 #include "BaseUpgrade.generated.h"
 
+class ARangedAbility;
+class ABaseCharacter;
 class AChar;
 class ABaseAbility;
 
@@ -23,10 +24,10 @@ public:
 	virtual void InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel);
 	
 	UFUNCTION()
-	virtual void OnAbilityStart(int AbilityHandle);
+	virtual void OnAbilityStart();
 
 	UFUNCTION()
-	virtual void OnAbilityEnd(int AbilityHandle);
+	virtual void OnAbilityEnd();
 
 	UFUNCTION()
 	virtual void OnEnemyHit(ABaseCharacter* Enemy);

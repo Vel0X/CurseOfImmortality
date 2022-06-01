@@ -6,14 +6,13 @@
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
 
 
-void UBehemoth::OnAbilityStart(const int AbilityHandle)
+void UBehemoth::OnAbilityStart()
 {
-	Super::OnAbilityStart(AbilityHandle);
+	Super::OnAbilityStart();
 
 	if(Proc == false)
 	{
-		ABaseAbility* Owner = static_cast<ABaseAbility*>(GetOwner());
-		Owner->RelativeSize *= SizeIncrease;
+		AbilityInstance->RelativeSize *= SizeIncrease;
 		Proc = true;
 	}
 

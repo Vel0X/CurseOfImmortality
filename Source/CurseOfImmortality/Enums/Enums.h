@@ -4,7 +4,8 @@ UENUM()
 enum EStats
 {
 	Health,
-	PhysicalDamage,
+	PhysicalDamage, 
+	AttackSpeed,
 	Arcane,
 	Faith,
 	Astrality,
@@ -80,7 +81,7 @@ enum EUpgradeName
 	Pierce,
 	ShatteredImpact,
 	SustainedFocus,
-	BerserkerFury,
+	Revelation,
 	ArcaneReplicator,
 	DolomarsWrath,
 	SeaOfDarkness
@@ -105,11 +106,21 @@ enum ELog
 {
 	Round,
 	PlayerStateMachine,
-	DamageComponent
+	DamageComponent,
+	Buff
 };
 
 UENUM()
 enum EControlFlag
 {
 	AutomaticRoundIncrement
+};
+
+UENUM()
+enum EAbilityType
+{
+	None,
+	Melee,
+	Ranged,
+	Special
 };

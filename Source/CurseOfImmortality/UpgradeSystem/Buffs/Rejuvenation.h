@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
-#include "UObject/Object.h"
 #include "Rejuvenation.generated.h"
 
 /**

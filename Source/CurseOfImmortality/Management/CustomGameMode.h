@@ -59,7 +59,7 @@ public:
 	static void Pathfinding_GenerateNavmesh();
 
 	UFUNCTION(Exec, Category = ExecFunctions)
-	static void AddBuffToPlayer(int BuffID);
+	static void AddBuffToPlayer(FString Key);
 
 	UFUNCTION(Exec, Category = ExecFunctions)
 	static void SetLogLevel(FString Key, bool Log);

@@ -7,11 +7,13 @@
 
 URejuvenation::URejuvenation()
 {
+	/*
 	DisplayName = "Rejuvenation";
 	CurrentStacks = 1;
 	Stackable = true;
 	CustomBuffEnd = true;
 	StatModifier = false;
+	*/
 }
 
 void URejuvenation::AddBuffStack()

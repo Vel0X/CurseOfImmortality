@@ -6,6 +6,7 @@
 #include "CurseOfImmortality/Enums/Enums.h"
 #include "BaseBuff.generated.h"
 
+class UNiagaraSystem;
 class UBuffSpecification;
 class ABaseCharacter;
 class UNiagaraComponent;
@@ -18,21 +19,26 @@ class CURSEOFIMMORTALITY_API UBaseBuff : public UObject
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UBaseBuff();
 
 	void SetupBuff(UBuffSpecification* Specification);
 	
 	UFUNCTION()
 	virtual void OnTakeDamage(ABaseAbility* Ability);
+	virtual void OnDealDamage(float Amount, ABaseCharacter* Recipient);
 	virtual void AddBuffStack();
 	virtual void OnBuffBegin();
 	virtual void OnBuffTick(float DeltaTime);
 	virtual void OnBuffEnd();
-	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner);
+	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter);
 	virtual UNiagaraComponent* SetupVfx(EAttachmentPoint AttachmentPoint);
 	virtual void DestroyVfx();
-	
+
+	//who inflicted this buff
+	UPROPERTY(EditAnywhere)
+	ABaseCharacter* Inflicter;
+
+	//who this buff is on
 	UPROPERTY(EditAnywhere)
 	ABaseCharacter* Owner;
 
@@ -45,10 +51,14 @@ public:
 
 	//might need an array for this later
 	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* ParticleSystem;
+	UNiagaraComponent* ParticleSystemComponent;
+
+	//
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* ParticleSystem;
 	
 	//when this buff is already on an object multiple iterations can be stacked atop of each other
-	int CurrentStacks;
+	int CurrentStacks = 1;
 
 	bool Stackable;
 	bool CustomBuffEnd = false;

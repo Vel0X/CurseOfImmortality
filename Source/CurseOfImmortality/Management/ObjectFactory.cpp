@@ -41,6 +41,15 @@ UAssortmentSpecification* AObjectFactory::GetSpecification(EAssortment Assortmen
 	return nullptr;
 }
 
+UBuffSpecification* AObjectFactory::GetSpecification(EBuff Buff) const
+{
+	if(Spawnables->Buffs.Contains(Buff))
+		return Spawnables->Buffs[Buff];
+
+	UE_LOG(LogTemp, Error, TEXT("No Specification defined for Buff"));
+	return nullptr;
+}
+
 UBaseBuff* AObjectFactory::GetBuff(const EBuff BuffName) const
 {
 	if(!Spawnables->Buffs.Contains(BuffName))
@@ -175,4 +184,17 @@ ABaseAbility* AObjectFactory::SpawnAbility(EUpgradeName Ability, const FVector L
 	//AbilityInstance->OnAbilityCreation();
 	//AbilityInstance->AbilityType
 	return AbilityInstance;
+}
+
+ADamageIndicator* AObjectFactory::SpawnDamageIndicator(FString Text, FColor Color, const FVector Location,
+	const FRotator Rotation) const
+{
+	if(Spawnables->DamageIndicator)
+	{
+		ADamageIndicator* DamageIndicatorInstance = Cast<ADamageIndicator>(GetWorld()->SpawnActor(Spawnables->DamageIndicator, &Location, &Rotation));
+		DamageIndicatorInstance->SetText(Text, Color);
+		return DamageIndicatorInstance;
+	}
+
+	return nullptr;
 }

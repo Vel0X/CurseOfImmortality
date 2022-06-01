@@ -47,7 +47,7 @@ public:
 	void ConvertInterface();
 
 	UFUNCTION(BlueprintCallable)
-	void OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter);
+	bool OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter);
 
 	//manually trigger a damage object
 	void DirectCharacterHit(int Index, ABaseCharacter* HitCharacter);
