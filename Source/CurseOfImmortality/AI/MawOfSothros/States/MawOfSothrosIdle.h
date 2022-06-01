@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosStateMachine.h"
 #include "CurseOfImmortality/AI/MawOfSothros/States/MawOfSothrosBaseState.h"
 #include "CurseOfImmortality/Enums/Enums.h"
 #include "MawOfSothrosIdle.generated.h"
@@ -16,7 +17,7 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosIdle : public UMawOfSothrosBaseState
 {
 	GENERATED_BODY()
 
-	void AttackRandomizer(TArray<UMawOfSothrosBaseState*> Attacks) const;
+	void AttackRandomizer(TArray<FAttackType> Attacks) const;
 
 public:
 	virtual void OnStateEnter(UStateMachine* StateMachine) override;

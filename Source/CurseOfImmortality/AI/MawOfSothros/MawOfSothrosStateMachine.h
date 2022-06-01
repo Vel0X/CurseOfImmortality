@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/StateMachine.h"
+#include "CurseOfImmortality/Enums/Enums.h"
 #include "MawOfSothrosStateMachine.generated.h"
 
 class APlayerCharacter;
@@ -11,10 +12,34 @@ class AMawOfSothrosPawn;
 /**
  * 
  */
+
+USTRUCT()
+struct FAttackType
+{
+	GENERATED_BODY()
+
+	FAttackType(){}
+	
+	FAttackType(EMawAttacks Type, int Weight): Type(Type), Weight(Weight)
+	{
+	}
+
+	EMawAttacks Type;
+	int Weight;
+	int CurrentWeight = Weight;
+
+	void ResetWeight()
+	{
+		CurrentWeight = Weight;
+	}
+};
+
 UCLASS()
 class CURSEOFIMMORTALITY_API UMawOfSothrosStateMachine : public UStateMachine
 {
 	GENERATED_BODY()
+
+	UMawOfSothrosStateMachine();
 
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
@@ -36,6 +61,10 @@ public:
 	UState* ChargeAttack;
 	UPROPERTY()
 	UState* TailSweep;
+
+	TArray<FAttackType> RangedAttackTypes;
+	TArray<FAttackType> MeleeAttackTypes;
+	TArray<FAttackType> BackAttackTypes;
 
 	//Getter
 	AMawOfSothrosPawn* GetSelfRef() const;

@@ -12,6 +12,18 @@
 #include "States/MawOfSothrosTailSweep.h"
 #include "States/MawOfSothrosVomit.h"
 
+UMawOfSothrosStateMachine::UMawOfSothrosStateMachine()
+{
+	RangedAttackTypes.Add(FAttackType(EMawAttacks::Vomit, 100));
+	RangedAttackTypes.Add(FAttackType(EMawAttacks::ChargeAttack, 100));
+
+	MeleeAttackTypes.Add(FAttackType(EMawAttacks::GroundSlam, 100));
+	MeleeAttackTypes.Add(FAttackType(EMawAttacks::ChargeAttack, 75));
+	MeleeAttackTypes.Add(FAttackType(EMawAttacks::Vomit, 50));
+
+	BackAttackTypes.Add(FAttackType(EMawAttacks::Vomit, 100));;
+}
+
 void UMawOfSothrosStateMachine::BeginPlay()
 {
 	Super::BeginPlay();

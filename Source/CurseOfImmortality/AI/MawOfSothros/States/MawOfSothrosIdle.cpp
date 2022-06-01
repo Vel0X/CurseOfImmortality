@@ -61,18 +61,11 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 
 			if (Dist < SelfRef->DistMeleeAttack)
 			{
-				TArray<UMawOfSothrosBaseState*> MawAttacks;
-				MawAttacks.Add(Cast<UMawOfSothrosBaseState>(Controller->ChargeAttack));
-				MawAttacks.Add(Cast<UMawOfSothrosBaseState>(Controller->Vomit));
-				// MawAttacks.Add(GroundSlam);
-				AttackRandomizer(MawAttacks);
+				AttackRandomizer(Controller->MeleeAttackTypes);
 			}
 			else if (Dist < SelfRef->DistRangedAttack)
 			{
-				TArray<UMawOfSothrosBaseState*> MawAttacks;
-				MawAttacks.Add(Cast<UMawOfSothrosBaseState>(Controller->ChargeAttack));
-				MawAttacks.Add(Cast<UMawOfSothrosBaseState>(Controller->Vomit));
-				AttackRandomizer(MawAttacks);
+				AttackRandomizer(Controller->RangedAttackTypes);
 			}
 			else
 			{
@@ -83,9 +76,7 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 		{
 			if (Dist < 400.f)
 			{
-				TArray<UMawOfSothrosBaseState*> MawAttacks;
-				MawAttacks.Add(Cast<UMawOfSothrosBaseState>(Controller->TailSweep));
-				AttackRandomizer(MawAttacks);
+				AttackRandomizer(Controller->BackAttackTypes);
 			}
 			else
 			{
@@ -105,32 +96,37 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 	}
 }
 
-void UMawOfSothrosIdle::AttackRandomizer(TArray<UMawOfSothrosBaseState*> Attacks) const
+void UMawOfSothrosIdle::AttackRandomizer(TArray<FAttackType> Attacks) const
 {
 	int WeightSum = 0;
 
-	for (const UMawOfSothrosBaseState* Attack : Attacks)
+	for (const FAttackType Attack : Attacks)
 	{
-		WeightSum += Attack->Weight;
+		WeightSum += Attack.CurrentWeight;
 	}
 
 	int Rand = FMath::RandRange(0, WeightSum);
 
-	for (UMawOfSothrosBaseState* Attack : Attacks)
+	for (FAttackType Attack : Attacks)
 	{
-		Rand -= Attack->Weight;
-		if (Attack->Weight > Rand)
+		Rand -= Attack.CurrentWeight;
+		if (Attack.CurrentWeight >= Rand)
 		{
-			switch (Attack->AttackType)
+			for (FAttackType A : Attacks)
 			{
+				A.ResetWeight();
+			}
+			Attack.CurrentWeight /= 2;
+			switch (Attack.CurrentWeight)
+			{
+			case GroundSlam:
+				Controller->Transition(Controller->GroundSlam, Controller);
+				break;
 			case Vomit:
 				Controller->Transition(Controller->Vomit, Controller);
 				break;
 			case TailSweep:
 				Controller->Transition(Controller->TailSweep, Controller);
-				break;
-			case GroundSlam:
-				Controller->Transition(Controller->GroundSlam, Controller);
 				break;
 			case ChargeAttack:
 				Controller->Transition(Controller->ChargeAttack, Controller);
@@ -138,11 +134,6 @@ void UMawOfSothrosIdle::AttackRandomizer(TArray<UMawOfSothrosBaseState*> Attacks
 			default:
 				Controller->Transition(Controller->Idle, Controller);;
 			}
-			Attack->Weight -= 50;
-		}
-		else
-		{
-			Attack->Weight += 50;
 		}
 	}
 }
