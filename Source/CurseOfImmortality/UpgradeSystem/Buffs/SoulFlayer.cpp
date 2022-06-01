@@ -5,10 +5,6 @@
 
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 
-USoulFlayer::USoulFlayer()
-{
-}
-
 void USoulFlayer::InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter)
 {
 	Super::InitializeBuff(Level, _Owner, _Inflicter);

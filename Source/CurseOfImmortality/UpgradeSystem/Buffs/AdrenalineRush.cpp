@@ -1,23 +1,22 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "IncreaseHealth.h"
+#include "AdrenalineRush.h"
 
-
-void UIncreaseHealth::AddBuffStack()
+void UAdrenalineRush::AddBuffStack()
 {
 	Super::AddBuffStack();
 	CurrentStacks ++;
-	StatModifications[Health] += IncreaseValue;
+	StatModifications[AttackSpeed] += IncreaseValue;
 	
 }
 
-void UIncreaseHealth::OnBuffBegin()
+void UAdrenalineRush::OnBuffBegin()
 {
 	Super::OnBuffBegin();
 }
 
-void UIncreaseHealth::OnBuffEnd()
+void UAdrenalineRush::OnBuffEnd()
 {
 	Super::OnBuffEnd();
 	

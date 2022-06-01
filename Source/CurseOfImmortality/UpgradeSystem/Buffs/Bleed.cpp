@@ -2,24 +2,7 @@
 
 
 #include "Bleed.h"
-
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
-
-UBleed::UBleed()
-{
-	/*
-	DisplayName = "Bleed";
-	BuffDuration = 5.0f;
-	RemainingDuration = BuffDuration;
-	TimeUntilNextTick = TickInterval;
-	CurrentStacks = 1;
-	Stackable = true;
-	RefreshOnNew = true;
-	CustomBuffEnd = false;
-	StatModifier = false;
-	BuffType = Bleed;
-	*/
-}
 
 void UBleed::InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter)
 {
@@ -47,7 +30,7 @@ void UBleed::OnBuffTick(float DeltaTime)
 	if(TimeUntilNextTick <= 0.0f)
 	{
 		//Deal Damage
-		Owner->TakeDmg(DamageAmount, Inflicter, nullptr, true);
+		Owner->TakeDmg(DamageAmount, Inflicter, nullptr, false);
 		TimeUntilNextTick = TickInterval;
 	}
 	else

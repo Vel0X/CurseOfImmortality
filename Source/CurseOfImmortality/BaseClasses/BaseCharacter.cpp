@@ -236,13 +236,22 @@ void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 	}
 }
 
-void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Verbose)
+void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, const bool Visual)
 {
 	CurrentHealth -= Amount;
 
 	FString Text = "";
 	Text.AppendInt(Amount);
-	ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(Text, FColor::Red, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
+
+	if(Visual)
+	{
+		FColor Color = FColor(255,0,0);
+		if(Dealer == this) //if the damage is self inflicted, display the damage number in a darker shade of red
+			Color = FColor(50,0,0);
+	
+		ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(Text, Color, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
+	}
+
 
 	if(Dealer != nullptr && Dealer != this)
 	{

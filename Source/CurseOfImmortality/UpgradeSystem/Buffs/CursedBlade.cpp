@@ -6,21 +6,6 @@
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
 
-UCursedBlade::UCursedBlade()
-{
-	/*
-	DisplayName = "Cursed Blade";
-	BuffDuration = 5.0f;
-	RemainingDuration = BuffDuration;
-	CurrentStacks = 1;
-	Stackable = false;
-	RefreshOnNew = false;
-	CustomBuffEnd = false;
-	StatModifier = false;
-	BuffType = CursedBlade;
-	*/
-}
-
 void UCursedBlade::InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter)
 {
 	Super::InitializeBuff(Level, _Owner, _Inflicter);

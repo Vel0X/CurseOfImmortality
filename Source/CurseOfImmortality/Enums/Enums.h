@@ -22,7 +22,8 @@ enum EBuff
 	IncreaseHealth,
 	CursedBlade,
 	Rejuvenation,
-	SoulFlayer
+	SoulFlayer,
+	AdrenalineRush
 };
 
 UENUM()

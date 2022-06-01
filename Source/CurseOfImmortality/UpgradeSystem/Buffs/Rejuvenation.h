@@ -13,9 +13,6 @@ UCLASS(ClassGroup=(Custom))
 class CURSEOFIMMORTALITY_API URejuvenation : public UBaseBuff
 {
 	GENERATED_BODY()
-
-	URejuvenation();
-	
 public:
 	virtual void AddBuffStack() override;
 	

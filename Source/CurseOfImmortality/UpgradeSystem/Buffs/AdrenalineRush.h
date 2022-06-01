@@ -4,21 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
-#include "CursedBlade.generated.h"
+#include "AdrenalineRush.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class CURSEOFIMMORTALITY_API UCursedBlade : public UBaseBuff
+class CURSEOFIMMORTALITY_API UAdrenalineRush final : public UBaseBuff
 {
 	GENERATED_BODY()
 
-	
 public:
 
-	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter) override;
+	virtual void AddBuffStack() override;
 	virtual void OnBuffBegin() override;
 	virtual void OnBuffEnd() override;
-	virtual void OnTakeDamage(ABaseAbility* Ability) override;
+
+private:
+	float IncreaseValue = 100.0f;
 };
