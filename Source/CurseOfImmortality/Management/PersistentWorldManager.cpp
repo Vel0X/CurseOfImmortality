@@ -12,7 +12,8 @@ TMap<FString, bool> FPersistentWorldManager::Logs = {
 	{"round", false},
 	{"playerstatemachine", false},
 	{"mawstatemachine", false},
-	{"damagecomponent", false}
+	{"damagecomponent", false},
+	{"buff", false}
 };
 
 TMap<FString, bool> FPersistentWorldManager::ControlFlags = {

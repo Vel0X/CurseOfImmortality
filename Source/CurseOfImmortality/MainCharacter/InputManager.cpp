@@ -156,7 +156,7 @@ void UInputManager::AddToBuffer(InputAction _InputAction)
 	{
 		InputBuffer.Add(_InputAction);
 		
-		UE_LOG(LogTemp, Display, TEXT("Added Action to buffer"));
+		//UE_LOG(LogTemp, Display, TEXT("Added Action to buffer"));
 	}
 }
 
@@ -169,7 +169,7 @@ void UInputManager::DoAction(InputAction _InputAction)
 		{
 			LastAction = InputAction::Dash;
 			//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnDashKeyPressed();
-			// UE_LOG(LogTemp, Display, TEXT("Used Dash"));
+			//UE_LOG(LogTemp, Display, TEXT("Used Dash"));
 		}
 		break;
 	case InputAction::MeleeAbility:
@@ -178,14 +178,14 @@ void UInputManager::DoAction(InputAction _InputAction)
 		{
 			LastAction = InputAction::MeleeAbility;
 			//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnMeleeKeyPressed();
-			// UE_LOG(LogTemp, Display, TEXT("Used Melee"));
+			//UE_LOG(LogTemp, Display, TEXT("Used Melee"));
 		} else
 		{
 			if(Player->PlayerAnim->AnimationFinished)
 			{
 				LastAction = InputAction::MeleeAbility;
 				//static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnMeleeKeyPressed();
-				// UE_LOG(LogTemp, Display, TEXT("Used Melee"));
+				//UE_LOG(LogTemp, Display, TEXT("Used Melee"));
 			}
 		}
 		
@@ -197,7 +197,7 @@ void UInputManager::DoAction(InputAction _InputAction)
 	    	{
 	    		LastAction = InputAction::RangedAbility;
 	    		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Ranged);
-	    		UE_LOG(LogTemp, Display, TEXT("Used Ranged"));
+	    		//UE_LOG(LogTemp, Display, TEXT("Used Ranged"));
 	    	}
 	    }
 		break;
@@ -208,7 +208,7 @@ void UInputManager::DoAction(InputAction _InputAction)
 			{
 				LastAction = InputAction::SpecialAbility;
 				static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Special);
-				UE_LOG(LogTemp, Display, TEXT("Used Special"));
+				//UE_LOG(LogTemp, Display, TEXT("Used Special"));
 			}
 		}
 		break;

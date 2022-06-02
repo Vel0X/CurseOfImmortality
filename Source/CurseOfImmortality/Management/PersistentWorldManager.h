@@ -20,7 +20,7 @@ public:
 		return Enemies;
 	}
 
-
+	
 	static TArray<ABaseCharacter*> GetFriendly()
 	{
 		return Friendly;
@@ -107,7 +107,10 @@ public:
 
 		case MawStateMachine:
 			return ReturnIfContains("mawstatemachine");
+		case Buff:
+			return ReturnIfContains("buff");
 		}
+
 		return false;
 	}
 
