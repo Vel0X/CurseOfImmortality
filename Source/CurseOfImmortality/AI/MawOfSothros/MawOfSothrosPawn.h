@@ -23,6 +23,10 @@ public:
 	void ActivateVomit();
 	UFUNCTION(BlueprintCallable)
 	void DeactivateVomit();
+	UFUNCTION(BlueprintCallable)
+	void ToggleArmDamage();
+	UFUNCTION(BlueprintCallable)
+	void ToggleHeadDamage();
 
 	//States
 	UPROPERTY(BlueprintReadWrite)
@@ -78,12 +82,18 @@ public:
 	UCapsuleComponent* LowerRightArmCollision;
 	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* HeadCollision;
+
+	//Damage
 	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* TailDamageSphere;
 	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* SmokeDamageSphere;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	UCapsuleComponent* ChargeAttackDamageCapsule;
+	UCapsuleComponent* LeftArmDamageCapsule;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UCapsuleComponent* RightArmDamageCapsule;
+	UPROPERTY(EditDefaultsOnly)
+	USphereComponent* HeadDamageSphere;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UMawOfSothrosStateMachine* StateMachine;

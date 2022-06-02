@@ -96,46 +96,51 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 	}
 }
 
-void UMawOfSothrosIdle::AttackRandomizer(TArray<FAttackType> Attacks) const
+void UMawOfSothrosIdle::AttackRandomizer(TArray<FAttackType>& Attacks) const
 {
 	int WeightSum = 0;
 
-	for (const FAttackType Attack : Attacks)
+	for (int i = 0; i < Attacks.Num(); ++i)
 	{
-		WeightSum += Attack.CurrentWeight;
+		WeightSum += Attacks[i].CurrentWeight;
 	}
 
 	int Rand = FMath::RandRange(0, WeightSum);
-	
-	for (FAttackType Attack : Attacks)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), Attack.Type)
 
-		if (Attack.CurrentWeight >= Rand)
+	for (int i = 0; i < Attacks.Num(); ++i)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Random Number %i on index %i"), Rand, i);
+
+		UE_LOG(LogTemp, Warning, TEXT("%i on %i"), Attacks[i].CurrentWeight, i);
+		if (Attacks[i].CurrentWeight >= Rand)
 		{
-			for (FAttackType A : Attacks)
+			for (int f = 0; f < Attacks.Num(); ++f)
 			{
-				A.ResetWeight();
+				if (Attacks[i].Type != Attacks[f].Type)
+					Attacks[f].ResetWeight();
 			}
-			Attack.CurrentWeight /= 2;
-			switch (Attack.CurrentWeight)
+
+			Attacks[i].CurrentWeight /= 2;
+			UE_LOG(LogTemp, Warning, TEXT("%i on %i"), Attacks[i].CurrentWeight, i);
+
+			switch (Attacks[i].Type)
 			{
 			case GroundSlam:
 				Controller->Transition(Controller->GroundSlam, Controller);
-				break;
+				return;
 			case Vomit:
 				Controller->Transition(Controller->Vomit, Controller);
-				break;
+				return;
 			case TailSweep:
 				Controller->Transition(Controller->TailSweep, Controller);
-				break;
+				return;
 			case ChargeAttack:
 				Controller->Transition(Controller->ChargeAttack, Controller);
-				break;
+				return;
 			default:
-				Controller->Transition(Controller->Idle, Controller);;
+				Controller->Transition(Controller->Idle, Controller);
 			}
 		}
-		Rand -= Attack.CurrentWeight;
+		Rand -= Attacks[i].CurrentWeight;
 	}
 }

@@ -6,12 +6,6 @@
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosPawn.h"
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosStateMachine.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
-
-UMawOfSothrosTailSweep::UMawOfSothrosTailSweep()
-{
-	AttackType = TailSweep;
-}
-
 void UMawOfSothrosTailSweep::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
