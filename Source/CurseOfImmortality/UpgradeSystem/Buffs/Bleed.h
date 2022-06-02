@@ -13,7 +13,7 @@ class CURSEOFIMMORTALITY_API UBleed final : public UBaseBuff
 
 public:
 	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter) override;
-	virtual void AddBuffStack() override;
+	virtual bool AddBuffStack() override;
 	virtual void OnBuffEnd() override;
 	virtual void OnBuffTick(float DeltaTime) override;
 	float TickInterval = 0.2f;

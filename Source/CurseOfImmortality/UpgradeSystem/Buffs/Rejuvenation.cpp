@@ -5,12 +5,13 @@
 
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 
-void URejuvenation::AddBuffStack()
+bool URejuvenation::AddBuffStack()
 {
-	Super::AddBuffStack();
-	CurrentStacks++;
-	HealAmount += HealAmount / static_cast<float>(CurrentStacks);
-	UE_LOG(LogTemp, Warning, TEXT("Stack was added" ));
+	const bool AddedStack = Super::AddBuffStack();
+	if(AddedStack)
+		HealAmount += HealAmount / static_cast<float>(CurrentStacks-1);
+
+	return AddedStack;
 }
 
 void URejuvenation::OnBuffTick(float DeltaTime)

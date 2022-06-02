@@ -14,11 +14,8 @@ class CURSEOFIMMORTALITY_API UIncreaseHealth : public UBaseBuff
 
 public:
 
-	virtual void AddBuffStack() override;
+	virtual bool AddBuffStack() override;
 	virtual void OnBuffBegin() override;
 
 	virtual void OnBuffEnd() override;
-
-private:
-	float IncreaseValue = 100.0f;
 };
