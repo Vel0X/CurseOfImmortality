@@ -16,7 +16,7 @@ class CURSEOFIMMORTALITY_API UBehemoth final : public UBaseUpgrade
 
 public:
 
-	virtual void OnAbilityStart(int AbilityHandle) override;
+	virtual void OnAbilityStart() override;
 	virtual void InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel) override;
 
 private:

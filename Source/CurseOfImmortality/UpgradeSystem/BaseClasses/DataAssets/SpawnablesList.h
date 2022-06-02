@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySpecification.h"
-#include "NiagaraSystem.h"
 #include "UpgradeSpecification.h"
 #include "CurseOfImmortality/Enemies/EnemySpecification.h"
 #include "CurseOfImmortality/Management/Rounds/Round.h"
 #include "CurseOfImmortality/Management/Rounds/DataAssets/AssortmentSpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseBuff.h"
+#include "CurseOfImmortality/UpgradeSystem/Utility/DamageIndicator.h"
 #include "SpawnablesList.generated.h"
 
 /**
@@ -30,8 +30,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EBuff>, UBuffSpecification*> Buffs;
 
-	UPROPERTY(EditAnywhere)
-	TMap<TEnumAsByte<EBuff>, UNiagaraSystem*> BuffVFX;
+	//UPROPERTY(EditAnywhere)
+	//TMap<TEnumAsByte<EBuff>, UNiagaraSystem*> BuffVFX;
 
 	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EEnemy>, UEnemySpecification*> Enemies;
@@ -41,4 +41,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TArray<URoundSpecification*> RoundSpecifications;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ADamageIndicator> DamageIndicator;
 };

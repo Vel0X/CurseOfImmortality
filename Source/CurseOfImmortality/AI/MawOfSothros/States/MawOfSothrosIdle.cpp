@@ -106,10 +106,11 @@ void UMawOfSothrosIdle::AttackRandomizer(TArray<FAttackType> Attacks) const
 	}
 
 	int Rand = FMath::RandRange(0, WeightSum);
-
+	
 	for (FAttackType Attack : Attacks)
 	{
-		Rand -= Attack.CurrentWeight;
+		UE_LOG(LogTemp, Warning, TEXT("%s"), Attack.Type)
+
 		if (Attack.CurrentWeight >= Rand)
 		{
 			for (FAttackType A : Attacks)
@@ -135,5 +136,6 @@ void UMawOfSothrosIdle::AttackRandomizer(TArray<FAttackType> Attacks) const
 				Controller->Transition(Controller->Idle, Controller);;
 			}
 		}
+		Rand -= Attack.CurrentWeight;
 	}
 }

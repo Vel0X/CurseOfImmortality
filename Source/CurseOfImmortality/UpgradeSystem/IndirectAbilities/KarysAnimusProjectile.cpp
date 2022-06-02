@@ -31,14 +31,14 @@ void AKarysAnimusProjectile::BeginPlay()
 		//set spawn rotation
 		const float X = FMath::RandRange(-SpawnAngleVariation, SpawnAngleVariation);
 		const float Y = FMath::RandRange(-SpawnAngleVariation, SpawnAngleVariation);
-		FVector Angle = FVector(X,Y,1);
+		FVector Angle = FVector(X,Y,0.1);
 		Angle.Normalize();
 		const FRotator Rotation = UKismetMathLibrary::Conv_VectorToRotator(Angle);
 		SetActorRotation(Rotation);
 	}
 	else
 	{
-		Destroy();
+		DestroyAbility();
 	}
 }
 
@@ -49,7 +49,7 @@ void AKarysAnimusProjectile::Tick(float DeltaSeconds)
 	{
 		if(!GetTarget())
 		{
-			Destroy();
+			DestroyAbility();
 		}
 		return;
 	}

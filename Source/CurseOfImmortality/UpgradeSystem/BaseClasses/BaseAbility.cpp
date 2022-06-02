@@ -26,29 +26,6 @@ ABaseAbility::ABaseAbility()
 void ABaseAbility::BeginPlay()
 {
 	Super::BeginPlay();
-	RemainingAbilityLifetime = AbilityLifetime;
-	//OnActorBeginOverlap.AddDynamic( this, &ABaseAbility::OnEnemyHit);
-	//UE_LOG(LogTemp, Warning, TEXT("AbilityInstance was spawned (Base)"));
-	//OnActorBeginOverlap.AddDynamic(this, &ABaseAbility::AtOverlap);
-	
-	//get all the colliders and store them in an array
-	TArray<UActorComponent*> HBs;
-	GetComponents(UPrimitiveComponent::StaticClass(), HBs);
-	for (const auto Component : HBs)
-	{
-
-		//add all primitive Components that generate Overlap Events
-		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
-		if(PrimitiveComponent->GetCollisionProfileName() == "Ability")
-		{
-			HitBoxes.Add(PrimitiveComponent);
-		}
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Ability contains %i Colliders"), HitBoxes.Num());
-
-	DamageComponent->ConvertInterface();
-
 
 }
 
@@ -59,12 +36,17 @@ void ABaseAbility::CheckCollisions()
 
 	//UE_LOG(LogTemp, Warning, TEXT("Number of overlapping Actors: %i"), OverlappingActors.Num());
 
+	bool EnemyHit = false;
 	for (auto OverlappingActor : OverlappingActors)
 	{
 		if(OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
 		{
 			ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
 
+			if(InitialCollisions.Contains(OverlappingCharacter))
+				continue;
+			
+			
 			if(Caster == nullptr)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
@@ -73,6 +55,8 @@ void ABaseAbility::CheckCollisions()
 			
 			if(OverlappingCharacter->Faction == Caster->Faction)
 				continue;
+
+			EnemyHit = true;
 			
 			auto CharacterHitboxes = OverlappingCharacter->BodyHitboxes;
 
@@ -82,69 +66,39 @@ void ABaseAbility::CheckCollisions()
 				{
 					if(AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
 					{
-						DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter);
+						if(DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter))
+							OnCharacterHit(OverlappingCharacter);
 					}
 				}
+
+				/*
+				if(OtherActor->GetClass()->IsChildOf(ARangedAbility::StaticClass()))
+				{
+					ARangedAbility* OtherAbility = static_cast<ARangedAbility*>(OtherActor);
+					UE_LOG(LogTemp, Error, TEXT("Hit other Ability"));
+					for (const auto Upgrade : UpgradeStack)
+					{
+						Upgrade->OnAbilityHit(OtherAbility);
+					}
+
+				}
+				*/
+				//Handling hitting other Abilities
 			}
 		}
 	}
+	
+	if(EnemyHit && DestroyOnEnemyHit)
+		DestroyAbility();
+	
 }
 
-void ABaseAbility::OnEnemyHit(AActor* OverlappedActor, AActor* OtherActor)
+void ABaseAbility::OnCharacterHit(ABaseCharacter* OverlappingCharacter)
 {
-	/*
-	if(OtherActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
+	for (const auto Upgrade : UpgradeStack)
 	{
-		if(!CanInteract)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Hit Enemy during Initialization"));
-			return;
-		}
-		
-		ABaseCharacter* OtherChar = static_cast<ABaseCharacter*>(OtherActor);
-		if(Caster == OtherChar)
-		{
-			return;
-		}
-		OtherChar->TakeDmg(10,  Caster, this, false);
-
-
-		
-		UE_LOG(LogTemp, Warning, TEXT("Enemy was hit"));
-		for (const auto Upgrade : UpgradeStack)
-		{
-			if(Upgrade == nullptr)
-			{
-				UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL in list"));
-			}
-			else
-			{
-				Upgrade->OnEnemyHit(OtherChar);
-			}
-		}
-		
-
-		if(DestroyOnEnemyHit)
-		{
-			UE_LOG(LogTemp, Error, TEXT("Ability was destroyed on Enemyhit"));
-			DestroyAbility();
-		}
-
-		return;
+		Upgrade->OnEnemyHit(OverlappingCharacter);
 	}
-
-	if(OtherActor->GetClass()->IsChildOf(ARangedAbility::StaticClass()))
-	{
-		ARangedAbility* OtherAbility = static_cast<ARangedAbility*>(OtherActor);
-		UE_LOG(LogTemp, Error, TEXT("Hit other Ability"));
-		for (const auto Upgrade : UpgradeStack)
-		{
-			Upgrade->OnAbilityHit(OtherAbility);
-		}
-
-	}
-	//Handling hitting other Abilities
-	*/
 }
 
 void ABaseAbility::OnAbilityCreation()
@@ -160,7 +114,53 @@ void ABaseAbility::Tick(float DeltaTime)
 	{
 		DestroyAbility();
 	}
-	CanInteract = true;
+	if(!CanInteract)
+	{
+		if(IgnoreInitialCollisions)
+		{
+			CanInteract = true;
+			return;
+		}
+		
+		//Initial Collision Check
+		TArray<AActor*> OverlappingActors;
+		GetOverlappingActors(OverlappingActors);
+
+		//UE_LOG(LogTemp, Warning, TEXT("Number of overlapping Actors: %i"), OverlappingActors.Num());
+
+		for (auto OverlappingActor : OverlappingActors)
+		{
+			if(OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
+			{
+				ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
+		
+				if(Caster == nullptr)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
+					continue;
+				}
+			
+				if(OverlappingCharacter->Faction == Caster->Faction)
+					continue;
+			
+				auto CharacterHitboxes = OverlappingCharacter->BodyHitboxes;
+
+				for (const auto AbilityHitbox : HitBoxes)
+				{
+					for (const auto CharacterHitbox : CharacterHitboxes)
+					{
+						if(AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
+						{
+							InitialCollisions.Add(OverlappingCharacter);
+						}
+					}
+				}
+			}
+		}
+
+		//UE_LOG(LogTemp, Warning, TEXT("Hit %i Actors in Start"), InitialCollisions.Num());
+		CanInteract = true;
+	}
 
 	CheckCollisions();
 }
@@ -175,7 +175,7 @@ void ABaseAbility::AfterInitialization()
 		}
 		else
 		{
-			Upgrade->OnAbilityStart(AbilityHandle);
+			Upgrade->OnAbilityStart();
 		}
 	}
 
@@ -183,6 +183,7 @@ void ABaseAbility::AfterInitialization()
 	const FVector NewScale = FVector(RelativeSize, RelativeSize, RelativeSize);
 	SetActorScale3D(NewScale);
 
+	/*
 	TArray<AActor*> Overlapping;
 	GetOverlappingActors(Overlapping);
 	UE_LOG(LogTemp, Warning, TEXT("Overlapping %i"), Overlapping.Num());
@@ -191,6 +192,7 @@ void ABaseAbility::AfterInitialization()
 	{
 		OnEnemyHit(this, Actor);
 	}
+	*/
 }
 
 void ABaseAbility::DestroyAbility()
@@ -205,7 +207,7 @@ void ABaseAbility::DestroyAbility()
 		}
 		else
 		{
-			Upgrade->OnAbilityEnd(AbilityHandle);
+			Upgrade->OnAbilityEnd();
 		}
 	}
 	//const UNiagaraComponent* vfx = FindComponentByClass<UNiagaraComponent>();
@@ -225,23 +227,36 @@ void ABaseAbility::DestroyAbility()
 	Destroy();
 }
 
-void ABaseAbility::InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level)
+void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level)
 {
 	Caster = _Caster;
+
+	RemainingAbilityLifetime = AbilityLifetime;
+	//OnActorBeginOverlap.AddDynamic( this, &ABaseAbility::OnEnemyHit);
+	//UE_LOG(LogTemp, Warning, TEXT("AbilityInstance was spawned (Base)"));
+	//OnActorBeginOverlap.AddDynamic(this, &ABaseAbility::AtOverlap);
+	
+	//get all the colliders and store them in an array
+	TArray<UActorComponent*> HBs;
+	GetComponents(UPrimitiveComponent::StaticClass(), HBs);
+	for (const auto Component : HBs)
+	{
+
+		//add all primitive Components that generate Overlap Events
+		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
+		if(PrimitiveComponent->GetCollisionProfileName() == "Ability")
+		{
+			HitBoxes.Add(PrimitiveComponent);
+		}
+	}
+
+	//UE_LOG(LogTemp, Warning, TEXT("Ability contains %i Colliders"), HitBoxes.Num());
+	DamageComponent->ConvertInterface();
 }
 
 void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel)
 {
-	/*
-	auto Upgrade = AddComponentByClass(Class, false, GetTransform(), false);
-
-	if(Upgrade == nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL after cast"));
-	}
-	*/
-	
-	UBaseUpgrade* Upgrade = static_cast<UBaseUpgrade*>(AddComponentByClass(Class, false, FTransform::Identity, false));
+	UBaseUpgrade* Upgrade = Cast<UBaseUpgrade>(AddComponentByClass(Class, false, FTransform::Identity, false));
 	if(Upgrade == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL after cast"));

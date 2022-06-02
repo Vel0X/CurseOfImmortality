@@ -32,4 +32,7 @@ public:
 
 	bool Current = false;
 	FVector CurrentTarget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Static = false;
 };

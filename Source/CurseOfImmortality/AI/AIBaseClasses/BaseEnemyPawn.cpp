@@ -2,6 +2,8 @@
 
 
 #include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
+
+#include "CurseOfImmortality/Enemies/EnemySpecification.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 

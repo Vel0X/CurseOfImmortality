@@ -25,7 +25,7 @@ public:
 	// Sets default values for this pawn's properties
 	ABaseCharacter();
 
-	virtual ~ABaseCharacter();
+	virtual ~ABaseCharacter() override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -65,7 +65,7 @@ public:
 	 */
 	void RecalculateStats();
 
-	void AddBuff(UBaseBuff* Buff);
+	void AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter);
 	void RemoveBuff(UBaseBuff* Buff);
 
 	/**
@@ -73,9 +73,11 @@ public:
 	 * @param Amount How much Damage was done
 	 * @param Dealer Who dealt the Damage
 	 * @param Ability By which Ability was the Damage dealt (null, if the Damage was done some other way)
-	 * @param Verbose Enable Logging
+	 * @param Visual Enable Damage Numbers
 	 */
-	void TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Verbose = false);
+	void TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Visual = true);
+
+	void OnDamageDealt(float Amount, ABaseCharacter* DamageRecipient);
 	
 	void Heal(float Amount, bool Verbose = false);
 	
@@ -83,6 +85,8 @@ public:
 	
 	void RemoveBuffVfx(const int Handle, const bool SpawnDetachedParticleActor = true);
 
+	USceneComponent* GetAttachmentLocation(EAttachmentPoint Point);
+	
 	UPROPERTY(EditAnywhere)
 	TArray<UBaseBuff*> Buffs;
 

@@ -21,4 +21,6 @@ public:
 private:
 	UPROPERTY(EditAnywhere)
 	int PiercesLeft = 1;
+
+	TArray<ABaseCharacter*> HitCharacters;
 };

@@ -13,27 +13,22 @@ void UArcaneReplicator::InitializeUpgrade(ABaseAbility* _AbilityInstance, int Up
 	Super::InitializeUpgrade(_AbilityInstance, UpgradeLevel);
 }
 
-void UArcaneReplicator::OnAbilityStart(int AbilityHandle)
+void UArcaneReplicator::OnAbilityStart()
 {
-	Super::OnAbilityStart(AbilityHandle);
-	ASpecialAbility* Owner = static_cast<ASpecialAbility*>(GetOwner());
+	Super::OnAbilityStart();
+	ASpecialAbility* Owner = Cast<ASpecialAbility>(AbilityInstance);
 	if(Owner != nullptr)
 	{
 		
 		//FVector Forward = Owner->GetActorForwardVector();
 		const auto TurretClass = FPersistentWorldManager::AttackManager->ArcaneReplicatorTurretBP;
-		AActor* Turret = GetWorld()->SpawnActor(TurretClass);
+		AActor* InstantiatedActor = GetWorld()->SpawnActor(TurretClass);
+		AArcaneReplicatorCrab* Turret = Cast<AArcaneReplicatorCrab>(InstantiatedActor);
 		if(Turret != nullptr)
 		{
-			const auto TurretCasted = static_cast<ABaseAbility*>(Turret);
-			if(TurretCasted != nullptr)
-			{
-				TurretCasted->SetActorLocation(Owner->GetActorLocation());
-				Owner->Parent = Turret;
-				TurretCasted->AbilityLifetime = Owner->AbilityLifetime;
-				TurretCasted->ResetLifetime();
-			}
+			Turret->SetActorLocation(Owner->GetActorLocation());
+			Owner->Parent = Turret->GetAttachmentLocation(Owner->AttachmentPoint);
+			Turret->SetLifetime(Owner->AbilityLifetime);
 		}
-		
 	}
 }

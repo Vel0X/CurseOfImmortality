@@ -19,6 +19,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TMap<TEnumAsByte<EStats>, float> BaseStats = {
 		{Health, 10.0f},
+		{AttackSpeed, 1.0f},
 		{PhysicalDamage, 10.0f},
 		{Soul, 10.0f},
 		{Arcane, 10.0f},

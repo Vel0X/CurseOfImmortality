@@ -3,6 +3,8 @@
 
 #include "Pierce.h"
 
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
+
 void UPierce::InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel)
 {
 	Super::InitializeUpgrade(_AbilityInstance, UpgradeLevel);
@@ -26,16 +28,19 @@ void UPierce::InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel
 void UPierce::OnEnemyHit(ABaseCharacter* Enemy)
 {
 	Super::OnEnemyHit(Enemy);
+
+	if(HitCharacters.Contains(Enemy))
+		return;
 	
-	ABaseAbility* Owner = static_cast<ABaseAbility*>(GetOwner());
 	if(PiercesLeft > 0)
 	{
-		Owner->DestroyOnEnemyHit = false;
+		AbilityInstance->DestroyOnEnemyHit = false;
+		HitCharacters.Add(Enemy);
 		PiercesLeft--;
 	}
 	else
 	{
-		Owner->DestroyOnEnemyHit = true;
+		AbilityInstance->DestroyOnEnemyHit = true;
 	}
 	
 }

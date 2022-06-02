@@ -3,9 +3,9 @@
 
 #include "MeleeAbility.h"
 
-void AMeleeAbility::InitializeAbility(int _AbilityHandle, ABaseCharacter* _Caster, int Level)
+void AMeleeAbility::InitializeAbility(ABaseCharacter* _Caster, int Level)
 {
-	Super::InitializeAbility(_AbilityHandle, _Caster, Level);
+	Super::InitializeAbility(_Caster, Level);
 }
 
 void AMeleeAbility::Tick(float DeltaSeconds)

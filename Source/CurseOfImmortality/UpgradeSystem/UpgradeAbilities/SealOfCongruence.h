@@ -17,8 +17,7 @@ class CURSEOFIMMORTALITY_API USealOfCongruence final: public UBaseUpgrade
 public:
 	virtual void InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel) override;
 protected:
-	virtual void OnAbilityStart(int AbilityHandle) override;
-	virtual void OnAbilityEnd(int AbilityHandle) override;
+	virtual void OnAbilityStart() override;
 private:
 	UPROPERTY(EditAnywhere)
 	int ChargesLeft = 1;

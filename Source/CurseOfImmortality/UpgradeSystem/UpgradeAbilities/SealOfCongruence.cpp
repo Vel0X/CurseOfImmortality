@@ -29,9 +29,9 @@ void USealOfCongruence::InitializeUpgrade(ABaseAbility* _AbilityInstance, int Up
 	}
 }
 
-void USealOfCongruence::OnAbilityStart(int AbilityHandle)
+void USealOfCongruence::OnAbilityStart()
 {
-	Super::OnAbilityStart(AbilityHandle);
+	Super::OnAbilityStart();
 	if(ChargesLeft == 0)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("No Charges left (Seal of Congruence) %d"), ChargesLeft);
@@ -42,10 +42,9 @@ void USealOfCongruence::OnAbilityStart(int AbilityHandle)
 	
 	const UAttackManager* AttackManager = FPersistentWorldManager::AttackManager;
 
-	ABaseAbility* Owner = static_cast<ABaseAbility*>(GetOwner());
-	if(Owner != nullptr)
+	if(AbilityInstance != nullptr)
 	{
-		FVector Direction = Owner->GetActorForwardVector();
+		FVector Direction = AbilityInstance->GetActorForwardVector();//FVector(1,0,0); //
 		const float AngleChange = (Projectiles-1) * AngleBetweenProjectiles;
 		const FRotator StartRotator = FRotator(0.0f,-(AngleChange / 2.0f), 0.0f);
 		const FRotator OngoingRotator = FRotator(0.0f, AngleBetweenProjectiles, 0.0f);
@@ -58,7 +57,7 @@ void USealOfCongruence::OnAbilityStart(int AbilityHandle)
 				if((Projectiles-1)/2 != i)
 				{
 					const FRotator Rotation = UKismetMathLibrary::Conv_VectorToRotator(Direction);
-					AttackManager->SpawnFromTemplate(Owner, Rotation);
+					AttackManager->SpawnFromTemplate(AbilityInstance, AbilityInstance->GetActorLocation(), Rotation);
 				}
 
 				Direction = OngoingRotator.RotateVector(Direction);
@@ -71,9 +70,4 @@ void USealOfCongruence::OnAbilityStart(int AbilityHandle)
 	}
 }
 
-void USealOfCongruence::OnAbilityEnd(int AbilityHandle)
-{
-	Super::OnAbilityEnd(AbilityHandle);
-	//UE_LOG(LogTemp, Warning, TEXT("On Abilityend was called in Seal of Congruence Upgrade"));
- 
-}
+
