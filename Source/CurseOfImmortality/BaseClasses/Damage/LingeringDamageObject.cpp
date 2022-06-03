@@ -3,6 +3,12 @@
 
 #include "LingeringDamageObject.h"
 
+void ULingeringDamageObject::SetupDamageObject(const UDamageSpecification* Specification)
+{
+	Super::SetupDamageObject(Specification);
+	HitTimer = Specification->HitTimer;
+}
+
 bool ULingeringDamageObject::DealDamage(ABaseCharacter* Character)
 {
 	if(TimeUntilNextHit <= 0.0f)

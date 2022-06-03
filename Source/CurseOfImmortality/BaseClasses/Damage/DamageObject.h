@@ -25,7 +25,7 @@ public:
 
 	bool ScaleWithAbilityLevel;
 
-	void SetupDamageObject(const UDamageSpecification* Specification);
+	virtual void SetupDamageObject(const UDamageSpecification* Specification);
 
 	virtual bool DealDamage(ABaseCharacter* Character);
 

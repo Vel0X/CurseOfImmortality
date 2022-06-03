@@ -1,5 +1,6 @@
 ﻿#include "PersistentWorldManager.h"
 
+ASoundManager* FPersistentWorldManager::SoundManager = nullptr;
 UAttackManager* FPersistentWorldManager::AttackManager = nullptr;
 APlayerCharacter* FPersistentWorldManager::PlayerCharacter = nullptr;
 AObjectFactory* FPersistentWorldManager::ObjectFactory = nullptr;
@@ -17,5 +18,7 @@ TMap<FString, bool> FPersistentWorldManager::Logs = {
 };
 
 TMap<FString, bool> FPersistentWorldManager::ControlFlags = {
-	{"automaticroundincrement", false}
+	{"automaticroundincrement", false},
+	{"sfx", true},
+	{"music", true}
 };

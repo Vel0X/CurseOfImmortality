@@ -15,6 +15,8 @@ class CURSEOFIMMORTALITY_API ULingeringDamageObject : public UDamageObject
 	GENERATED_BODY()
 
 public:
+
+	virtual void SetupDamageObject(const UDamageSpecification* Specification) override;
 	virtual bool DealDamage(ABaseCharacter* Character) override;
 
 	virtual void Tick(float DeltaTime) override;

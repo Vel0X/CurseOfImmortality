@@ -18,6 +18,8 @@ public:
 	AArcaneReplicatorTurret();
 
 	virtual void Tick(float DeltaSeconds) override;
+
+	void SetDirection(FVector Direction);
 	
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* Mesh;

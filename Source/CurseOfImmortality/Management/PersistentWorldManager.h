@@ -2,6 +2,7 @@
 #include "ObjectFactory.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/Arena/Arena.h"
+#include "CurseOfImmortality/BaseClasses/SoundManager.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "Rounds/RoundsManager.h"
 
@@ -13,6 +14,7 @@ public:
 	static AObjectFactory* ObjectFactory;
 	static APathfindingGrid* PathfindingGrid;
 	static ARoundsManager* RoundsManager;
+	static ASoundManager* SoundManager;
 	static AArena* Arena;
 
 	static TArray<ABaseCharacter*> GetEnemies()
@@ -79,7 +81,13 @@ public:
 		{
 		case AutomaticRoundIncrement:
 			return ReturnIfControlflagsContains("automaticroundincrement");
+		case SFX:
+			return ReturnIfControlflagsContains("sfx");
+		case Music:
+			return ReturnIfControlflagsContains("music");
+		default: ;
 		}
+			
 		return false;
 	}
 
@@ -136,6 +144,7 @@ public:
 		ObjectFactory = nullptr;
 		RoundsManager = nullptr;
 		Arena = nullptr;
+		SoundManager = nullptr;
 	}
 
 private:

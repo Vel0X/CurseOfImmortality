@@ -19,3 +19,8 @@ void AArcaneReplicatorTurret::Tick(float DeltaSeconds)
 	const FVector Offset = DeltaSeconds * 100.0f * Speed * GetActorForwardVector();
 	AddActorWorldOffset(Offset, false);
 }
+
+void AArcaneReplicatorTurret::SetDirection(FVector Direction)
+{
+	SetActorRotation(Direction.Rotation());
+}

@@ -50,7 +50,7 @@ void AKarysAnimus::Tick(float DeltaTime)
 			ABaseAbility* Projectile = Cast<ABaseAbility>(GetWorld()->SpawnActor(ProjectileClass, &Location, &Rotation));
 			if(Projectile != nullptr)
 			{
-				Projectile->InitializeAbility(Caster,1);
+				Projectile->InitializeAbility(Caster,AbilityLevel);
 			}
 		}	
 		

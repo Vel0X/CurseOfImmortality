@@ -23,7 +23,6 @@ AFireball::AFireball()
 void AFireball::OnInteraction(ABaseAbility* OtherAbility)
 {
 	Super::OnInteraction(OtherAbility);
-	UE_LOG(LogTemp, Warning, TEXT("ffff"));
 	//rotate the Actor 180°
 	FVector NewForward = GetActorForwardVector();
 	NewForward.X *= -1;

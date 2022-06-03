@@ -25,7 +25,7 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	//UStormCallerStateMachine* StateMachine;
 
-	void SetLifetime(float Lifetime);
+	void Initialize(FVector Direction, float Lifetime);
 
 	float RemainingLifetime = 1.0f;
 

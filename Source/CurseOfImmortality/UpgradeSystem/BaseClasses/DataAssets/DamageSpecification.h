@@ -29,4 +29,8 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UDamageObject> Class;
+
+	/** In which time interval damage will be dealt */
+	UPROPERTY(EditAnywhere, Category="LingeringDamageObjectSettings")
+	float HitTimer = 0.5f;
 };

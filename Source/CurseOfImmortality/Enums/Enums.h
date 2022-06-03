@@ -124,7 +124,9 @@ enum ELog
 UENUM()
 enum EControlFlag
 {
-	AutomaticRoundIncrement
+	AutomaticRoundIncrement,
+	SFX,
+	Music
 };
 
 UENUM()

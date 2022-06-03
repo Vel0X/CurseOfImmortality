@@ -28,7 +28,7 @@ void UArcaneReplicator::OnAbilityStart()
 		{
 			Turret->SetActorLocation(Owner->GetActorLocation());
 			Owner->Parent = Turret->GetAttachmentLocation(Owner->AttachmentPoint);
-			Turret->SetLifetime(Owner->AbilityLifetime);
+			Turret->Initialize(Owner->Caster->GetActorForwardVector(), Owner->AbilityLifetime);
 		}
 	}
 }

@@ -36,7 +36,7 @@ void UAttackManager::BeginPlay()
 	Super::BeginPlay();
 	FPersistentWorldManager::AttackManager = this;
 	UpdateAbilityPool();
-	SortActiveUpgrades();
+	SortActiveUpgrades(true);
 
 }
 
@@ -52,7 +52,7 @@ void UAttackManager::SortActiveUpgrades(bool Verbose)
 
 	
 	ActiveUpgrades.ValueSort([](const FActiveUpgrade& A, const FActiveUpgrade& B) {
-	return A.Specification < B.Specification; // sort strings by length
+	return A.Specification->UpgradeOrder < B.Specification->UpgradeOrder; // sort strings by length
 		});
 	
 	if(Verbose)

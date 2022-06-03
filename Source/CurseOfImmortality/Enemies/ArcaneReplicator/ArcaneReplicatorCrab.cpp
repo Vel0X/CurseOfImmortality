@@ -13,8 +13,9 @@ AArcaneReplicatorCrab::AArcaneReplicatorCrab()
 	Mesh->SetupAttachment(RootComponent);
 }
 
-void AArcaneReplicatorCrab::SetLifetime(float Lifetime)
+void AArcaneReplicatorCrab::Initialize(FVector Direction, float Lifetime)
 {
+	SetActorRotation(Direction.Rotation());
 	RemainingLifetime = Lifetime;
 }
 
