@@ -94,7 +94,8 @@ enum EUpgradeName
 	Revelation,
 	ArcaneReplicator,
 	DolomarsWrath,
-	SeaOfDarkness
+	SeaOfDarkness,
+	MawSlam
 };
 
 UENUM()
