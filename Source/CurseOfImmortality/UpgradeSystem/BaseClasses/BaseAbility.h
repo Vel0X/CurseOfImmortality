@@ -48,6 +48,8 @@ public:
 	bool CanInteract = false;
 	UPROPERTY(EditAnywhere)
 	float RelativeSize = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int AbilityLevel = 1;
 
 	UPROPERTY(EditAnywhere)
 	bool IgnoreInitialCollisions = false;

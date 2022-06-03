@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CurseOfImmortality/BaseClasses/Damage/DamageObject.h"
+#include "CurseOfImmortality/BaseClasses/Damage/DamageFormula.h"
 #include "DamageSpecification.generated.h"
 
+
+class UDamageObject;
 /**
  * 
  */
@@ -18,6 +20,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	float Damage = 10.0f;
 
+	UPROPERTY(EditAnywhere, Category="Level")
+	bool ScaleWithAbilityLevel;
+	
+	/** How to calculate the Damage. Can be specified on a per Level Basis. If this Damageobject does not have levels the first entry will be picked */
+	UPROPERTY(EditAnywhere)
+	TArray<FDamageFormula> DamageFormulas; 
+	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UDamageObject> Class;
 };

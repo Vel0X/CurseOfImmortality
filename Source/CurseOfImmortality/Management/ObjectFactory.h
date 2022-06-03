@@ -76,6 +76,8 @@ public:
 	ABaseAbility* SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation, const ABaseCharacter* Caster) const;
 
 	ADamageIndicator* SpawnDamageIndicator(FString Text, FColor Color, const FVector Location, const FRotator Rotation) const;
+
+	UAudioComponent* SpawnSound();
 	
 	/**
 	 * @brief DataAsset containing all of the Spawnable Actors, Components and UObjects. Should not be accessed directly, but using the object-specific functions

@@ -126,7 +126,7 @@ void ACustomGameMode::AddBuffToPlayer(FString Key)
 		Buff = Rejuvenation;
 	UBaseBuff* BuffInstance = ObjectFactory->GetBuff(Buff);
 	BuffInstance->SetupBuff(ObjectFactory->GetSpecification(Buff));
-	MainChar->AddBuff(BuffInstance, nullptr);
+	MainChar->AddBuff(BuffInstance, nullptr, 1);
 	
 }
 

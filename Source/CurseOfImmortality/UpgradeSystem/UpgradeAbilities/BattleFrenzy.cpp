@@ -11,7 +11,7 @@ void UBattleFrenzy::OnEnemyHit(ABaseCharacter* Enemy)
 	Super::OnEnemyHit(Enemy);
 	//apply the Adrenaline Rush Buff on the Caster
 	const auto AdrenalineRushInstance = FPersistentWorldManager::ObjectFactory->GetBuff(AdrenalineRush);
-	AbilityInstance->Caster->AddBuff(AdrenalineRushInstance, AbilityInstance->Caster);
+	AbilityInstance->Caster->AddBuff(AdrenalineRushInstance, AbilityInstance->Caster, Level);
 }
 
 void UBattleFrenzy::InitializeUpgrade(ABaseAbility* _AbilityInstance, int UpgradeLevel)

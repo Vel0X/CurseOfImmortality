@@ -44,5 +44,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	ABaseAbility* AbilityInstance;
 
+	UPROPERTY(EditAnywhere)
+	int Level;
+
 		
 };

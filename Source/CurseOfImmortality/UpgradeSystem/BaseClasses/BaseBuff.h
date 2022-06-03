@@ -60,6 +60,8 @@ public:
 	//when this buff is already on an object multiple iterations can be stacked atop of each other
 	int CurrentStacks = 1;
 
+	int BuffLevel = 1;
+	
 	bool Stackable;
 	int MaxStacks = 1;
 	bool CustomBuffEnd = false;

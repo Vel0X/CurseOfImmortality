@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/DamageSpecification.h"
 #include "UObject/Object.h"
 #include "DamageObject.generated.h"
 
@@ -19,6 +20,10 @@ class CURSEOFIMMORTALITY_API UDamageObject : public UObject
 
 public:
 	float Damage;
+
+	TArray<FDamageFormula> Formulas;
+
+	bool ScaleWithAbilityLevel;
 
 	void SetupDamageObject(const UDamageSpecification* Specification);
 

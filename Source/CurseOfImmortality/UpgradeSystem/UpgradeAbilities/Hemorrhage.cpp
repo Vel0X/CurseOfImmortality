@@ -10,5 +10,5 @@ void UHemorrhage::OnEnemyHit(ABaseCharacter* Enemy)
 	Super::OnEnemyHit(Enemy);
 	//apply the Cursemark Of Doom Buff on the Enemy
 	const auto BleedInstance = FPersistentWorldManager::ObjectFactory->GetBuff(Bleed);
-	Enemy->AddBuff(BleedInstance, AbilityInstance->Caster);
+	Enemy->AddBuff(BleedInstance, AbilityInstance->Caster, Level);
 }

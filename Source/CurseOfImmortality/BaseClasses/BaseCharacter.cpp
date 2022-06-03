@@ -48,6 +48,8 @@ void ABaseCharacter::BeginPlay()
 	}
 	
 	RecalculateStats();
+
+
 	if(Stats.Contains(EStats::Health))
 	{
 		CurrentHealth = Stats[EStats::Health];
@@ -173,7 +175,7 @@ void ABaseCharacter::RecalculateStats()
 	}
 }
 
-void ABaseCharacter::AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter)
+void ABaseCharacter::AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter, int Level)
 {
 	int FoundIndex = -1;
 	for (int i = 0; i < Buffs.Num(); ++i)
@@ -194,7 +196,7 @@ void ABaseCharacter::AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter)
 			//if the Buff should renew when it is already present
 			if(Buff->RefreshOnNew)
 			{
-				Buffs[FoundIndex]->InitializeBuff(1, this, Inflicter);
+				Buffs[FoundIndex]->InitializeBuff(Level, this, Inflicter);
 				if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
 					UE_LOG(LogTemp, Warning, TEXT("%s was already present and was refreshed"), *Buff->DisplayName);
 			}
@@ -213,7 +215,7 @@ void ABaseCharacter::AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter)
 	else
 	{
 		Buffs.Add(Buff);
-		Buff->InitializeBuff(1,this, Inflicter);
+		Buff->InitializeBuff(Level,this, Inflicter);
 		if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
 			UE_LOG(LogTemp, Warning, TEXT("%s was added"), *Buff->DisplayName);
 	}
@@ -274,6 +276,46 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 		Buffs[i]->OnTakeDamage(Ability);
 	}
 	
+}
+
+void ABaseCharacter::TakeDmg(FDamageFormula Formula, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Visual)
+{
+	const float Scale = Formula.ScaleFactor * Stats[PhysicalDamage];
+	UE_LOG(LogTemp, Warning, TEXT("Scale %f"), Scale);
+	const float Amount = (Formula.BaseDamage + Scale) * (1 + FMath::FRandRange(-Formula.Variation, Formula.Variation));
+	CurrentHealth -= Amount;
+
+	FString Text = "";
+	Text.AppendInt(Amount);
+
+	if(Visual)
+	{
+		FColor Color = FColor(255,0,0);
+		if(Dealer == this) //if the damage is self inflicted, display the damage number in a darker shade of red
+			Color = FColor(50,0,0);
+	
+		ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(Text, Color, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
+	}
+
+
+	if(Dealer != nullptr && Dealer != this)
+	{
+		Dealer->OnDamageDealt(Amount, this); //Inform the DamageDealer
+	}
+	if(FPersistentWorldManager::GetLogLevel(ELog::DamageComponent))
+		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: %s Health is at %f Max Health %f"), *DisplayName, CurrentHealth, Stats[EStats::Health]);
+	
+	if(CurrentHealth <= 0.0f)
+	{
+		OnDeath();
+	}
+	
+	//notify all buffs of the damage taken
+	
+	for (int i = 0; i < Buffs.Num(); ++i)
+	{
+		Buffs[i]->OnTakeDamage(Ability);
+	}
 }
 
 void ABaseCharacter::OnDamageDealt(float Amount, ABaseCharacter* DamageRecipient)

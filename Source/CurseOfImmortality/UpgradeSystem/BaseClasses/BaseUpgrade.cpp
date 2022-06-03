@@ -20,6 +20,8 @@ void UBaseUpgrade::InitializeUpgrade(ABaseAbility* _AbilityInstance, int Upgrade
 	{
 		AbilityInstance = _AbilityInstance; //grab a reference to the Ability (might not be needed since component should easily access it anyway)
 	}
+
+	Level = UpgradeLevel;	
 }
 
 

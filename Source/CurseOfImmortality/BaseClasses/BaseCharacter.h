@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/Enums/Enums.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/DamageSpecification.h"
 #include "GameFramework/Pawn.h"
 #include "BaseCharacter.generated.h"
 
@@ -65,7 +66,7 @@ public:
 	 */
 	void RecalculateStats();
 
-	void AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter);
+	void AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter, int Level);
 	void RemoveBuff(UBaseBuff* Buff);
 
 	/**
@@ -76,6 +77,8 @@ public:
 	 * @param Visual Enable Damage Numbers
 	 */
 	void TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Visual = true);
+
+	void TakeDmg(FDamageFormula Formula, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Visual = true);
 
 	void OnDamageDealt(float Amount, ABaseCharacter* DamageRecipient);
 	

@@ -21,4 +21,6 @@ public:
 	virtual void OnBuffBegin() override;
 	virtual void OnBuffEnd() override;
 	virtual void OnTakeDamage(ABaseAbility* Ability) override;
+
+	float DamageAmount = 20.0f;
 };

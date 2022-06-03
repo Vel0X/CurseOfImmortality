@@ -230,6 +230,7 @@ void ABaseAbility::DestroyAbility()
 void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level)
 {
 	Caster = _Caster;
+	AbilityLevel = Level;
 
 	RemainingAbilityLifetime = AbilityLifetime;
 	//OnActorBeginOverlap.AddDynamic( this, &ABaseAbility::OnEnemyHit);

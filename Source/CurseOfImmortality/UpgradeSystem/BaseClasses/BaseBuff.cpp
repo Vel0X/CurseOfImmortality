@@ -95,6 +95,7 @@ void UBaseBuff::SetupBuff(UBuffSpecification* Specification)
 
 void UBaseBuff::InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter)
 {
+	BuffLevel = Level;
 	Owner = _Owner;
 	Inflicter = _Inflicter;
 	RemainingDuration = BuffDuration;

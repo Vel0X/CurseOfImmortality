@@ -16,5 +16,5 @@ void URevelation::OnAbilityStart()
 
 	//apply the Cursemark Of Doom Buff on the Enemy
 	const auto SoulFlayerInstance = FPersistentWorldManager::ObjectFactory->GetBuff(SoulFlayer);
-	AbilityInstance->Caster->AddBuff(SoulFlayerInstance, AbilityInstance->Caster);
+	AbilityInstance->Caster->AddBuff(SoulFlayerInstance, AbilityInstance->Caster, Level);
 }

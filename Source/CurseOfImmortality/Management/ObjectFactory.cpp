@@ -198,3 +198,8 @@ ADamageIndicator* AObjectFactory::SpawnDamageIndicator(FString Text, FColor Colo
 
 	return nullptr;
 }
+
+UAudioComponent* AObjectFactory::SpawnSound()
+{
+	return nullptr;
+}
