@@ -26,7 +26,7 @@ public:
 	UFUNCTION()
 	virtual void OnTakeDamage(ABaseAbility* Ability);
 	virtual void OnDealDamage(float Amount, ABaseCharacter* Recipient);
-	virtual void AddBuffStack();
+	virtual bool AddBuffStack();
 	virtual void OnBuffBegin();
 	virtual void OnBuffTick(float DeltaTime);
 	virtual void OnBuffEnd();
@@ -61,6 +61,7 @@ public:
 	int CurrentStacks = 1;
 
 	bool Stackable;
+	int MaxStacks = 1;
 	bool CustomBuffEnd = false;
 	bool InheritRotation = false;
 	bool StatModifier = false;
@@ -68,5 +69,6 @@ public:
 
 	int DefaultHandle = -1;
 	
-	TMap<TEnumAsByte<EStats>, float> StatModifications;
+	TMap<TEnumAsByte<EStats>, float> StatModifications; 
+	TMap<TEnumAsByte<EStats>, float> StatModificationsPerStack;
 };

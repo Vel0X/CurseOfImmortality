@@ -3,36 +3,27 @@
 
 #include "Bleed.h"
 
+#include "NiagaraComponent.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
-
-UBleed::UBleed()
-{
-	/*
-	DisplayName = "Bleed";
-	BuffDuration = 5.0f;
-	RemainingDuration = BuffDuration;
-	TimeUntilNextTick = TickInterval;
-	CurrentStacks = 1;
-	Stackable = true;
-	RefreshOnNew = true;
-	CustomBuffEnd = false;
-	StatModifier = false;
-	BuffType = Bleed;
-	*/
-}
 
 void UBleed::InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter)
 {
 	Super::InitializeBuff(Level, _Owner, _Inflicter);
 	ParticleSystemComponent = SetupVfx(CenterPoint);
+	ParticleSystemComponent->SetIntParameter("User.CurrentStacks", 1);
 }
 
-void UBleed::AddBuffStack()
+bool UBleed::AddBuffStack()
 {
-	Super::AddBuffStack();
-	RemainingDuration = BuffDuration;
-	DamageAmount += DamageAmount / static_cast<float>(CurrentStacks);
-	CurrentStacks++;
+	const bool AddedStack = Super::AddBuffStack();
+
+	if(AddedStack)
+	{
+		DamageAmount += DamageAmount / static_cast<float>(CurrentStacks-1);
+		ParticleSystemComponent->SetIntParameter("User.CurrentStacks", CurrentStacks);
+	}
+
+	return AddedStack;
 }
 
 void UBleed::OnBuffEnd()

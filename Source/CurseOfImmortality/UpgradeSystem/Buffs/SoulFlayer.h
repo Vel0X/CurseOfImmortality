@@ -15,8 +15,6 @@ class CURSEOFIMMORTALITY_API USoulFlayer final : public UBaseBuff
 	GENERATED_BODY()
 
 public:
-	USoulFlayer();
-
 	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter) override;
 	virtual void OnBuffEnd() override;
 	virtual void OnBuffTick(float DeltaTime) override;

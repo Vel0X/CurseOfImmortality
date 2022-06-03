@@ -13,5 +13,14 @@ UCLASS()
 class CURSEOFIMMORTALITY_API UMawOfSothrosGroundSlam : public UMawOfSothrosBaseState
 {
 	GENERATED_BODY()
+
+	UMawOfSothrosGroundSlam();
+
+	virtual void OnStateEnter(UStateMachine* StateMachine) override;
+
+	virtual void OnStateExit() override;
+
+	virtual void OnStateUpdate(float DeltaTime) override;
 	
+
 };

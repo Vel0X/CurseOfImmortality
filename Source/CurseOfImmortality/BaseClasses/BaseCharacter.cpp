@@ -205,7 +205,9 @@ void ABaseCharacter::AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter)
 				return;
 			}
 		}
-		Buffs[FoundIndex]->AddBuffStack();
+		const bool AddedStack = Buffs[FoundIndex]->AddBuffStack();
+		if(FPersistentWorldManager::GetLogLevel(ELog::Buff) && AddedStack)
+			UE_LOG(LogTemp, Warning, TEXT("%s was already present with maximum amount of stacks"), *Buff->DisplayName);
 	}
 	//Buff is not already present
 	else
@@ -236,13 +238,22 @@ void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 	}
 }
 
-void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Verbose)
+void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, const bool Visual)
 {
 	CurrentHealth -= Amount;
 
 	FString Text = "";
 	Text.AppendInt(Amount);
-	ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(Text, FColor::Red, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
+
+	if(Visual)
+	{
+		FColor Color = FColor(255,0,0);
+		if(Dealer == this) //if the damage is self inflicted, display the damage number in a darker shade of red
+			Color = FColor(50,0,0);
+	
+		ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(Text, Color, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
+	}
+
 
 	if(Dealer != nullptr && Dealer != this)
 	{

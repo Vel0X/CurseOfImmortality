@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "DamageObject.h"
-#include "UObject/Object.h"
 #include "LingeringDamageObject.generated.h"
 
 /**

@@ -13,14 +13,9 @@ class CURSEOFIMMORTALITY_API UIncreaseHealth : public UBaseBuff
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
-	UIncreaseHealth();
 
-	virtual void AddBuffStack() override;
+	virtual bool AddBuffStack() override;
 	virtual void OnBuffBegin() override;
 
 	virtual void OnBuffEnd() override;
-
-private:
-	float IncreaseValue = 100.0f;
 };

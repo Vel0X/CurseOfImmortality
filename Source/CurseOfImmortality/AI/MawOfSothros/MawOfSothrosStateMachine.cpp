@@ -5,11 +5,24 @@
 
 #include "MawOfSothrosPawn.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
+#include "States/MawOfSothrosBaseState.h"
 #include "States/MawOfSothrosChargeAttack.h"
 #include "States/MawOfSothrosGroundSlam.h"
 #include "States/MawOfSothrosIdle.h"
 #include "States/MawOfSothrosTailSweep.h"
 #include "States/MawOfSothrosVomit.h"
+
+UMawOfSothrosStateMachine::UMawOfSothrosStateMachine()
+{
+	RangedAttackTypes.Add(FAttackType(EMawAttacks::Vomit, 100));
+	RangedAttackTypes.Add(FAttackType(EMawAttacks::ChargeAttack, 100));
+
+	MeleeAttackTypes.Add(FAttackType(EMawAttacks::GroundSlam, 100));
+	MeleeAttackTypes.Add(FAttackType(EMawAttacks::ChargeAttack, 75));
+	MeleeAttackTypes.Add(FAttackType(EMawAttacks::Vomit, 50));
+
+	BackAttackTypes.Add(FAttackType(EMawAttacks::Vomit, 100));;
+}
 
 void UMawOfSothrosStateMachine::BeginPlay()
 {
@@ -24,13 +37,6 @@ void UMawOfSothrosStateMachine::BeginPlay()
 	ChargeAttack = NewObject<UMawOfSothrosChargeAttack>();
 	TailSweep = NewObject<UMawOfSothrosTailSweep>();
 	GroundSlam = NewObject<UMawOfSothrosGroundSlam>();
-
-	//Log States
-	Idle->Verbose = true;
-	Vomit->Verbose = true;
-	ChargeAttack->Verbose = true;
-	TailSweep->Verbose = true;
-	GroundSlam->Verbose = true;
 }
 
 void UMawOfSothrosStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
@@ -53,16 +59,11 @@ void UMawOfSothrosStateMachine::TickComponent(float DeltaTime, ELevelTick TickTy
 	}
 }
 
-void UMawOfSothrosStateMachine::MoveToTarget(FVector Target, float Speed, float DeltaTime)
+void UMawOfSothrosStateMachine::Move(float Speed, float DeltaTime)
 {
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Maw StateMachine")); }
-	Target = Target - SelfRef->GetActorLocation();
-	Target.Z = 0.f;
-	Target.Normalize();
 
-	// SelfRef->MovementComponent->SetDirection(Target, Speed);
-
-	const FVector MoveDir(SelfRef->GetActorLocation() + Target * DeltaTime * Speed);
+	const FVector MoveDir(SelfRef->GetActorLocation() + SelfRef->GetActorForwardVector() * DeltaTime * Speed);
 	SelfRef->SetActorLocation(MoveDir, true);
 }
 

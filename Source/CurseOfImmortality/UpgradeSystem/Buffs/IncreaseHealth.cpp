@@ -4,21 +4,9 @@
 #include "IncreaseHealth.h"
 
 
-UIncreaseHealth::UIncreaseHealth()
+bool UIncreaseHealth::AddBuffStack()
 {
-	DisplayName = "IncreaseHealth";
-	CurrentStacks = 1;
-	Stackable = true;
-	CustomBuffEnd = true;
-	StatModifier = true;
-	StatModifications.Add(Health, IncreaseValue);
-}
-
-void UIncreaseHealth::AddBuffStack()
-{
-	Super::AddBuffStack();
-	CurrentStacks ++;
-	StatModifications[Health] += IncreaseValue;
+	return Super::AddBuffStack();
 	
 }
 

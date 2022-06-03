@@ -22,7 +22,8 @@ enum EBuff
 	IncreaseHealth,
 	CursedBlade,
 	Rejuvenation,
-	SoulFlayer
+	SoulFlayer,
+	AdrenalineRush
 };
 
 UENUM()
@@ -56,6 +57,15 @@ enum EEnemy
 	Deprived,
 	Stormcaller,
 	MawOfSothros
+};
+
+UENUM()
+enum EMawAttacks
+{
+	Vomit,
+	TailSweep,
+	GroundSlam,
+	ChargeAttack,
 };
 
 UENUM()
@@ -106,6 +116,7 @@ enum ELog
 {
 	Round,
 	PlayerStateMachine,
+	MawStateMachine,
 	DamageComponent,
 	Buff
 };

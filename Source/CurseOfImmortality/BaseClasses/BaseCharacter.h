@@ -73,9 +73,9 @@ public:
 	 * @param Amount How much Damage was done
 	 * @param Dealer Who dealt the Damage
 	 * @param Ability By which Ability was the Damage dealt (null, if the Damage was done some other way)
-	 * @param Verbose Enable Logging
+	 * @param Visual Enable Damage Numbers
 	 */
-	void TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Verbose = false);
+	void TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Visual = true);
 
 	void OnDamageDealt(float Amount, ABaseCharacter* DamageRecipient);
 	

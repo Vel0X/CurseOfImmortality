@@ -13,5 +13,12 @@ UCLASS()
 class CURSEOFIMMORTALITY_API UMawOfSothrosChargeAttack : public UMawOfSothrosBaseState
 {
 	GENERATED_BODY()
+
+	UMawOfSothrosChargeAttack();
 	
+	virtual void OnStateEnter(UStateMachine* StateMachine) override;
+
+	virtual void OnStateExit() override;
+
+	virtual void OnStateUpdate(float DeltaTime) override;
 };

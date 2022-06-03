@@ -14,19 +14,13 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosVomit : public UMawOfSothrosBaseState
 {
 	GENERATED_BODY()
 
+	UMawOfSothrosVomit();
+
 	virtual void OnStateEnter(UStateMachine* StateMachine) override;
 
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
-	void ActivateVomit();
-	UFUNCTION(BlueprintCallable)
-	void DeactivateVomit();
-	UFUNCTION(BlueprintCallable)
-	void TransitionToIdle();
-
-	bool SpawnPuddle;
 	float SpawnFrequency = 0;
 };
