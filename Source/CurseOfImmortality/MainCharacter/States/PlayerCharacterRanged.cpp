@@ -3,6 +3,7 @@
 
 #include "PlayerCharacterRanged.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
+#include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
@@ -10,11 +11,11 @@
 void UPlayerCharacterRanged::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
-
 	Controller = Cast<UPlayerCharacterStateMachine>(StateMachine);
 	SelfRef = Controller->GetSelfRef();
-	SelfRef->Ranged = true;
-	SelfRef->CurrentAnimationDuration = SelfRef->RangedDuration1;
+	SelfRef->PlayerAnim->SyncAnimAttackSpeed(SelfRef->Stats[AttackSpeed]);
+	SelfRef->PlayerAnim->Ranged = true;
+	SelfRef->CurrentAnimationDuration = SelfRef->PlayerAnim->RangedDuration1;
 
 	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = 0;
 
@@ -26,7 +27,7 @@ void UPlayerCharacterRanged::OnStateEnter(UStateMachine* StateMachine)
 void UPlayerCharacterRanged::OnStateExit()
 {
 	Super::OnStateExit();
-	SelfRef->Ranged = false;
+	SelfRef->PlayerAnim->Ranged = false;
 	if (Verbose)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Exit Ranged State"))

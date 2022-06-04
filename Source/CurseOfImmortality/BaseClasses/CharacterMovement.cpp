@@ -6,6 +6,7 @@
 #include "VectorTypes.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
+#include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 
 
 // Sets default values for this component's properties
@@ -51,7 +52,7 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
 		{
 
-			if (Cast<APlayerCharacter>(GetOwner())->Melee)
+			if (Cast<APlayerCharacter>(GetOwner())->PlayerAnim->Melee)
 			{
 				if (UKismetMathLibrary::Acos(FVector::DotProduct(GetOwner()->GetActorForwardVector(), Direction)) < 1.5)
 				{

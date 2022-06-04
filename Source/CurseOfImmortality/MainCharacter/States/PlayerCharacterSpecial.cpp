@@ -3,6 +3,7 @@
 
 #include "PlayerCharacterSpecial.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
+#include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
@@ -10,12 +11,12 @@
 void UPlayerCharacterSpecial::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
-
+	
 	Controller = Cast<UPlayerCharacterStateMachine>(StateMachine);
 	SelfRef = Controller->GetSelfRef();
-	
-	SelfRef->Special = true;
-	SelfRef->CurrentAnimationDuration = SelfRef->SpecialDuration1;
+	SelfRef->PlayerAnim->SyncAnimAttackSpeed(SelfRef->Stats[AttackSpeed]);
+	SelfRef->PlayerAnim->Special = true;
+	SelfRef->CurrentAnimationDuration = SelfRef->PlayerAnim->SpecialDuration1;
 	
 	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = 0;
 
@@ -27,7 +28,7 @@ void UPlayerCharacterSpecial::OnStateEnter(UStateMachine* StateMachine)
 void UPlayerCharacterSpecial::OnStateExit()
 {
 	Super::OnStateExit();
-	SelfRef->Special = false;
+	SelfRef->PlayerAnim->Special = false;
 	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Exit Special State"))
 	

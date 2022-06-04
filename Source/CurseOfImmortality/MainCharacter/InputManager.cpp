@@ -63,7 +63,7 @@ void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if(Player->Idle || Player->Melee || Player->Running)
+	if(Player->PlayerAnim->Idle || Player->PlayerAnim->Melee || Player->PlayerAnim->Running)
 	{
 		if (MoveX != 0 && LastAction == InputAction::NoAction || MoveY != 0 && LastAction == InputAction::NoAction)
 		{
