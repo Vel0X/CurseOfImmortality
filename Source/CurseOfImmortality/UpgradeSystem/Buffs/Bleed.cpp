@@ -2,20 +2,28 @@
 
 
 #include "Bleed.h"
+
+#include "NiagaraComponent.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 
 void UBleed::InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter)
 {
 	Super::InitializeBuff(Level, _Owner, _Inflicter);
 	ParticleSystemComponent = SetupVfx(CenterPoint);
+	ParticleSystemComponent->SetIntParameter("User.CurrentStacks", 1);
 }
 
-void UBleed::AddBuffStack()
+bool UBleed::AddBuffStack()
 {
-	Super::AddBuffStack();
-	RemainingDuration = BuffDuration;
-	DamageAmount += DamageAmount / static_cast<float>(CurrentStacks);
-	CurrentStacks++;
+	const bool AddedStack = Super::AddBuffStack();
+
+	if(AddedStack)
+	{
+		DamageAmount += DamageAmount / static_cast<float>(CurrentStacks-1);
+		ParticleSystemComponent->SetIntParameter("User.CurrentStacks", CurrentStacks);
+	}
+
+	return AddedStack;
 }
 
 void UBleed::OnBuffEnd()
@@ -30,7 +38,7 @@ void UBleed::OnBuffTick(float DeltaTime)
 	if(TimeUntilNextTick <= 0.0f)
 	{
 		//Deal Damage
-		Owner->TakeDmg(DamageAmount, Inflicter, nullptr, false);
+		Owner->TakeDmg(DamageAmount, Inflicter, nullptr, true);
 		TimeUntilNextTick = TickInterval;
 	}
 	else

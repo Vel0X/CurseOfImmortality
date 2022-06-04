@@ -3,12 +3,9 @@
 
 #include "AdrenalineRush.h"
 
-void UAdrenalineRush::AddBuffStack()
+bool UAdrenalineRush::AddBuffStack()
 {
-	Super::AddBuffStack();
-	CurrentStacks ++;
-	StatModifications[AttackSpeed] += IncreaseValue;
-	
+	return Super::AddBuffStack();
 }
 
 void UAdrenalineRush::OnBuffBegin()

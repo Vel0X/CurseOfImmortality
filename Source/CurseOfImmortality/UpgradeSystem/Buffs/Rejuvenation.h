@@ -14,7 +14,7 @@ class CURSEOFIMMORTALITY_API URejuvenation : public UBaseBuff
 {
 	GENERATED_BODY()
 public:
-	virtual void AddBuffStack() override;
+	virtual bool AddBuffStack() override;
 	
 	virtual void OnBuffTick(float DeltaTime) override;
 

@@ -13,7 +13,7 @@ class CURSEOFIMMORTALITY_API UAdrenalineRush final : public UBaseBuff
 
 public:
 
-	virtual void AddBuffStack() override;
+	virtual bool AddBuffStack() override;
 	virtual void OnBuffBegin() override;
 	virtual void OnBuffEnd() override;
 

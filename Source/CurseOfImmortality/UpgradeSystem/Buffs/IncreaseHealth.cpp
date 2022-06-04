@@ -4,11 +4,9 @@
 #include "IncreaseHealth.h"
 
 
-void UIncreaseHealth::AddBuffStack()
+bool UIncreaseHealth::AddBuffStack()
 {
-	Super::AddBuffStack();
-	CurrentStacks ++;
-	StatModifications[Health] += IncreaseValue;
+	return Super::AddBuffStack();
 	
 }
 

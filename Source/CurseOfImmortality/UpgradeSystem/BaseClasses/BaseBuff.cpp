@@ -21,9 +21,31 @@ void UBaseBuff::OnDealDamage(float Amount, ABaseCharacter* Recipient)
 	
 }
 
-void UBaseBuff::AddBuffStack()
+bool UBaseBuff::AddBuffStack()
 {
+	if(RefreshOnNew)
+	{
+		RemainingDuration = BuffDuration;
+	}
 	
+	//can not add another stack
+	if(CurrentStacks >= MaxStacks)
+	{
+		return false;
+	}
+	
+	CurrentStacks++;
+
+	if(StatModifier)
+	{
+		for (const auto Tuple : StatModifications)
+		{
+			const auto Stat = Tuple.Key;
+			StatModifications[Stat] += StatModificationsPerStack[Stat];
+		}
+	}
+	
+	return true;
 }
 
 void UBaseBuff::OnBuffBegin()
@@ -62,10 +84,12 @@ void UBaseBuff::SetupBuff(UBuffSpecification* Specification)
 	BuffDuration = Specification->BuffDuration;
 	ParticleSystem = Specification->ParticleSystem;
 	Stackable = Specification->Stackable;
+	MaxStacks = Specification->MaxStacks;
 	CustomBuffEnd = Specification->CustomBuffEnd;
 	InheritRotation = Specification->InheritRotation;
 	StatModifier = Specification->StatModifier;
 	RefreshOnNew = Specification->RefreshOnNew;
+	StatModificationsPerStack = Specification->StatModifications; //initially the buff has one stack
 	StatModifications = Specification->StatModifications;
 }
 

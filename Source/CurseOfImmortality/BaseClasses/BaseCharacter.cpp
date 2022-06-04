@@ -205,7 +205,9 @@ void ABaseCharacter::AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter)
 				return;
 			}
 		}
-		Buffs[FoundIndex]->AddBuffStack();
+		const bool AddedStack = Buffs[FoundIndex]->AddBuffStack();
+		if(FPersistentWorldManager::GetLogLevel(ELog::Buff) && AddedStack)
+			UE_LOG(LogTemp, Warning, TEXT("%s was already present with maximum amount of stacks"), *Buff->DisplayName);
 	}
 	//Buff is not already present
 	else

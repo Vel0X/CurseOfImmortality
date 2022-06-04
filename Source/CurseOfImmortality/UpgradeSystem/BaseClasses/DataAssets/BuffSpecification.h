@@ -36,6 +36,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool Stackable;
 
+	UPROPERTY(EditAnywhere)
+	int MaxStacks;
+	
 	//ignore BuffDuration and instead remove the Buff at an arbitrary point in time
 	UPROPERTY(EditAnywhere)
 	bool CustomBuffEnd = false;
