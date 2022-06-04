@@ -18,3 +18,10 @@ AMawSlam::AMawSlam()
 	Collider = CreateDefaultSubobject<USphereComponent>("SphereCollider");
 	Collider->SetupAttachment(RootComponent);
 }
+
+void AMawSlam::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	
+}

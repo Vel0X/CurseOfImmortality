@@ -47,7 +47,10 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 
 
 	FVector PlayerLocation = Player->GetActorLocation();
+	PlayerLocation.Z = 0;
 	FVector OwnLocation = SelfRef->GetActorLocation();
+	OwnLocation.Z = 0;
+
 	FVector VectorToPlayer = PlayerLocation - OwnLocation;
 
 	const float Angle = Controller->CalculateAngleBetweenVectors(VectorToPlayer, SelfRef->GetActorForwardVector());
@@ -67,7 +70,8 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 			{
 				AttackRandomizer(Controller->RangedAttackTypes);
 			}
-			else
+
+			if (Dist > 800.f)
 			{
 				Controller->Move(SelfRef->CurrentMovementSpeed, DeltaTime);
 			}
@@ -90,9 +94,12 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 	}
 	else
 	{
+		if (Dist > 800.f)
+		{
+			Controller->Move(SelfRef->CurrentMovementSpeed, DeltaTime);
+		}
 		SelfRef->CurrentAttackCooldown -= DeltaTime;
 		Controller->FocusOnPlayer(DeltaTime, Angle);
-		Controller->Move(SelfRef->CurrentMovementSpeed, DeltaTime);
 	}
 }
 
@@ -109,9 +116,6 @@ void UMawOfSothrosIdle::AttackRandomizer(TArray<FAttackType>& Attacks) const
 
 	for (int i = 0; i < Attacks.Num(); ++i)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Random Number %i on index %i"), Rand, i);
-
-		UE_LOG(LogTemp, Warning, TEXT("%i on %i"), Attacks[i].CurrentWeight, i);
 		if (Attacks[i].CurrentWeight >= Rand)
 		{
 			for (int f = 0; f < Attacks.Num(); ++f)
@@ -121,7 +125,6 @@ void UMawOfSothrosIdle::AttackRandomizer(TArray<FAttackType>& Attacks) const
 			}
 
 			Attacks[i].CurrentWeight /= 2;
-			UE_LOG(LogTemp, Warning, TEXT("%i on %i"), Attacks[i].CurrentWeight, i);
 
 			switch (Attacks[i].Type)
 			{

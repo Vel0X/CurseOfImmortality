@@ -19,6 +19,4 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosGroundSlam : public UMawOfSothrosBaseS
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
-	
-
 };

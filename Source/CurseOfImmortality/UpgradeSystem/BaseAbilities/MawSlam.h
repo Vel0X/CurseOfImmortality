@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "MawSlam.generated.h"
 
 class USphereComponent;
@@ -22,6 +23,8 @@ class CURSEOFIMMORTALITY_API AMawSlam : public ABaseAbility
 	UNiagaraComponent* ParticleSystem;
 
 public:
+	virtual void Tick(float DeltaSeconds) override;
+	
 	UPROPERTY(EditAnywhere)
 	USphereComponent* Collider;
 };

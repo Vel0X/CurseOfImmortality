@@ -27,6 +27,8 @@ public:
 	void ToggleArmDamage();
 	UFUNCTION(BlueprintCallable)
 	void ToggleHeadDamage();
+	UFUNCTION(BlueprintCallable)
+	void SpawnAbility(FName SocketName);
 
 	//States
 	UPROPERTY(BlueprintReadWrite)
@@ -43,7 +45,7 @@ public:
 	bool AnimationEnd;
 
 	UPROPERTY(EditAnywhere)
-	UAbilitySpecification* AbilitySpecification;
+	UAbilitySpecification* SeaOfDarknessSpecification;
 
 	UPROPERTY(EditAnywhere)
 	float AttackCooldown = 2.f;
@@ -99,6 +101,9 @@ public:
 	UMawOfSothrosStateMachine* StateMachine;
 	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* Mesh;
+
+	UPROPERTY(EditDefaultsOnly)
+	UAbilitySpecification* MawSlamSpecification;
 
 private:
 	UPROPERTY(EditDefaultsOnly)
