@@ -53,7 +53,7 @@ void UPlayerCharacterMelee::OnStateEnter(UStateMachine* StateMachine)
 void UPlayerCharacterMelee::OnStateExit()
 {
 	Super::OnStateExit();
-	Cast<APlayerCharacter>(SelfRef)->CurrentMovementSpeed = 0;
+	SelfRef->CurrentMovementSpeed = 0;
 	UCapsuleComponent* HitBox = Cast<UCapsuleComponent>(SelfRef->GetDefaultSubobjectByName(TEXT("SwordHitbox")));
 	//TODO NEED TO FIND BETTER SOLUTION
 	HitBox->SetGenerateOverlapEvents(false);

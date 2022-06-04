@@ -86,11 +86,10 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 }
 
 
-void UCharacterMovement::SetDirection(FVector MoveInput, float MovementSpeedInput)
+void UCharacterMovement::SetDirection(FVector MoveInput)
 {
 	if (!(MoveInput.IsZero() && Direction.IsZero()))
 	{
-		MovementSpeed = MovementSpeedInput;
 		Direction = MoveInput;
 		DirectionSet = true;
 	}

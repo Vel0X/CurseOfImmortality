@@ -143,7 +143,7 @@ void UInputManager::Move()
 {
 	MoveInput.X = MoveX;
 	MoveInput.Y = MoveY;
-	MovementComponent->SetDirection(MoveInput, Player->Stats[EStats::Movespeed]);
+	MovementComponent->SetDirection(MoveInput);
 }
 
 
