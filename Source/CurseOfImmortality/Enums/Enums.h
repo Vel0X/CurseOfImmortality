@@ -4,7 +4,7 @@ UENUM()
 enum EStats
 {
 	Health,
-	PhysicalDamage, 
+	PhysicalDamage,
 	AttackSpeed,
 	Arcane,
 	Faith,
@@ -66,6 +66,7 @@ enum EMawAttacks
 	TailSweep,
 	GroundSlam,
 	ChargeAttack,
+	Laser
 };
 
 UENUM()
@@ -95,7 +96,8 @@ enum EUpgradeName
 	ArcaneReplicator,
 	DolomarsWrath,
 	SeaOfDarkness,
-	MawSlam
+	MawSlam,
+	LavaCrack
 };
 
 UENUM()

@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/SphereComponent.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
 #include "MawOfSothrosPawn.generated.h"
 
+class USphereComponent;
 class UAbilitySpecification;
 class UMawOfSothrosStateMachine;
 /**
@@ -29,8 +29,11 @@ public:
 	void ToggleArmDamage();
 	UFUNCTION(BlueprintCallable)
 	void ToggleHeadDamage();
+
 	UFUNCTION(BlueprintCallable)
-	void SpawnAbility(FName SocketName);
+	void TriggerMawSlam(FName SocketName);
+	UFUNCTION(BlueprintCallable)
+	void ToggleLaser();
 
 	//States
 	UPROPERTY(BlueprintReadWrite)
@@ -44,16 +47,23 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool GroundSlam;
 	UPROPERTY(BlueprintReadWrite)
+	bool Laser;
+	UPROPERTY(BlueprintReadWrite)
 	bool AnimationEnd;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	UAbilitySpecification* SeaOfDarknessSpecification;
+	UPROPERTY(EditDefaultsOnly)
+	UAbilitySpecification* LavaCrackSpecification;
+	UPROPERTY(EditDefaultsOnly)
+	UAbilitySpecification* MawSlamSpecification;
 
 	UPROPERTY(EditAnywhere)
 	float AttackCooldown = 2.f;
 	float CurrentAttackCooldown;
 
 	bool SpawnPuddle;
+	bool LaserOn;
 
 	//Stats
 	UPROPERTY(EditAnywhere, Category="ChargeAttack")
@@ -65,10 +75,6 @@ public:
 	UPROPERTY(EditAnywhere, Category="Idle")
 	float DistMeleeAttack = 700.f;
 
-	FRotator TargetHeadRotation;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FRotator HeadRotation;
-	
 	//Collisions
 	UPROPERTY(EditDefaultsOnly)
 	UNiagaraComponent* VomitUpperJaw;
@@ -107,9 +113,11 @@ public:
 	UMawOfSothrosStateMachine* StateMachine;
 	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* Mesh;
-
 	UPROPERTY(EditDefaultsOnly)
-	UAbilitySpecification* MawSlamSpecification;
+	UStaticMeshComponent* Beam;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FRotator HeadRotation;
 
 private:
 	UPROPERTY(EditDefaultsOnly)

@@ -69,6 +69,8 @@ public:
 	UState* ChargeAttack;
 	UPROPERTY()
 	UState* TailSweep;
+	UPROPERTY()
+	UState* Laser;
 
 	TArray<FAttackType> RangedAttackTypes;
 	TArray<FAttackType> MeleeAttackTypes;
