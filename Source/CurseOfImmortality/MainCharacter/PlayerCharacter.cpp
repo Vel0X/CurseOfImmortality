@@ -2,6 +2,8 @@
 
 
 #include "PlayerCharacter.h"
+
+#include "PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
@@ -28,7 +30,7 @@ APlayerCharacter::APlayerCharacter() : ABaseCharacter()
 	PlayerCamera->SetupAttachment(SpringArm);
 	InputManager = CreateDefaultSubobject<UInputManager>(TEXT("InputManager"));
 	AttackManager = CreateDefaultSubobject<UAttackManager>(TEXT("AttackManager"));
-	StateMachine = CreateDefaultSubobject<UStateMachine>(TEXT("StateMachine"));
+	StateMachine = CreateDefaultSubobject<UPlayerCharacterStateMachine>(TEXT("StateMachine"));
 	
 }
  
@@ -37,8 +39,9 @@ APlayerCharacter::APlayerCharacter() : ABaseCharacter()
 void APlayerCharacter::Setup()
 {
 	Super::Setup();
+	PlayerAnim = Cast<UPlayerAnim>(SkeletalMesh->GetAnimInstance());
+	StateMachine->Initialize();
 	FPersistentWorldManager::PlayerCharacter = this;
-	PlayerAnim = static_cast<UPlayerAnim*>(SkeletalMesh->GetAnimInstance());
 	SetupInputComponent();
 	//DamageComponent->ConvertInterface();
 }

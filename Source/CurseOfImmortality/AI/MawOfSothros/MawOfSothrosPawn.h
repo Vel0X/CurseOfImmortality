@@ -23,6 +23,12 @@ public:
 	void ActivateVomit();
 	UFUNCTION(BlueprintCallable)
 	void DeactivateVomit();
+	UFUNCTION(BlueprintCallable)
+	void ToggleArmDamage();
+	UFUNCTION(BlueprintCallable)
+	void ToggleHeadDamage();
+	UFUNCTION(BlueprintCallable)
+	void SpawnAbility(FName SocketName);
 
 	//States
 	UPROPERTY(BlueprintReadWrite)
@@ -39,7 +45,7 @@ public:
 	bool AnimationEnd;
 
 	UPROPERTY(EditAnywhere)
-	UAbilitySpecification* AbilitySpecification;
+	UAbilitySpecification* SeaOfDarknessSpecification;
 
 	UPROPERTY(EditAnywhere)
 	float AttackCooldown = 2.f;
@@ -78,17 +84,26 @@ public:
 	UCapsuleComponent* LowerRightArmCollision;
 	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* HeadCollision;
+
+	//Damage
 	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* TailDamageSphere;
 	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* SmokeDamageSphere;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	UCapsuleComponent* ChargeAttackDamageCapsule;
+	UCapsuleComponent* LeftArmDamageCapsule;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UCapsuleComponent* RightArmDamageCapsule;
+	UPROPERTY(EditDefaultsOnly)
+	USphereComponent* HeadDamageSphere;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UMawOfSothrosStateMachine* StateMachine;
 	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* Mesh;
+
+	UPROPERTY(EditDefaultsOnly)
+	UAbilitySpecification* MawSlamSpecification;
 
 private:
 	UPROPERTY(EditDefaultsOnly)

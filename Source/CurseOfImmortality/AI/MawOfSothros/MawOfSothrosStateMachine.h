@@ -18,15 +18,23 @@ struct FAttackType
 {
 	GENERATED_BODY()
 
-	FAttackType(){}
-	
+	FAttackType()
+	{
+		Weight = 400;
+		CurrentWeight = Weight;
+		Type = TailSweep;
+
+		UE_LOG(LogTemp, Warning, TEXT("Wrong Cunstructor in FAttackType"))
+	}
+
 	FAttackType(EMawAttacks Type, int Weight): Type(Type), Weight(Weight)
 	{
+		CurrentWeight = Weight;
 	}
 
 	EMawAttacks Type;
 	int Weight;
-	int CurrentWeight = Weight;
+	int CurrentWeight;
 
 	void ResetWeight()
 	{

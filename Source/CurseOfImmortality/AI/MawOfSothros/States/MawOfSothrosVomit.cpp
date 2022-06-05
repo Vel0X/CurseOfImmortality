@@ -10,11 +10,6 @@
 #include "CurseOfImmortality/UpgradeSystem/BaseAbilities/SeaOfDarkness.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 
-UMawOfSothrosVomit::UMawOfSothrosVomit()
-{
-	AttackType = Vomit;
-}
-
 void UMawOfSothrosVomit::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
@@ -65,21 +60,17 @@ void UMawOfSothrosVomit::OnStateUpdate(float DeltaTime)
 
 			FVector SpawnLocation(SelfRef->PuddleLowerSpawnLocation->GetComponentLocation());
 			ASeaOfDarkness* AbilityInstance = Cast<ASeaOfDarkness>(SelfRef->GetWorld()->SpawnActor(
-				SelfRef->AbilitySpecification->Class,
+				SelfRef->SeaOfDarknessSpecification->Class,
 				&SpawnLocation, &FRotator::ZeroRotator));
 			if (!AbilityInstance) { return; }
 			AbilityInstance->InitializeAbility(SelfRef, 1);
 
 			SpawnLocation = SelfRef->PuddleUpperSpawnLocation->GetComponentLocation();
 			AbilityInstance = Cast<ASeaOfDarkness>(SelfRef->GetWorld()->SpawnActor(
-				SelfRef->AbilitySpecification->Class,
+				SelfRef->SeaOfDarknessSpecification->Class,
 				&SpawnLocation, &FRotator::ZeroRotator));
 			if (!AbilityInstance) { return; }
 			AbilityInstance->InitializeAbility(SelfRef, 1);
-
-			for (int index = 0; index < 2; ++index)
-			{
-			}
 		}
 		SpawnFrequency -= DeltaTime;
 	}

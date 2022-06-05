@@ -6,6 +6,9 @@
 #include "MawOfSothrosStateMachine.h"
 #include "NiagaraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "CurseOfImmortality/BaseClasses/Damage/DamageComponent.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseAbilities/MawSlam.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 
 AMawOfSothrosPawn::AMawOfSothrosPawn()
 {
@@ -29,6 +32,7 @@ AMawOfSothrosPawn::AMawOfSothrosPawn()
 	MawSmoke = CreateDefaultSubobject<UNiagaraComponent>("Maw Smoke");
 	MawSmoke->SetupAttachment(Mesh);
 
+	//Collision
 	UpperBodyCollision = CreateDefaultSubobject<UCapsuleComponent>("Upper Body Collision");
 	UpperBodyCollision->SetupAttachment(Mesh, "UpperBodyCollisionSocket");
 	UpperLeftArmCollision = CreateDefaultSubobject<UCapsuleComponent>("Upper Left Arm Collision");
@@ -41,12 +45,18 @@ AMawOfSothrosPawn::AMawOfSothrosPawn()
 	LowerRightArmCollision->SetupAttachment(Mesh, "LowerRightArmCollisionSocket");
 	HeadCollision = CreateDefaultSubobject<USphereComponent>("Head Collision");
 	HeadCollision->SetupAttachment(Mesh, "HeadCollisionSocket");
+
+	//Damage
+	LeftArmDamageCapsule = CreateDefaultSubobject<UCapsuleComponent>("Left Arm Damage Capsule");
+	LeftArmDamageCapsule->SetupAttachment(Mesh, "LowerLeftArmCollisionSocket");
+	RightArmDamageCapsule = CreateDefaultSubobject<UCapsuleComponent>("Right Arm Damage Capsule");
+	RightArmDamageCapsule->SetupAttachment(Mesh, "LowerRightArmCollisionSocket");
+	HeadDamageSphere = CreateDefaultSubobject<USphereComponent>("HeadDamageSphere");
+	HeadDamageSphere->SetupAttachment(Mesh, "HeadCollisionSocket");
 	TailDamageSphere = CreateDefaultSubobject<USphereComponent>("TailDamageSphere");
 	TailDamageSphere->SetupAttachment(Mesh, "TailDamageSphere");
 	SmokeDamageSphere = CreateDefaultSubobject<USphereComponent>("SmokeDamageSphere");
 	SmokeDamageSphere->SetupAttachment(Mesh);
-	ChargeAttackDamageCapsule = CreateDefaultSubobject<UCapsuleComponent>("ChargeAttackDamageCapsule");
-	ChargeAttackDamageCapsule->SetupAttachment(Mesh);
 }
 
 void AMawOfSothrosPawn::ActivateVomit()
@@ -63,4 +73,38 @@ void AMawOfSothrosPawn::DeactivateVomit()
 	VomitUpperJaw->Deactivate();
 
 	SpawnPuddle = false;
+}
+
+void AMawOfSothrosPawn::ToggleArmDamage()
+{
+	LeftArmDamageCapsule->SetGenerateOverlapEvents(!LeftArmDamageCapsule->GetGenerateOverlapEvents());
+	RightArmDamageCapsule->SetGenerateOverlapEvents(!RightArmDamageCapsule->GetGenerateOverlapEvents());
+
+	DamageComponent->ResetAllHitCharacters();
+}
+
+void AMawOfSothrosPawn::ToggleHeadDamage()
+{
+	HeadDamageSphere->SetGenerateOverlapEvents(!HeadDamageSphere->GetGenerateOverlapEvents());
+
+	DamageComponent->ResetAllHitCharacters();
+}
+
+void AMawOfSothrosPawn::SpawnAbility(FName SocketName)
+{
+	const FVector SpawnLocation = Mesh->GetSocketLocation(SocketName);
+	AMawSlam* AbilityInstance = Cast<AMawSlam>(
+		GetWorld()->SpawnActor(MawSlamSpecification->Class,
+		                       &SpawnLocation,
+		                       &FRotator::ZeroRotator));
+
+	AbilityInstance->InitializeAbility(this, 1);
+
+	DrawDebugSphere(GetWorld(), AbilityInstance->Collider->GetComponentLocation(), 500, 20, FColor::Green, true);
+
+	if (AbilityInstance == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned in MawGroundSlam!"));
+		return;
+	}
 }

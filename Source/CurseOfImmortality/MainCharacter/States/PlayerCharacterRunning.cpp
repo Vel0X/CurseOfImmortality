@@ -3,6 +3,7 @@
 
 #include "PlayerCharacterRunning.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
+#include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
@@ -14,7 +15,7 @@ void UPlayerCharacterRunning::OnStateEnter(UStateMachine* StateMachine)
 	Controller = Cast<UPlayerCharacterStateMachine>(StateMachine);
 	SelfRef = Controller->GetSelfRef();
 
-	SelfRef->Running = true;
+	SelfRef->PlayerAnim->Running = true;
 	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Running State Entered"))
 }
@@ -22,7 +23,7 @@ void UPlayerCharacterRunning::OnStateEnter(UStateMachine* StateMachine)
 void UPlayerCharacterRunning::OnStateExit()
 {
 	Super::OnStateExit();
-	SelfRef->Running = false;
+	SelfRef->PlayerAnim->Running = false;
 	SelfRef->CurrentMovementSpeed = 0;
 	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Exit Running State"))

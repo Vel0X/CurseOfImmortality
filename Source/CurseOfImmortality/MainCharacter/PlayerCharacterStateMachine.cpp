@@ -25,6 +25,12 @@ void UPlayerCharacterStateMachine::TickComponent(float DeltaTime, ELevelTick Tic
 	CurrentState->OnStateUpdate(DeltaTime);
 }
 
+void UPlayerCharacterStateMachine::Initialize()
+{
+	CurrentState = Idle;
+	CurrentState->OnStateEnter(this);
+}
+
 void UPlayerCharacterStateMachine::BeginPlay()
 {
 	Super::BeginPlay();
@@ -40,9 +46,7 @@ void UPlayerCharacterStateMachine::BeginPlay()
 	RangedAttack = NewObject<UPlayerCharacterRanged>();
 	SpecialAttack = NewObject<UPlayerCharacterSpecial>();
 	Dash = NewObject<UPlayerCharacterDash>();
-
-	CurrentState = Idle;
-	CurrentState->OnStateEnter(this);
+	
 }
 
 //Getter and Setter

@@ -17,8 +17,8 @@ void UPlayerCharacterDash::OnStateEnter(UStateMachine* StateMachine)
 	Controller = Cast<UPlayerCharacterStateMachine>(StateMachine);
 	SelfRef = Controller->GetSelfRef();
 	
-	SelfRef->Dash = true;
-	SelfRef->CurrentAnimationDuration = SelfRef->DashDuration1;
+	SelfRef->PlayerAnim->Dash = true;
+	SelfRef->CurrentAnimationDuration = SelfRef->PlayerAnim->DashDuration1;
 	SelfRef->CurrentDashCooldown = SelfRef->DashCooldown;
 	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Dash State Entered"))
@@ -28,7 +28,7 @@ void UPlayerCharacterDash::OnStateEnter(UStateMachine* StateMachine)
 void UPlayerCharacterDash::OnStateExit()
 {
 	Super::OnStateExit();
-	SelfRef->Dash = false;
+	SelfRef->PlayerAnim->Dash = false;
 	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Exit Dash State"))
 }

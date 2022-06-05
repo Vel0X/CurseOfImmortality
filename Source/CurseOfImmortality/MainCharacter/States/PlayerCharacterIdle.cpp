@@ -3,6 +3,7 @@
 
 #include "PlayerCharacterIdle.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
+#include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
@@ -13,8 +14,8 @@ void UPlayerCharacterIdle::OnStateEnter(UStateMachine* StateMachine)
 
 	Controller = Cast<UPlayerCharacterStateMachine>(StateMachine);
 	SelfRef = Controller->GetSelfRef();
-
-	SelfRef->Idle = true;
+	
+	SelfRef->PlayerAnim->Idle = true;
 	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Idle State Entered"))
 }
@@ -22,7 +23,7 @@ void UPlayerCharacterIdle::OnStateEnter(UStateMachine* StateMachine)
 void UPlayerCharacterIdle::OnStateExit()
 {
 	Super::OnStateExit();
-	SelfRef->Idle = false;
+	SelfRef->PlayerAnim->Idle = false;
 	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Exit Idle State"))
 	
