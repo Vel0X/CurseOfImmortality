@@ -19,6 +19,8 @@ class CURSEOFIMMORTALITY_API AMawOfSothrosPawn : public ABaseEnemyPawn
 public:
 	AMawOfSothrosPawn();
 
+	void Tick(float DeltaSeconds) override;
+
 	UFUNCTION(BlueprintCallable)
 	void ActivateVomit();
 	UFUNCTION(BlueprintCallable)
@@ -63,6 +65,10 @@ public:
 	UPROPERTY(EditAnywhere, Category="Idle")
 	float DistMeleeAttack = 700.f;
 
+	FRotator TargetHeadRotation;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FRotator HeadRotation;
+	
 	//Collisions
 	UPROPERTY(EditDefaultsOnly)
 	UNiagaraComponent* VomitUpperJaw;

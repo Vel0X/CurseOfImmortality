@@ -36,7 +36,7 @@ void UAttackManager::BeginPlay()
 	Super::BeginPlay();
 	FPersistentWorldManager::AttackManager = this;
 	UpdateAbilityPool();
-	SortActiveUpgrades(true);
+	SortActiveUpgrades();
 
 }
 
