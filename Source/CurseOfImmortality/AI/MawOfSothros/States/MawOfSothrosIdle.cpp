@@ -18,11 +18,6 @@ void UMawOfSothrosIdle::OnStateEnter(UStateMachine* StateMachine)
 
 	SelfRef->Idle = true;
 
-	MawAttackStates.Add(Controller->Vomit);
-	MawAttackStates.Add(Controller->GroundSlam);
-	MawAttackStates.Add(Controller->ChargeAttack);
-	MawAttackStates.Add(Controller->TailSweep);
-
 	if (FPersistentWorldManager::GetLogLevel(MawStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Maw Idle State Entered"))
@@ -58,7 +53,7 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 
 	if (SelfRef->CurrentAttackCooldown <= 0)
 	{
-		if (Angle < 30.f)
+		if (Angle < 50.f)
 		{
 			Controller->FocusOnPlayer(DeltaTime, Angle);
 
@@ -78,7 +73,7 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 		}
 		else if (Angle > 130.f)
 		{
-			if (Dist < 400.f)
+			if (Dist < 800.f)
 			{
 				AttackRandomizer(Controller->BackAttackTypes);
 			}
@@ -139,6 +134,9 @@ void UMawOfSothrosIdle::AttackRandomizer(TArray<FAttackType>& Attacks) const
 				return;
 			case ChargeAttack:
 				Controller->Transition(Controller->ChargeAttack, Controller);
+				return;
+			case Laser:
+				Controller->Transition(Controller->Laser, Controller);
 				return;
 			default:
 				Controller->Transition(Controller->Idle, Controller);

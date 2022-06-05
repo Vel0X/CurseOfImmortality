@@ -6,6 +6,7 @@
 #include "MawOfSothrosStateMachine.h"
 #include "NiagaraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
 #include "CurseOfImmortality/BaseClasses/Damage/DamageComponent.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseAbilities/MawSlam.h"
@@ -32,6 +33,9 @@ AMawOfSothrosPawn::AMawOfSothrosPawn()
 
 	MawSmoke = CreateDefaultSubobject<UNiagaraComponent>("Maw Smoke");
 	MawSmoke->SetupAttachment(Mesh);
+
+	Beam = CreateDefaultSubobject<UStaticMeshComponent>("Beam");
+	Beam->SetupAttachment(Mesh, "LaserSocket");
 
 	//Collision
 	UpperBodyCollision = CreateDefaultSubobject<UCapsuleComponent>("Upper Body Collision");
@@ -63,37 +67,6 @@ AMawOfSothrosPawn::AMawOfSothrosPawn()
 void AMawOfSothrosPawn::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	const FVector PlayerPosition = FPersistentWorldManager::PlayerCharacter->GetAttachmentLocation(CenterPoint)->GetComponentLocation(); //Player Location
-	FVector BoneLocation = Mesh->GetBoneLocation("Bone_006"); //Neck Bone Location
-	FVector Dir = PlayerPosition - BoneLocation;// + FVector(0,0,500.0f);
-	Dir.Normalize();
-	const FVector Cross = FVector::UpVector.Cross(Dir);
-
-	const float ACos = FMath::Acos(GetActorForwardVector().Dot(Dir));
-	if( ACos < 1.0f)
-		TargetHeadRotation = Cross.Rotation();
-
-	FVector PlayerLoc = FPersistentWorldManager::PlayerCharacter->GetActorLocation();
-	PlayerLoc.Z = 0.0f;
-	const float HeightDiff = BoneLocation.Z + 400.0f;
-	BoneLocation.Z = 0.0f;
-	const float Dist = FVector::Dist(PlayerLoc, BoneLocation);
-	const float Hypotenuse = FMath::Sqrt(Dist * Dist + HeightDiff * HeightDiff);
-
-	const float Beta = FMath::Asin(HeightDiff / Hypotenuse);
-	
-	const float RollAngle = -(90 - (90 - FMath::RadiansToDegrees(Beta)));
-	//UE_LOG(LogTemp, Error, TEXT("HeightDiff %f"), HeightDiff);
-	//UE_LOG(LogTemp, Error, TEXT("Dist %f"), Dist);
-	//UE_LOG(LogTemp, Error, TEXT("Beta %f"), FMath::RadiansToDegrees(Beta));
-
-	//const float RollRadians = FMath::Acos(GetActorForwardVector().Dot())
-	TargetHeadRotation.Roll = RollAngle;
-	//else
-	//	TargetHeadRotation = FVector::UpVector.Cross(GetActorForwardVector()).Rotation();
-	HeadRotation = FMath::RInterpTo(HeadRotation, TargetHeadRotation, DeltaSeconds, 7.0f);
-
-	
 }
 
 void AMawOfSothrosPawn::ActivateVomit()
@@ -127,7 +100,7 @@ void AMawOfSothrosPawn::ToggleHeadDamage()
 	DamageComponent->ResetAllHitCharacters();
 }
 
-void AMawOfSothrosPawn::SpawnAbility(FName SocketName)
+void AMawOfSothrosPawn::TriggerMawSlam(FName SocketName)
 {
 	const FVector SpawnLocation = Mesh->GetSocketLocation(SocketName);
 	AMawSlam* AbilityInstance = Cast<AMawSlam>(
@@ -136,12 +109,11 @@ void AMawOfSothrosPawn::SpawnAbility(FName SocketName)
 		                       &FRotator::ZeroRotator));
 
 	AbilityInstance->InitializeAbility(this, 1);
+}
 
-	DrawDebugSphere(GetWorld(), AbilityInstance->Collider->GetComponentLocation(), 500, 20, FColor::Green, true);
+void AMawOfSothrosPawn::ToggleLaser()
+{
+	Beam->SetVisibility(!Beam->GetVisibleFlag());
 
-	if (AbilityInstance == nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned in MawGroundSlam!"));
-		return;
-	}
+	LaserOn = !LaserOn;
 }

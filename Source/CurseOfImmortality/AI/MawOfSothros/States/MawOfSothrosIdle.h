@@ -26,7 +26,4 @@ public:
 
 	virtual void OnStateUpdate(float DeltaTime) override;
 
-private:
-	UPROPERTY()
-	TArray<UState*> MawAttackStates;
 };

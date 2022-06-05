@@ -85,7 +85,6 @@ void UAttackManager::UpdateAbilityPool()
 	//some entries start with lower weights, that can be boosted by obtaining other upgrades
 
 	Pool.Empty();
-
 	
 	for (const auto Tuple : PossibleUpgrades->PossibleBaseAbilities)
 	{
