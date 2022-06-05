@@ -16,7 +16,7 @@ UInputManager::UInputManager()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	MaxBufferTime = 0.5;
+	MaxBufferTime = 0.3;
 	LastAction = InputAction::NoAction;
 
 	
@@ -49,12 +49,12 @@ void UInputManager::BeginPlay()
 		MovementComponent = Player->MovementComponent;
 		if(MovementComponent == nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("MovementComponent is NULL!!!"));
+			UE_LOG(LogTemp, Warning, TEXT("MovementComponent is Null"));
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player is NullB"));
+		UE_LOG(LogTemp, Warning, TEXT("Player is Null"));
 	}
 }
 
@@ -93,8 +93,17 @@ void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	}
 	else if (InputBuffer.Num()>0)
 	{
-		DoAction(InputBuffer.Last());
-		InputBuffer.Empty();
+		if(InputBuffer.Contains(InputAction::MeleeAbility) && Player->MeleeComboCount > 0)
+		{
+			//UE_LOG(LogTemp, Display, TEXT("Executed BufferAction"));
+			DoAction(InputBuffer.Last());
+			InputBuffer.Empty();
+		} else if (Player->PlayerAnim->AnimationFinished == true)
+		{
+			//UE_LOG(LogTemp, Display, TEXT("Executed BufferAction"));
+			DoAction(InputBuffer.Last());
+			InputBuffer.Empty();
+		}
 	}
 }
 
