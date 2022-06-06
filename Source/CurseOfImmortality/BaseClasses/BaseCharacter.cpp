@@ -350,7 +350,7 @@ UNiagaraComponent* ABaseCharacter::SetupBuffVfx(UNiagaraSystem* Vfx, const EAtta
 	USceneComponent* AttachmentLocation = GetAttachmentLocation(AttachmentPoint);
 	
 	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(Vfx, AttachmentLocation, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
-	NiagaraComp->AttachToComponent(AttachmentLocation, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+	//NiagaraComp->AttachToComponent(AttachmentLocation, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 	ActiveParticleEffects.Add(ActiveParticleEffectHandle, NiagaraComp);
 
 	Handle = ActiveParticleEffectHandle;

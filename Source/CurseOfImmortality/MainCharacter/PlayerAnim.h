@@ -56,7 +56,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="Time")
 	float SpecialDuration1 = 0.5333335f;
 	UPROPERTY(EditAnywhere, Category="Time")
-	float DashDuration1 = 0.15f;
+	float DashDuration1 = 0.25f;
 
 	//States
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

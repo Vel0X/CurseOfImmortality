@@ -44,4 +44,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ADamageIndicator> DamageIndicator;
+	
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* DashVFX;
 };

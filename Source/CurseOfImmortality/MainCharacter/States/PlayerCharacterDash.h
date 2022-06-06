@@ -6,6 +6,7 @@
 #include "PlayerCharacterBaseState.h"
 #include "PlayerCharacterDash.generated.h"
 
+class UNiagaraComponent;
 /**
  * 
  */
@@ -20,4 +21,7 @@ public:
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
+
+	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* NiagaraComp;
 };

@@ -75,7 +75,7 @@ void AMawOfSothrosPawn::Tick(float DeltaSeconds)
 
 	FVector PlayerLoc = FPersistentWorldManager::PlayerCharacter->GetActorLocation();
 	PlayerLoc.Z = 0.0f;
-	const float HeightDiff = BoneLocation.Z + 400.0f;
+	const float HeightDiff = BoneLocation.Z;// + 400.0f;
 	BoneLocation.Z = 0.0f;
 	const float Dist = FVector::Dist(PlayerLoc, BoneLocation);
 	const float Hypotenuse = FMath::Sqrt(Dist * Dist + HeightDiff * HeightDiff);
