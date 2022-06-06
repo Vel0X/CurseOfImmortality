@@ -13,6 +13,7 @@ UCLASS(Blueprintable)
 class CURSEOFIMMORTALITY_API UDeprivedJumpAttack : public UDeprivedBaseState
 {
 	GENERATED_BODY()
+	float Time = 0.5f;
 
 public:
 	virtual void OnStateEnter(UStateMachine* StateMachine) override;

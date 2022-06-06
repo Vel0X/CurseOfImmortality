@@ -4,6 +4,7 @@
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedRecover.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
+#include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 
 void UDeprivedRecover::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -37,7 +38,7 @@ void UDeprivedRecover::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	Controller->FocusOnPlayer();
+	Controller->FocusOnLocation(Player->GetActorLocation(),DeltaTime);
 
 	SelfRef->CurrentRecoverDuration -= DeltaTime;
 

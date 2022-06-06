@@ -10,7 +10,6 @@
 #include "CurseOfImmortality/UpgradeSystem/Buffs/Bleed.h"
 
 
-
 void ACustomGameMode::SpawnEnemy(int Index, const float X, const float Y, const float Z)
 {
 	const FVector Location = FVector(X, Y, Z);
@@ -28,11 +27,11 @@ void ACustomGameMode::SpawnEnemyByName(const FString Index, const float X, const
 
 	EEnemy E = {};
 	const FString IndexToLower = Index.ToLower();
-	if(IndexToLower == "deprived")
+	if (IndexToLower == "deprived")
 		E = Deprived;
-	else if(IndexToLower == "stormcaller")
+	else if (IndexToLower == "stormcaller")
 		E = Stormcaller;
-	else if(IndexToLower == "mawofsothros")
+	else if (IndexToLower == "mawofsothros")
 		E = MawOfSothros;
 
 	FPersistentWorldManager::ObjectFactory->SpawnEnemy(E, Location, FRotator::ZeroRotator);
@@ -42,20 +41,19 @@ void ACustomGameMode::SpawnEnemyByNameCustomSpawnBehaviour(FString Index)
 {
 	EEnemy E = {};
 	const FString IndexToLower = Index.ToLower();
-	if(IndexToLower == "deprived")
+	if (IndexToLower == "deprived")
 		E = Deprived;
-	else if(IndexToLower == "stormcaller")
+	else if (IndexToLower == "stormcaller")
 		E = Stormcaller;
-	else if(IndexToLower == "mawofsothros")
+	else if (IndexToLower == "mawofsothros")
 		E = MawOfSothros;
 
 	FPersistentWorldManager::ObjectFactory->SpawnEnemyCustomSpawnBehaviour(E);
-
 }
 
 void ACustomGameMode::StartRound(const int Index)
 {
-	if(FPersistentWorldManager::RoundsManager != nullptr)
+	if (FPersistentWorldManager::RoundsManager != nullptr)
 	{
 		FPersistentWorldManager::RoundsManager->StartRound(Index);
 	}
@@ -112,22 +110,20 @@ void ACustomGameMode::Pathfinding_GenerateNavmesh()
 
 void ACustomGameMode::AddBuffToPlayer(FString Key)
 {
-	
 	const auto MainChar = FPersistentWorldManager::PlayerCharacter;
 	const auto ObjectFactory = FPersistentWorldManager::ObjectFactory;
 
 	EBuff Buff = {};
 	const FString IndexToLower = Key.ToLower();
-	if(IndexToLower == "soulflayer")
+	if (IndexToLower == "soulflayer")
 		Buff = SoulFlayer;
-	else if(IndexToLower == "bleed")
+	else if (IndexToLower == "bleed")
 		Buff = Bleed;
-	else if(IndexToLower == "rejuvenation")
+	else if (IndexToLower == "rejuvenation")
 		Buff = Rejuvenation;
 	UBaseBuff* BuffInstance = ObjectFactory->GetBuff(Buff);
 	BuffInstance->SetupBuff(ObjectFactory->GetSpecification(Buff));
 	MainChar->AddBuff(BuffInstance, nullptr, 1);
-	
 }
 
 void ACustomGameMode::SetLogLevel(const FString Key, const bool Log)
@@ -151,4 +147,3 @@ void ACustomGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 	FPersistentWorldManager::Clear();
 }
-

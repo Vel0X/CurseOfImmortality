@@ -30,10 +30,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ToggleHeadDamage();
 
+	//AbilityTrigger
 	UFUNCTION(BlueprintCallable)
 	void TriggerMawSlam(FName SocketName);
 	UFUNCTION(BlueprintCallable)
 	void ToggleLaser();
+	UFUNCTION(BlueprintCallable)
+	void TriggerTailSweep();
 
 	//States
 	UPROPERTY(BlueprintReadWrite)
@@ -57,6 +60,8 @@ public:
 	UAbilitySpecification* LavaCrackSpecification;
 	UPROPERTY(EditDefaultsOnly)
 	UAbilitySpecification* MawSlamSpecification;
+	UPROPERTY(EditDefaultsOnly)
+	UAbilitySpecification* TailSweepSpecification;
 
 	UPROPERTY(EditAnywhere)
 	float AttackCooldown = 2.f;
@@ -98,8 +103,6 @@ public:
 	USphereComponent* HeadCollision;
 
 	//Damage
-	UPROPERTY(EditDefaultsOnly)
-	USphereComponent* TailDamageSphere;
 	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* SmokeDamageSphere;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)

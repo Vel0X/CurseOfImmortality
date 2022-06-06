@@ -58,31 +58,20 @@ void UDeprivedStateMachine::BeginPlay()
 	Recover = NewObject<UDeprivedRecover>();
 	NormalAttack = NewObject<UDeprivedNormalAttack>();
 	FindStartLocation = NewObject<UFindStartLocation>();
-
-	//Log States
-	// Idle->Verbose = true;
-	// Running->Verbose = true;
-	// JumpAttack->Verbose = true;
-	// HitPlayer->Verbose = true;
-	// Recover->Verbose = true;
-	// NormalAttack->Verbose = true;
-	// FindStartLocation->Verbose = true;
 }
 
-void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float DeltaTime)
+void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float DeltaTime) const
 {
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
 	Target = Target - SelfRef->GetActorLocation();
 	Target.Z = 0.f;
 	Target.Normalize();
 
-	// SelfRef->MovementComponent->SetDirection(Target, Speed);
-
 	FVector MoveDir(SelfRef->GetActorLocation() + Target * DeltaTime * Speed);
 	SelfRef->SetActorLocation(MoveDir, true);
 }
 
-void UDeprivedStateMachine::FocusOnPlayer()
+void UDeprivedStateMachine::FocusOnLocation(FVector Location, float DeltaTime) const
 {
 	if (!SelfRef)
 	{
@@ -94,25 +83,26 @@ void UDeprivedStateMachine::FocusOnPlayer()
 		UE_LOG(LogTemp, Error, TEXT("No Player in Deprived StateMachine"));
 		return;
 	}
-	const FVector PlayerLocation = Player->GetActorLocation();
-	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
-
-	const FRotator LookAtRotation = FRotator(0.f, Target.Rotation().Yaw, 0.f);
-	SelfRef->CapsuleComponent->SetWorldRotation(LookAtRotation);
-}
-
-void UDeprivedStateMachine::FocusOnPath(FVector PathLocation, float DeltaTime)
-{
-	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
-	const FVector SelfRefLocation(SelfRef->GetActorLocation());
-	FVector Target = PathLocation - SelfRefLocation;
+	FVector Target = Location - SelfRef->GetActorLocation();
 
 	Target.Z = 0;
 	const FRotator LookAtRotation(
 		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 270.f).Rotation());
-
 	SelfRef->CapsuleComponent->SetWorldRotation(LookAtRotation);
 }
+
+// void UDeprivedStateMachine::FocusOnPath(FVector PathLocation, float DeltaTime) const
+// {
+// 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
+// 	const FVector SelfRefLocation(SelfRef->GetActorLocation());
+// 	FVector Target = PathLocation - SelfRefLocation;
+//
+// 	Target.Z = 0;
+// 	const FRotator LookAtRotation(
+// 		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 270.f).Rotation());
+//
+// 	SelfRef->CapsuleComponent->SetWorldRotation(LookAtRotation);
+// }
 
 //Getter and Setter
 ADeprivedPawn* UDeprivedStateMachine::GetSelfRef() const

@@ -4,8 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
-#include "Particles/ParticleSystemComponent.h"
-#include "MawSlam.generated.h"
+#include "TailSweep.generated.h"
 
 class USphereComponent;
 class UNiagaraComponent;
@@ -13,21 +12,16 @@ class UNiagaraComponent;
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API AMawSlam : public ABaseAbility
+class CURSEOFIMMORTALITY_API ATailSweep : public ABaseAbility
 {
 	GENERATED_BODY()
-	// Sets default values for this actor's properties
-	AMawSlam();
+	
+	ATailSweep();
 
 	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* ParticleSystem;
 
-	UPROPERTY(EditAnywhere)
-	float DamageWindow = 0.5f;
-
-public:
-	virtual void Tick(float DeltaSeconds) override;
-	
+public:	
 	UPROPERTY(EditAnywhere)
 	USphereComponent* Collider;
 };

@@ -21,9 +21,12 @@ class CURSEOFIMMORTALITY_API ADeprivedPawn : public ABaseEnemyPawn
 
 public:
 	ADeprivedPawn();
-	
+
 	UFUNCTION(BlueprintCallable)
-	void ToggleDashEffect();
+	void ToggleJumpAttackDamage();
+
+	UPROPERTY(BlueprintReadWrite)
+	bool AnimationEnd;
 
 	//States
 	UPROPERTY(BlueprintReadWrite)
@@ -41,58 +44,47 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool NormalAttack = false;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* Mesh;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* JumpAttackSphere;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* NormalAttackSphereLeft;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* NormalAttackSphereRight;
 	TArray<USphereComponent*> NormalAttackSphereArray;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UDeprivedStateMachine* StateMachine;
-	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* DashEffect;
 
 	//Base Stats
-	UPROPERTY(EditAnywhere, Category="Base Stats")
+	UPROPERTY(EditDefaultsOnly, Category="Base Stats")
 	float DamageJumpAttack = 50.f;
-	UPROPERTY(EditAnywhere, Category="Base Stats")
+	UPROPERTY(EditDefaultsOnly, Category="Base Stats")
 	float DamageNormalAttack = 10.f;
 
 	//Jump Attack
-	UPROPERTY(EditAnywhere, Category="Jump Attack")
+	UPROPERTY(EditDefaultsOnly, Category="Jump Attack")
 	float JumpAttackSpeed = 2000.f;
-	UPROPERTY(EditAnywhere, Category="Jump Attack")
+	UPROPERTY(EditDefaultsOnly, Category="Jump Attack")
 	float DistJumpAttack = 800.f;
-	UPROPERTY(EditAnywhere, Category="Jump Attack")
+	UPROPERTY(EditDefaultsOnly, Category="Jump Attack")
 	float DistAfterPlayer = 200.f;
-	UPROPERTY(EditAnywhere, Category="Jump Attack")
+	UPROPERTY(EditDefaultsOnly, Category="Jump Attack")
 	float PlayerForwardVector = 300.f;
-	UPROPERTY(EditAnywhere, Category="Jump Attack")
+	UPROPERTY(EditDefaultsOnly, Category="Jump Attack")
 	float JumpAttackCoolDown = 5.f;
 	float CurrentJumpAttackCoolDown;
-	UPROPERTY(EditAnywhere, Category="Jump Attack")
-	float JumpAttackChargeTime = 1.f;
-	float CurrentJumpAttackChargeTime;
-	UPROPERTY(EditAnywhere, Category="Jump Attack")
-	float JumpAttackDuration = 2.3f;
-	float CurrentJumpAttackDuration;
 
 	//Cool Downs and Durations
-	UPROPERTY(EditAnywhere, Category="time")
+	UPROPERTY(EditDefaultsOnly, Category="time")
 	float RecoverDuration = 2.f;
 	float CurrentRecoverDuration;
-	UPROPERTY(EditAnywhere, Category="Time")
-	float NormalAttackDuration = 4.29f;
-	float CurrentNormalAttackDuration;
 
 	//Distances for Movement
-	UPROPERTY(EditAnywhere, Category="Distances")
+	UPROPERTY(EditDefaultsOnly, Category="Distances")
 	float DistRunning = 1000.f;
-	UPROPERTY(EditAnywhere, Category="Distances")
+	UPROPERTY(EditDefaultsOnly, Category="Distances")
 	float DistNormalAttack = 400.f;
-	UPROPERTY(EditAnywhere, Category="Distances")
+	UPROPERTY(EditDefaultsOnly, Category="Distances")
 	float MinDistNormalAttack = 50.f;
 };

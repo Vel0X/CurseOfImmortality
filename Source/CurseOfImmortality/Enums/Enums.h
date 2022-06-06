@@ -62,11 +62,11 @@ enum EEnemy
 UENUM()
 enum EMawAttacks
 {
-	Vomit,
-	TailSweep,
-	GroundSlam,
-	ChargeAttack,
-	Laser
+	VomitState,
+	TailSweepState,
+	GroundSlamState,
+	ChargeAttackState,
+	LaserState
 };
 
 UENUM()
@@ -97,7 +97,8 @@ enum EUpgradeName
 	DolomarsWrath,
 	SeaOfDarkness,
 	MawSlam,
-	LavaCrack
+	LavaCrack,
+	TailSweep
 };
 
 UENUM()
