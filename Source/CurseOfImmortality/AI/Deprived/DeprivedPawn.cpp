@@ -28,14 +28,8 @@ ADeprivedPawn::ADeprivedPawn()
 
 	StateMachine = CreateDefaultSubobject<UDeprivedStateMachine>("StateMachine");
 
-	DashEffect = CreateDefaultSubobject<UNiagaraComponent>("Dash Effect");
-	DashEffect->SetupAttachment(Mesh, "DashEffectSocket");
-
 	CurrentJumpAttackCoolDown = 0.f;
-	CurrentJumpAttackChargeTime = JumpAttackChargeTime;
 	CurrentRecoverDuration = RecoverDuration;
-	CurrentNormalAttackDuration = NormalAttackDuration;
-	CurrentJumpAttackDuration = JumpAttackDuration;
 }
 
 void ADeprivedPawn::OnDeath()
@@ -45,14 +39,7 @@ void ADeprivedPawn::OnDeath()
 	//CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
-void ADeprivedPawn::ToggleDashEffect()
+void ADeprivedPawn::ToggleJumpAttackDamage()
 {
-	if (DashEffect->IsActive())
-	{
-		DashEffect->Deactivate();
-	}
-	else
-	{
-		DashEffect->Activate();
-	}
+	JumpAttackSphere->SetGenerateOverlapEvents(!JumpAttackSphere->GetGenerateOverlapEvents());
 }

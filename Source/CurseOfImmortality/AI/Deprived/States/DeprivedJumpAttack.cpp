@@ -27,7 +27,7 @@ void UDeprivedJumpAttack::OnStateEnter(UStateMachine* StateMachine)
 
 	SelfRef->Jump = true;
 
-	// SelfRef->CapsuleComponent->SetCollisionProfileName(TEXT("IgnoreOnlyPawn"));
+	SelfRef->AnimationEnd = false;
 }
 
 void UDeprivedJumpAttack::OnStateExit()
@@ -42,8 +42,6 @@ void UDeprivedJumpAttack::OnStateExit()
 	// Controller->GetSelfRef()->CapsuleComponent->SetCollisionProfileName(TEXT("Character"));
 
 	LocationSet = false;
-	SelfRef->CurrentJumpAttackChargeTime = SelfRef->JumpAttackChargeTime;
-	SelfRef->CurrentJumpAttackDuration = SelfRef->JumpAttackDuration;
 
 	PlayerLocation = FVector::Zero();
 	JumpDestination = FVector::Zero();
@@ -52,41 +50,41 @@ void UDeprivedJumpAttack::OnStateExit()
 void UDeprivedJumpAttack::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
-	
+
 	JumpDestination.Z = 0;
 	OwnLocation = SelfRef->GetActorLocation();
 	OwnLocation.Z = 0;
 
 	Jump(DeltaTime);
 
-	if (FVector::Dist(JumpDestination, OwnLocation) <= 50.f || SelfRef->CurrentJumpAttackDuration <= 0)
+	Time -= DeltaTime;
+
+	if (SelfRef->AnimationEnd)
 	{
 		Controller->Transition(Controller->Recover, Controller);
 	}
-
-	SelfRef->CurrentJumpAttackDuration -= DeltaTime;
 }
 
 void UDeprivedJumpAttack::SetLocation()
 {
-	PlayerLocation = Player->GetActorLocation();
-	FVector PlayerForwardDir(
-		Player->GetActorForwardVector() * (SelfRef->PlayerForwardVector * (Player->CurrentMovementSpeed / Player->
-			Stats[EStats::Movespeed])) +
-		PlayerLocation);
-	OwnLocation = SelfRef->GetActorLocation();
-
-	JumpDestination = PlayerForwardDir - OwnLocation;
-	JumpDestination.Normalize();
-	JumpDestination = JumpDestination * SelfRef->DistAfterPlayer + PlayerForwardDir;
-
-	if (Verbose)
-	{
-		DrawDebugLine(Controller->GetWorld(), PlayerLocation, PlayerForwardDir, FColor::Red, true, 10);
-		DrawDebugLine(Controller->GetWorld(), OwnLocation, PlayerForwardDir, FColor::Green, true, 10);
-		DrawDebugLine(Controller->GetWorld(), PlayerForwardDir, JumpDestination,
-		              FColor::Blue, true, 10);
-	}
+	// PlayerLocation = Player->GetActorLocation();
+	// FVector PlayerForwardDir(
+	// 	Player->GetActorForwardVector() * (SelfRef->PlayerForwardVector * (Player->CurrentMovementSpeed / Player->
+	// 		Stats[EStats::Movespeed])) +
+	// 	PlayerLocation);
+	// OwnLocation = SelfRef->GetActorLocation();
+	//
+	// JumpDestination = PlayerForwardDir - OwnLocation;
+	// JumpDestination.Normalize();
+	// JumpDestination = JumpDestination * SelfRef->DistAfterPlayer + PlayerForwardDir;
+	//
+	// if (Verbose)
+	// {
+	// 	DrawDebugLine(Controller->GetWorld(), PlayerLocation, PlayerForwardDir, FColor::Red, true, 10);
+	// 	DrawDebugLine(Controller->GetWorld(), OwnLocation, PlayerForwardDir, FColor::Green, true, 10);
+	// 	DrawDebugLine(Controller->GetWorld(), PlayerForwardDir, JumpDestination,
+	// 	              FColor::Blue, true, 10);
+	// }
 	LocationSet = true;
 }
 
@@ -94,14 +92,16 @@ void UDeprivedJumpAttack::Jump(float DeltaTime) const
 {
 	const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
 	float CurveValue;
-	Animation->GetCurveValue(FName("MovementSpeed"), CurveValue);
-
 	if (LocationSet)
 	{
-		Controller->MoveToTarget(JumpDestination, SelfRef->JumpAttackSpeed * CurveValue, DeltaTime);
+		Animation->GetCurveValue(FName("MovementSpeed"), CurveValue);
+		SelfRef->SetActorLocation(
+			SelfRef->GetActorLocation() + SelfRef->GetActorForwardVector() * SelfRef->JumpAttackSpeed *
+			DeltaTime
+		);
 	}
 	else
 	{
-		Controller->FocusOnPlayer();
+		Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime);
 	}
 }

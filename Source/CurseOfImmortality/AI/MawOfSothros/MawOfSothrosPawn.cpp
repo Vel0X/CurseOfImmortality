@@ -10,6 +10,7 @@
 #include "CurseOfImmortality/BaseClasses/Damage/DamageComponent.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseAbilities/MawSlam.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseAbilities/TailSweep.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 
 AMawOfSothrosPawn::AMawOfSothrosPawn()
@@ -58,8 +59,6 @@ AMawOfSothrosPawn::AMawOfSothrosPawn()
 	RightArmDamageCapsule->SetupAttachment(Mesh, "LowerRightArmCollisionSocket");
 	HeadDamageSphere = CreateDefaultSubobject<USphereComponent>("HeadDamageSphere");
 	HeadDamageSphere->SetupAttachment(Mesh, "HeadCollisionSocket");
-	TailDamageSphere = CreateDefaultSubobject<USphereComponent>("TailDamageSphere");
-	TailDamageSphere->SetupAttachment(Mesh, "TailDamageSphere");
 	SmokeDamageSphere = CreateDefaultSubobject<USphereComponent>("SmokeDamageSphere");
 	SmokeDamageSphere->SetupAttachment(Mesh);
 }
@@ -116,4 +115,14 @@ void AMawOfSothrosPawn::ToggleLaser()
 	Beam->SetVisibility(!Beam->GetVisibleFlag());
 
 	LaserOn = !LaserOn;
+}
+
+void AMawOfSothrosPawn::TriggerTailSweep()
+{
+	const FVector SpawnLocation = Mesh->GetSocketLocation("TailSweep");
+	ATailSweep* AbilityInstance = Cast<ATailSweep>(GetWorld()->SpawnActor(
+		TailSweepSpecification->Class,
+		&SpawnLocation, &FRotator::ZeroRotator));
+	if (!AbilityInstance) { return; }
+	AbilityInstance->InitializeAbility(this, 1);
 }

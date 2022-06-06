@@ -22,7 +22,7 @@ struct FAttackType
 	{
 		Weight = 400;
 		CurrentWeight = Weight;
-		Type = TailSweep;
+		Type = VomitState;
 
 		UE_LOG(LogTemp, Warning, TEXT("Wrong Cunstructor in FAttackType"))
 	}

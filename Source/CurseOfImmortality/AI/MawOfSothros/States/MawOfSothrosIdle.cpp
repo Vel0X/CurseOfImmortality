@@ -123,19 +123,19 @@ void UMawOfSothrosIdle::AttackRandomizer(TArray<FAttackType>& Attacks) const
 
 			switch (Attacks[i].Type)
 			{
-			case GroundSlam:
+			case GroundSlamState:
 				Controller->Transition(Controller->GroundSlam, Controller);
 				return;
-			case Vomit:
+			case VomitState:
 				Controller->Transition(Controller->Vomit, Controller);
 				return;
-			case TailSweep:
+			case TailSweepState:
 				Controller->Transition(Controller->TailSweep, Controller);
 				return;
-			case ChargeAttack:
+			case ChargeAttackState:
 				Controller->Transition(Controller->ChargeAttack, Controller);
 				return;
-			case Laser:
+			case LaserState:
 				Controller->Transition(Controller->Laser, Controller);
 				return;
 			default:

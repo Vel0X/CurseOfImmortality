@@ -16,8 +16,8 @@ void UDeprivedNormalAttack::OnStateEnter(UStateMachine* StateMachine)
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
 	SelfRef->DamageComponent->ResetAllHitCharacters();
-
 	SelfRef->NormalAttack = true;
+	SelfRef->AnimationEnd = false;
 
 	if (Verbose)
 	{
@@ -30,7 +30,6 @@ void UDeprivedNormalAttack::OnStateExit()
 	Super::OnStateExit();
 
 	SelfRef->NormalAttack = false;
-	SelfRef->CurrentNormalAttackDuration = SelfRef->NormalAttackDuration;
 
 	if (Verbose)
 	{
@@ -42,7 +41,7 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	Controller->FocusOnPlayer();
+	Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime);
 
 	const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
 	float CurveValue;
@@ -54,49 +53,19 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 	{
 		SelfRef->DamageComponent->ResetAllHitCharacters();
 		LeftHandCanAttack = false;
-/*
-		TArray<AActor*> OverlappingActors;
-		SelfRef->NormalAttackSphereLeft->GetOverlappingActors(OverlappingActors);
-
-		for (AActor* OverlappingActor : OverlappingActors)
-		{
-			if (Cast<APlayerCharacter>(OverlappingActor))
-			{
-				//UE_LOG(LogTemp, Warning, TEXT("Damage Left"))
-				SelfRef->DealDamage(SelfRef->DamageNormalAttack, Player);
-				LeftHandCanAttack = false;
-			};
-		}*/
 	}
 	if (RightHandCanAttack)
 	{
 		SelfRef->DamageComponent->ResetAllHitCharacters();
 		RightHandCanAttack = false;
-/*
-		//UE_LOG(LogTemp, Warning, TEXT("Right Hand Can Attack"))
-
-		TArray<AActor*> OverlappingActors;
-		SelfRef->NormalAttackSphereRight->GetOverlappingActors(OverlappingActors);
-
-		for (AActor* OverlappingActor : OverlappingActors)
-		{
-			if (Cast<APlayerCharacter>(OverlappingActor))
-			{
-				//UE_LOG(LogTemp, Warning, TEXT("Damage Right"))
-				SelfRef->DealDamage(SelfRef->DamageNormalAttack, Player);
-				RightHandCanAttack = false;
-			};
-		}
-		*/
 	}
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) > SelfRef->MinDistNormalAttack)
 	{
 		Controller->MoveToTarget(PlayerLocation, (SelfRef->Stats[EStats::Movespeed] + 500) * CurveValue, DeltaTime);
 	}
-	if (SelfRef->CurrentNormalAttackDuration <= 0.f)
+	if (SelfRef->AnimationEnd)
 	{
 		Controller->Transition(Controller->Running, Controller);
 	}
-	SelfRef->CurrentNormalAttackDuration -= DeltaTime;
 }

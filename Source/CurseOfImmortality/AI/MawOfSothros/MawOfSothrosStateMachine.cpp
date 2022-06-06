@@ -15,15 +15,15 @@
 
 UMawOfSothrosStateMachine::UMawOfSothrosStateMachine()
 {
-	RangedAttackTypes.Add(FAttackType(EMawAttacks::Vomit, 100));
-	RangedAttackTypes.Add(FAttackType(EMawAttacks::ChargeAttack, 100));
-	RangedAttackTypes.Add(FAttackType(EMawAttacks::Laser, 100));
+	RangedAttackTypes.Add(FAttackType(VomitState, 100));
+	RangedAttackTypes.Add(FAttackType(ChargeAttackState, 100));
+	RangedAttackTypes.Add(FAttackType(LaserState, 100));
 
-	MeleeAttackTypes.Add(FAttackType(EMawAttacks::GroundSlam, 100));
-	MeleeAttackTypes.Add(FAttackType(EMawAttacks::ChargeAttack, 50));
-	MeleeAttackTypes.Add(FAttackType(EMawAttacks::Vomit, 25));
+	MeleeAttackTypes.Add(FAttackType(GroundSlamState, 100));
+	MeleeAttackTypes.Add(FAttackType(ChargeAttackState, 50));
+	MeleeAttackTypes.Add(FAttackType(VomitState, 25));
 
-	BackAttackTypes.Add(FAttackType(EMawAttacks::TailSweep, 100));;
+	BackAttackTypes.Add(FAttackType(TailSweepState, 100));;
 }
 
 void UMawOfSothrosStateMachine::BeginPlay()

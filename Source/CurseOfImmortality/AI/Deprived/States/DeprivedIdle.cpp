@@ -36,7 +36,7 @@ void UDeprivedIdle::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	Controller->FocusOnPlayer();
+	Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime);
 	const FVector PlayerLocation = Player->GetActorLocation();
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistRunning)

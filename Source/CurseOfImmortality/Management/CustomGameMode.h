@@ -66,6 +66,4 @@ public:
 
 	UFUNCTION(Exec, Category = ExecFunctions)
 	static void SetControlFlag(FString Flag, bool Value);
-
-
 };

@@ -17,8 +17,6 @@ void UMawOfSothrosTailSweep::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef->TailSweep = true;
 	SelfRef->AnimationEnd = false;
 
-	SelfRef->TailDamageSphere->SetGenerateOverlapEvents(true);
-
 	if (FPersistentWorldManager::GetLogLevel(MawStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Tail Sweep State Entered"));
@@ -30,8 +28,6 @@ void UMawOfSothrosTailSweep::OnStateExit()
 	Super::OnStateExit();
 
 	SelfRef->TailSweep = false;
-
-	SelfRef->TailDamageSphere->SetGenerateOverlapEvents(false);
 
 	SelfRef->CurrentAttackCooldown = SelfRef->AttackCooldown;
 
