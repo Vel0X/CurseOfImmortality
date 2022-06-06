@@ -204,6 +204,7 @@ void UInputManager::DoAction(InputAction _InputAction)
 	    {
 	    	if(Player->PlayerAnim->AnimationFinished)
 	    	{
+	    		Player->RotateToClosestEnemy();
 	    		LastAction = InputAction::RangedAbility;
 	    		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Ranged);
 	    		//UE_LOG(LogTemp, Display, TEXT("Used Ranged"));
