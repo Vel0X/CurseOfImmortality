@@ -41,7 +41,7 @@ public:
 
 	//Cooldowns
 	UPROPERTY(EditAnywhere, Category="Time")
-	float DashCooldown = 1.5f;
+	float DashCooldown = 1.0f;
 
 	UPROPERTY(EditAnywhere, Category="Time")
 	float MeleeFollowUpTime = 0.5;
