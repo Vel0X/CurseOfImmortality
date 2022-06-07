@@ -206,7 +206,7 @@ void UInputManager::DoAction(InputAction _InputAction)
 	    	{
 	    		Player->RotateToClosestEnemy();
 	    		LastAction = InputAction::RangedAbility;
-	    		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Ranged);
+	    		Player->AttackManager->OnKeyPressed(Ranged);
 	    		//UE_LOG(LogTemp, Display, TEXT("Used Ranged"));
 	    	}
 	    }
@@ -217,7 +217,7 @@ void UInputManager::DoAction(InputAction _InputAction)
 			if(Player->PlayerAnim->AnimationFinished)
 			{
 				LastAction = InputAction::SpecialAbility;
-				static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Special);
+				Player->AttackManager->OnKeyPressed(Special);
 				//UE_LOG(LogTemp, Display, TEXT("Used Special"));
 			}
 		}
