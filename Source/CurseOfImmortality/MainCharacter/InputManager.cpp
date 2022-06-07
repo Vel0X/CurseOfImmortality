@@ -3,6 +3,8 @@
 
 #include "InputManager.h"
 
+#include <concrt.h>
+
 #include "PlayerAnim.h"
 #include "PlayerCharacter.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
@@ -154,7 +156,6 @@ void UInputManager::Move()
 	MoveInput.Y = MoveY;
 	MovementComponent->SetDirection(MoveInput);
 }
-
 
 void UInputManager::AddToBuffer(InputAction _InputAction)
 {

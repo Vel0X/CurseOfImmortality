@@ -7,6 +7,7 @@
 #include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
+#include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
@@ -84,26 +85,23 @@ void APlayerCharacter::RotateToClosestEnemy()
 		{
 			if(Cast<ABaseCharacter>(HitResult.GetActor()) != nullptr)
 			{
-				UE_LOG(LogTemp, Error, TEXT("Hit base"));
-				float DotProduct = FVector::DotProduct(GetActorForwardVector(),HitResult.ImpactNormal);
-				float Magnitude = GetActorForwardVector().Size() * HitResult.ImpactNormal.Size();
-				float Angle = FMath::RadiansToDegrees(UKismetMathLibrary::Acos(DotProduct/Magnitude));
-				
-				if(Angle > 135)
+				if(Cast<ABaseCharacter>(HitResult.GetActor())->Faction == Enemy)
 				{
-					if((UKismetMathLibrary::Sin(Angle) * (Start - HitResult.GetActor()->GetActorLocation()).Length()) < ClosestDistance)
+					float DotProduct = FVector::DotProduct(GetActorForwardVector(),HitResult.ImpactNormal);
+					float Magnitude = GetActorForwardVector().Size() * HitResult.ImpactNormal.Size();
+					float Angle = FMath::RadiansToDegrees(UKismetMathLibrary::Acos(DotProduct/Magnitude));
+				
+					if(Angle > 135)
 					{
-						float Distance = (Start - HitResult.GetActor()->GetActorLocation()).Length();
-						ClosestDistance = UKismetMathLibrary::Sin(Angle) * (Start - HitResult.GetActor()->GetActorLocation()).Length();
-						ClosestActor = HitResult.GetActor();
-						ClosestHit = HitResult;
+						if((UKismetMathLibrary::Sin(Angle) * (Start - HitResult.GetActor()->GetActorLocation()).Length()) < ClosestDistance)
+						{
+							float Distance = (Start - HitResult.GetActor()->GetActorLocation()).Length();
+							ClosestDistance = UKismetMathLibrary::Sin(Angle) * (Start - HitResult.GetActor()->GetActorLocation()).Length();
+							ClosestActor = HitResult.GetActor();
+							ClosestHit = HitResult;
+						}
 					}
 				}
-				/*if ((Start - HitResult.GetActor()->GetActorLocation()).Length() <= ClosestDistance)
-				{
-					ClosestActor = HitResult.GetActor();
-					ClosestHit = HitResult;
-				}*/
 			}
 		}
 		if (ClosestActor != this)
