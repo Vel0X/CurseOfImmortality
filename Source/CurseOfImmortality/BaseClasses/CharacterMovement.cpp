@@ -33,6 +33,17 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if(Rotating)
+	{
+		FRotator NextRotator = FMath::RInterpTo(GetOwner()->GetActorRotation(), GoalRotation,DeltaTime,23);
+		CurrentTimeToRotate -= DeltaTime;
+		GetOwner()->SetActorRotation(NextRotator);
+		if (CurrentTimeToRotate <= 0)
+		{
+			Rotating = false;
+		}
+	}
+	
 	if (DirectionSet)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Text,%d"), Direction.Length());
@@ -48,6 +59,7 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 			SpeedDep = 1;
 		}
 		Direction.Normalize();
+		//UE_LOG(LogTemp, Warning, TEXT("Text,%s"), *Direction.Rotation().ToString());
 
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
 		{
@@ -56,6 +68,7 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 			{
 				if (UKismetMathLibrary::Acos(FVector::DotProduct(GetOwner()->GetActorForwardVector(), Direction)) < 1.5)
 				{
+					GetOwner()->SetActorRotation(Direction.Rotation());
 					Direction = GetOwner()->GetActorForwardVector();
 				}
 				else
@@ -64,7 +77,7 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 				}
 			}
 		}
-		GetOwner()->SetActorRotation(Direction.Rotation());
+		SmoothRotation(Direction.Rotation(),0.15);
 
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
 		{
@@ -124,5 +137,13 @@ void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, float Delta
 	}
 
 	delete Result;
+}
+
+void UCharacterMovement::SmoothRotation(FRotator Rotation, float Time)
+{
+	Rotating = true;
+	GoalRotation = Rotation;
+	TimeToRotate = Time;
+	CurrentTimeToRotate = Time;
 }
 
