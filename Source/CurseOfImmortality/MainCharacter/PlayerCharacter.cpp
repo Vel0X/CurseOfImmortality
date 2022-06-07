@@ -70,15 +70,21 @@ void APlayerCharacter::RotateToClosestEnemy()
 	TArray<FHitResult> HitArray;
 	float ClosestDistance = SphereTraceRadius;
 	FVector ForwardInSphere = GetActorForwardVector() * SphereTraceRadius;
-	const bool Hit = UKismetSystemLibrary::SphereTraceMulti(GetWorld(), Start, End, SphereTraceRadius, UEngineTypes::ConvertToTraceType(ECC_Camera), false, ActorsToIgnore, EDrawDebugTrace::None,HitArray, true, FLinearColor::Gray, FLinearColor::Blue, 60.0f);
+	if(!GetWorld())
+		UE_LOG(LogTemp, Error, TEXT("world is there"));
+
+	const bool Hit = UKismetSystemLibrary::SphereTraceMulti(GetWorld(), Start, End, SphereTraceRadius,  UEngineTypes::ConvertToTraceType(ECC_Camera),
+		false, ActorsToIgnore, EDrawDebugTrace::None,HitArray, true, FLinearColor::Gray, FLinearColor::Blue, 60.0f);
 	if (Hit)
 	{
 		AActor* ClosestActor = this;
 		FHitResult ClosestHit;
+		UE_LOG(LogTemp, Error, TEXT("Hit %i chars"), HitArray.Num());
 		for(const FHitResult HitResult : HitArray)
 		{
 			if(Cast<ABaseCharacter>(HitResult.GetActor()) != nullptr)
 			{
+				UE_LOG(LogTemp, Error, TEXT("Hit base"));
 				float DotProduct = FVector::DotProduct(GetActorForwardVector(),HitResult.ImpactNormal);
 				float Magnitude = GetActorForwardVector().Size() * HitResult.ImpactNormal.Size();
 				float Angle = FMath::RadiansToDegrees(UKismetMathLibrary::Acos(DotProduct/Magnitude));
