@@ -28,11 +28,13 @@ class CURSEOFIMMORTALITY_API APlayerCharacter : public ABaseCharacter
 public:
 	// Sets default values for this pawn's properties
 	APlayerCharacter();
+	virtual ~APlayerCharacter() override;
 
 protected:
 	
 	virtual void Setup() override;
 	void SetupInputComponent();
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	
@@ -81,4 +83,13 @@ public:
 		UPlayerCharacterStateMachine* StateMachine;
 	UPROPERTY(EditAnywhere)
 		UPlayerAnim* PlayerAnim;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* Weapon;
+
+	UPROPERTY(EditAnywhere)
+		UMaterialInstance* WeaponMaterial;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* WeaponMaterialInst;
 };
