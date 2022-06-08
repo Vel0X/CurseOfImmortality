@@ -40,6 +40,7 @@ void ATargetDummy::Tick(float DeltaSeconds)
 		FVector Direction = CorrectedTarget - CorrectedLocation;
 		Direction.Normalize();
 		SetActorRotation(Direction.Rotation());
-		MovementComponent->SetDirection(GetActorForwardVector());
+		MovementComponent->SetDirection(GetActorForwardVector(),
+					Stats[EStats::Movespeed]);
 	}
 }

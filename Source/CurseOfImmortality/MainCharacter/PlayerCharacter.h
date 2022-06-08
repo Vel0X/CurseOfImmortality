@@ -66,9 +66,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float MovementSpeedWhileAttacking = 300;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float SphereTraceRadius = 700.0f;
-	
 	UPROPERTY(EditAnywhere)
 		USkeletalMeshComponent* SkeletalMesh;
 	UPROPERTY(EditAnywhere)

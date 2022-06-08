@@ -83,27 +83,27 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 		{
 			if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
 			{
-				Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->
-					Stats[EStats::Movespeed] * SpeedDep;
+				Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = CurrentSpeed * SpeedDep;
 			}
 		}
 		else
 		{
-			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = Cast<ABaseCharacter>(GetOwner())->Stats[EStats::Movespeed] * SpeedDep;
+			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = CurrentSpeed * SpeedDep;
 		}
 		
-		MoveWithCorrection(Direction, DeltaTime, Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed);
+		MoveWithCorrection(Direction, DeltaTime, CurrentSpeed);
 		
 		DirectionSet = false;
 	}
 }
 
 
-void UCharacterMovement::SetDirection(FVector MoveInput)
+void UCharacterMovement::SetDirection(FVector MoveInput, float MoveSpeed)
 {
 	if (!(MoveInput.IsZero() && Direction.IsZero()))
 	{
 		Direction = MoveInput;
+		CurrentSpeed = MoveSpeed;
 		DirectionSet = true;
 	}
 	else
