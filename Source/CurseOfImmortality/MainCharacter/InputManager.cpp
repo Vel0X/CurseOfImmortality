@@ -154,7 +154,15 @@ void UInputManager::Move()
 {
 	MoveInput.X = MoveX;
 	MoveInput.Y = MoveY;
-	MovementComponent->SetDirection(MoveInput);
+	if(Player->PlayerAnim->Melee)
+	{
+		MovementComponent->SetDirection(MoveInput, Player->
+					MovementSpeedWhileAttacking);
+	}else
+	{
+		MovementComponent->SetDirection(MoveInput, Player->Stats[Movespeed]);
+	}
+	
 }
 
 void UInputManager::AddToBuffer(InputAction _InputAction)
