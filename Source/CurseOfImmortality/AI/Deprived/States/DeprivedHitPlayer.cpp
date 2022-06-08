@@ -5,6 +5,7 @@
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UDeprivedHitPlayer::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -15,9 +16,9 @@ void UDeprivedHitPlayer::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->HitPlayer = true;
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hit Player State Entered"))
+		UE_LOG(LogTemp, Warning, TEXT("Enter State Hit Player"))
 	}
 }
 
@@ -26,7 +27,7 @@ void UDeprivedHitPlayer::OnStateExit()
 	Super::OnStateExit();
 
 	Controller->GetSelfRef()->HitPlayer = false;
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Exit State Hit Player"))
 	}

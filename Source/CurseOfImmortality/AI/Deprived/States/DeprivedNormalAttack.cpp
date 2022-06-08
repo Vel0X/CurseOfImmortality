@@ -4,9 +4,9 @@
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedNormalAttack.h"
 
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
-#include "Components/SphereComponent.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UDeprivedNormalAttack::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -19,7 +19,7 @@ void UDeprivedNormalAttack::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef->NormalAttack = true;
 	SelfRef->AnimationEnd = false;
 
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("NormalAttack State Entered"))
 	}
@@ -31,7 +31,7 @@ void UDeprivedNormalAttack::OnStateExit()
 
 	SelfRef->NormalAttack = false;
 
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Exit State NormalAttack"))
 	}

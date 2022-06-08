@@ -14,18 +14,17 @@ class CURSEOFIMMORTALITY_API UStateMachine : public UActorComponent
 public:
 	// Sets default values for this component's properties
 	UStateMachine();
-	
+
 	virtual void Transition(UState* NewState, UStateMachine* Controller);
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-							   FActorComponentTickFunction* ThisTickFunction) override;
-	
+	                           FActorComponentTickFunction* ThisTickFunction) override;
+
 	UPROPERTY()
 	UState* CurrentState;
-	
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
 };

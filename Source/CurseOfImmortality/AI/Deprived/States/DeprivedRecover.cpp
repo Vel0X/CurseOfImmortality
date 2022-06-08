@@ -5,6 +5,7 @@
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UDeprivedRecover::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -15,7 +16,7 @@ void UDeprivedRecover::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->Recover = true;
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Recover State Entered"))
 	}
@@ -26,9 +27,9 @@ void UDeprivedRecover::OnStateExit()
 	Super::OnStateExit();
 
 	SelfRef->Recover = false;
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Exit State Recover"))
+		UE_LOG(LogTemp, Warning, TEXT("Recover State Exit"))
 	}
 
 	SelfRef->CurrentRecoverDuration = SelfRef->RecoverDuration;

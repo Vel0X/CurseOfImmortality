@@ -114,7 +114,11 @@ public:
 			return ReturnIfContains("damagecomponent");
 
 		case MawStateMachine:
-			return ReturnIfContains("mawstatemachine");
+			return ReturnIfContains("maw");
+
+		case DeprivedStateMachine:
+			return ReturnIfContains("deprived");
+			
 		case Buff:
 			return ReturnIfContains("buff");
 		}

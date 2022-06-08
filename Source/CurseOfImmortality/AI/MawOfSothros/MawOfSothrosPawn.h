@@ -88,6 +88,8 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	USceneComponent* PuddleUpperSpawnLocation;
 	UPROPERTY(EditDefaultsOnly)
+	USceneComponent* TailSweepLocation;
+	UPROPERTY(EditDefaultsOnly)
 	UCapsuleComponent* UpperBodyCollision;
 	UPROPERTY(EditDefaultsOnly)
 	UCapsuleComponent* UpperLeftArmCollision;

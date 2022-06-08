@@ -43,6 +43,8 @@ public:
 	bool HitPlayer = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool NormalAttack = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool Feast = false;
 
 	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* Mesh;

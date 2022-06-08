@@ -16,7 +16,7 @@ void UDeprivedRunning::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->Running = true;
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Running State Entered"))
 	}
@@ -25,7 +25,7 @@ void UDeprivedRunning::OnStateEnter(UStateMachine* StateMachine)
 void UDeprivedRunning::OnStateExit()
 {
 	SelfRef->Running = false;
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Running State Exit"))
 	}
@@ -90,7 +90,7 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	}
 	else
 	{
-		Controller->FocusOnLocation(Player->GetActorLocation(),DeltaTime);
+		Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime);
 		Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[EStats::Movespeed], DeltaTime);
 		if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
 		{
