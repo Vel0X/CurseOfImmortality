@@ -3,6 +3,8 @@
 
 #include "InputManager.h"
 
+#include <concrt.h>
+
 #include "PlayerAnim.h"
 #include "PlayerCharacter.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
@@ -155,7 +157,6 @@ void UInputManager::Move()
 	MovementComponent->SetDirection(MoveInput);
 }
 
-
 void UInputManager::AddToBuffer(InputAction _InputAction)
 {
 	if(Player->CurrentAnimationDuration <= 0 && InputBuffer.Num() == 0)
@@ -204,8 +205,9 @@ void UInputManager::DoAction(InputAction _InputAction)
 	    {
 	    	if(Player->PlayerAnim->AnimationFinished)
 	    	{
+	    		Player->RotateToClosestEnemy();
 	    		LastAction = InputAction::RangedAbility;
-	    		static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Ranged);
+	    		Player->AttackManager->OnKeyPressed(Ranged);
 	    		//UE_LOG(LogTemp, Display, TEXT("Used Ranged"));
 	    	}
 	    }
@@ -216,7 +218,7 @@ void UInputManager::DoAction(InputAction _InputAction)
 			if(Player->PlayerAnim->AnimationFinished)
 			{
 				LastAction = InputAction::SpecialAbility;
-				static_cast<APlayerCharacter*>(GetOwner())->AttackManager->OnKeyPressed(Special);
+				Player->AttackManager->OnKeyPressed(Special);
 				//UE_LOG(LogTemp, Display, TEXT("Used Special"));
 			}
 		}

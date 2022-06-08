@@ -19,6 +19,11 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	
+	bool Rotating = false;
+	FRotator GoalRotation;
+	float TimeToRotate;
+	float CurrentTimeToRotate;
 
 public:	
 	// Called every frame
@@ -27,6 +32,8 @@ public:
 	void SetDirection(FVector MoveInput);
 
 	void MoveWithCorrection(FVector DirectionToMove, float DeltaTime, float Speed);
+
+	void SmoothRotation(FRotator Rotation, float Time);
 	
 	FVector Direction;
 	bool DirectionSet;

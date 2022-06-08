@@ -38,6 +38,8 @@ public:
 	
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnDeath() override;
+	
+	void RotateToClosestEnemy();
 
 	//Cooldowns
 	UPROPERTY(EditAnywhere, Category="Time")
@@ -62,6 +64,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float MovementSpeedWhileAttacking = 300;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SphereTraceRadius = 700.0f;
 	
 	UPROPERTY(EditAnywhere)
 		USkeletalMeshComponent* SkeletalMesh;
