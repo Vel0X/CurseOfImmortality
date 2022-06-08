@@ -23,7 +23,7 @@ class CURSEOFIMMORTALITY_API AMawSlam : public ABaseAbility
 	UNiagaraComponent* ParticleSystem;
 
 	UPROPERTY(EditAnywhere)
-	float DamageWindow = 0.5f;
+	float DamageWindow = 0.25f;
 
 public:
 	virtual void Tick(float DeltaSeconds) override;

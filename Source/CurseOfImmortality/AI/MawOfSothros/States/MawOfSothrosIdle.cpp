@@ -53,7 +53,7 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 
 	if (SelfRef->CurrentAttackCooldown <= 0)
 	{
-		if (Angle < 50.f)
+		if (Angle <= 60.f)
 		{
 			Controller->FocusOnPlayer(DeltaTime, Angle);
 
@@ -71,7 +71,7 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 				Controller->Move(SelfRef->CurrentMovementSpeed, DeltaTime);
 			}
 		}
-		else if (Angle > 130.f)
+		else if (Angle >= 130.f)
 		{
 			if (Dist < 800.f)
 			{

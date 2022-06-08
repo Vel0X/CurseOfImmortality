@@ -60,6 +60,8 @@ public:
 
 	//States
 	UPROPERTY()
+	UState* Start;
+	UPROPERTY()
 	UState* Idle;
 	UPROPERTY(BlueprintReadOnly)
 	UState* Vomit;

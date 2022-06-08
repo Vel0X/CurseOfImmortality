@@ -38,6 +38,8 @@ AMawOfSothrosPawn::AMawOfSothrosPawn()
 	Beam = CreateDefaultSubobject<UStaticMeshComponent>("Beam");
 	Beam->SetupAttachment(Mesh, "LaserSocket");
 
+	CurrentAttackCooldown = AttackCooldown;
+
 	//Collision
 	UpperBodyCollision = CreateDefaultSubobject<UCapsuleComponent>("Upper Body Collision");
 	UpperBodyCollision->SetupAttachment(Mesh, "UpperBodyCollisionSocket");

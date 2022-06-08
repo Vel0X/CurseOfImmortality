@@ -6,7 +6,7 @@
 #include <CurseOfImmortality/Management/PersistentWorldManager.h>
 
 
-APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(30, 30)
+APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(60, 60)
 {
 	PrimaryActorTick.bCanEverTick = true;
 

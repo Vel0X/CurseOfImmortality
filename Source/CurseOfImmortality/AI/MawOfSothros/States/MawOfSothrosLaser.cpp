@@ -79,7 +79,7 @@ void UMawOfSothrosLaser::FireLaser(float DeltaTime)
 
 	const float RollAngle = -(90 - (90 - FMath::RadiansToDegrees(Beta)));
 	TargetHeadRotation.Roll = RollAngle;
-	SelfRef->HeadRotation = FMath::RInterpTo(SelfRef->HeadRotation, TargetHeadRotation, DeltaTime, 7.0f);
+	SelfRef->HeadRotation = FMath::RInterpTo(SelfRef->HeadRotation, TargetHeadRotation, DeltaTime, 3.0f);
 
 	if (SelfRef->LaserOn)
 	{
