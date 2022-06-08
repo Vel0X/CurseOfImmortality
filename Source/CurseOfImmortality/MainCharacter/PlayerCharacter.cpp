@@ -11,6 +11,7 @@
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
+#include "Engine/SkeletalMeshSocket.h"
 
 
 // Sets default values
@@ -32,9 +33,16 @@ APlayerCharacter::APlayerCharacter() : ABaseCharacter()
 	InputManager = CreateDefaultSubobject<UInputManager>(TEXT("InputManager"));
 	AttackManager = CreateDefaultSubobject<UAttackManager>(TEXT("AttackManager"));
 	StateMachine = CreateDefaultSubobject<UPlayerCharacterStateMachine>(TEXT("StateMachine"));
+	Weapon = CreateDefaultSubobject<UStaticMeshComponent>("Weapon");
+	Weapon->SetupAttachment(SkeletalMesh, "RightHandSocket");
+	
 	
 }
- 
+
+APlayerCharacter::~APlayerCharacter()
+{
+}
+
 
 // Called when the game starts or when spawned
 void APlayerCharacter::Setup()
@@ -43,6 +51,10 @@ void APlayerCharacter::Setup()
 	PlayerAnim = Cast<UPlayerAnim>(SkeletalMesh->GetAnimInstance());
 	StateMachine->Initialize();
 	FPersistentWorldManager::PlayerCharacter = this;
+	
+	WeaponMaterialInst = UMaterialInstanceDynamic::Create(WeaponMaterial, Weapon);
+	Weapon->GetStaticMesh()->SetMaterial(0, WeaponMaterialInst);
+
 	SetupInputComponent();
 	//DamageComponent->ConvertInterface();
 }
@@ -125,4 +137,10 @@ void APlayerCharacter::SetupInputComponent()
 		// Controller, so that input flows down to us
 		EnableInput(GetWorld()->GetFirstPlayerController());
 	}
+}
+
+void APlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Weapon->GetStaticMesh()->SetMaterial(0, WeaponMaterial);
+	Super::EndPlay(EndPlayReason);
 }
