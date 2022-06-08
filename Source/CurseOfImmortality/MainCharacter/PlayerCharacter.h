@@ -28,11 +28,13 @@ class CURSEOFIMMORTALITY_API APlayerCharacter : public ABaseCharacter
 public:
 	// Sets default values for this pawn's properties
 	APlayerCharacter();
+	virtual ~APlayerCharacter() override;
 
 protected:
 	
 	virtual void Setup() override;
 	void SetupInputComponent();
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	
@@ -64,9 +66,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float MovementSpeedWhileAttacking = 300;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float SphereTraceRadius = 700.0f;
-	
 	UPROPERTY(EditAnywhere)
 		USkeletalMeshComponent* SkeletalMesh;
 	UPROPERTY(EditAnywhere)
@@ -81,4 +80,13 @@ public:
 		UPlayerCharacterStateMachine* StateMachine;
 	UPROPERTY(EditAnywhere)
 		UPlayerAnim* PlayerAnim;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* Weapon;
+
+	UPROPERTY(EditAnywhere)
+		UMaterialInstance* WeaponMaterial;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* WeaponMaterialInst;
 };
