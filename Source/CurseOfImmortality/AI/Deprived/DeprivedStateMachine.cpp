@@ -81,7 +81,7 @@ void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float Delt
 	Target.Normalize();
 
 	FVector MoveDir(SelfRef->GetActorLocation() + Target * DeltaTime * Speed);
-	SelfRef->MovementComponent->SetDirection(Target);
+	SelfRef->MovementComponent->SetDirection(Target, Speed);
 }
 
 void UDeprivedStateMachine::FocusOnLocation(FVector Location, float DeltaTime) const
