@@ -16,6 +16,7 @@
 #include "States/DeprivedRecover.h"
 #include "States/DeprivedRunning.h"
 #include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
+#include "States/DeprivedFeast.h"
 #include "States/FindStartLocation.h"
 
 UDeprivedStateMachine::UDeprivedStateMachine()
@@ -37,9 +38,20 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	if (!SelfRef->Dead)
 	{
+		if (Player->Dead)
+		{
+			if (!StateChanged)
+			{
+				StateChanged = true;
+				Transition(Feast, this);
+			}
+		}
+		else
+		{
+			LastLocation = Player->GetActorLocation();
+		}
 		CurrentState->OnStateUpdate(DeltaTime);
 	}
-
 	SelfRef->CurrentJumpAttackCoolDown -= DeltaTime;
 }
 
@@ -57,6 +69,7 @@ void UDeprivedStateMachine::BeginPlay()
 	HitPlayer = NewObject<UDeprivedHitPlayer>();
 	Recover = NewObject<UDeprivedRecover>();
 	NormalAttack = NewObject<UDeprivedNormalAttack>();
+	Feast = NewObject<UDeprivedFeast>();
 	FindStartLocation = NewObject<UFindStartLocation>();
 }
 

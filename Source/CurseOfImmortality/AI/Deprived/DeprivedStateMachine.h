@@ -43,6 +43,12 @@ public:
 	UState* NormalAttack;
 	UPROPERTY()
 	UState* FindStartLocation;
+	UPROPERTY()
+	UState* Feast;
+
+	bool StateChanged;
+
+	FVector LastLocation;
 
 	//Getter
 	ADeprivedPawn* GetSelfRef() const;

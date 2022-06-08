@@ -21,7 +21,13 @@ class CURSEOFIMMORTALITY_API ATailSweep : public ABaseAbility
 	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* ParticleSystem;
 
-public:	
+	UPROPERTY(EditAnywhere)
+	float DamageWindow = 0.25f;
+
+public:
+	virtual void Tick(float DeltaSeconds) override;
+	
 	UPROPERTY(EditAnywhere)
 	USphereComponent* Collider;
 };
+

@@ -18,3 +18,14 @@ ATailSweep::ATailSweep()
 	Collider = CreateDefaultSubobject<USphereComponent>("SphereCollider");
 	Collider->SetupAttachment(RootComponent);
 }
+
+void ATailSweep::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (DamageWindow <= 0.f)
+	{
+		Collider->SetGenerateOverlapEvents(false);
+	}
+	DamageWindow -= DeltaSeconds;
+}

@@ -26,6 +26,9 @@ AMawOfSothrosPawn::AMawOfSothrosPawn()
 	PuddleLowerSpawnLocation = CreateDefaultSubobject<USceneComponent>("Lower Spawn Location");
 	PuddleLowerSpawnLocation->SetupAttachment(RootComponent);
 
+	TailSweepLocation = CreateDefaultSubobject<USceneComponent>("Tail Sweep Location");
+	TailSweepLocation->SetupAttachment(RootComponent);
+
 	VomitUpperJaw = CreateDefaultSubobject<UNiagaraComponent>("Vomit Upper Jaw");
 	VomitUpperJaw->SetupAttachment(Mesh, "Upper Jaw");
 
@@ -121,7 +124,7 @@ void AMawOfSothrosPawn::ToggleLaser()
 
 void AMawOfSothrosPawn::TriggerTailSweep()
 {
-	const FVector SpawnLocation = Mesh->GetSocketLocation("TailSweep");
+	const FVector SpawnLocation = TailSweepLocation->GetComponentLocation();
 	ATailSweep* AbilityInstance = Cast<ATailSweep>(GetWorld()->SpawnActor(
 		TailSweepSpecification->Class,
 		&SpawnLocation, &FRotator::ZeroRotator));

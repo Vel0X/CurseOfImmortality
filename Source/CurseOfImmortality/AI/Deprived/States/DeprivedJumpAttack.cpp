@@ -8,14 +8,14 @@
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
-#include "Components/CapsuleComponent.h"
-#include "Components/SphereComponent.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "Kismet/GameplayStatics.h"
 
 void UDeprivedJumpAttack::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
-	if (Verbose)
+
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Jump Attack State Entered"))
 	}
@@ -33,7 +33,7 @@ void UDeprivedJumpAttack::OnStateEnter(UStateMachine* StateMachine)
 void UDeprivedJumpAttack::OnStateExit()
 {
 	Super::OnStateExit();
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Exit State Jump Attack"))
 	}

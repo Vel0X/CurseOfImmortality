@@ -121,6 +121,7 @@ enum ELog
 	Round,
 	PlayerStateMachine,
 	MawStateMachine,
+	DeprivedStateMachine,
 	DamageComponent,
 	Buff
 };

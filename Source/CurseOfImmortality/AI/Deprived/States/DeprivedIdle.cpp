@@ -6,6 +6,7 @@
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UDeprivedIdle::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -16,7 +17,7 @@ void UDeprivedIdle::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->Idle = true;
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Deprived Idle State Entered"))
 	}
@@ -26,7 +27,7 @@ void UDeprivedIdle::OnStateExit()
 {
 	Super::OnStateExit();
 	SelfRef->Idle = false;
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Deprived Exit Idle State"))
 	}

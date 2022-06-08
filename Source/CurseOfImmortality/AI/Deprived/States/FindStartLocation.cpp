@@ -17,7 +17,7 @@ void UFindStartLocation::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->Running = true;
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Find Location State Entered"))
 	}
@@ -28,7 +28,7 @@ void UFindStartLocation::OnStateExit()
 	Super::OnStateExit();
 
 	SelfRef->Running = false;
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(DeprivedStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Find Location State Exit"))
 	}
