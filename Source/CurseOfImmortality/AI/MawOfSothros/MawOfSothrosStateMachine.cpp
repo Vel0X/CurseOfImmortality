@@ -4,10 +4,12 @@
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosStateMachine.h"
 
 #include "MawOfSothrosPawn.h"
+#include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "States/MawOfSothrosBaseState.h"
 #include "States/MawOfSothrosChargeAttack.h"
 #include "States/MawOfSothrosGroundSlam.h"
+#include "States/MawOfSothrosStart.h"
 #include "States/MawOfSothrosIdle.h"
 #include "States/MawOfSothrosLaser.h"
 #include "States/MawOfSothrosTailSweep.h"
@@ -34,6 +36,7 @@ void UMawOfSothrosStateMachine::BeginPlay()
 	SelfRef = Cast<AMawOfSothrosPawn>(GetOwner());
 
 	//Initialise States
+	Start = NewObject<UMawOfSothrosStart>();
 	Idle = NewObject<UMawOfSothrosIdle>();
 	Vomit = NewObject<UMawOfSothrosVomit>();
 	ChargeAttack = NewObject<UMawOfSothrosChargeAttack>();
@@ -50,7 +53,7 @@ void UMawOfSothrosStateMachine::TickComponent(float DeltaTime, ELevelTick TickTy
 	if (!Player)
 	{
 		Player = FPersistentWorldManager::PlayerCharacter;
-		CurrentState = Idle;
+		CurrentState = Start;
 		CurrentState->OnStateEnter(this);
 	}
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Maw StateMachine")); }
@@ -66,8 +69,8 @@ void UMawOfSothrosStateMachine::Move(float Speed, float DeltaTime)
 {
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Maw StateMachine")); }
 
-	const FVector MoveDir(SelfRef->GetActorLocation() + SelfRef->GetActorForwardVector() * DeltaTime * Speed);
-	SelfRef->SetActorLocation(MoveDir, true);
+	const FVector MoveDir(SelfRef->GetActorForwardVector() * DeltaTime * Speed);
+	SelfRef->MovementComponent->SetDirection(MoveDir);
 }
 
 void UMawOfSothrosStateMachine::FocusOnPlayer(const float DeltaTime, const float Speed) const

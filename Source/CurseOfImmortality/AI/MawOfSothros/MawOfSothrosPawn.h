@@ -40,6 +40,8 @@ public:
 
 	//States
 	UPROPERTY(BlueprintReadWrite)
+	bool Start;
+	UPROPERTY(BlueprintReadWrite)
 	bool Idle;
 	UPROPERTY(BlueprintReadWrite)
 	bool Vomit;
@@ -82,10 +84,6 @@ public:
 
 	//Collisions
 	UPROPERTY(EditDefaultsOnly)
-	UNiagaraComponent* VomitUpperJaw;
-	UPROPERTY(EditDefaultsOnly)
-	UNiagaraComponent* VomitLowerJaw;
-	UPROPERTY(EditDefaultsOnly)
 	USceneComponent* PuddleLowerSpawnLocation;
 	UPROPERTY(EditDefaultsOnly)
 	USceneComponent* PuddleUpperSpawnLocation;
@@ -122,7 +120,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FRotator HeadRotation;
 
-private:
 	UPROPERTY(EditDefaultsOnly)
 	UNiagaraComponent* MawSmoke;
+	UPROPERTY(EditDefaultsOnly)
+	UNiagaraComponent* VomitUpperJaw;
+	UPROPERTY(EditDefaultsOnly)
+	UNiagaraComponent* VomitLowerJaw;
 };

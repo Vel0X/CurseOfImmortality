@@ -68,7 +68,7 @@ void UDeprivedStateMachine::MoveToTarget(FVector Target, float Speed, float Delt
 	Target.Normalize();
 
 	FVector MoveDir(SelfRef->GetActorLocation() + Target * DeltaTime * Speed);
-	SelfRef->SetActorLocation(MoveDir, true);
+	SelfRef->MovementComponent->SetDirection(Target);
 }
 
 void UDeprivedStateMachine::FocusOnLocation(FVector Location, float DeltaTime) const
@@ -87,7 +87,7 @@ void UDeprivedStateMachine::FocusOnLocation(FVector Location, float DeltaTime) c
 
 	Target.Z = 0;
 	const FRotator LookAtRotation(
-		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 270.f).Rotation());
+		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 90.f).Rotation());
 	SelfRef->CapsuleComponent->SetWorldRotation(LookAtRotation);
 }
 

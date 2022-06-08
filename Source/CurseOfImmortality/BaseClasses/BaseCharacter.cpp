@@ -14,21 +14,20 @@
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("Root");
 	SetRootComponent(CapsuleComponent);
 	//CapsuleComponent = static_cast<UCapsuleComponent*>(RootComponent);
 	MovementComponent = CreateDefaultSubobject<UCharacterMovement>("CharacterMovement");
 	DamageComponent = CreateDefaultSubobject<UDamageComponent>("DamageObject");
-	
+
 	UpperAttachmentPoint = CreateDefaultSubobject<USceneComponent>("UpperAttachmentPoint");
 	UpperAttachmentPoint->SetupAttachment(RootComponent);
 	CenterAttachmentPoint = CreateDefaultSubobject<USceneComponent>("CenterAttachmentPoint");
 	CenterAttachmentPoint->SetupAttachment(RootComponent);
 	LowerAttachmentPoint = CreateDefaultSubobject<USceneComponent>("LowerAttachmentPoint");
 	LowerAttachmentPoint->SetupAttachment(RootComponent);
-	
 }
 
 ABaseCharacter::~ABaseCharacter()
@@ -41,16 +40,16 @@ void ABaseCharacter::BeginPlay()
 	Super::BeginPlay();
 	Setup();
 
-	if(BaseStats == nullptr)
+	if (BaseStats == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s has no BaseStats specified for it!"), *DisplayName);
 		return;
 	}
-	
+
 	RecalculateStats();
 
 
-	if(Stats.Contains(EStats::Health))
+	if (Stats.Contains(EStats::Health))
 	{
 		CurrentHealth = Stats[EStats::Health];
 	}
@@ -64,27 +63,27 @@ void ABaseCharacter::BeginPlay()
 	GetComponents(UPrimitiveComponent::StaticClass(), HBs);
 	for (const auto Component : HBs)
 	{
-
 		//add all primitive Components that generate Overlap Events and that are part of body hitbox of the character (determined by the Collision Profile)
 		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
-		if(PrimitiveComponent->GetCollisionProfileName() == "Character")
+		if (PrimitiveComponent->GetCollisionProfileName() == "Character")
 		{
 			BodyHitboxes.Add(PrimitiveComponent);
 		}
 	}
 
+	UE_LOG(LogTemp, Error, TEXT("Hbs: %i"), BodyHitboxes.Num());
+
 	//Add all Damage Hitboxes
 	for (const auto Component : HBs)
 	{
-
 		//add all primitive Components that generate Overlap Events
 		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
-		if(PrimitiveComponent->GetCollisionProfileName() == "Ability")
+		if (PrimitiveComponent->GetCollisionProfileName() == "Ability")
 		{
 			DamageHitboxes.Add(PrimitiveComponent);
 		}
 	}
-	
+
 	DamageComponent->ConvertInterface();
 	FPersistentWorldManager::RegisterCharacter(this);
 }
@@ -110,20 +109,20 @@ void ABaseCharacter::CheckCollisions()
 
 	for (const auto OverlappingActor : OverlappingActors)
 	{
-		if(OverlappingActor->GetClass()->IsChildOf(StaticClass()))
+		if (OverlappingActor->GetClass()->IsChildOf(StaticClass()))
 		{
 			ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
 
-			if(OverlappingCharacter->Faction == Faction)
+			if (OverlappingCharacter->Faction == Faction)
 				continue;
-			
+
 			auto CharacterHitboxes = OverlappingCharacter->BodyHitboxes;
 
 			for (const auto DamageHitbox : DamageHitboxes)
 			{
 				for (const auto CharacterHitbox : CharacterHitboxes)
 				{
-					if(DamageHitbox->IsOverlappingComponent(CharacterHitbox))
+					if (DamageHitbox->IsOverlappingComponent(CharacterHitbox))
 					{
 						DamageComponent->OnCharacterHit(DamageHitbox, OverlappingCharacter);
 					}
@@ -135,7 +134,6 @@ void ABaseCharacter::CheckCollisions()
 
 void ABaseCharacter::Setup()
 {
-	
 }
 
 void ABaseCharacter::OnDeath()
@@ -149,7 +147,7 @@ void ABaseCharacter::OnDeath()
 
 	DamageHitboxes.Empty();
 	BodyHitboxes.Empty();
-	
+
 	Dead = true;
 	FPersistentWorldManager::DeRegisterCharacter(this);
 	//Destroy();
@@ -162,10 +160,10 @@ void ABaseCharacter::RecalculateStats()
 	{
 		Stats.Add(Stat.Key, Stat.Value);
 	}
-	
+
 	for (const auto Buff : Buffs)
 	{
-		if(!Buff->StatModifier)
+		if (!Buff->StatModifier)
 			continue;
 
 		for (const auto StatMod : Buff->StatModifications)
@@ -180,7 +178,7 @@ void ABaseCharacter::AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter, int Lev
 	int FoundIndex = -1;
 	for (int i = 0; i < Buffs.Num(); ++i)
 	{
-		if(Buffs[i]->DisplayName == Buff->DisplayName)
+		if (Buffs[i]->DisplayName == Buff->DisplayName)
 		{
 			FoundIndex = i;
 			break;
@@ -188,52 +186,51 @@ void ABaseCharacter::AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter, int Lev
 	}
 
 	//if the Buff is already present...
-	if(FoundIndex != -1)
+	if (FoundIndex != -1)
 	{
 		//if the Buff is not stackable
-		if(!Buff->Stackable)
+		if (!Buff->Stackable)
 		{
 			//if the Buff should renew when it is already present
-			if(Buff->RefreshOnNew)
+			if (Buff->RefreshOnNew)
 			{
 				Buffs[FoundIndex]->InitializeBuff(Level, this, Inflicter);
-				if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
+				if (FPersistentWorldManager::GetLogLevel(ELog::Buff))
 					UE_LOG(LogTemp, Warning, TEXT("%s was already present and was refreshed"), *Buff->DisplayName);
 			}
 			else
 			{
-				if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
+				if (FPersistentWorldManager::GetLogLevel(ELog::Buff))
 					UE_LOG(LogTemp, Warning, TEXT("%s was already present and is not stackable"), *Buff->DisplayName);
 				return;
 			}
 		}
 		const bool AddedStack = Buffs[FoundIndex]->AddBuffStack();
-		if(FPersistentWorldManager::GetLogLevel(ELog::Buff) && AddedStack)
+		if (FPersistentWorldManager::GetLogLevel(ELog::Buff) && AddedStack)
 			UE_LOG(LogTemp, Warning, TEXT("%s was already present with maximum amount of stacks"), *Buff->DisplayName);
 	}
 	//Buff is not already present
 	else
 	{
 		Buffs.Add(Buff);
-		Buff->InitializeBuff(Level,this, Inflicter);
-		if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
+		Buff->InitializeBuff(Level, this, Inflicter);
+		if (FPersistentWorldManager::GetLogLevel(ELog::Buff))
 			UE_LOG(LogTemp, Warning, TEXT("%s was added"), *Buff->DisplayName);
 	}
-	
-	if(Buff->StatModifier)
+
+	if (Buff->StatModifier)
 		RecalculateStats();
-	
 }
 
 void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 {
-	if(Buffs.Contains(Buff))
+	if (Buffs.Contains(Buff))
 	{
-		if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
+		if (FPersistentWorldManager::GetLogLevel(ELog::Buff))
 			UE_LOG(LogTemp, Warning, TEXT("%s was removed"), *Buff->DisplayName);
 		Buffs.Remove(Buff);
 		Buff->OnBuffEnd();
-		if(Buff->StatModifier)
+		if (Buff->StatModifier)
 		{
 			RecalculateStats();
 		}
@@ -247,35 +244,36 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 	FString Text = "";
 	Text.AppendInt(Amount);
 
-	if(Visual)
+	if (Visual)
 	{
-		FColor Color = FColor(255,0,0);
-		if(Dealer == this) //if the damage is self inflicted, display the damage number in a darker shade of red
-			Color = FColor(50,0,0);
-	
-		ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(Text, Color, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
+		FColor Color = FColor(255, 0, 0);
+		if (Dealer == this) //if the damage is self inflicted, display the damage number in a darker shade of red
+			Color = FColor(50, 0, 0);
+
+		ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(
+			Text, Color, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
 	}
 
 
-	if(Dealer != nullptr && Dealer != this)
+	if (Dealer != nullptr && Dealer != this)
 	{
 		Dealer->OnDamageDealt(Amount, this); //Inform the DamageDealer
 	}
-	if(FPersistentWorldManager::GetLogLevel(ELog::DamageComponent))
-		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: %s Health is at %f Max Health %f"), *DisplayName, CurrentHealth, Stats[EStats::Health]);
-	
-	if(CurrentHealth <= 0.0f)
+	if (FPersistentWorldManager::GetLogLevel(ELog::DamageComponent))
+		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: %s Health is at %f Max Health %f"), *DisplayName, CurrentHealth,
+	       Stats[EStats::Health]);
+
+	if (CurrentHealth <= 0.0f)
 	{
 		OnDeath();
 	}
-	
+
 	//notify all buffs of the damage taken
-	
+
 	for (int i = 0; i < Buffs.Num(); ++i)
 	{
 		Buffs[i]->OnTakeDamage(Ability);
 	}
-	
 }
 
 void ABaseCharacter::TakeDmg(FDamageFormula Formula, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Visual)
@@ -288,30 +286,32 @@ void ABaseCharacter::TakeDmg(FDamageFormula Formula, ABaseCharacter* Dealer, ABa
 	FString Text = "";
 	Text.AppendInt(Amount);
 
-	if(Visual)
+	if (Visual)
 	{
-		FColor Color = FColor(255,0,0);
-		if(Dealer == this) //if the damage is self inflicted, display the damage number in a darker shade of red
-			Color = FColor(50,0,0);
-	
-		ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(Text, Color, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
+		FColor Color = FColor(255, 0, 0);
+		if (Dealer == this) //if the damage is self inflicted, display the damage number in a darker shade of red
+			Color = FColor(50, 0, 0);
+
+		ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(
+			Text, Color, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
 	}
 
 
-	if(Dealer != nullptr && Dealer != this)
+	if (Dealer != nullptr && Dealer != this)
 	{
 		Dealer->OnDamageDealt(Amount, this); //Inform the DamageDealer
 	}
-	if(FPersistentWorldManager::GetLogLevel(ELog::DamageComponent))
-		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: %s Health is at %f Max Health %f"), *DisplayName, CurrentHealth, Stats[EStats::Health]);
-	
-	if(CurrentHealth <= 0.0f)
+	if (FPersistentWorldManager::GetLogLevel(ELog::DamageComponent))
+		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: %s Health is at %f Max Health %f"), *DisplayName, CurrentHealth,
+	       Stats[EStats::Health]);
+
+	if (CurrentHealth <= 0.0f)
 	{
 		OnDeath();
 	}
-	
+
 	//notify all buffs of the damage taken
-	
+
 	for (int i = 0; i < Buffs.Num(); ++i)
 	{
 		Buffs[i]->OnTakeDamage(Ability);
@@ -332,24 +332,29 @@ void ABaseCharacter::Heal(float Amount, bool Verbose)
 
 	FString Text = "";
 	Text.AppendInt(Amount);
-	ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(Text, FColor::Green, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
-	
-	if(CurrentHealth > Stats[EStats::Health])
+	ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(
+		Text, FColor::Green, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
+
+	if (CurrentHealth > Stats[EStats::Health])
 	{
 		CurrentHealth = Stats[EStats::Health];
 	}
 
-	if(Verbose)
+	if (Verbose)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("After Heal: Char Health is at %f Max Health %f"), CurrentHealth, Stats[EStats::Health]);
+		UE_LOG(LogTemp, Warning, TEXT("After Heal: Char Health is at %f Max Health %f"), CurrentHealth,
+		       Stats[EStats::Health]);
 	}
 }
 
-UNiagaraComponent* ABaseCharacter::SetupBuffVfx(UNiagaraSystem* Vfx, const EAttachmentPoint AttachmentPoint, int& Handle)
+UNiagaraComponent* ABaseCharacter::SetupBuffVfx(UNiagaraSystem* Vfx, const EAttachmentPoint AttachmentPoint,
+                                                int& Handle)
 {
 	USceneComponent* AttachmentLocation = GetAttachmentLocation(AttachmentPoint);
-	
-	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(Vfx, AttachmentLocation, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
+
+	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(
+		Vfx, AttachmentLocation, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset,
+		true);
 	//NiagaraComp->AttachToComponent(AttachmentLocation, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 	ActiveParticleEffects.Add(ActiveParticleEffectHandle, NiagaraComp);
 
@@ -360,9 +365,9 @@ UNiagaraComponent* ABaseCharacter::SetupBuffVfx(UNiagaraSystem* Vfx, const EAtta
 
 void ABaseCharacter::RemoveBuffVfx(const int Handle, const bool SpawnDetachedParticleActor)
 {
-	if(ActiveParticleEffects.Contains(Handle))
+	if (ActiveParticleEffects.Contains(Handle))
 	{
-		if(SpawnDetachedParticleActor)
+		if (SpawnDetachedParticleActor)
 		{
 			const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
 			DetachedParticleActor->InitializeParticleActor(ActiveParticleEffects[Handle], this, -1);
@@ -382,7 +387,6 @@ void ABaseCharacter::RemoveBuffVfx(const int Handle, const bool SpawnDetachedPar
 
 USceneComponent* ABaseCharacter::GetAttachmentLocation(const EAttachmentPoint Point)
 {
-	
 	switch (Point)
 	{
 	case UpperPoint:
