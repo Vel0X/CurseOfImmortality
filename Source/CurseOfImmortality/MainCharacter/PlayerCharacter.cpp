@@ -102,53 +102,6 @@ void APlayerCharacter::RotateToClosestEnemy()
 		SetActorRotation(UKismetMathLibrary::MakeRotFromXZ(ClosestActor->GetActorLocation()-GetActorLocation(), FVector::UpVector));
 	}
 }
-			/*const FVector Start = GetActorLocation();
-			const FVector End = GetActorLocation();
-		
-			TArray<AActor*> ActorsToIgnore;
-		
-			ActorsToIgnore.Add(this);
-		
-			TArray<FHitResult> HitArray;
-			float ClosestDistance = SphereTraceRadius;
-			FVector ForwardInSphere = GetActorForwardVector() * SphereTraceRadius;
-			if(!GetWorld())
-				UE_LOG(LogTemp, Error, TEXT("world is there"));
-		
-			const bool Hit = UKismetSystemLibrary::SphereTraceMulti(GetWorld(), Start, End, SphereTraceRadius,  UEngineTypes::ConvertToTraceType(ECC_Camera),
-				false, ActorsToIgnore, EDrawDebugTrace::None,HitArray, true, FLinearColor::Gray, FLinearColor::Blue, 60.0f);
-			if (Hit)
-			{
-				AActor* ClosestActor = this;
-				FHitResult ClosestHit;
-				UE_LOG(LogTemp, Error, TEXT("Hit %i chars"), HitArray.Num());
-				for(const FHitResult HitResult : HitArray)
-				{
-					if(Cast<ABaseCharacter>(HitResult.GetActor()) != nullptr)
-					{
-						if(Cast<ABaseCharacter>(HitResult.GetActor())->Faction == Enemy)
-						{
-							float DotProduct = FVector::DotProduct(GetActorForwardVector(),HitResult.ImpactNormal);
-							float Magnitude = GetActorForwardVector().Size() * HitResult.ImpactNormal.Size();
-							float Angle = FMath::RadiansToDegrees(UKismetMathLibrary::Acos(DotProduct/Magnitude));
-						
-							if(Angle > 135)
-							{
-								if((UKismetMathLibrary::Sin(Angle) * (Start - HitResult.GetActor()->GetActorLocation()).Length()) < ClosestDistance)
-								{
-									float Distance = (Start - HitResult.GetActor()->GetActorLocation()).Length();
-									ClosestDistance = UKismetMathLibrary::Sin(Angle) * (Start - HitResult.GetActor()->GetActorLocation()).Length();
-									ClosestActor = HitResult.GetActor();
-									ClosestHit = HitResult;
-								}
-							}
-						}
-					}
-				}
-				if (ClosestActor != this)
-				{
-					SetActorRotation(UKismetMathLibrary::MakeRotFromXZ(ClosestActor->GetActorLocation()-GetActorLocation(), FVector::UpVector));
-				}*/
 
 //Called to bind functionality to input
 void APlayerCharacter::SetupInputComponent()
