@@ -156,8 +156,14 @@ void UInputManager::Move()
 	MoveInput.Y = MoveY;
 	if(Player->PlayerAnim->Melee)
 	{
-		MovementComponent->SetDirection(MoveInput, Player->
+		if (UKismetMathLibrary::Acos(FVector::DotProduct(GetOwner()->GetActorForwardVector(), MoveInput)) < 1.5)
+		{
+			GetOwner()->SetActorRotation(MoveInput.Rotation());
+			MoveInput = GetOwner()->GetActorForwardVector();
+			MovementComponent->SetDirection(MoveInput, Player->
 					MovementSpeedWhileAttacking);
+		}
+		
 	}else
 	{
 		MovementComponent->SetDirection(MoveInput, Player->Stats[Movespeed]);

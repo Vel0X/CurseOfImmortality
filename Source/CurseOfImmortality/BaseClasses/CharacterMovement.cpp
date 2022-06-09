@@ -46,7 +46,6 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 	
 	if (DirectionSet)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Text,%d"), Direction.Length());
 		if (Direction.Length() < 0.3)
 		{
 			DirectionSet = false;
@@ -59,24 +58,6 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 			SpeedDep = 1;
 		}
 		Direction.Normalize();
-		//UE_LOG(LogTemp, Warning, TEXT("Text,%s"), *Direction.Rotation().ToString());
-
-		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
-		{
-
-			if (Cast<APlayerCharacter>(GetOwner())->PlayerAnim->Melee)
-			{
-				if (UKismetMathLibrary::Acos(FVector::DotProduct(GetOwner()->GetActorForwardVector(), Direction)) < 1.5)
-				{
-					GetOwner()->SetActorRotation(Direction.Rotation());
-					Direction = GetOwner()->GetActorForwardVector();
-				}
-				else
-				{
-					return;
-				}
-			}
-		}
 		SmoothRotation(Direction.Rotation(),0.15);
 
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
