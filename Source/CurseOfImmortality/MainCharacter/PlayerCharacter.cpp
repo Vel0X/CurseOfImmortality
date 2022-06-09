@@ -7,11 +7,9 @@
 #include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
-#include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
-#include "Engine/SkeletalMeshSocket.h"
 
 
 // Sets default values
@@ -88,8 +86,14 @@ void APlayerCharacter::RotateToClosestEnemy()
 		{
 			if((UKismetMathLibrary::Sin(Angle) * (GetActorLocation() - Enemy->GetActorLocation()).Length()) < ClosestDistance)
 			{
-				ClosestDistance = UKismetMathLibrary::Sin(Angle) * (GetActorLocation() - Enemy->GetActorLocation()).Length();
-				ClosestActor = Enemy;
+				FHitResult HResult;
+				FCollisionQueryParams Params;
+				Params.AddIgnoredActor(GetOwner());
+				if(!GetWorld()->LineTraceSingleByChannel(HResult, GetActorLocation(), Enemy->GetActorLocation(), ECollisionChannel::ECC_Visibility, Params, FCollisionResponseParams()))
+				{
+					ClosestDistance = UKismetMathLibrary::Sin(Angle) * (GetActorLocation() - Enemy->GetActorLocation()).Length();
+					ClosestActor = Enemy;
+				}
 			}
 		}
 	}
