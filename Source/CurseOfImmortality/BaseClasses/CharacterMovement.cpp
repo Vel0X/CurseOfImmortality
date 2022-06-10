@@ -59,8 +59,9 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 			SpeedDep = 1;
 		}
 		Direction.Normalize();
+		
 		SmoothRotation(Direction.Rotation(),0.15);
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *Direction.Rotation().ToString());
+		
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
 		{
 			if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
