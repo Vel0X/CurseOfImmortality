@@ -17,6 +17,21 @@ class ABaseAbility;
 class UBaseBuff;
 class UCharacterMovement;
 
+USTRUCT()
+struct FDamageReceiverHandle
+{
+	GENERATED_BODY()
+
+	FDamageReceiverHandle() : Handle(-1), Expiration(0.0f){}
+
+	FDamageReceiverHandle(int Handle, float Expiration): Handle(Handle), Expiration(Expiration){}
+
+	int Handle;
+	float Expiration;
+};
+
+
+
 UCLASS()
 class CURSEOFIMMORTALITY_API ABaseCharacter : public APawn
 {
@@ -37,6 +52,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void CheckCollisions();
+	void UpdateDamageReceiverHandles(float DeltaTime);
+
+	bool DamageReceiverHandleContained(int Handle);
 	
 	virtual void Setup();
 	
@@ -126,6 +144,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<UPrimitiveComponent*> DamageHitboxes;
 
+	//An Array containing Indizes of Abilities by which the player was already hit. This allows multiple abilities to be grouped with the same handle, thus avoiding the player being hit by them multiple times
+	UPROPERTY(EditAnywhere)
+	TArray<FDamageReceiverHandle> DamageReceiverHandles;
 private:
 	
 	int ActiveParticleEffectHandle = 0;

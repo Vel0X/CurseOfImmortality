@@ -73,7 +73,7 @@ public:
 	ABaseEnemyPawn* SpawnEnemy(EEnemy Character, const FVector Location, const FRotator Rotation) const;
 	
 	UFUNCTION(BlueprintCallable)
-	ABaseAbility* SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation, const ABaseCharacter* Caster) const;
+	ABaseAbility* SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation, ABaseCharacter* Caster) const;
 
 	ADamageIndicator* SpawnDamageIndicator(FString Text, FColor Color, const FVector Location, const FRotator Rotation) const;
 

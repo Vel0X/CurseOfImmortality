@@ -98,7 +98,8 @@ enum EUpgradeName
 	SeaOfDarkness,
 	MawSlam,
 	LavaCrack,
-	TailSweep
+	TailSweep,
+	TrailExplosion
 };
 
 UENUM()

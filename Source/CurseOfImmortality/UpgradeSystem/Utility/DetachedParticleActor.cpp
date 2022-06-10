@@ -36,7 +36,7 @@ void ADetachedParticleActor::Tick(float DeltaTime)
 		SetActorLocation(FollowParent->GetActorLocation());
 	}
 }
-
+	
 void ADetachedParticleActor::InitializeParticleActor(UNiagaraComponent* ParticleSystem,
 	AActor* _FollowParent, float ManualDestructionTime)
 {

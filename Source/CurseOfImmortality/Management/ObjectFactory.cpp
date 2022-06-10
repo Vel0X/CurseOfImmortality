@@ -158,29 +158,29 @@ UAssortment* AObjectFactory::SpawnAssortment(EAssortment Assortment) const
 
 }
 
-ABaseAbility* AObjectFactory::SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation, const ABaseCharacter* Caster) const
+ABaseAbility* AObjectFactory::SpawnAbility(EUpgradeName Ability, const FVector Location, const FRotator Rotation, ABaseCharacter* Caster) const
 {
-	if(!Spawnables->PossibleBaseAbilities.Contains(Ability))
+	if(!Spawnables->BaseAbilities.Contains(Ability))
 	{
 		UE_LOG(LogTemp, Error, TEXT("Ability exists in EUpgradeName, but not in Spawnables List"));
 		return nullptr;
 	}
 
-	const UAbilitySpecification* AbilitySpecification = Spawnables->PossibleBaseAbilities[Ability];
+	const UAbilitySpecification* AbilitySpecification = Spawnables->BaseAbilities[Ability];
 
 	if(AbilitySpecification == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Ability has no Specification set in Spawnables List"));
 		return nullptr;
 	}	
-	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(AbilitySpecification->Class, &Location, &Rotation));
+	ABaseAbility* AbilityInstance = Cast<ABaseAbility>(GetWorld()->SpawnActor(AbilitySpecification->Class, &Location, &Rotation));
 
 	if(AbilityInstance == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned!"));
 		return nullptr;
 	}
-	//AbilityInstance->InitializeAbility(0, static_cast<ABaseCharacter*>(GetOwner()), Ability.Level);
+	AbilityInstance->InitializeAbility(Caster, 1);
 	//AbilityInstance->OnAbilityCreation();
 	//AbilityInstance->AbilityType
 	return AbilityInstance;

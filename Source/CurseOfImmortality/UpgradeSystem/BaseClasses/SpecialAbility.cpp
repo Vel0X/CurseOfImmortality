@@ -15,7 +15,4 @@ void ASpecialAbility::Tick(float DeltaSeconds)
 
 	if(Parent != nullptr)
 		SetActorLocation(Parent->GetComponentLocation());
-	
-
-	//TODO: Need to implement Arcane Replicator as an ABaseCharacter
 }

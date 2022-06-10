@@ -10,7 +10,6 @@
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/BaseStatSpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/Utility/DetachedParticleActor.h"
 
-
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
@@ -70,9 +69,7 @@ void ABaseCharacter::BeginPlay()
 			BodyHitboxes.Add(PrimitiveComponent);
 		}
 	}
-
-	UE_LOG(LogTemp, Error, TEXT("Hbs: %i"), BodyHitboxes.Num());
-
+	
 	//Add all Damage Hitboxes
 	for (const auto Component : HBs)
 	{
@@ -98,6 +95,7 @@ void ABaseCharacter::Tick(float DeltaTime)
 	}
 
 	CheckCollisions();
+	UpdateDamageReceiverHandles(DeltaTime);
 }
 
 void ABaseCharacter::CheckCollisions()
@@ -130,6 +128,27 @@ void ABaseCharacter::CheckCollisions()
 			}
 		}
 	}
+}
+
+void ABaseCharacter::UpdateDamageReceiverHandles(const float DeltaTime)
+{
+	for (int i = DamageReceiverHandles.Num()-1; i >= 0; --i)
+	{
+		DamageReceiverHandles[i].Expiration -= DeltaTime;
+		if(DamageReceiverHandles[i].Expiration <= 0.0f)
+			DamageReceiverHandles.RemoveAt(i);
+	}
+}
+
+bool ABaseCharacter::DamageReceiverHandleContained(const int Handle)
+{
+	for (int i = 0; i < DamageReceiverHandles.Num(); ++i)
+	{
+		if(DamageReceiverHandles[i].Handle == Handle)
+			return true;
+	}
+
+	return false;
 }
 
 void ABaseCharacter::Setup()
@@ -250,7 +269,7 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 		if (Dealer == this) //if the damage is self inflicted, display the damage number in a darker shade of red
 			Color = FColor(50, 0, 0);
 
-		ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(
+		ADamageIndicator* _ = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(
 			Text, Color, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
 	}
 
@@ -292,7 +311,7 @@ void ABaseCharacter::TakeDmg(FDamageFormula Formula, ABaseCharacter* Dealer, ABa
 		if (Dealer == this) //if the damage is self inflicted, display the damage number in a darker shade of red
 			Color = FColor(50, 0, 0);
 
-		ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(
+		ADamageIndicator* _ = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(
 			Text, Color, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
 	}
 
@@ -332,7 +351,7 @@ void ABaseCharacter::Heal(float Amount, bool Verbose)
 
 	FString Text = "";
 	Text.AppendInt(Amount);
-	ADamageIndicator* DamageText = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(
+	ADamageIndicator* _ = FPersistentWorldManager::ObjectFactory->SpawnDamageIndicator(
 		Text, FColor::Green, UpperAttachmentPoint->GetComponentLocation(), FRotator::ZeroRotator);
 
 	if (CurrentHealth > Stats[EStats::Health])
