@@ -73,8 +73,8 @@ void APlayerCharacter::RotateToClosestEnemy()
 {
 
 	TArray<ABaseCharacter*> AllEnemies = FPersistentWorldManager::GetEnemies();
-	float ClosestDistance = 700.0f;
-	float MaxDistance = 700.0f;
+	float ClosestDistance = 1200.0f;
+	float MaxDistance = 1200.0f;
 	ABaseCharacter* ClosestActor = this;
 	for(ABaseCharacter* Enemy : AllEnemies)
 	{
@@ -82,7 +82,7 @@ void APlayerCharacter::RotateToClosestEnemy()
 		float Magnitude = GetActorForwardVector().Size() * (GetActorLocation() - Enemy->GetActorLocation()).Size();
 		float Angle = FMath::RadiansToDegrees(UKismetMathLibrary::Acos(DotProduct/Magnitude));
 		
-		if(Angle > 135 && MaxDistance > (GetActorLocation() - Enemy->GetActorLocation()).Length())
+		if(Angle > 55 && MaxDistance > (GetActorLocation() - Enemy->GetActorLocation()).Length())
 		{
 			if((UKismetMathLibrary::Sin(Angle) * (GetActorLocation() - Enemy->GetActorLocation()).Length()) < ClosestDistance)
 			{

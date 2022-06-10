@@ -59,8 +59,6 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	float MaxBufferTime;
-
-	bool UseRangedAfterRot = false;
 	
 public:	
 	// Called every frame

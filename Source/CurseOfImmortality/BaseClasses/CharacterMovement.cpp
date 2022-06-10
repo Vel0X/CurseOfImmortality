@@ -29,10 +29,11 @@ void UCharacterMovement::BeginPlay()
 
 // Called every frame
 void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
-                                       FActorComponentTickFunction* ThisTickFunction)
+									   FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	
 	if(Rotating)
 	{
 		FRotator NextRotator = FMath::RInterpTo(GetOwner()->GetActorRotation(), GoalRotation,DeltaTime,23);
@@ -59,7 +60,7 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 		}
 		Direction.Normalize();
 		SmoothRotation(Direction.Rotation(),0.15);
-
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *Direction.Rotation().ToString());
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
 		{
 			if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
@@ -72,7 +73,7 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = CurrentSpeed * SpeedDep;
 		}
 		
-		MoveWithCorrection(Direction, DeltaTime, CurrentSpeed);
+		MoveWithCorrection(Direction, DeltaTime, Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed);
 		
 		DirectionSet = false;
 	}

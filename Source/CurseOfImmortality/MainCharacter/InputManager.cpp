@@ -19,7 +19,7 @@ UInputManager::UInputManager()
 	LastAction = InputAction::NoAction;
 
 	
-	Player = static_cast <APlayerCharacter*>(GetOwner());
+	Player = Cast<APlayerCharacter>(GetOwner());
 	
 	if(Player != nullptr)
 	{
@@ -42,7 +42,7 @@ void UInputManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Player = static_cast <APlayerCharacter*>(GetOwner());
+	Player = Cast<APlayerCharacter>(GetOwner());
 	if(Player != nullptr)
 	{
 		MovementComponent = Player->MovementComponent;
@@ -61,15 +61,6 @@ void UInputManager::BeginPlay()
 void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if(UseRangedAfterRot)
-	{
-		if(!Player->MovementComponent->Rotating)
-		{
-			Player->AttackManager->OnKeyPressed(Ranged);
-			UseRangedAfterRot = false;
-		}
-	}
 	
 	if(Player->PlayerAnim->Idle || Player->PlayerAnim->Melee || Player->PlayerAnim->Running)
 	{
@@ -241,8 +232,7 @@ void UInputManager::DoAction(InputAction _InputAction)
 	    	{
 	    		Player->RotateToClosestEnemy();
 	    		LastAction = InputAction::RangedAbility;
-	    		UseRangedAfterRot = true;
-	    		//Player->AttackManager->OnKeyPressed(Ranged);
+	    		Player->AttackManager->OnKeyPressed(Ranged);
 	    		//UE_LOG(LogTemp, Display, TEXT("Used Ranged"));
 	    	}
 	    }
