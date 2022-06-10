@@ -2,9 +2,6 @@
 
 
 #include "InputManager.h"
-
-#include <concrt.h>
-
 #include "PlayerAnim.h"
 #include "PlayerCharacter.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
@@ -65,6 +62,15 @@ void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if(UseRangedAfterRot)
+	{
+		if(!Player->MovementComponent->Rotating)
+		{
+			Player->AttackManager->OnKeyPressed(Ranged);
+			UseRangedAfterRot = false;
+		}
+	}
+	
 	if(Player->PlayerAnim->Idle || Player->PlayerAnim->Melee || Player->PlayerAnim->Running)
 	{
 		if (MoveX != 0 && LastAction == InputAction::NoAction || MoveY != 0 && LastAction == InputAction::NoAction)
@@ -132,43 +138,57 @@ void UInputManager::MoveRight(float Value)
 
 void UInputManager::MeleeAbility()
 {
-	AddToBuffer(InputAction::MeleeAbility);
+	if(!Player->Dead)
+	{
+		AddToBuffer(InputAction::MeleeAbility);
+	}
 }
 
 void UInputManager::RangedAbility()
 {
-	AddToBuffer(InputAction::RangedAbility);
+	if(!Player->Dead)
+	{
+		AddToBuffer(InputAction::RangedAbility);
+	}
 }
 
 void UInputManager::SpecialAbility()
 {
-	AddToBuffer(InputAction::SpecialAbility);
+	if(!Player->Dead)
+	{
+		AddToBuffer(InputAction::SpecialAbility);
+	}
 }
 
 void UInputManager::Dash()
 {
-	DoAction(InputAction::Dash);
+	if(!Player->Dead)
+	{
+		DoAction(InputAction::Dash);
+	}
 }
 
 void UInputManager::Move()
 {
-	MoveInput.X = MoveX;
-	MoveInput.Y = MoveY;
-	if(Player->PlayerAnim->Melee)
+	if (!Player->Dead)
 	{
-		if (UKismetMathLibrary::Acos(FVector::DotProduct(GetOwner()->GetActorForwardVector(), MoveInput)) < 1.5)
+		MoveInput.X = MoveX;
+		MoveInput.Y = MoveY;
+		if(Player->PlayerAnim->Melee)
 		{
-			GetOwner()->SetActorRotation(MoveInput.Rotation());
-			MoveInput = GetOwner()->GetActorForwardVector();
-			MovementComponent->SetDirection(MoveInput, Player->
-					MovementSpeedWhileAttacking);
-		}
+			if (UKismetMathLibrary::Acos(FVector::DotProduct(GetOwner()->GetActorForwardVector(), MoveInput)) < 1.5)
+			{
+				GetOwner()->SetActorRotation(MoveInput.Rotation());
+				MoveInput = GetOwner()->GetActorForwardVector();
+				MovementComponent->SetDirection(MoveInput, Player->
+						MovementSpeedWhileAttacking);
+			}
 		
-	}else
-	{
-		MovementComponent->SetDirection(MoveInput, Player->Stats[Movespeed]);
+		}else
+		{
+			MovementComponent->SetDirection(MoveInput, Player->Stats[Movespeed]);
+		}
 	}
-	
 }
 
 void UInputManager::AddToBuffer(InputAction _InputAction)
@@ -221,7 +241,8 @@ void UInputManager::DoAction(InputAction _InputAction)
 	    	{
 	    		Player->RotateToClosestEnemy();
 	    		LastAction = InputAction::RangedAbility;
-	    		Player->AttackManager->OnKeyPressed(Ranged);
+	    		UseRangedAfterRot = true;
+	    		//Player->AttackManager->OnKeyPressed(Ranged);
 	    		//UE_LOG(LogTemp, Display, TEXT("Used Ranged"));
 	    	}
 	    }

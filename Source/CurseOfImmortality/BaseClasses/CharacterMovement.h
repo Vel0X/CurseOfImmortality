@@ -20,7 +20,6 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
-	bool Rotating = false;
 	FRotator GoalRotation;
 	float TimeToRotate;
 	float CurrentTimeToRotate;
@@ -38,5 +37,5 @@ public:
 	FVector Direction;
 	bool DirectionSet;
 	float CurrentSpeed;
-	
+	bool Rotating = false;
 };
