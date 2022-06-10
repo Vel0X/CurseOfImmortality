@@ -38,4 +38,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	ABaseAbility* DamagingAbility;
+
+	float TickInterval;
 };

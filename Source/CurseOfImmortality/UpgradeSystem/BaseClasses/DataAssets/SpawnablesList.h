@@ -34,6 +34,9 @@ public:
 	//TMap<TEnumAsByte<EBuff>, UNiagaraSystem*> BuffVFX;
 
 	UPROPERTY(EditAnywhere)
+	TMap<TEnumAsByte<EUpgradeName>,UAbilitySpecification*> BaseAbilities;
+	
+	UPROPERTY(EditAnywhere)
 	TMap<TEnumAsByte<EEnemy>, UEnemySpecification*> Enemies;
 
 	UPROPERTY(EditAnywhere)
