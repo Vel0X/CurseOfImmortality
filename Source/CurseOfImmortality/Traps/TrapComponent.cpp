@@ -2,6 +2,8 @@
 
 
 #include "CurseOfImmortality/Traps/TrapComponent.h"
+#include "CurseOfImmortality/Traps/TrapManagerCopmonent.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 // Sets default values for this component's properties
 UTrapComponent::UTrapComponent()
@@ -19,9 +21,7 @@ void UTrapComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TrapIsActive = true;
-
-	// ...
+	TrapIsActive = false;
 	
 }
 
@@ -30,6 +30,23 @@ void UTrapComponent::BeginPlay()
 void UTrapComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if(!TimerDone)
+	{
+		if(Timer >= 0)
+		{
+			Timer -= DeltaTime;
+		}else
+		{
+			if(FPersistentWorldManager::TrapManager != nullptr)
+			{
+				UE_LOG(LogTemp, Display, TEXT("No Trapmanager"));
+				FPersistentWorldManager::TrapManager -> ActivateTrapsOfType.AddDynamic(this, &UTrapComponent::CheckActivation);
+				FPersistentWorldManager::TrapManager -> DeactivateTrapsOfType.AddDynamic(this, &UTrapComponent::CheckDeactivation);
+				TimerDone = true;
+			}
+		}	
+	}
+	
 
 	// ...
 }

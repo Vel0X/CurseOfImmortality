@@ -2,6 +2,7 @@
 
 
 #include "CurseOfImmortality/Traps/TrapManagerCopmonent.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 // Sets default values for this component's properties
 UTrapManagerCopmonent::UTrapManagerCopmonent()
@@ -18,6 +19,11 @@ UTrapManagerCopmonent::UTrapManagerCopmonent()
 void UTrapManagerCopmonent::BeginPlay()
 {
 	Super::BeginPlay();
+	FPersistentWorldManager::TrapManager = this;
+	sawLvl = 0;
+	arrowLvl = 0;
+	turretLvl = 0;
+	spikesLvl = 0;
 
 	// ...
 	
@@ -34,16 +40,65 @@ void UTrapManagerCopmonent::TickComponent(float DeltaTime, ELevelTick TickType, 
 
 void UTrapManagerCopmonent::UpgradeTrapsOfType(TEnumAsByte<ETrapTypes> Type)
 {
-	UpgradeTraptype.Broadcast(Type, 0);
+	UpgradeTraptype.Broadcast(Type, GetLvl(Type));
 }
 void UTrapManagerCopmonent::ActivateAllTrapsOfType(TEnumAsByte<ETrapTypes> Type)
 {
-	ActivateTrapsOfType.Broadcast(Type, 0);
+	ActivateTrapsOfType.Broadcast(Type, GetLvl(Type));
 }
 
 void UTrapManagerCopmonent::DeactivateAllTrapsOfType(TEnumAsByte<ETrapTypes> Type)
 {
-	DeactivateTrapsOfType.Broadcast(Type, 0);
+	DeactivateTrapsOfType.Broadcast(Type, GetLvl(Type));
+}
+
+void UTrapManagerCopmonent::ChooseRandomDowngrade()
+{
+	int rnd = FMath::RandRange(1,4);
+
+	switch (rnd)
+	{
+	case 1:
+		if(arrowLvl < 3)
+		{
+			arrowLvl++;
+			UpgradeTrapsOfType(ETrapTypes::Arrows);
+			break;
+		}
+	case 2:
+		if(spikesLvl < 3)
+		{
+			spikesLvl++;
+			UpgradeTrapsOfType(ETrapTypes::Spikes);
+			break;
+		}
+	case 3:
+		if(sawLvl < 3)
+		{
+			sawLvl++;
+			UpgradeTrapsOfType(ETrapTypes::Saws);
+			break;
+		}
+	case 4:
+		if(turretLvl < 3)
+		{
+			turretLvl++;
+			UpgradeTrapsOfType(ETrapTypes::Turrets);
+			break;
+		}
+	}
+}
+
+int UTrapManagerCopmonent::GetLvl(TEnumAsByte<ETrapTypes> Type)
+{
+	switch (Type)
+	{
+	case ETrapTypes::Arrows: return arrowLvl;
+	case ETrapTypes::Saws: return sawLvl;
+	case ETrapTypes::Spikes: return spikesLvl;
+	case ETrapTypes::Turrets: return turretLvl;
+	default: return 0;
+	}
 }
 
 

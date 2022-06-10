@@ -26,6 +26,8 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	float Timer = 5;
+	bool TimerDone = false;
 
 public:	
 	// Called every frame

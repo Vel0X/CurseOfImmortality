@@ -4,6 +4,7 @@
 #include "CurseOfImmortality/Arena/Arena.h"
 #include "CurseOfImmortality/BaseClasses/SoundManager.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
+#include "CurseOfImmortality/Traps/TrapManagerCopmonent.h"
 #include "Rounds/RoundsManager.h"
 
 class FPersistentWorldManager
@@ -16,6 +17,7 @@ public:
 	static ARoundsManager* RoundsManager;
 	static ASoundManager* SoundManager;
 	static AArena* Arena;
+	static UTrapManagerCopmonent* TrapManager;
 
 	static TArray<ABaseCharacter*> GetEnemies()
 	{
@@ -149,6 +151,7 @@ public:
 		RoundsManager = nullptr;
 		Arena = nullptr;
 		SoundManager = nullptr;
+		TrapManager = nullptr;
 	}
 
 private:

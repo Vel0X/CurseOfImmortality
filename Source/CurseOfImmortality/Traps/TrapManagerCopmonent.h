@@ -16,15 +16,19 @@ class CURSEOFIMMORTALITY_API UTrapManagerCopmonent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UTrapManagerCopmonent();
-	DECLARE_EVENT_TwoParams( OwningType, TrapEvent, TEnumAsByte<ETrapTypes>, int )
-
-	TrapEvent ActivateTrapsOfType;
-	TrapEvent DeactivateTrapsOfType;
-	TrapEvent UpgradeTraptype;
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FTrapDelegate, TEnumAsByte<ETrapTypes>, TypeOfTrap, int, Prio);
+	FTrapDelegate ActivateTrapsOfType;
+	FTrapDelegate DeactivateTrapsOfType;
+	FTrapDelegate UpgradeTraptype;
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	int spikesLvl;
+	int arrowLvl;
+	int turretLvl;
+	int sawLvl;
 
 public:	
 	// Called every frame
@@ -34,6 +38,8 @@ public:
 	void DeactivateAllTrapsOfType(TEnumAsByte<ETrapTypes> Type);
 	void UpgradeTrapsOfType(TEnumAsByte<ETrapTypes> Type);
 
+	void ChooseRandomDowngrade();
+	int GetLvl(TEnumAsByte<ETrapTypes> Type);
 	
 		
 };

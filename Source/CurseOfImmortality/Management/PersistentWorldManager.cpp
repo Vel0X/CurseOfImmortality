@@ -7,6 +7,7 @@ AObjectFactory* FPersistentWorldManager::ObjectFactory = nullptr;
 APathfindingGrid* FPersistentWorldManager::PathfindingGrid = nullptr;
 ARoundsManager* FPersistentWorldManager::RoundsManager = nullptr;
 AArena* FPersistentWorldManager::Arena = nullptr;
+UTrapManagerCopmonent* FPersistentWorldManager::TrapManager = nullptr;
 TArray<ABaseCharacter*> FPersistentWorldManager::Enemies = TArray<ABaseCharacter*>();
 TArray<ABaseCharacter*> FPersistentWorldManager::Friendly = TArray<ABaseCharacter*>();
 TMap<FString, bool> FPersistentWorldManager::Logs = {
