@@ -54,39 +54,47 @@ void UTrapManagerCopmonent::DeactivateAllTrapsOfType(TEnumAsByte<ETrapTypes> Typ
 
 void UTrapManagerCopmonent::ChooseRandomDowngrade()
 {
-	int rnd = FMath::RandRange(1,4);
-
-	switch (rnd)
+	for (int i = 0; i < 1000; i++)
 	{
-	case 1:
-		if(arrowLvl < 3)
+		int rnd = FMath::RandRange(1,4);
+
+		switch (rnd)
 		{
-			arrowLvl++;
-			UpgradeTrapsOfType(ETrapTypes::Arrows);
+		case 1:
+			if(arrowLvl < 3)
+			{
+				arrowLvl++;
+				UpgradeTrapsOfType(ETrapTypes::Arrows);
+				return;
+			} 			
 			break;
-		}
-	case 2:
-		if(spikesLvl < 3)
-		{
-			spikesLvl++;
-			UpgradeTrapsOfType(ETrapTypes::Spikes);
+		case 2:
+			if(spikesLvl < 3)
+			{
+				spikesLvl++;
+				UpgradeTrapsOfType(ETrapTypes::Spikes);
+				return;
+			}
 			break;
-		}
-	case 3:
-		if(sawLvl < 3)
-		{
-			sawLvl++;
-			UpgradeTrapsOfType(ETrapTypes::Saws);
+		case 3:
+			if(sawLvl < 3)
+			{
+				sawLvl++;
+				UpgradeTrapsOfType(ETrapTypes::Saws);
+				return;
+			}
 			break;
-		}
-	case 4:
-		if(turretLvl < 3)
-		{
-			turretLvl++;
-			UpgradeTrapsOfType(ETrapTypes::Turrets);
+		case 4:
+			if(turretLvl < 3)
+			{
+				turretLvl++;
+				UpgradeTrapsOfType(ETrapTypes::Turrets);
+				return;
+			}
 			break;
 		}
 	}
+	
 }
 
 int UTrapManagerCopmonent::GetLvl(TEnumAsByte<ETrapTypes> Type)
