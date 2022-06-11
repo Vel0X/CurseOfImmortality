@@ -46,9 +46,9 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	FVector LeftVectorSelf(RightVectorSelf.operator-());
 	FVector RightVectorPlayer(Player->GetActorRightVector());
 	FVector LeftVectorPlayer(RightVectorPlayer.operator-());
-	FVector StartPointLeft(LeftVectorSelf * SelfRef->CapsuleComponent->GetUnscaledCapsuleRadius() + OwnLocation);
-	FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleComponent->GetUnscaledCapsuleRadius() + PlayerLocation);
-	FVector StartPointRight(RightVectorSelf * SelfRef->CapsuleComponent->GetUnscaledCapsuleRadius() + OwnLocation);
+	FVector StartPointLeft(LeftVectorSelf * SelfRef->CapsuleCollision->GetUnscaledCapsuleRadius() + OwnLocation);
+	FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleCollision->GetUnscaledCapsuleRadius() + PlayerLocation);
+	FVector StartPointRight(RightVectorSelf * SelfRef->CapsuleCollision->GetUnscaledCapsuleRadius() + OwnLocation);
 
 	FHitResult HitMid;
 	FHitResult HitLeft;
@@ -57,12 +57,14 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	CollisionParams.AddIgnoredActor(Player);
 	CollisionParams.AddIgnoredActor(SelfRef);
 
+	
 	Controller->GetWorld()->LineTraceSingleByChannel(HitMid, SelfRef->GetActorLocation(), Player->GetActorLocation(),
 	                                                 ECC_GameTraceChannel3, CollisionParams);
 	Controller->GetWorld()->LineTraceSingleByChannel(HitLeft, StartPointLeft, EndPointLeft,
 	                                                 ECC_Pawn, CollisionParams);
 	Controller->GetWorld()->LineTraceSingleByChannel(HitRight, StartPointRight, EndPointLeft,
 	                                                 ECC_Pawn, CollisionParams);
+
 	if (HitMid.GetActor())
 	{
 		//UE_LOG(LogTemp, Error, TEXT("%s"), *HitMid.GetActor()->GetName());

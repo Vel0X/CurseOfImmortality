@@ -24,12 +24,20 @@ AArena::AArena()
 	Gate4->SetupAttachment(RootComponent);
 	LargeGate = CreateDefaultSubobject<USceneComponent>("LargeGate");
 	LargeGate->SetupAttachment(RootComponent);
+	PlayerSpawnPosition = CreateDefaultSubobject<USceneComponent>("PlayerSpawnPosition");
+	PlayerSpawnPosition->SetupAttachment(RootComponent);
+}
+
+void AArena::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	FPersistentWorldManager::Arena = this;
+
 }
 
 void AArena::BeginPlay()
 {
 	Super::BeginPlay();
-	FPersistentWorldManager::Arena = this;
 }
 
 //maybe use an array for gates, but might be tricky, since the gates are components

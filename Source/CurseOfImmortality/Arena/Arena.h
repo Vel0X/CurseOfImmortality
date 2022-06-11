@@ -13,6 +13,7 @@ class CURSEOFIMMORTALITY_API AArena : public AActor
 
 public:
 	AArena();
+	virtual void PostInitializeComponents() override;
 
 	virtual void BeginPlay() override;
 
@@ -35,4 +36,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	USceneComponent* LargeGate;
+
+	UPROPERTY(EditAnywhere)
+	USceneComponent* PlayerSpawnPosition;
 };

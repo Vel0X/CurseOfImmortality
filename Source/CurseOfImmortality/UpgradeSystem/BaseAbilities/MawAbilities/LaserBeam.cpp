@@ -23,6 +23,7 @@ ALaserBeam::ALaserBeam()
 void ALaserBeam::BeginPlay()
 {
 	Super::BeginPlay();
+	Handle = FMath::Rand();
 	//PositionLastFrame = GetActorLocation();
 }
 
@@ -34,7 +35,7 @@ void ALaserBeam::Tick(float DeltaTime)
 	{
 		TimeUntilNextSpawn = SpawnInterval;
 		const auto AbilityInstance = FPersistentWorldManager::ObjectFactory->SpawnAbility(TrailExplosion, GetActorLocation(), GetActorRotation(), Caster);
-		AbilityInstance->AbilityHandle = 100;
+		AbilityInstance->AbilityHandle = Handle;
 	}
 	TimeUntilNextSpawn -= DeltaTime;
 

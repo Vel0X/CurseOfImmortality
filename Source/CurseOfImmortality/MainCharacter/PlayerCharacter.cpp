@@ -23,9 +23,11 @@ APlayerCharacter::APlayerCharacter() : ABaseCharacter()
 	//CapsuleComponent = static_cast<UCapsuleComponent*>(RootComponent);
 	//CapsuleComponent->SetupAttachment(RootComponent);
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
-	SkeletalMesh->SetupAttachment(CapsuleComponent);
+
+	SkeletalMesh->SetupAttachment(RootComponent);
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	SpringArm->SetupAttachment(CapsuleComponent);
+	SpringArm->SetupAttachment(RootComponent);
+
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	PlayerCamera->SetupAttachment(SpringArm);
 	InputManager = CreateDefaultSubobject<UInputManager>(TEXT("InputManager"));

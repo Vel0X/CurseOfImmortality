@@ -10,8 +10,7 @@
 bool ABaseEnemyPawn::GetSpawnPosition(FVector& Position, FRotator& Rotation)
 {
 	USceneComponent* Gate = FPersistentWorldManager::Arena->GetRandomGate();
-	FVector GatePosition = Gate->GetComponentLocation();
-	GatePosition.Z += 100.0f;
+	const FVector GatePosition = Gate->GetComponentLocation();
 	Position = GatePosition;
 	SetActorLocation(Position);
 	return true;

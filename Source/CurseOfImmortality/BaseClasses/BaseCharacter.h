@@ -136,8 +136,14 @@ public:
 	USceneComponent* LowerAttachmentPoint;
 
 	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* CapsuleComponent;
+	USceneComponent* Root;
 
+	//UPROPERTY(EditDefaultsOnly)
+	//UCapsuleComponent* CapsuleComponent;
+
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* CapsuleCollision;
+	
 	UPROPERTY(EditAnywhere)
 	TArray<UPrimitiveComponent*> BodyHitboxes;
 

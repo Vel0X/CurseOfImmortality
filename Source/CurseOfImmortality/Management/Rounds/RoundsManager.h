@@ -47,6 +47,9 @@ public:
 	 */
 	void StartRound(const int Index);
 
+	UFUNCTION(BlueprintCallable)
+	void EndCurrentRound();
+	
 	/**
 	 * Receive a Notification when an enemy died. Information will be passed on to the currently active round
 	 */
@@ -56,4 +59,7 @@ public:
 	URound* ActiveRound;
 
 	int CurrentRoundIndex = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool AutoRoundIncrement = true;
 };

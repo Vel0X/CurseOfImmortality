@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "CustomGameMode.h"
 #include "ObjectFactory.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/Arena/Arena.h"
@@ -18,6 +19,7 @@ public:
 	static ASoundManager* SoundManager;
 	static AArena* Arena;
 	static UTrapManagerCopmonent* TrapManager;
+	static ACustomGameMode* GameMode;
 
 	static TArray<ABaseCharacter*> GetEnemies()
 	{
@@ -152,6 +154,7 @@ public:
 		Arena = nullptr;
 		SoundManager = nullptr;
 		TrapManager = nullptr;
+		GameMode = nullptr;
 	}
 
 private:

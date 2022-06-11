@@ -10,6 +10,7 @@
 #include "CurseOfImmortality/UpgradeSystem/Buffs/Bleed.h"
 
 
+
 void ACustomGameMode::SpawnEnemy(int Index, const float X, const float Y, const float Z)
 {
 	const FVector Location = FVector(X, Y, Z);
@@ -139,6 +140,8 @@ void ACustomGameMode::SetControlFlag(const FString Flag, const bool Value)
 void ACustomGameMode::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+	FPersistentWorldManager::GameMode = this;
+	
 	//Set Flags from Config
 }
 
@@ -146,4 +149,49 @@ void ACustomGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 	FPersistentWorldManager::Clear();
+}
+
+UAttackManager* ACustomGameMode::AttackManager()
+{
+	return FPersistentWorldManager::AttackManager;
+}
+
+APlayerCharacter* ACustomGameMode::PlayerCharacter()
+{	return FPersistentWorldManager::PlayerCharacter;
+
+}
+
+AObjectFactory* ACustomGameMode::ObjectFactory()
+{	return FPersistentWorldManager::ObjectFactory;
+
+}
+
+APathfindingGrid* ACustomGameMode::PathfindingGrid()
+{	return FPersistentWorldManager::PathfindingGrid;
+
+}
+
+ARoundsManager* ACustomGameMode::RoundsManager()
+{	return FPersistentWorldManager::RoundsManager;
+
+}
+
+ASoundManager* ACustomGameMode::SoundManager()
+{	return FPersistentWorldManager::SoundManager;
+
+}
+
+AArena* ACustomGameMode::Arena()
+{	return FPersistentWorldManager::Arena;
+
+}
+
+UTrapManagerCopmonent* ACustomGameMode::TrapManager()
+{	return FPersistentWorldManager::TrapManager;
+
+}
+
+ACustomGameMode* ACustomGameMode::GameMode()
+{	return FPersistentWorldManager::GameMode;
+
 }

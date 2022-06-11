@@ -16,7 +16,7 @@ void ARoundsManager::BeginPlay()
 	UE_LOG(LogTemp, Error, TEXT("BeginPlay"));
 	Super::BeginPlay();
 
-	if(FPersistentWorldManager::GetControlFlag(AutomaticRoundIncrement))
+	if(FPersistentWorldManager::GetControlFlag(AutomaticRoundIncrement) || AutoRoundIncrement)
 	{
 		StartRound(CurrentRoundIndex);
 	}
@@ -69,7 +69,7 @@ void ARoundsManager::Tick(float DeltaTime)
 		else
 		{
 			ActiveRound->ConditionalBeginDestroy();
-			if(FPersistentWorldManager::GetControlFlag(AutomaticRoundIncrement))
+			if(FPersistentWorldManager::GetControlFlag(AutomaticRoundIncrement) || AutoRoundIncrement)
 			{
 				CurrentRoundIndex++;
 				StartRound(CurrentRoundIndex);
@@ -98,6 +98,14 @@ void ARoundsManager::StartRound(const int Index)
 		UE_LOG(LogTemp, Error, TEXT("Round was NULL"));
 	}
 
+}
+
+void ARoundsManager::EndCurrentRound()
+{
+	if(ActiveRound != nullptr)
+	{
+		ActiveRound->EndRound();
+	}
 }
 
 void ARoundsManager::OnEnemyDied(ABaseEnemyPawn* Enemy) const

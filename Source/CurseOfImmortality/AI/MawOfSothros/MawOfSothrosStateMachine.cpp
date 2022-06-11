@@ -92,7 +92,7 @@ void UMawOfSothrosStateMachine::FocusOnPlayer(const float DeltaTime, const float
 
 	const FRotator ZeroedRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
 
-	SelfRef->CapsuleComponent->SetWorldRotation(ZeroedRotation);
+	SelfRef->SetActorRotation(ZeroedRotation);
 }
 
 float UMawOfSothrosStateMachine::CalculateAngleBetweenVectors(FVector VectorOne, FVector VectorTwo) const

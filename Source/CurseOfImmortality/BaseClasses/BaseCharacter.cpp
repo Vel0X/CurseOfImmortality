@@ -15,9 +15,17 @@ ABaseCharacter::ABaseCharacter()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("Root");
-	SetRootComponent(CapsuleComponent);
+	//CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("CapsuleCollider");
+	//CapsuleComponent->SetupAttachment(RootComponent);
+	//SetRootComponent(CapsuleComponent);
 	//CapsuleComponent = static_cast<UCapsuleComponent*>(RootComponent);
+
+
+	Root = CreateDefaultSubobject<USceneComponent>("RootC");
+	SetRootComponent(Root);
+	
+	CapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>("CapsuleCollision");
+	CapsuleCollision->SetupAttachment(RootComponent);
 	MovementComponent = CreateDefaultSubobject<UCharacterMovement>("CharacterMovement");
 	DamageComponent = CreateDefaultSubobject<UDamageComponent>("DamageObject");
 

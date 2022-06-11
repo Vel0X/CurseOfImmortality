@@ -107,8 +107,23 @@ ABaseEnemyPawn* AObjectFactory::SpawnEnemyCustomSpawnBehaviour(const EEnemy Char
 
 	FVector Location = FVector::Zero();
 	FRotator Rotation = FRotator::ZeroRotator;
-	ABaseEnemyPawn* CharacterInstance = Cast<ABaseEnemyPawn>(GetWorld()->SpawnActor(Specification->Class, &Location, &Rotation));
 
+
+	if(Specification->Class == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Class was null"));
+
+		return nullptr;
+	}
+
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	ABaseEnemyPawn* CharacterInstance = Cast<ABaseEnemyPawn>(GetWorld()->SpawnActor(Specification->Class, &Location, &Rotation, Params));
+	if(CharacterInstance == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("CharacterInstance was null"));
+		return nullptr;
+	}
 	CharacterInstance->GetSpawnPosition(Location, Rotation);
 	CharacterInstance->Init(Specification);
 	return CharacterInstance;

@@ -91,5 +91,7 @@ public:
 	 * Will be set false, once all enemies are defeated
 	 */
 	bool RoundOngoing = false;
+	float RoundEndDelay = 5.0f;
+	//float CurrentRoundDelay = 0.0f;
 };
 

@@ -6,6 +6,14 @@
 #include "GameFramework/GameMode.h"
 #include "CustomGameMode.generated.h"
 
+class UTrapManagerCopmonent;
+class AArena;
+class ASoundManager;
+class ARoundsManager;
+class APathfindingGrid;
+class AObjectFactory;
+class APlayerCharacter;
+class UAttackManager;
 /**
  * 
  */
@@ -16,10 +24,36 @@ class CURSEOFIMMORTALITY_API ACustomGameMode final : public AGameMode
 public:
 	virtual void PostInitializeComponents() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowUpgradeMenu();
+
+/////////////////////////////////////////////////////////////////////
+///-------------------WORLD MANAGER INTERFACE---------------------///
+/////////////////////////////////////////////////////////////////////
+
+	UFUNCTION(BlueprintCallable)
+	UAttackManager* AttackManager();
+	UFUNCTION(BlueprintCallable)
+	APlayerCharacter* PlayerCharacter();
+	UFUNCTION(BlueprintCallable)
+	AObjectFactory* ObjectFactory();
+	UFUNCTION(BlueprintCallable)
+	APathfindingGrid* PathfindingGrid();
+	UFUNCTION(BlueprintCallable)
+	ARoundsManager* RoundsManager();
+	UFUNCTION(BlueprintCallable)
+	ASoundManager* SoundManager();
+	UFUNCTION(BlueprintCallable)
+	AArena* Arena();
+	UFUNCTION(BlueprintCallable)
+	UTrapManagerCopmonent* TrapManager();
+	UFUNCTION(BlueprintCallable)
+	ACustomGameMode* GameMode();
 	
 /////////////////////////////////////////////////////////////////////
-///-------------------------COMMANDS---------------------------------
-////////////////////////////////////////////////////////////////////////
+///-------------------------COMMANDS------------------------------///
+/////////////////////////////////////////////////////////////////////
 
 public:
 	UFUNCTION(Exec, Category = ExecFunctions)

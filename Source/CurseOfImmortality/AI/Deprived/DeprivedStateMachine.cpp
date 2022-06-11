@@ -101,7 +101,7 @@ void UDeprivedStateMachine::FocusOnLocation(FVector Location, float DeltaTime) c
 	Target.Z = 0;
 	const FRotator LookAtRotation(
 		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 90.f).Rotation());
-	SelfRef->CapsuleComponent->SetWorldRotation(LookAtRotation);
+	SelfRef->SetActorRotation(LookAtRotation);
 }
 
 // void UDeprivedStateMachine::FocusOnPath(FVector PathLocation, float DeltaTime) const

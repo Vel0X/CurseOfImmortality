@@ -4,6 +4,7 @@
 #include "TrailExplosion.h"
 
 #include "NiagaraComponent.h"
+#include "Components/SphereComponent.h"
 
 
 ATrailExplosion::ATrailExplosion()
@@ -13,7 +14,12 @@ ATrailExplosion::ATrailExplosion()
 	RootComponent = CreateDefaultSubobject<USceneComponent>("RootComponent");
 	
 	ParticleSystem = CreateDefaultSubobject<UNiagaraComponent>("Vfx");
+	
 	ParticleSystem->SetupAttachment(RootComponent);
+
+	SphereComponent = CreateDefaultSubobject<USphereComponent>("Collider");
+
+	SphereComponent->SetupAttachment(RootComponent);
 }
 
 void ATrailExplosion::BeginPlay()

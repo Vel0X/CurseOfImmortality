@@ -2,6 +2,8 @@
 
 
 #include "Round.h"
+
+#include "CurseOfImmortality/Enemies/EnemySpecification.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "DataAssets/AssortmentSpecification.h"
 #include "DataAssets/RoundSpecification.h"
@@ -117,8 +119,11 @@ void URound::RoundTick(float DeltaTime)
 	const int RemainingPowerLevel = CalculateRemainingPowerLevel();
 	if(RemainingPowerLevel == 0)
 	{
-		RoundOngoing = false;
-		EndRound();
+		RoundEndDelay -= DeltaTime;
+		if(RoundEndDelay <= 0.0f)
+		{
+			FPersistentWorldManager::GameMode->ShowUpgradeMenu();
+		}
 		return;
 	}
 	
@@ -151,6 +156,8 @@ void URound::RoundTick(float DeltaTime)
 
 void URound::EndRound()
 {
+	RoundOngoing = false;
+
 	UE_LOG(LogTemp, Warning, TEXT("Round was ended"));
 	for (auto Enemy : ActiveEnemies)
 	{
@@ -162,6 +169,12 @@ void URound::EndRound()
 			Enemy->Destroy();
 		}
 	}
+
+	//
+	const FVector L = FPersistentWorldManager::Arena->PlayerSpawnPosition->GetComponentLocation();
+	const auto Player = FPersistentWorldManager::PlayerCharacter;
+	Player->SetActorLocation(L);
+	Player->Heal(50.0f);
 }
 
 void URound::OnEnemyDeath(ABaseEnemyPawn* Enemy)

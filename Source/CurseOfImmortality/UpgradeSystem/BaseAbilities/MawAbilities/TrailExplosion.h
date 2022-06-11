@@ -6,6 +6,7 @@
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
 #include "TrailExplosion.generated.h"
 
+class USphereComponent;
 class UNiagaraComponent;
 UCLASS()
 class CURSEOFIMMORTALITY_API ATrailExplosion : public ABaseAbility
@@ -26,4 +27,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* ParticleSystem;
+
+	UPROPERTY(EditAnywhere)
+	USphereComponent* SphereComponent;
 };

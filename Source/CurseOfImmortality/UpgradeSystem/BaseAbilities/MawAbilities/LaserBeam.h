@@ -32,4 +32,5 @@ public:
 
 private:
 	float TimeUntilNextSpawn = 0.0f;
+	int Handle = -1;
 };

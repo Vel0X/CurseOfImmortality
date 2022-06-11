@@ -1,6 +1,7 @@
 ﻿#include "PersistentWorldManager.h"
 
 ASoundManager* FPersistentWorldManager::SoundManager = nullptr;
+ACustomGameMode* FPersistentWorldManager::GameMode = nullptr;
 UAttackManager* FPersistentWorldManager::AttackManager = nullptr;
 APlayerCharacter* FPersistentWorldManager::PlayerCharacter = nullptr;
 AObjectFactory* FPersistentWorldManager::ObjectFactory = nullptr;
