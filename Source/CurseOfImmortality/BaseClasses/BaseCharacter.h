@@ -126,13 +126,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EFaction> Faction;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* UpperAttachmentPoint;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* CenterAttachmentPoint;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* LowerAttachmentPoint;
 
 	UPROPERTY(EditAnywhere)
