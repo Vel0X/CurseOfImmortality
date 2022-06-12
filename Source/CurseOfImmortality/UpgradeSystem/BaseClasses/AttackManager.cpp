@@ -414,20 +414,20 @@ void UAttackManager::PrintCurrentlyActive()
 		UE_LOG(LogTemp, Warning, TEXT("UpgradeAbility: %s Level %i"), *Tuple.Value.Specification->DisplayName, Tuple.Value.Level);
 }
 
-void UAttackManager::OnKeyPressed(EAbilityType Type)
+void UAttackManager::OnKeyPressed(EAbilityType Type, FVector SpawnLocation)
 {
 	if(ActiveAbilities.Contains(Type) && CheckCooldown(Type))
-		SpawnAbility(ActiveAbilities[Type]);
+		SpawnAbility(ActiveAbilities[Type], SpawnLocation);
 }
 
 
 
-void UAttackManager::SpawnAbility(FActiveAbility& Ability)
+void UAttackManager::SpawnAbility(FActiveAbility& Ability, FVector SpawnLocation)
 {
 	const ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwner());
 
 	const FRotator Rotation = Owner->GetActorRotation();
-	const FVector Location = Owner->GetActorLocation();
+	const FVector Location = SpawnLocation;
 
 	SpawnAbility(Ability, Location, Rotation);
 }
@@ -437,7 +437,6 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability, FVector Position, FRo
 	ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwner());
 	
 	//FPersistentWorldManager::ObjectFactory->SpawnAbility(Ability.Specification->AbilityName, Location, Rotation, Owner);
-
 	ABaseAbility* AbilityInstance = Cast<ABaseAbility>(GetWorld()->SpawnActor(Ability.Specification->Class, &Position, &Rotation));
 
 	if(AbilityInstance == nullptr)
@@ -478,7 +477,7 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability, FVector Position, FRo
 void UAttackManager::SpawnAbility(EAbilityType Ability)
 {
 	if(ActiveAbilities.Contains(Ability) && CheckCooldown(Ability))
-		SpawnAbility(ActiveAbilities[Ability]);
+		SpawnAbility(ActiveAbilities[Ability], GetOwner()->GetActorLocation());
 }
 
 void UAttackManager::SpawnAbilityRotationSpecified(EAbilityType Ability, FVector Position, FRotator Rotation)

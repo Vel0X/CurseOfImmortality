@@ -232,7 +232,7 @@ void UInputManager::DoAction(InputAction _InputAction)
 	    	{
 	    		Player->RotateToClosestEnemy();
 	    		LastAction = InputAction::RangedAbility;
-	    		Player->AttackManager->OnKeyPressed(Ranged);
+	    		//Player->AttackManager->OnKeyPressed(Ranged, Player->SkeletalMesh->GetSocketLocation("LeftHandSocket"));
 	    		//UE_LOG(LogTemp, Display, TEXT("Used Ranged"));
 	    	}
 	    }
@@ -243,7 +243,7 @@ void UInputManager::DoAction(InputAction _InputAction)
 			if(Player->PlayerAnim->AnimationFinished)
 			{
 				LastAction = InputAction::SpecialAbility;
-				Player->AttackManager->OnKeyPressed(Special);
+				//Player->AttackManager->OnKeyPressed(Special, Player->GetActorLocation());
 				//UE_LOG(LogTemp, Display, TEXT("Used Special"));
 			}
 		}

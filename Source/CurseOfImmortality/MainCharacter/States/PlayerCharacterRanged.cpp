@@ -7,6 +7,7 @@
 #include "CurseOfImmortality/MainCharacter/PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 
 void UPlayerCharacterRanged::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -41,6 +42,11 @@ void UPlayerCharacterRanged::OnStateUpdate(float DeltaTime)
 	if(Controller->GetSelfRef()->InputManager->LastAction == InputAction::Dash && SelfRef->CurrentDashCooldown <= 0)
 	{
 		Controller->Transition(Controller->Dash, Controller);
+	}
+	if(SelfRef->PlayerAnim->FireRanged)
+	{
+		SelfRef->AttackManager->OnKeyPressed(Ranged, SelfRef->SkeletalMesh->GetSocketLocation("LeftHandSocket"));
+		SelfRef->PlayerAnim->FireRanged = false;
 	}
 	else if (SelfRef->CurrentAnimationDuration <= 0)
 	{

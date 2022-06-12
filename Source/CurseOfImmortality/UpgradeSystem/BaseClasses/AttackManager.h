@@ -128,13 +128,13 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void OnKeyPressed(EAbilityType Type);
+	void OnKeyPressed(EAbilityType Type, FVector SpawnLocation);
 	
 	void SortActiveUpgrades(bool Verbose = false);
 	
 	bool CheckCooldown(EAbilityType Ability);
 	
-	void SpawnAbility(FActiveAbility& Ability);
+	void SpawnAbility(FActiveAbility& Ability, FVector SpawnLocation);
 
 	void SpawnAbility(FActiveAbility& Ability, FVector Position, FRotator Rotation);
 	

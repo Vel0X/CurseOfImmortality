@@ -2,6 +2,9 @@
 
 
 #include "CharacterMovement.h"
+
+#include <algorithm>
+
 #include "BaseCharacter.h"
 #include "VectorTypes.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
@@ -106,16 +109,35 @@ void UCharacterMovement::SetDirection(FVector MoveInput, float MoveSpeed)
 void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, float DeltaTime, float Speed)
 {
 	FHitResult* Result = new FHitResult();
-	GetOwner()->AddActorWorldOffset(DirectionToMove * DeltaTime * Speed,
-									true, Result);
+	AActor* Owner = GetOwner();
+	auto CapsuleCol = Cast<ABaseCharacter>(Owner)->CapsuleCollision;
+	auto CapsuleLocBeforeMove = CapsuleCol->GetComponentLocation();
+	CapsuleCol->AddWorldOffset(DirectionToMove * DeltaTime * Speed, true, Result);
+	CapsuleCol->SetWorldLocation(CapsuleLocBeforeMove);
+
 	if(Result != nullptr)
 	{
-		if (Result->GetActor()!= GetOwner() && Result->GetActor()!= nullptr)
+		if (Result->GetActor()!= Owner && Result->GetActor()!= nullptr)
 		{
 			FVector UndesiredMotion = Result->ImpactNormal * (FVector::DotProduct(DirectionToMove, Result->ImpactNormal));
-				
-			GetOwner()->AddActorWorldOffset((DirectionToMove-UndesiredMotion) * DeltaTime * Speed,
-									true);
+
+			CapsuleCol->AddWorldOffset((DirectionToMove-UndesiredMotion) * DeltaTime * Speed, true, Result);
+			CapsuleCol->SetWorldLocation(CapsuleLocBeforeMove);
+			if(Result != nullptr)
+			{
+				if (Result->GetActor()!= Owner && Result->GetActor()!= nullptr)
+				{
+					FVector UndesiredMotion2 = Result->ImpactNormal * (FVector::DotProduct(DirectionToMove-UndesiredMotion, Result->ImpactNormal));
+					Owner->AddActorWorldOffset((DirectionToMove-UndesiredMotion - UndesiredMotion2) * DeltaTime * Speed, false);
+				}else
+				{
+					Owner->AddActorWorldOffset((DirectionToMove-UndesiredMotion) * DeltaTime * Speed, false);
+				}
+			}
+		}
+		else
+		{
+			Owner->AddActorWorldOffset(DirectionToMove * DeltaTime * Speed, false);
 		}
 	}
 

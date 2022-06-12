@@ -40,6 +40,12 @@ public:
 	bool AnimationFinished = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool FireRanged = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool FireSpecial = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackSpeed = 1.0f;
 
 	//Dynamic Animation Durations
