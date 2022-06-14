@@ -50,7 +50,7 @@ void UMawOfSothrosIdle::OnStateUpdate(float DeltaTime)
 
 	const float Angle = Controller->CalculateAngleBetweenVectors(VectorToPlayer, SelfRef->GetActorForwardVector());
 	const float Dist = FVector::Dist(PlayerLocation, OwnLocation);
-
+	
 	if (SelfRef->CurrentAttackCooldown <= 0)
 	{
 		if (Angle <= 60.f)

@@ -3,10 +3,12 @@
 
 #include "CurseOfImmortality/AI/MawOfSothros/States/MawOfSothrosLaser.h"
 
+#include "NiagaraComponent.h"
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosPawn.h"
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosStateMachine.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseAbilities/LavaCrack.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseAbilities/MawAbilities/LaserBeam.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 
 void UMawOfSothrosLaser::OnStateEnter(UStateMachine* StateMachine)
@@ -34,6 +36,8 @@ void UMawOfSothrosLaser::OnStateExit()
 
 	SelfRef->Laser = false;
 
+	AbilityInstance = nullptr;
+
 	if (FPersistentWorldManager::GetLogLevel(MawStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Laser State Exit"));
@@ -51,6 +55,7 @@ void UMawOfSothrosLaser::OnStateUpdate(float DeltaTime)
 	}
 	else
 	{
+		AbilityInstance->ParticleSystem->Deactivate();
 		Controller->Transition(Controller->Idle, Controller);
 	}
 }
@@ -97,17 +102,45 @@ void UMawOfSothrosLaser::FireLaser(float DeltaTime)
 			CollisionParams.AddIgnoredActor(Player);
 			CollisionParams.AddIgnoredActor(SelfRef);
 
+			TArray<AActor*> AllEnemies;
+			for (ABaseCharacter* Enemy : FPersistentWorldManager::GetEnemies())
+			{
+				AllEnemies.Add(Cast<AActor>(Enemy));
+			}
+			CollisionParams.AddIgnoredActors(AllEnemies);
+
+
 			Controller->GetWorld()->LineTraceSingleByChannel(Hit, StartPoint,
 			                                                 EndPoint,
-			                                                 ECC_WorldStatic, CollisionParams);
+			                                                 ECC_GameTraceChannel4, CollisionParams);
+
+			DrawDebugLine(SelfRef->GetWorld(), StartPoint, Hit.Location, FColor::Red);
+
+			if (Hit.bBlockingHit)
+				UE_LOG(LogTemp, Warning, TEXT("%s"), *Hit.Location.ToString());
+
 			if (Hit.bBlockingHit)
 			{
-				FVector SpawnLocation(Hit.Location);
-				ALavaCrack* AbilityInstance = Cast<ALavaCrack>(SelfRef->GetWorld()->SpawnActor(
-					SelfRef->LavaCrackSpecification->Class,
-					&SpawnLocation, &FRotator::ZeroRotator));
-				if (!AbilityInstance) { return; }
-				AbilityInstance->InitializeAbility(SelfRef, 1);
+				FVector AbilityLocation(Hit.Location);
+				AbilityLocation.Z += 1;
+
+				UE_LOG(LogTemp, Error, TEXT("%s"), *AbilityLocation.ToString());
+
+				if (!AbilityInstance)
+				{
+					AbilityInstance = Cast<ALaserBeam>(SelfRef->GetWorld()->SpawnActor(
+						SelfRef->LaserBeamSpecification->Class,
+						&AbilityLocation, &FRotator::ZeroRotator));
+					if (!AbilityInstance) { return; }
+					AbilityInstance->InitializeAbility(SelfRef, 1);
+				}
+				else
+				{
+					AbilityInstance->SetActorLocation(AbilityLocation);
+					// AbilityInstance->SetActorLocation(
+					// 	FMath::VInterpNormalRotationTo(AbilityInstance->GetActorLocation(), AbilityLocation, DeltaTime,
+					// 	                               20.f));
+				}
 			}
 		}
 		SpawnFrequency -= DeltaTime;

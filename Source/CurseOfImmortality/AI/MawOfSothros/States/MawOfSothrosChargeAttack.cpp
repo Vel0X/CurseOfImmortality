@@ -48,7 +48,6 @@ void UMawOfSothrosChargeAttack::OnStateUpdate(float DeltaTime)
 		Controller->Transition(Controller->Idle, Controller);
 	}
 	
-	const FVector PlayerLocation(Controller->GetPlayer()->GetActorLocation());
 	const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
 	
 	float MovementCurve;

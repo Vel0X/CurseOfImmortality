@@ -17,8 +17,8 @@
 
 UMawOfSothrosStateMachine::UMawOfSothrosStateMachine()
 {
-	RangedAttackTypes.Add(FAttackType(VomitState, 100));
-	RangedAttackTypes.Add(FAttackType(ChargeAttackState, 100));
+	// RangedAttackTypes.Add(FAttackType(VomitState, 100));
+	// RangedAttackTypes.Add(FAttackType(ChargeAttackState, 100));
 	RangedAttackTypes.Add(FAttackType(LaserState, 100));
 
 	MeleeAttackTypes.Add(FAttackType(GroundSlamState, 100));

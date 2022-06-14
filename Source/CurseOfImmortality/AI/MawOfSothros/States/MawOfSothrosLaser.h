@@ -6,6 +6,7 @@
 #include "CurseOfImmortality/AI/MawOfSothros/States/MawOfSothrosBaseState.h"
 #include "MawOfSothrosLaser.generated.h"
 
+class ALaserBeam;
 /**
  * 
  */
@@ -25,4 +26,7 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosLaser : public UMawOfSothrosBaseState
 	FRotator TargetHeadRotation;
 
 	float SpawnFrequency = 0;
+
+	UPROPERTY()
+	ALaserBeam* AbilityInstance;
 };
