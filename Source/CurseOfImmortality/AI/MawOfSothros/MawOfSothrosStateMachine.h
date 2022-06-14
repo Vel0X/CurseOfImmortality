@@ -53,7 +53,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	void Move(float Speed, float DeltaTime);
+	void Move(float Speed) const;
 	void FocusOnPlayer(float DeltaTime, float Speed) const;
 
 	float CalculateAngleBetweenVectors(FVector VectorOne, FVector VectorTwo) const;

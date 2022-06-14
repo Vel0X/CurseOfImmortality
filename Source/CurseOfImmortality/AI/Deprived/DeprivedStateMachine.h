@@ -23,9 +23,11 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	void MoveToTarget(FVector Target, float Speed, float DeltaTime) const;
+	void MoveToTarget(const FVector Target, const float MovementSpeed, const float DeltaTime,
+	                  const float RotationSpeed = 180.f) const;
+	float CalculateAngleBetweenVectors(FVector VectorOne, FVector VectorTwo) const;
 
-	void FocusOnLocation(FVector Location, float DeltaTime) const;
+	void FocusOnLocation(FVector Location, float DeltaTime, float RotationSpeed = 180.f) const;
 	// void FocusOnPath(FVector PathLocation, float DeltaTime) const;
 
 	//States
@@ -41,6 +43,8 @@ public:
 	UState* HitPlayer;
 	UPROPERTY(BlueprintReadOnly)
 	UState* NormalAttack;
+	UPROPERTY(BlueprintReadOnly)
+	UState* FrenziedAttack;
 	UPROPERTY()
 	UState* FindStartLocation;
 	UPROPERTY()

@@ -56,6 +56,6 @@ void UMawOfSothrosChargeAttack::OnStateUpdate(float DeltaTime)
 	Animation->GetCurveValue(FName("ChargeAttack"), MovementCurve);
 	Animation->GetCurveValue(FName("TurnSpeed"), TurnSpeedCurve);
 
-	Controller->Move(SelfRef->ChargeAttackMovementSpeed * MovementCurve, DeltaTime);
+	Controller->Move(SelfRef->ChargeAttackMovementSpeed * MovementCurve);
 	Controller->FocusOnPlayer(DeltaTime, SelfRef->ChargeAttackTurnSpeed * TurnSpeedCurve);
 }

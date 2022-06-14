@@ -17,21 +17,19 @@ class CURSEOFIMMORTALITY_API UDeprivedJumpAttack : public UDeprivedBaseState
 
 public:
 	virtual void OnStateEnter(UStateMachine* StateMachine) override;
-	
+
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
-	void SetLocation();
+	UPROPERTY(BlueprintReadWrite)
+	bool LocationSet = false;
 
 private:
 	FVector PlayerLocation;
 	FVector JumpDestination;
 	FVector JumpDir;
 	FVector OwnLocation;
-
-	bool LocationSet = false;
 
 	void Jump(float DeltaTime) const;
 };

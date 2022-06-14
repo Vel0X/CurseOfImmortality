@@ -25,8 +25,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ToggleJumpAttackDamage();
 
+	UFUNCTION(BlueprintCallable)
+	void ToggleLeftHand();
+
+	UFUNCTION(BlueprintCallable)
+	void ToggleRightHand();
+
 	UPROPERTY(BlueprintReadWrite)
 	bool AnimationEnd;
+
+	UPROPERTY(EditDefaultsOnly)
+	bool WeakDeprived = true;
 
 	//States
 	UPROPERTY(BlueprintReadWrite)
@@ -44,6 +53,8 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool NormalAttack = false;
 	UPROPERTY(BlueprintReadWrite)
+	bool FrenziedAttack = false;
+	UPROPERTY(BlueprintReadWrite)
 	bool Feast = false;
 
 	UPROPERTY(EditDefaultsOnly)
@@ -51,10 +62,9 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* JumpAttackSphere;
 	UPROPERTY(EditDefaultsOnly)
-	USphereComponent* NormalAttackSphereLeft;
+	USphereComponent* AttackSphereLeft;
 	UPROPERTY(EditDefaultsOnly)
-	USphereComponent* NormalAttackSphereRight;
-	TArray<USphereComponent*> NormalAttackSphereArray;
+	USphereComponent* AttackSphereRight;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UDeprivedStateMachine* StateMachine;
 
@@ -62,8 +72,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Base Stats")
 	float DamageJumpAttack = 50.f;
 	UPROPERTY(EditDefaultsOnly, Category="Base Stats")
-	float DamageNormalAttack = 10.f;
-
+	float DamageFrenziedAttack = 10.f;
+	UPROPERTY(EditDefaultsOnly, Category="Base Stats")
+	float FrenziedAttackCoolDown = 10.f;
+	float CurrentFrenziedAttackCoolDown;
+	
 	//Jump Attack
 	UPROPERTY(EditDefaultsOnly, Category="Jump Attack")
 	float JumpAttackSpeed = 2000.f;
@@ -86,7 +99,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Distances")
 	float DistRunning = 1000.f;
 	UPROPERTY(EditDefaultsOnly, Category="Distances")
-	float DistNormalAttack = 400.f;
+	float DistFrenziedAttack = 400.f;
 	UPROPERTY(EditDefaultsOnly, Category="Distances")
-	float MinDistNormalAttack = 50.f;
+	float DistNormalAttack = 100.f;
+	UPROPERTY(EditDefaultsOnly, Category="Distances")
+	float MinDistFrenziedAttack = 50.f;
 };

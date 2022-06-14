@@ -8,6 +8,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
+#include "CurseOfImmortality/BaseClasses/Damage/DamageComponent.h"
 
 ADeprivedPawn::ADeprivedPawn()
 {
@@ -17,18 +18,17 @@ ADeprivedPawn::ADeprivedPawn()
 	JumpAttackSphere = CreateDefaultSubobject<USphereComponent>("JumpAttackSphere");
 	JumpAttackSphere->SetupAttachment(RootComponent);
 
-	NormalAttackSphereLeft = CreateDefaultSubobject<USphereComponent>("NormalAttackSphereLeft");
-	NormalAttackSphereLeft->SetupAttachment(Mesh, "LeftHandSocket");
 
-	NormalAttackSphereRight = CreateDefaultSubobject<USphereComponent>("NormalAttackSphereRight");
-	NormalAttackSphereRight->SetupAttachment(Mesh, "RightHandSocket");
+	AttackSphereLeft = CreateDefaultSubobject<USphereComponent>("AttackSphereLeft");
+	AttackSphereLeft->SetupAttachment(Mesh, "LeftHandSocket");
 
-	NormalAttackSphereArray.Add(NormalAttackSphereLeft);
-	NormalAttackSphereArray.Add(NormalAttackSphereRight);
+	AttackSphereRight = CreateDefaultSubobject<USphereComponent>("AttackSphereRight");
+	AttackSphereRight->SetupAttachment(Mesh, "RightHandSocket");
 
 	StateMachine = CreateDefaultSubobject<UDeprivedStateMachine>("StateMachine");
 
-	CurrentJumpAttackCoolDown = 0.f;
+	CurrentJumpAttackCoolDown = FMath::RandRange(0.f, JumpAttackCoolDown);
+	CurrentFrenziedAttackCoolDown = FMath::RandRange(0.f, FrenziedAttackCoolDown);
 	CurrentRecoverDuration = RecoverDuration;
 }
 
@@ -42,4 +42,17 @@ void ADeprivedPawn::OnDeath()
 void ADeprivedPawn::ToggleJumpAttackDamage()
 {
 	JumpAttackSphere->SetGenerateOverlapEvents(!JumpAttackSphere->GetGenerateOverlapEvents());
+	DamageComponent->ResetAllHitCharacters();
+}
+
+void ADeprivedPawn::ToggleLeftHand()
+{
+	AttackSphereLeft->SetGenerateOverlapEvents(!AttackSphereLeft->GetGenerateOverlapEvents());
+	DamageComponent->ResetAllHitCharacters();
+}
+
+void ADeprivedPawn::ToggleRightHand()
+{
+	AttackSphereRight->SetGenerateOverlapEvents(!AttackSphereRight->GetGenerateOverlapEvents());
+	DamageComponent->ResetAllHitCharacters();
 }

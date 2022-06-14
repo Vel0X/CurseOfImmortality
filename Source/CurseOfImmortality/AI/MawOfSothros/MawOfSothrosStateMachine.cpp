@@ -65,7 +65,7 @@ void UMawOfSothrosStateMachine::TickComponent(float DeltaTime, ELevelTick TickTy
 	}
 }
 
-void UMawOfSothrosStateMachine::Move(float Speed, float DeltaTime)
+void UMawOfSothrosStateMachine::Move(float Speed) const
 {
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Maw StateMachine")); }
 

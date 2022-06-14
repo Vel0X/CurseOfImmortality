@@ -9,7 +9,6 @@
 #include "VectorTypes.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
-#include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 
 
 // Sets default values for this component's properties

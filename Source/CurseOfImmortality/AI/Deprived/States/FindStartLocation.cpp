@@ -6,6 +6,7 @@
 #include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
+#include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UFindStartLocation::OnStateEnter(UStateMachine* StateMachine)
@@ -62,13 +63,13 @@ void UFindStartLocation::OnStateUpdate(float DeltaTime)
 		}
 	}
 	else
-	{
-		Controller->MoveToTarget(Path[PathIndex], SelfRef->CurrentMovementSpeed, DeltaTime);
+	{		
 		FVector L(SelfRef->GetActorLocation());
 		L.Z = 0;
-		Controller->FocusOnLocation(Path[PathIndex], DeltaTime);
+		
+		Controller->MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime, 1.f);
 
-		if (FVector::Dist(Path[PathIndex], L) < 50.f)
+		if (FVector::Dist(Path[PathIndex], L) < 100.f)
 		{
 			if (PathIndex < Path.Num() - 1)
 				PathIndex++;
