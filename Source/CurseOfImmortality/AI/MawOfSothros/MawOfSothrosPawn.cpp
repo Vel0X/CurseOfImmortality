@@ -117,7 +117,7 @@ void AMawOfSothrosPawn::TriggerMawSlam(FName SocketName)
 
 void AMawOfSothrosPawn::ToggleLaser()
 {
-	// Beam->SetVisibility(!Beam->GetVisibleFlag());
+	Beam->SetVisibility(!Beam->GetVisibleFlag());
 
 	LaserOn = !LaserOn;
 }

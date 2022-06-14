@@ -114,17 +114,10 @@ void UMawOfSothrosLaser::FireLaser(float DeltaTime)
 			                                                 EndPoint,
 			                                                 ECC_GameTraceChannel4, CollisionParams);
 
-			DrawDebugLine(SelfRef->GetWorld(), StartPoint, Hit.Location, FColor::Red);
-
-			if (Hit.bBlockingHit)
-				UE_LOG(LogTemp, Warning, TEXT("%s"), *Hit.Location.ToString());
-
 			if (Hit.bBlockingHit)
 			{
 				FVector AbilityLocation(Hit.Location);
 				AbilityLocation.Z += 1;
-
-				UE_LOG(LogTemp, Error, TEXT("%s"), *AbilityLocation.ToString());
 
 				if (!AbilityInstance)
 				{
