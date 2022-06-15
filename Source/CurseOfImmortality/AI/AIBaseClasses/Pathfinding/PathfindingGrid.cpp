@@ -133,6 +133,18 @@ bool APathfindingGrid::GetPath(int StartX, int StartY, int EndX, int EndY, TArra
 
 	FPfNode* StartNode = &GetValue(StartX, StartY);
 	const FPfNode* EndNode = &GetValue(EndX, EndY);
+	if (!EndNode->IsWalkable)
+	{
+		TArray<FPfNode*> Neighbours  = GetNeighbors(EndNode->X, EndNode->Y);
+		for (FPfNode* Node : Neighbours)
+		{
+			if(Node->IsWalkable)
+			{
+				EndNode = Node;
+				break;
+			}
+		}
+	}
 	StartNode->G = 0;
 	StartNode->H = CalculateDistance(StartX, StartY, EndX, EndY);
 	StartNode->S = StartNode->H;
