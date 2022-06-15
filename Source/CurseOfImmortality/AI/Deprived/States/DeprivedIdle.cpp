@@ -37,8 +37,10 @@ void UDeprivedIdle::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime);
 	const FVector PlayerLocation = Player->GetActorLocation();
+
+	SelfRef->CurrentJumpAttackCoolDown = FMath::RandRange(0.f, SelfRef->JumpAttackCoolDown / 2);
+	SelfRef->CurrentFrenziedAttackCoolDown = FMath::RandRange(0.f, SelfRef->FrenziedAttackCoolDown / 2);
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistRunning)
 	{

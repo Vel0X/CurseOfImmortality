@@ -28,7 +28,7 @@ void UStormCallerStateMachine::TickComponent(float DeltaTime, ELevelTick TickTyp
 	if (!SelfRef->Dead)
 	{
 		CurrentState->OnStateUpdate(DeltaTime);
-		FocusOnPlayer();
+		FocusOnPlayer(DeltaTime);
 		SelfRef->CurrentAttackCoolDown -= DeltaTime;
 	}
 }
@@ -53,16 +53,16 @@ void UStormCallerStateMachine::BeginPlay()
 	//Initialise States
 	Idle = NewObject<UStormCallerIdle>();
 	Attack = NewObject<UStormCallerAttack>();
-	
 }
 
-void UStormCallerStateMachine::FocusOnPlayer()
+void UStormCallerStateMachine::FocusOnPlayer(float DeltaTime)
 {
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in StormCaller StateMachine")); }
 	if (!Player) { UE_LOG(LogTemp, Error, TEXT("No Player in StormCaller StateMachine")); }
 	const FVector PlayerLocation = Player->GetActorLocation();
 	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 
-	const FRotator LookAtRotation = FRotator(0.f, Target.Rotation().Yaw, 0.f);
+	const FRotator LookAtRotation(
+		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 100.f).Rotation());
 	SelfRef->SetActorRotation(LookAtRotation);
 }

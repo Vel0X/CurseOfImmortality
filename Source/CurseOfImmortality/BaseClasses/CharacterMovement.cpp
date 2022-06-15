@@ -7,9 +7,9 @@
 
 #include "BaseCharacter.h"
 #include "VectorTypes.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
-#include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 
 
 // Sets default values for this component's properties
@@ -32,22 +32,25 @@ void UCharacterMovement::BeginPlay()
 
 // Called every frame
 void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
-									   FActorComponentTickFunction* ThisTickFunction)
+                                       FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	
-	if(Rotating)
+
+	if (Rotating)
 	{
-		FRotator NextRotator = FMath::RInterpTo(GetOwner()->GetActorRotation(), GoalRotation,DeltaTime,23);
+		FRotator NextRotator = FMath::RInterpTo(GetOwner()->GetActorRotation(), GoalRotation, DeltaTime, 23);
 		CurrentTimeToRotate -= DeltaTime;
-		GetOwner()->SetActorRotation(NextRotator);
+		if (!Cast<ABaseEnemyPawn>(GetOwner()))
+		{
+			GetOwner()->SetActorRotation(NextRotator);
+		}
 		if (CurrentTimeToRotate <= 0)
 		{
 			Rotating = false;
 		}
 	}
-	
+
 	if (DirectionSet)
 	{
 		if (Direction.Length() < 0.3)
@@ -62,9 +65,9 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 			SpeedDep = 1;
 		}
 		Direction.Normalize();
-		
-		SmoothRotation(Direction.Rotation(),0.15);
-		
+
+		SmoothRotation(Direction.Rotation(), 0.15);
+
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
 		{
 			if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
@@ -76,9 +79,9 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 		{
 			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = CurrentSpeed * SpeedDep;
 		}
-		
+
 		MoveWithCorrection(Direction, DeltaTime, Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed);
-		
+
 		DirectionSet = false;
 	}
 }
@@ -115,23 +118,27 @@ void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, float Delta
 	CapsuleCol->AddWorldOffset(DirectionToMove * DeltaTime * Speed, true, Result);
 	CapsuleCol->SetWorldLocation(CapsuleLocBeforeMove);
 
-	if(Result != nullptr)
+	if (Result != nullptr)
 	{
-		if (Result->GetActor()!= Owner && Result->GetActor()!= nullptr)
+		if (Result->GetActor() != Owner && Result->GetActor() != nullptr)
 		{
-			FVector UndesiredMotion = Result->ImpactNormal * (FVector::DotProduct(DirectionToMove, Result->ImpactNormal));
+			FVector UndesiredMotion = Result->ImpactNormal * (
+				FVector::DotProduct(DirectionToMove, Result->ImpactNormal));
 
-			CapsuleCol->AddWorldOffset((DirectionToMove-UndesiredMotion) * DeltaTime * Speed, true, Result);
+			CapsuleCol->AddWorldOffset((DirectionToMove - UndesiredMotion) * DeltaTime * Speed, true, Result);
 			CapsuleCol->SetWorldLocation(CapsuleLocBeforeMove);
-			if(Result != nullptr)
+			if (Result != nullptr)
 			{
-				if (Result->GetActor()!= Owner && Result->GetActor()!= nullptr)
+				if (Result->GetActor() != Owner && Result->GetActor() != nullptr)
 				{
-					FVector UndesiredMotion2 = Result->ImpactNormal * (FVector::DotProduct(DirectionToMove-UndesiredMotion, Result->ImpactNormal));
-					Owner->AddActorWorldOffset((DirectionToMove-UndesiredMotion - UndesiredMotion2) * DeltaTime * Speed, false);
-				}else
+					FVector UndesiredMotion2 = Result->ImpactNormal * (FVector::DotProduct(
+						DirectionToMove - UndesiredMotion, Result->ImpactNormal));
+					Owner->AddActorWorldOffset(
+						(DirectionToMove - UndesiredMotion - UndesiredMotion2) * DeltaTime * Speed, false);
+				}
+				else
 				{
-					Owner->AddActorWorldOffset((DirectionToMove-UndesiredMotion) * DeltaTime * Speed, false);
+					Owner->AddActorWorldOffset((DirectionToMove - UndesiredMotion) * DeltaTime * Speed, false);
 				}
 			}
 		}
@@ -151,4 +158,3 @@ void UCharacterMovement::SmoothRotation(FRotator Rotation, float Time)
 	TimeToRotate = Time;
 	CurrentTimeToRotate = Time;
 }
-

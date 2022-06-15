@@ -4,6 +4,8 @@
 #include "PlayerCharacter.h"
 
 #include "PlayerCharacterStateMachine.h"
+#include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
+#include "CurseOfImmortality/AI/Deprived/States/DeprivedFrenziedAttack.h"
 #include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
@@ -17,9 +19,9 @@ APlayerCharacter::APlayerCharacter() : ABaseCharacter()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	//Setup Components and attach to RootComponent
-    //CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+	//CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
 	//CapsuleComponent = static_cast<UCapsuleComponent*>(RootComponent);
 	//CapsuleComponent->SetupAttachment(RootComponent);
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
@@ -35,8 +37,9 @@ APlayerCharacter::APlayerCharacter() : ABaseCharacter()
 	StateMachine = CreateDefaultSubobject<UPlayerCharacterStateMachine>(TEXT("StateMachine"));
 	Weapon = CreateDefaultSubobject<UStaticMeshComponent>("Weapon");
 	Weapon->SetupAttachment(SkeletalMesh, "RightHandSocket");
-	
-	
+
+	SoundSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SoundSphere"));
+	SoundSphere->SetupAttachment(RootComponent);
 }
 
 APlayerCharacter::~APlayerCharacter()
@@ -51,7 +54,7 @@ void APlayerCharacter::Setup()
 	PlayerAnim = Cast<UPlayerAnim>(SkeletalMesh->GetAnimInstance());
 	StateMachine->Initialize();
 	FPersistentWorldManager::PlayerCharacter = this;
-	
+
 	WeaponMaterialInst = UMaterialInstanceDynamic::Create(WeaponMaterial, Weapon);
 	Weapon->GetStaticMesh()->SetMaterial(0, WeaponMaterialInst);
 
@@ -63,7 +66,7 @@ void APlayerCharacter::Setup()
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
-    Super::Tick(DeltaTime);
+	Super::Tick(DeltaTime);
 }
 
 void APlayerCharacter::OnDeath()
@@ -73,27 +76,30 @@ void APlayerCharacter::OnDeath()
 
 void APlayerCharacter::RotateToClosestEnemy()
 {
-
 	TArray<ABaseCharacter*> AllEnemies = FPersistentWorldManager::GetEnemies();
 	float ClosestDistance = 1200.0f;
 	float MaxDistance = 1200.0f;
 	ABaseCharacter* ClosestActor = this;
-	for(ABaseCharacter* Enemy : AllEnemies)
+	for (ABaseCharacter* Enemy : AllEnemies)
 	{
-		float DotProduct = FVector::DotProduct(GetActorForwardVector(),GetActorLocation() - Enemy->GetActorLocation());
+		float DotProduct = FVector::DotProduct(GetActorForwardVector(), GetActorLocation() - Enemy->GetActorLocation());
 		float Magnitude = GetActorForwardVector().Size() * (GetActorLocation() - Enemy->GetActorLocation()).Size();
-		float Angle = FMath::RadiansToDegrees(UKismetMathLibrary::Acos(DotProduct/Magnitude));
-		
-		if(Angle > 55 && MaxDistance > (GetActorLocation() - Enemy->GetActorLocation()).Length())
+		float Angle = FMath::RadiansToDegrees(UKismetMathLibrary::Acos(DotProduct / Magnitude));
+
+		if (Angle > 55 && MaxDistance > (GetActorLocation() - Enemy->GetActorLocation()).Length())
 		{
-			if((UKismetMathLibrary::Sin(Angle) * (GetActorLocation() - Enemy->GetActorLocation()).Length()) < ClosestDistance)
+			if ((UKismetMathLibrary::Sin(Angle) * (GetActorLocation() - Enemy->GetActorLocation()).Length()) <
+				ClosestDistance)
 			{
 				FHitResult HResult;
 				FCollisionQueryParams Params;
 				Params.AddIgnoredActor(GetOwner());
-				if(!GetWorld()->LineTraceSingleByChannel(HResult, CenterAttachmentPoint->GetComponentLocation(), Enemy->GetActorLocation(), ECollisionChannel::ECC_Visibility, Params, FCollisionResponseParams()))
+				if (!GetWorld()->LineTraceSingleByChannel(HResult, CenterAttachmentPoint->GetComponentLocation(),
+				                                          Enemy->GetActorLocation(), ECollisionChannel::ECC_Visibility,
+				                                          Params, FCollisionResponseParams()))
 				{
-					ClosestDistance = UKismetMathLibrary::Sin(Angle) * (GetActorLocation() - Enemy->GetActorLocation()).Length();
+					ClosestDistance = UKismetMathLibrary::Sin(Angle) * (GetActorLocation() - Enemy->GetActorLocation()).
+						Length();
 					ClosestActor = Enemy;
 				}
 			}
@@ -101,7 +107,9 @@ void APlayerCharacter::RotateToClosestEnemy()
 	}
 	if (ClosestActor != this)
 	{
-		SetActorRotation(UKismetMathLibrary::MakeRotFromXZ(ClosestActor->GetActorLocation()-GetActorLocation(), FVector::UpVector));
+		SetActorRotation(
+			UKismetMathLibrary::MakeRotFromXZ(ClosestActor->GetActorLocation() - GetActorLocation(),
+			                                  FVector::UpVector));
 	}
 }
 
@@ -124,4 +132,24 @@ void APlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Weapon->GetStaticMesh()->SetMaterial(0, WeaponMaterial);
 	Super::EndPlay(EndPlayReason);
+}
+
+int APlayerCharacter::GetDeprivedCount()
+{
+	int Count = 0;
+
+	TArray<AActor*> OverlappingActorArray;
+
+	SoundSphere->GetOverlappingActors(OverlappingActorArray);
+
+	// UE_LOG(LogTemp, Warning, TEXT("%s"), OverlappingActorArray.Num())
+
+	for (AActor* Actor : OverlappingActorArray)
+	{
+		if (Cast<ADeprivedPawn>(Actor))
+		{
+			Count++;
+		}
+	}
+	return OverlappingActorArray.Num();
 }
