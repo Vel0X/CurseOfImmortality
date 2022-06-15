@@ -67,7 +67,7 @@ void UFindStartLocation::OnStateUpdate(float DeltaTime)
 		FVector L(SelfRef->GetActorLocation());
 		L.Z = 0;
 		
-		Controller->MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime, 1.f);
+		Controller->MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime);
 
 		if (FVector::Dist(Path[PathIndex], L) < 100.f)
 		{

@@ -83,7 +83,7 @@ void UDeprivedStateMachine::MoveToTarget(FVector Target, const float MovementSpe
 	FocusOnLocation(Target, DeltaTime, RotationSpeed);
 	Target = Target - SelfRef->GetActorLocation();
 	Target.Z = 0;
-	SelfRef->MovementComponent->SetDirection(Target, MovementSpeed);
+	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed);
 }
 
 void UDeprivedStateMachine::FocusOnLocation(const FVector Location, const float DeltaTime,
@@ -100,6 +100,7 @@ void UDeprivedStateMachine::FocusOnLocation(const FVector Location, const float 
 		return;
 	}
 	FVector Target = Location - SelfRef->GetActorLocation();
+	Target.Normalize();
 	const FRotator LookAtRotation(
 		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, RotationSpeed).Rotation());
 	const FRotator ZeroedRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);

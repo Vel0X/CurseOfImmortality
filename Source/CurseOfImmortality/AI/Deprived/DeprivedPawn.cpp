@@ -21,14 +21,12 @@ ADeprivedPawn::ADeprivedPawn()
 
 	AttackSphereLeft = CreateDefaultSubobject<USphereComponent>("AttackSphereLeft");
 	AttackSphereLeft->SetupAttachment(Mesh, "LeftHandSocket");
-
+	
 	AttackSphereRight = CreateDefaultSubobject<USphereComponent>("AttackSphereRight");
 	AttackSphereRight->SetupAttachment(Mesh, "RightHandSocket");
 
 	StateMachine = CreateDefaultSubobject<UDeprivedStateMachine>("StateMachine");
-
-	CurrentJumpAttackCoolDown = FMath::RandRange(0.f, JumpAttackCoolDown);
-	CurrentFrenziedAttackCoolDown = FMath::RandRange(0.f, FrenziedAttackCoolDown);
+	
 	CurrentRecoverDuration = RecoverDuration;
 }
 

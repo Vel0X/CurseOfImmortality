@@ -131,10 +131,7 @@ public:
 	FPfNode* GetRandomNodeInNavMesh();
 	FPfNode* GetLowestCostNode(TArray<FPfNode*>& OpenList);
 
-	TArray<FHitResult> TraceNodes(ECollisionChannel CollisionChannel, int X, int Y) const;
-
 	TArray<FVector> ConvertPathToWorldSpace(const TArray<FPfNode*>& Path, bool Verbose = false) const;
-	TArray<FVector> GetPointsInNode(const int X, const int Y) const;
 
 
 	UPROPERTY(EditAnywhere)

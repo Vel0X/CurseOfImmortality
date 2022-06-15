@@ -40,6 +40,8 @@ void UDeprivedNormalAttack::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
+	Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime);
+
 	if (SelfRef->AnimationEnd)
 	{
 		Controller->Transition(Controller->Running, Controller);

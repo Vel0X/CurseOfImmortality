@@ -6,7 +6,6 @@
 #include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
-#include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
@@ -58,14 +57,15 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	CollisionParams.AddIgnoredActor(Player);
 	CollisionParams.AddIgnoredActor(SelfRef);
 
+	FVector Start = SelfRef->GetActorLocation();
+	Start.Z += 20;
+	FVector End = Player->GetActorLocation();
+	End.Z += 20;
 
-	Controller->GetWorld()->LineTraceSingleByChannel(HitMid, SelfRef->CapsuleCollision->GetComponentLocation(),
-	                                                 Player->CapsuleCollision->GetComponentLocation(),
-	                                                 ECC_GameTraceChannel3, CollisionParams);
+	Controller->GetWorld()->LineTraceSingleByChannel(HitMid, Start, End, ECC_GameTraceChannel3, CollisionParams);
 
-	// DrawDebugLine(SelfRef->GetWorld(), SelfRef->CapsuleCollision->GetComponentLocation(), Player->CapsuleCollision->GetComponentLocation(), FColor::Red);
-	//
-	//
+	// DrawDebugLine(SelfRef->GetWorld(), SelfRef->CapsuleCollision->GetComponentLocation(),
+	//               Player->CapsuleCollision->GetComponentLocation(), FColor::Red);
 	// if (HitMid.GetActor())
 	// {
 	// 	UE_LOG(LogTemp, Error, TEXT("%s"), *HitMid.ToString());
@@ -134,7 +134,7 @@ void UDeprivedRunning::FollowPath(float DeltaTime)
 
 	Controller->MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime);
 
-	if (FVector::Dist(Path[PathIndex], L) < 50.f)
+	if (FVector::Dist(Path[PathIndex], L) < 200.f)
 	{
 		if (PathIndex < Path.Num() - 1)
 			PathIndex++;

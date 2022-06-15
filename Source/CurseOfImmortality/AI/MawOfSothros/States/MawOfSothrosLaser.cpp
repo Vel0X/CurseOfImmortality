@@ -62,7 +62,7 @@ void UMawOfSothrosLaser::OnStateUpdate(float DeltaTime)
 
 void UMawOfSothrosLaser::FireLaser(float DeltaTime)
 {
-	const FVector PlayerPosition = FPersistentWorldManager::PlayerCharacter->GetAttachmentLocation(CenterPoint)->
+	const FVector PlayerPosition = FPersistentWorldManager::PlayerCharacter->GetAttachmentLocation(LowerPoint)->
 	                                                                         GetComponentLocation(); //Player Location
 	FVector BoneLocation = SelfRef->Mesh->GetBoneLocation("Bone_006"); //Neck Bone Location
 	FVector Dir = PlayerPosition - BoneLocation; // + FVector(0,0,500.0f);
@@ -117,7 +117,8 @@ void UMawOfSothrosLaser::FireLaser(float DeltaTime)
 			if (Hit.bBlockingHit)
 			{
 				FVector AbilityLocation(Hit.Location);
-				AbilityLocation.Z += 1;
+				
+				AbilityLocation.Z += FMath::FRandRange(0.99,1.01);
 
 				if (!AbilityInstance)
 				{
@@ -130,9 +131,6 @@ void UMawOfSothrosLaser::FireLaser(float DeltaTime)
 				else
 				{
 					AbilityInstance->SetActorLocation(AbilityLocation);
-					// AbilityInstance->SetActorLocation(
-					// 	FMath::VInterpNormalRotationTo(AbilityInstance->GetActorLocation(), AbilityLocation, DeltaTime,
-					// 	                               20.f));
 				}
 			}
 		}
