@@ -31,7 +31,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<UDamageSpecification*> DamagingHitboxDamageSpecifications;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	TMap<UPrimitiveComponent*, UDamageObject*> DamagingHitboxes;
 
 	UPROPERTY(EditAnywhere)
@@ -51,11 +51,51 @@ public:
 
 	//manually trigger a damage object
 	void DirectCharacterHit(int Index, ABaseCharacter* HitCharacter);
-	
-	void SetupDamageComponent(UPrimitiveComponent* Component, UDamageObject* DamageObject);
 
+	/**
+	 * Set the DamageObject of a DamagingHitbox using a DamageObject
+	 */
+	UFUNCTION(BlueprintCallable)
+	void SetupDamagingComponentByDamageObject(UPrimitiveComponent* Component, UDamageObject* DamageObject);
+
+	/**
+	 * Set the DamageObject of a DamagingHitbox using a DamageSpecifcation
+	 */
+	UFUNCTION(BlueprintCallable)
+	void SetupDamagingComponentByDamageSpecification(UPrimitiveComponent* Component, UDamageSpecification* DamageSpecification);
+
+	/**
+	 * Set the DamageObject of a DamagingHitbox using a DamageSpecifcation
+	 */
+	UFUNCTION(BlueprintCallable)
+	void SetupDamagingComponentByIndexAndDamageSpecification(int Index, UDamageSpecification* DamageSpecification);
+	
+	/**
+	 * Reset Hit Character Lists for all Damaging Components
+	 */
 	void ResetAllHitCharacters();
 
+	/**
+	 * Reset Hit Character Lists for a single Damaging Component
+	 */
+	UFUNCTION(BlueprintCallable)
+	void ResetHitCharactersForHitbox(UPrimitiveComponent* Hitbox);
+
+	UFUNCTION(BlueprintCallable)
+	void ResetHitCharactersForHitboxByIndex(int Index);
+	
+	/**
+	 * Toggle a Hitbox using a reference to the component
+	 */
 	UFUNCTION(BlueprintCallable)
 	void ToggleHitbox(UPrimitiveComponent* Hitbox);
+
+	/**
+	 * Toggle a Hitbox using an Index into the DamagingHitboxReferences Array
+	 */
+	UFUNCTION(BlueprintCallable)
+	void ToggleHitboxByIndex(int Index);
+
+	void SetDamageObjectOwner(UDamageObject* DamageObject) const;
 };
+

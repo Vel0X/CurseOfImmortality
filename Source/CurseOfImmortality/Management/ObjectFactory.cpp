@@ -73,6 +73,12 @@ UBaseBuff* AObjectFactory::GetBuff(const EBuff BuffName) const
 
 UDamageObject* AObjectFactory::GetDamageObject(const UDamageSpecification* Specification) const
 {
+	if(Specification->Class == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No DamageObject Class was specified in DamageSpecification"));
+		return nullptr;
+	}
+	
 	UDamageObject* DamageObjectInstance = NewObject<UDamageObject>(Specification->Class->StaticClass(), Specification->Class);
 	DamageObjectInstance->SetupDamageObject(Specification);
 	return DamageObjectInstance;

@@ -63,7 +63,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	UCharacterMovement* MovementComponent;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UDamageComponent* DamageComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Current")
