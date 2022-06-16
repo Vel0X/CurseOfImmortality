@@ -109,46 +109,48 @@ void UCharacterMovement::SetDirection(FVector MoveInput, float MoveSpeed)
 	}
 }
 
-void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, float DeltaTime, float Speed)
+void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, const float DeltaTime, const float Speed) const
 {
-	FHitResult* Result = new FHitResult();
+	//Reset Z to 0 for safety
+	DirectionToMove.Z = 0;
+	DirectionToMove.Normalize();
+	
+	FHitResult Result = FHitResult();
 	AActor* Owner = GetOwner();
-	auto CapsuleCol = Cast<ABaseCharacter>(Owner)->CapsuleCollision;
-	auto CapsuleLocBeforeMove = CapsuleCol->GetComponentLocation();
-	CapsuleCol->AddWorldOffset(DirectionToMove * DeltaTime * Speed, true, Result);
+	const auto CapsuleCol = Cast<ABaseCharacter>(Owner)->CapsuleCollision;
+	const auto CapsuleLocBeforeMove = CapsuleCol->GetComponentLocation();
+	CapsuleCol->AddWorldOffset(DirectionToMove * DeltaTime * Speed, true, &Result);
 	CapsuleCol->SetWorldLocation(CapsuleLocBeforeMove);
 
-	if (Result != nullptr)
+	if (Result.GetActor() != Owner && Result.GetActor())
 	{
-		if (Result->GetActor() != Owner && Result->GetActor() != nullptr)
-		{
-			FVector UndesiredMotion = Result->ImpactNormal * (
-				FVector::DotProduct(DirectionToMove, Result->ImpactNormal));
+		FVector CorrectedImpactNormal = Result.ImpactNormal;
+		CorrectedImpactNormal.Z = 0;
+		CorrectedImpactNormal.Normalize();
+		const FVector UndesiredMotion = CorrectedImpactNormal * FVector::DotProduct(DirectionToMove, CorrectedImpactNormal);
 
-			CapsuleCol->AddWorldOffset((DirectionToMove - UndesiredMotion) * DeltaTime * Speed, true, Result);
-			CapsuleCol->SetWorldLocation(CapsuleLocBeforeMove);
-			if (Result != nullptr)
-			{
-				if (Result->GetActor() != Owner && Result->GetActor() != nullptr)
-				{
-					FVector UndesiredMotion2 = Result->ImpactNormal * (FVector::DotProduct(
-						DirectionToMove - UndesiredMotion, Result->ImpactNormal));
-					Owner->AddActorWorldOffset(
-						(DirectionToMove - UndesiredMotion - UndesiredMotion2) * DeltaTime * Speed, false);
-				}
-				else
-				{
-					Owner->AddActorWorldOffset((DirectionToMove - UndesiredMotion) * DeltaTime * Speed, false);
-				}
-			}
+		CapsuleCol->AddWorldOffset((DirectionToMove - UndesiredMotion) * DeltaTime * Speed, true, &Result);
+		CapsuleCol->SetWorldLocation(CapsuleLocBeforeMove);
+
+		if (Result.GetActor() != Owner && Result.GetActor())
+		{
+			CorrectedImpactNormal = Result.ImpactNormal;
+			CorrectedImpactNormal.Z = 0;
+			CorrectedImpactNormal.Normalize();
+			
+			const FVector UndesiredMotion2 = CorrectedImpactNormal * FVector::DotProduct(DirectionToMove - UndesiredMotion, CorrectedImpactNormal);
+			Owner->AddActorWorldOffset(
+				(DirectionToMove - UndesiredMotion - UndesiredMotion2) * DeltaTime * Speed, false);
 		}
 		else
 		{
-			Owner->AddActorWorldOffset(DirectionToMove * DeltaTime * Speed, false);
+			Owner->AddActorWorldOffset((DirectionToMove - UndesiredMotion) * DeltaTime * Speed, false);
 		}
 	}
-
-	delete Result;
+	else
+	{
+		Owner->AddActorWorldOffset(DirectionToMove * DeltaTime * Speed, false);
+	}
 }
 
 void UCharacterMovement::SmoothRotation(FRotator Rotation, float Time)

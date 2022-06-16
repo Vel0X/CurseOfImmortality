@@ -30,7 +30,7 @@ public:
 
 	void SetDirection(FVector MoveInput, float MoveSpeed);
 
-	void MoveWithCorrection(FVector DirectionToMove, float DeltaTime, float Speed);
+	void MoveWithCorrection(FVector DirectionToMove, float DeltaTime, float Speed) const;
 
 	void SmoothRotation(FRotator Rotation, float Time);
 	
