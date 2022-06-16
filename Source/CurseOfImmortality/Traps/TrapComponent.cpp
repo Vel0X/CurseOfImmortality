@@ -21,7 +21,7 @@ void UTrapComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TrapIsActive = false;
+	TrapIsActive = true;
 	
 }
 
