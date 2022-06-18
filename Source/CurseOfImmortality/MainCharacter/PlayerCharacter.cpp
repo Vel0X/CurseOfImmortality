@@ -95,7 +95,7 @@ void APlayerCharacter::RotateToClosestEnemy()
 				FCollisionQueryParams Params;
 				Params.AddIgnoredActor(GetOwner());
 				if (!GetWorld()->LineTraceSingleByChannel(HResult, CenterAttachmentPoint->GetComponentLocation(),
-				                                          Enemy->GetActorLocation(), ECollisionChannel::ECC_Visibility,
+				                                          Enemy->CenterAttachmentPoint->GetComponentLocation(), ECollisionChannel::ECC_Visibility,
 				                                          Params, FCollisionResponseParams()))
 				{
 					ClosestDistance = UKismetMathLibrary::Sin(Angle) * (GetActorLocation() - Enemy->GetActorLocation()).

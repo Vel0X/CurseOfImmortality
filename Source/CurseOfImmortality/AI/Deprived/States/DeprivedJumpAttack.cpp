@@ -70,7 +70,7 @@ void UDeprivedJumpAttack::Jump(float DeltaTime) const
 	if (LocationSet)
 	{
 		Animation->GetCurveValue(FName("MovementSpeed"), CurveValue);
-		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), SelfRef->JumpAttackSpeed);
+		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), SelfRef->JumpAttackSpeed, false);
 	}
 	else
 	{

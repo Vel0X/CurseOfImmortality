@@ -41,6 +41,6 @@ void ATargetDummy::Tick(float DeltaSeconds)
 		Direction.Normalize();
 		SetActorRotation(Direction.Rotation());
 		MovementComponent->SetDirection(GetActorForwardVector(),
-					Stats[EStats::Movespeed]);
+					Stats[EStats::Movespeed], false);
 	}
 }
