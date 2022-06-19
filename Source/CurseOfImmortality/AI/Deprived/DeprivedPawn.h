@@ -34,7 +34,7 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool AnimationEnd;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool WeakDeprived = true;
 
 	//States
