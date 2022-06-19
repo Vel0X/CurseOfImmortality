@@ -73,6 +73,7 @@ public:
 	/**
 	 * Reset Hit Character Lists for all Damaging Components
 	 */
+	UFUNCTION(BlueprintCallable)
 	void ResetAllHitCharacters();
 
 	/**

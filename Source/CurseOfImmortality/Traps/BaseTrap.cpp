@@ -6,6 +6,7 @@
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "CurseOfImmortality/BaseClasses/Damage/DamageComponent.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseAbilities/Fireball.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseAbilities/TrapProjectile.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 
 // Sets default values
@@ -29,7 +30,7 @@ void ABaseTrap::BeginPlay()
 void ABaseTrap::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	CheckCollisions();
 }
 
@@ -57,13 +58,13 @@ void ABaseTrap::CheckCollisions()
 	TArray<AActor*> OverlappingActors;
 	GetOverlappingActors(OverlappingActors);
 
-	//UE_LOG(LogTemp, Warning, TEXT("Number of overlapping Actors: %i"), OverlappingActors.Num());
-
 	for (auto OverlappingActor : OverlappingActors)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Number of overlapping Actors: %i"), OverlappingActors.Num());
+
 		if (OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
 		{
-			ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
+			ABaseCharacter* OverlappingCharacter = Cast<ABaseCharacter>(OverlappingActor);
 
 			auto CharacterHitboxes = OverlappingCharacter->BodyHitboxes;
 
@@ -83,8 +84,8 @@ void ABaseTrap::CheckCollisions()
 
 void ABaseTrap::FireProjectile(FVector SpawnLocation, FRotator SpawnRotation)
 {
-	AFireball* AbilityInstance = Cast<AFireball>(GetWorld()->SpawnActor(
-		FireBallSpecification->Class,
+	ATrapProjectile* AbilityInstance = Cast<ATrapProjectile>(GetWorld()->SpawnActor(
+		ProjectileSpecification->Class,
 		&SpawnLocation, &SpawnRotation));
 	if (!AbilityInstance) { return; }
 	AbilityInstance->NoFraction = true;

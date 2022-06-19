@@ -29,7 +29,7 @@ public:
 	void CheckCollisions();
 
 	UPROPERTY(EditDefaultsOnly)
-	UAbilitySpecification* FireBallSpecification;
+	UAbilitySpecification* ProjectileSpecification;
 
 	UPROPERTY()
 	ABaseCharacter* Test;
@@ -42,4 +42,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TArray<UPrimitiveComponent*> HitBoxes;
+
+	bool CanInteract = false;
+
+private:
+	UPROPERTY(EditAnywhere)
+	TArray<ABaseCharacter*> InitialCollisions;
 };
