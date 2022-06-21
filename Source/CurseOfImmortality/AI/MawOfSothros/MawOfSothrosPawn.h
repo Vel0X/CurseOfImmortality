@@ -72,6 +72,9 @@ public:
 	bool SpawnPuddle;
 	bool LaserOn;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool AnimationStart; 
+
 	//Stats
 	UPROPERTY(EditAnywhere, Category="ChargeAttack")
 	float ChargeAttackTurnSpeed = 20.f;

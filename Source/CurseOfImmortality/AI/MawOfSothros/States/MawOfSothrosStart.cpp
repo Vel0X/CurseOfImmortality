@@ -48,8 +48,11 @@ void UMawOfSothrosStart::OnStateUpdate(float DeltaTime)
 	if (Dist <= 1500.f)
 	{
 		SelfRef->Start = true;
-		SelfRef->MawSmoke->Activate();
-		SelfRef->Mesh->SetVisibility(true);
+		if (SelfRef->AnimationStart)
+		{
+			SelfRef->MawSmoke->Activate();
+			SelfRef->Mesh->SetVisibility(true);
+		}
 	}
 
 	if (SelfRef->AnimationEnd)

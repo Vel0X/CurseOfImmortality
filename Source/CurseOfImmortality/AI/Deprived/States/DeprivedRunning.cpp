@@ -78,7 +78,7 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 			Path.Empty();
 			APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
 
-			if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, true))
+			if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, false))
 			{
 				Path.Empty();
 				UE_LOG(LogTemp, Error, TEXT("Path is Missing"));

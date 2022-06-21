@@ -46,6 +46,7 @@ public:
 	void ResetLifetime();
 	bool DestroyOnEnemyHit = false;
 	bool CanInteract = false;
+	bool NoFraction = false;
 	UPROPERTY(EditAnywhere)
 	float RelativeSize = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
