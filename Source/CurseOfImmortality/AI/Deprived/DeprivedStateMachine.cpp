@@ -79,7 +79,7 @@ void UDeprivedStateMachine::FindPathToPlayer(TArray<FVector>& Path) const
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
 
-	if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, false))
+	if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, true))
 	{
 		Path.Empty();
 		UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
@@ -97,7 +97,7 @@ void UDeprivedStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& Rando
 	{
 		Grid->GetWorldPositionFromCoordinates(EndNode->X, EndNode->Y, RandomLocation);
 
-		if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), RandomLocation, Path, false))
+		if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), RandomLocation, Path, true))
 		{
 			Path.Empty();
 			UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
@@ -110,14 +110,14 @@ void UDeprivedStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& Rando
 	}
 }
 
-bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex) const
+bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotaionSpeed) const
 {
 	FVector L(SelfRef->GetActorLocation());
 	L.Z = 0;
 
-	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime, 180.f);
+	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime, RotaionSpeed);
 
-	if (FVector::Dist(Path[PathIndex], L) < 200.f)
+	if (FVector::Dist(Path[PathIndex], L) < 100.f)
 	{
 		if (PathIndex < Path.Num() - 1)
 			return true;

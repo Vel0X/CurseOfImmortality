@@ -55,12 +55,12 @@ void UDeprivedFrenziedAttack::OnStateUpdate(float DeltaTime)
 			if (PathfindingTimer <= 0)
 			{
 				Controller->FindPathToPlayer(Path);
-				PathIndex = 0; 
+				PathIndex = 0;
 				PathfindingTimer = 0.5f;
 			}
 			if (!Path.IsEmpty())
 			{
-				if (Controller->FollowPath(Path, DeltaTime, PathIndex))
+				if (Controller->FollowPath(Path, DeltaTime, PathIndex, 720.f))
 				{
 					PathIndex++;
 				}

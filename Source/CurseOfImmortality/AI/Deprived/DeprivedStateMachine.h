@@ -26,7 +26,7 @@ public:
 	FHitResult CheckLineOfSight(FVector Target);
 	void FindPathToPlayer(TArray<FVector>& Path) const;
 	void FindRandomPath(TArray<FVector>& Path, FVector& RandomLocation) const;
-	bool FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex) const;
+	bool FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed = 360.f) const;
 
 	void MoveToTarget(const FVector Target, const float MovementSpeed, const float DeltaTime,
 	                  const float RotationSpeed = 360.f) const;

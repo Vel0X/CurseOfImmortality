@@ -24,4 +24,5 @@ private:
 	TArray<FVector> Path;
 	FVector RandomLocation;
 	int PathIndex = 0;
+	float PathfindingTimer;
 };

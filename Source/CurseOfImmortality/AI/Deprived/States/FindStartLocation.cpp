@@ -47,8 +47,22 @@ void UFindStartLocation::OnStateUpdate(float DeltaTime)
 	{
 		if (Cast<ABaseEnemyPawn>(Controller->CheckLineOfSight(Player->GetActorLocation()).GetActor()))
 		{
-			Controller->FindRandomPath(Path, RandomLocation);
-			PathIndex = 0;
+			if (PathfindingTimer <= 0)
+			{
+				Controller->FindRandomPath(Path, RandomLocation);
+				PathIndex = 0;
+				PathfindingTimer = 2.f;
+			}
+			else
+			{
+				if (!Path.IsEmpty())
+				{
+					if (Controller->FollowPath(Path, DeltaTime, PathIndex))
+					{
+						PathIndex++;
+					}
+				}
+			}
 		}
 		else
 		{
@@ -57,6 +71,8 @@ void UFindStartLocation::OnStateUpdate(float DeltaTime)
 				PathIndex++;
 			}
 		}
+
+		PathfindingTimer -= DeltaTime;
 
 		RandomLocation.Z = 0;
 		FVector PlayerLocation = Player->GetActorLocation();
