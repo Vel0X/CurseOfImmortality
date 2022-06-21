@@ -12,21 +12,17 @@
 // Sets default values
 ABaseAbility::ABaseAbility()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	DamageComponent = CreateDefaultSubobject<UDamageComponent>("DamageComponent");
-
-
 }
-
 
 
 // Called when the game starts or when spawned
 void ABaseAbility::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void ABaseAbility::CheckCollisions()
@@ -39,34 +35,36 @@ void ABaseAbility::CheckCollisions()
 	bool EnemyHit = false;
 	for (auto OverlappingActor : OverlappingActors)
 	{
-		if(OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
+		if (OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
 		{
 			ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
 
-			if(InitialCollisions.Contains(OverlappingCharacter))
-				continue;
-			
-			
-			if(Caster == nullptr)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
-				continue;
-			}
-			
-			if(OverlappingCharacter->Faction == Caster->Faction)
+			if (InitialCollisions.Contains(OverlappingCharacter))
 				continue;
 
+			if (!NoFraction)
+			{
+				if (Caster == nullptr)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
+					continue;
+				}
+
+				if (OverlappingCharacter->Faction == Caster->Faction)
+					continue;
+			}
+
 			EnemyHit = true;
-			
+
 			auto CharacterHitboxes = OverlappingCharacter->BodyHitboxes;
 
 			for (const auto AbilityHitbox : HitBoxes)
 			{
 				for (const auto CharacterHitbox : CharacterHitboxes)
 				{
-					if(AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
+					if (AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
 					{
-						if(DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter))
+						if (DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter))
 							OnCharacterHit(OverlappingCharacter);
 					}
 				}
@@ -87,10 +85,9 @@ void ABaseAbility::CheckCollisions()
 			}
 		}
 	}
-	
-	if(EnemyHit && DestroyOnEnemyHit)
+
+	if (EnemyHit && DestroyOnEnemyHit)
 		DestroyAbility();
-	
 }
 
 void ABaseAbility::OnCharacterHit(ABaseCharacter* OverlappingCharacter)
@@ -110,18 +107,18 @@ void ABaseAbility::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	RemainingAbilityLifetime -= DeltaTime;
-	if(RemainingAbilityLifetime <= 0.0f)
+	if (RemainingAbilityLifetime <= 0.0f)
 	{
 		DestroyAbility();
 	}
-	if(!CanInteract)
+	if (!CanInteract)
 	{
-		if(IgnoreInitialCollisions)
+		if (IgnoreInitialCollisions)
 		{
 			CanInteract = true;
 			return;
 		}
-		
+
 		//Initial Collision Check
 		TArray<AActor*> OverlappingActors;
 		GetOverlappingActors(OverlappingActors);
@@ -130,26 +127,26 @@ void ABaseAbility::Tick(float DeltaTime)
 
 		for (auto OverlappingActor : OverlappingActors)
 		{
-			if(OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
+			if (OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
 			{
 				ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
-		
-				if(Caster == nullptr)
+
+				if (Caster == nullptr)
 				{
 					UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
 					continue;
 				}
-			
-				if(OverlappingCharacter->Faction == Caster->Faction)
+
+				if (OverlappingCharacter->Faction == Caster->Faction)
 					continue;
-			
+
 				auto CharacterHitboxes = OverlappingCharacter->BodyHitboxes;
 
 				for (const auto AbilityHitbox : HitBoxes)
 				{
 					for (const auto CharacterHitbox : CharacterHitboxes)
 					{
-						if(AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
+						if (AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
 						{
 							InitialCollisions.Add(OverlappingCharacter);
 						}
@@ -169,7 +166,7 @@ void ABaseAbility::AfterInitialization()
 {
 	for (const auto Upgrade : UpgradeStack)
 	{
-		if(Upgrade == nullptr)
+		if (Upgrade == nullptr)
 		{
 			UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL in list"));
 		}
@@ -197,11 +194,10 @@ void ABaseAbility::AfterInitialization()
 
 void ABaseAbility::DestroyAbility()
 {
-	
 	//OnAbilityEnd.Broadcast(AbilityHandle);
 	for (const auto Upgrade : UpgradeStack)
 	{
-		if(Upgrade == nullptr)
+		if (Upgrade == nullptr)
 		{
 			UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL in list"));
 		}
@@ -211,19 +207,19 @@ void ABaseAbility::DestroyAbility()
 		}
 	}
 	//const UNiagaraComponent* vfx = FindComponentByClass<UNiagaraComponent>();
-/*
-	if(vfx == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Found no vfx"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("found vfx"));
-
-		//vfx->GetAsset()->Destro
-
-	}
-	*/
+	/*
+		if(vfx == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Found no vfx"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("found vfx"));
+	
+			//vfx->GetAsset()->Destro
+	
+		}
+		*/
 	Destroy();
 }
 
@@ -236,16 +232,15 @@ void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level)
 	//OnActorBeginOverlap.AddDynamic( this, &ABaseAbility::OnEnemyHit);
 	//UE_LOG(LogTemp, Warning, TEXT("AbilityInstance was spawned (Base)"));
 	//OnActorBeginOverlap.AddDynamic(this, &ABaseAbility::AtOverlap);
-	
+
 	//get all the colliders and store them in an array
 	TArray<UActorComponent*> HBs;
 	GetComponents(UPrimitiveComponent::StaticClass(), HBs);
 	for (const auto Component : HBs)
 	{
-
 		//add all primitive Components that generate Overlap Events
 		auto PrimitiveComponent = static_cast<UPrimitiveComponent*>(Component);
-		if(PrimitiveComponent->GetCollisionProfileName() == "Ability")
+		if (PrimitiveComponent->GetCollisionProfileName() == "Ability")
 		{
 			HitBoxes.Add(PrimitiveComponent);
 		}
@@ -258,7 +253,7 @@ void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level)
 void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel)
 {
 	UBaseUpgrade* Upgrade = Cast<UBaseUpgrade>(AddComponentByClass(Class, false, FTransform::Identity, false));
-	if(Upgrade == nullptr)
+	if (Upgrade == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Upgrade was NULL after cast"));
 	}
@@ -267,11 +262,9 @@ void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int Upgrad
 		Upgrade->InitializeUpgrade(this, UpgradeLevel);
 		UpgradeStack.Add(Upgrade);
 	}
-	
 }
 
 void ABaseAbility::ResetLifetime()
 {
 	RemainingAbilityLifetime = AbilityLifetime;
 }
-
