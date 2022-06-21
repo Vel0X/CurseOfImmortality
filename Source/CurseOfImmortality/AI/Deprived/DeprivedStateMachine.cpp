@@ -57,6 +57,75 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	SelfRef->CurrentFrenziedAttackCoolDown -= DeltaTime;
 }
 
+FHitResult UDeprivedStateMachine::CheckLineOfSight(FVector Target)
+{
+	FHitResult Hit;
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(Player);
+	CollisionParams.AddIgnoredActor(SelfRef);
+
+	FVector Start = SelfRef->GetActorLocation();
+	Start.Z += 20;
+	FVector End = Target;
+	End.Z += 20;
+
+	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel3, CollisionParams);
+
+	return Hit;
+}
+
+void UDeprivedStateMachine::FindPathToPlayer(TArray<FVector>& Path) const
+{
+	Path.Empty();
+	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
+
+	if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, false))
+	{
+		Path.Empty();
+		UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
+	}
+}
+
+void UDeprivedStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& RandomLocation) const
+{
+	Path.Empty();
+	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
+
+	FPfNode* EndNode = Grid->GetRandomNodeInNavMesh();
+
+	if (EndNode->IsWalkable)
+	{
+		Grid->GetWorldPositionFromCoordinates(EndNode->X, EndNode->Y, RandomLocation);
+
+		if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), RandomLocation, Path, false))
+		{
+			Path.Empty();
+			UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Node is not Walkable"));
+		Path.Empty();
+	}
+}
+
+bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex) const
+{
+	FVector L(SelfRef->GetActorLocation());
+	L.Z = 0;
+
+	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime, 180.f);
+
+	if (FVector::Dist(Path[PathIndex], L) < 200.f)
+	{
+		if (PathIndex < Path.Num() - 1)
+			return true;
+	}
+
+	return false;
+}
+
 void UDeprivedStateMachine::BeginPlay()
 {
 	Super::BeginPlay();
@@ -106,19 +175,6 @@ void UDeprivedStateMachine::FocusOnLocation(const FVector Location, const float 
 	const FRotator ZeroedRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
 	SelfRef->SetActorRotation(ZeroedRotation);
 }
-
-// void UDeprivedStateMachine::FocusOnPath(FVector PathLocation, float DeltaTime) const
-// {
-// 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
-// 	const FVector SelfRefLocation(SelfRef->GetActorLocation());
-// 	FVector Target = PathLocation - SelfRefLocation;
-//
-// 	Target.Z = 0;
-// 	const FRotator LookAtRotation(
-// 		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 270.f).Rotation());
-//
-// 	SelfRef->CapsuleComponent->SetWorldRotation(LookAtRotation);
-// }
 
 //Getter and Setter
 ADeprivedPawn* UDeprivedStateMachine::GetSelfRef() const

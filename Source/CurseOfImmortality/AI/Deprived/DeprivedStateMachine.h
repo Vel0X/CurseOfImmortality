@@ -23,6 +23,11 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
+	FHitResult CheckLineOfSight(FVector Target);
+	void FindPathToPlayer(TArray<FVector>& Path) const;
+	void FindRandomPath(TArray<FVector>& Path, FVector& RandomLocation) const;
+	bool FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex) const;
+
 	void MoveToTarget(const FVector Target, const float MovementSpeed, const float DeltaTime,
 	                  const float RotationSpeed = 360.f) const;
 	float CalculateAngleBetweenVectors(FVector VectorOne, FVector VectorTwo) const;

@@ -133,7 +133,7 @@ bool APathfindingGrid::GetPath(int StartX, int StartY, int EndX, int EndY, TArra
 
 	FPfNode* StartNode = &GetValue(StartX, StartY);
 	const FPfNode* EndNode = &GetValue(EndX, EndY);
-	if (!EndNode->IsWalkable)
+	if (EndNode && !EndNode->IsWalkable)
 	{
 		TArray<FPfNode*> Neighbours = GetNeighbors(EndNode->X, EndNode->Y);
 		for (FPfNode* Node : Neighbours)

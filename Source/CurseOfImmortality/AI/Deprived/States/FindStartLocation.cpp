@@ -41,38 +41,21 @@ void UFindStartLocation::OnStateUpdate(float DeltaTime)
 
 	if (Path.IsEmpty())
 	{
-		Path.Empty();
-		APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
-
-		FPfNode* EndNode = Grid->GetRandomNodeInNavMesh();
-
-		if (EndNode->IsWalkable)
+		Controller->FindRandomPath(Path, RandomLocation);
+	}
+	else
+	{
+		if (Cast<ABaseEnemyPawn>(Controller->CheckLineOfSight(Player->GetActorLocation()).GetActor()))
 		{
-			Grid->GetWorldPositionFromCoordinates(EndNode->X, EndNode->Y, RandomLocation);
-
-			if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), RandomLocation, Path, false))
-			{
-				Path.Empty();
-				UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
-			}
+			Controller->FindRandomPath(Path, RandomLocation);
+			PathIndex = 0;
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("Node is not Walkable"));
-			Path.Empty();
-		}
-	}
-	else
-	{		
-		FVector L(SelfRef->GetActorLocation());
-		L.Z = 0;
-		
-		Controller->MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime);
-
-		if (FVector::Dist(Path[PathIndex], L) < 100.f)
-		{
-			if (PathIndex < Path.Num() - 1)
+			if (Controller->FollowPath(Path, DeltaTime, PathIndex))
+			{
 				PathIndex++;
+			}
 		}
 
 		RandomLocation.Z = 0;

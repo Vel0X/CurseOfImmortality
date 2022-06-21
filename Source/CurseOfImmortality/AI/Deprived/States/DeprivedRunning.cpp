@@ -41,55 +41,22 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 
 	const FVector PlayerLocation = Player->GetActorLocation();
 
-	// FVector OwnLocation(SelfRef->GetActorLocation());
-	// FVector RightVectorSelf(SelfRef->GetActorRightVector());
-	// FVector LeftVectorSelf(RightVectorSelf.operator-());
-	// FVector RightVectorPlayer(Player->GetActorRightVector());
-	// FVector LeftVectorPlayer(RightVectorPlayer.operator-());
-	// FVector StartPointLeft(LeftVectorSelf * SelfRef->CapsuleCollision->GetUnscaledCapsuleRadius() + OwnLocation);
-	// FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleCollision->GetUnscaledCapsuleRadius() + PlayerLocation);
-	// FVector StartPointRight(RightVectorSelf * SelfRef->CapsuleCollision->GetUnscaledCapsuleRadius() + OwnLocation);
-
-	FHitResult HitMid;
-	// FHitResult HitLeft;
-	// FHitResult HitRight;
-	FCollisionQueryParams CollisionParams;
-	CollisionParams.AddIgnoredActor(Player);
-	CollisionParams.AddIgnoredActor(SelfRef);
-
-	FVector Start = SelfRef->GetActorLocation();
-	Start.Z += 20;
-	FVector End = Player->GetActorLocation();
-	End.Z += 20;
-
-	Controller->GetWorld()->LineTraceSingleByChannel(HitMid, Start, End, ECC_GameTraceChannel3, CollisionParams);
-
-	// DrawDebugLine(SelfRef->GetWorld(), SelfRef->CapsuleCollision->GetComponentLocation(),
-	//               Player->CapsuleCollision->GetComponentLocation(), FColor::Red);
-	// if (HitMid.GetActor())
-	// {
-	// 	UE_LOG(LogTemp, Error, TEXT("%s"), *HitMid.ToString());
-	// }
-
-	if (HitMid.bBlockingHit)
+	if (Controller->CheckLineOfSight(PlayerLocation).bBlockingHit)
 	{
 		if (PathfindingTimer <= 0)
 		{
-			Path.Empty();
-			APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
-
-			if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, false))
-			{
-				Path.Empty();
-				UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
-			}
+			Controller->FindPathToPlayer(Path);
 			PathIndex = 0;
 			PathfindingTimer = 0.5f;
 		}
 		if (!Path.IsEmpty())
 		{
-			FollowPath(DeltaTime);
+			if (Controller->FollowPath(Path, DeltaTime, PathIndex))
+			{
+				PathIndex++;
+			}
 		}
+		PathfindingTimer -= DeltaTime;
 	}
 	else
 	{
@@ -129,14 +96,4 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 
 void UDeprivedRunning::FollowPath(float DeltaTime)
 {
-	FVector L(SelfRef->GetActorLocation());
-	L.Z = 0;
-
-	Controller->MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime, 90.f);
-
-	if (FVector::Dist(Path[PathIndex], L) < 200.f)
-	{
-		if (PathIndex < Path.Num() - 1)
-			PathIndex++;
-	}
 }

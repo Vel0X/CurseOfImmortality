@@ -11,7 +11,7 @@
 void UDeprivedFrenziedAttack::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
-	
+
 	Controller = Cast<UDeprivedStateMachine>(StateMachine);
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
@@ -50,7 +50,31 @@ void UDeprivedFrenziedAttack::OnStateUpdate(float DeltaTime)
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) > SelfRef->MinDistFrenziedAttack)
 	{
-		Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[Movespeed] * CurveValue, DeltaTime);
+		if (Controller->CheckLineOfSight(Player->GetActorLocation()).bBlockingHit)
+		{
+			if (PathfindingTimer <= 0)
+			{
+				Controller->FindPathToPlayer(Path);
+				PathIndex = 0; 
+				PathfindingTimer = 0.5f;
+			}
+			if (!Path.IsEmpty())
+			{
+				if (Controller->FollowPath(Path, DeltaTime, PathIndex))
+				{
+					PathIndex++;
+				}
+			}
+			PathfindingTimer -= DeltaTime;
+		}
+		else
+		{
+			if (!Path.IsEmpty())
+			{
+				Path.Empty();
+			}
+			Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[Movespeed] * CurveValue, DeltaTime);
+		}
 	}
 	if (SelfRef->AnimationEnd)
 	{
