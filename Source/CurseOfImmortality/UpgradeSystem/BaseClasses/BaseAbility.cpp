@@ -280,7 +280,8 @@ void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level, const U
 	//UE_LOG(LogTemp, Warning, TEXT("Ability contains %i Colliders"), HitBoxes.Num());
 	DamageComponent->ConvertInterface();
 
-	HitVfx = Specification->HitVfx;
+	if(Specification)
+		HitVfx = Specification->HitVfx;
 }
 
 void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel)

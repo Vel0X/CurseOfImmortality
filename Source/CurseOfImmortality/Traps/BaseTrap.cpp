@@ -87,5 +87,5 @@ void ABaseTrap::FireProjectile(FVector SpawnLocation, FRotator SpawnRotation)
 		&SpawnLocation, &SpawnRotation));
 	if (!AbilityInstance) { return; }
 	AbilityInstance->NoFraction = true;
-	AbilityInstance->InitializeAbility(nullptr, 1);
+	AbilityInstance->InitializeAbility(nullptr, 1, nullptr);
 }
