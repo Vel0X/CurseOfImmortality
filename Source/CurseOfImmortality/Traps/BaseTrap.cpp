@@ -60,8 +60,6 @@ void ABaseTrap::CheckCollisions()
 
 	for (auto OverlappingActor : OverlappingActors)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Number of overlapping Actors: %i"), OverlappingActors.Num());
-
 		if (OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
 		{
 			ABaseCharacter* OverlappingCharacter = Cast<ABaseCharacter>(OverlappingActor);
