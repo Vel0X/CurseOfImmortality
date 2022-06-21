@@ -2,9 +2,6 @@
 
 
 #include "CharacterMovement.h"
-
-#include <algorithm>
-
 #include "BaseCharacter.h"
 #include "VectorTypes.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
@@ -80,33 +77,26 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = CurrentSpeed * SpeedDep;
 		}
 
-		MoveWithCorrection(Direction, DeltaTime, Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed);
-
+		if (!MoveWithoutCorrection)
+		{
+			MoveWithCorrection(Direction, DeltaTime, Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed);
+		} else
+		{
+			Direction.Z = 0;
+			GetOwner()->AddActorWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed, false);
+		}
 		DirectionSet = false;
 	}
 }
 
 
-void UCharacterMovement::SetDirection(FVector MoveInput, float MoveSpeed)
+void UCharacterMovement::SetDirection(FVector MoveInput, float MoveSpeed, bool IgnoreWalls)
 {
-	if (!(MoveInput.IsZero() && Direction.IsZero()))
-	{
-		Direction = MoveInput;
-		CurrentSpeed = MoveSpeed;
-		DirectionSet = true;
-	}
-	else
-	{
-		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
-		{
-			if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
-			//TODO Maybe do better
-			{
-				Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = 0;
-				Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction = InputAction::NoAction;
-			}
-		}
-	}
+
+	Direction = MoveInput;
+	CurrentSpeed = MoveSpeed;
+	DirectionSet = true;
+	MoveWithoutCorrection = IgnoreWalls;
 }
 
 void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, const float DeltaTime, const float Speed) const
