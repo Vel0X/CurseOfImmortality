@@ -126,7 +126,7 @@ void UMawOfSothrosLaser::FireLaser(float DeltaTime)
 						SelfRef->LaserBeamSpecification->Class,
 						&AbilityLocation, &FRotator::ZeroRotator));
 					if (!AbilityInstance) { return; }
-					AbilityInstance->InitializeAbility(SelfRef, 1);
+					AbilityInstance->InitializeAbility(SelfRef, 1, SelfRef->LaserBeamSpecification);
 				}
 				else
 				{

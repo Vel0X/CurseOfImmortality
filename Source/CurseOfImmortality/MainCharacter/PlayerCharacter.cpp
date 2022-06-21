@@ -55,8 +55,7 @@ void APlayerCharacter::Setup()
 	StateMachine->Initialize();
 	FPersistentWorldManager::PlayerCharacter = this;
 
-	WeaponMaterialInst = UMaterialInstanceDynamic::Create(WeaponMaterial, Weapon);
-	Weapon->GetStaticMesh()->SetMaterial(0, WeaponMaterialInst);
+	WeaponMaterialInst = Weapon->CreateAndSetMaterialInstanceDynamic(0);
 
 	SetupInputComponent();
 	//DamageComponent->ConvertInterface();
@@ -130,7 +129,7 @@ void APlayerCharacter::SetupInputComponent()
 
 void APlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	Weapon->GetStaticMesh()->SetMaterial(0, WeaponMaterial);
+	//Weapon->SetMaterial(0, WeaponMaterial);
 	Super::EndPlay(EndPlayReason);
 }
 

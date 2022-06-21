@@ -201,7 +201,7 @@ ABaseAbility* AObjectFactory::SpawnAbility(EUpgradeName Ability, const FVector L
 		UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned!"));
 		return nullptr;
 	}
-	AbilityInstance->InitializeAbility(Caster, 1);
+	AbilityInstance->InitializeAbility(Caster, 1, AbilitySpecification);
 	//AbilityInstance->OnAbilityCreation();
 	//AbilityInstance->AbilityType
 	return AbilityInstance;

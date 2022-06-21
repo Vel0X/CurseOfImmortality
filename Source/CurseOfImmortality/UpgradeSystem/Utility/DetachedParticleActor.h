@@ -25,6 +25,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void InitializeParticleActor(UNiagaraComponent* ParticleSystem, AActor* _FollowParent = nullptr, float ManualDestructionTime = -1.0f);
+	void InitializeParticleActor(FVector SpawnLocation, UNiagaraSystem* ParticleSystem, AActor* _FollowParent = nullptr, float ManualDestructionTime = -1.0f);
 
 	float RemainingLifetime = 0.0f;
 

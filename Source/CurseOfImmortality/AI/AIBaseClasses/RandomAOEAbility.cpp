@@ -33,7 +33,7 @@ void URandomAOEAbility::StartAbility(UAbilitySpecification* AbilitySpecification
 			GetWorld()->SpawnActor(AbilitySpecification->Class, &DamageFieldLocation, &FRotator::ZeroRotator));
 		AbilityInstance->Collider->SetSphereRadius(DamageField);
 
-		AbilityInstance->InitializeAbility(Caster, 1);
+		AbilityInstance->InitializeAbility(Caster, 1, AbilitySpecification);
 
 		if (AbilityInstance == nullptr)
 		{

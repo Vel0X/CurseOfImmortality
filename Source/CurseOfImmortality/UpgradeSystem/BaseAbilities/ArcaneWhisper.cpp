@@ -12,9 +12,9 @@ void AArcaneWhisper::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AArcaneWhisper::InitializeAbility(ABaseCharacter* _Caster, int Level)
+void AArcaneWhisper::InitializeAbility(ABaseCharacter* _Caster, int Level, const UAbilitySpecification* Specification)
 {
-	Super::InitializeAbility(_Caster, Level);
+	Super::InitializeAbility(_Caster, Level, Specification);
 	HitActors.Empty();
 }
 
@@ -87,11 +87,11 @@ void AArcaneWhisper::Tick(float DeltaSeconds)
 			GetComponents<UNiagaraComponent>(NiagaraComponents);
 			if(NiagaraComponents.Num() > 0)
 			{
-				NiagaraComponents[0]->SetNiagaraVariableVec3("User.Target", Target->GetActorLocation());
+				NiagaraComponents[0]->SetNiagaraVariableVec3("User.Target", Target->GetAttachmentLocation(CenterPoint)->GetComponentLocation());
 			}
 			CanInteract = true;
 			DestroyOnEnemyHit = false;
-			SpawnLocation = Target->GetActorLocation();
+			SpawnLocation = Target->GetAttachmentLocation(CenterPoint)->GetComponentLocation();
 			OnCharacterHit(Target);
 		}
 		else

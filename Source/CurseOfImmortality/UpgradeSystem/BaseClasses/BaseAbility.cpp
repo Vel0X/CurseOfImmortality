@@ -4,9 +4,11 @@
 #include "BaseAbility.h"
 #include "BaseUpgrade.h"
 #include "NiagaraCommon.h"
+#include "RangedAbility.h"
 #include "Components/ShapeComponent.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "CurseOfImmortality/BaseClasses/Damage/DamageComponent.h"
+#include "CurseOfImmortality/UpgradeSystem/Utility/DetachedParticleActor.h"
 #include "Niagara/Public/NiagaraComponent.h"
 
 // Sets default values
@@ -62,12 +64,25 @@ void ABaseAbility::CheckCollisions()
 
 			for (const auto AbilityHitbox : HitBoxes)
 			{
+				auto OverlapInfos = AbilityHitbox->GetOverlapInfos();
+
 				for (const auto CharacterHitbox : CharacterHitboxes)
 				{
 					if(AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
 					{
+						//auto Loc = Info.OverlapInfo.Location;
+						//UE_LOG(LogTemp, Warning, TEXT("L %f, %f, %f"), Loc.X, Loc.Y, Loc.Z);
 						if(DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter))
+						{
+							if(HitVfx)
+							{
+								const FVector SpawnLocation =CharacterHitbox->GetComponentLocation();
+
+								const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+								DetachedParticleActor->InitializeParticleActor(SpawnLocation, HitVfx, nullptr, 0.8f);
+							}
 							OnCharacterHit(OverlappingCharacter);
+						}
 					}
 				}
 
@@ -86,6 +101,24 @@ void ABaseAbility::CheckCollisions()
 				//Handling hitting other Abilities
 			}
 		}
+		else if(OverlappingActor->GetClass()->IsChildOf(ARangedAbility::StaticClass()))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Hit other Ability"));
+		}
+		else
+		{
+			if(DestroyOnEnemyHit)
+			{
+				if(HitVfx)
+				{
+					const FVector SpawnLocation = GetActorLocation();
+					const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+					DetachedParticleActor->InitializeParticleActor(SpawnLocation, HitVfx, nullptr, 0.8f);
+				}
+				DestroyAbility();
+			}
+		}
+
 	}
 	
 	if(EnemyHit && DestroyOnEnemyHit)
@@ -227,7 +260,7 @@ void ABaseAbility::DestroyAbility()
 	Destroy();
 }
 
-void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level)
+void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level, const UAbilitySpecification* Specification)
 {
 	Caster = _Caster;
 	AbilityLevel = Level;
@@ -253,6 +286,8 @@ void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level)
 
 	//UE_LOG(LogTemp, Warning, TEXT("Ability contains %i Colliders"), HitBoxes.Num());
 	DamageComponent->ConvertInterface();
+
+	HitVfx = Specification->HitVfx;
 }
 
 void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel)
