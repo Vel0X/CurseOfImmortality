@@ -132,7 +132,7 @@ void UDeprivedRunning::FollowPath(float DeltaTime)
 	FVector L(SelfRef->GetActorLocation());
 	L.Z = 0;
 
-	Controller->MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime);
+	Controller->MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime, 90.f);
 
 	if (FVector::Dist(Path[PathIndex], L) < 200.f)
 	{

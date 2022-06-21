@@ -6,7 +6,7 @@
 #include <CurseOfImmortality/Management/PersistentWorldManager.h>
 
 
-APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(60, 60)
+APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(86, 65)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -135,10 +135,10 @@ bool APathfindingGrid::GetPath(int StartX, int StartY, int EndX, int EndY, TArra
 	const FPfNode* EndNode = &GetValue(EndX, EndY);
 	if (!EndNode->IsWalkable)
 	{
-		TArray<FPfNode*> Neighbours  = GetNeighbors(EndNode->X, EndNode->Y);
+		TArray<FPfNode*> Neighbours = GetNeighbors(EndNode->X, EndNode->Y);
 		for (FPfNode* Node : Neighbours)
 		{
-			if(Node->IsWalkable)
+			if (Node->IsWalkable)
 			{
 				EndNode = Node;
 				break;
@@ -327,7 +327,6 @@ void APathfindingGrid::GenerateNavmesh()
 				FVector OffsetWorldPosition = WorldPosition + Offsets[i];
 				FVector StartPosition = OffsetWorldPosition + FVector(0, 0, 10000);
 				FCollisionQueryParams CollisionQuery = FCollisionQueryParams();
-				// DrawDebugLine(GetWorld(), StartPosition, OffsetWorldPosition, FColor::Red, true);
 				if (GetWorld()->
 					LineTraceSingleByChannel(Hit, StartPosition, OffsetWorldPosition, ECC_GameTraceChannel5,
 					                         CollisionQuery))

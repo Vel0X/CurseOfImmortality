@@ -44,7 +44,7 @@ void ABaseAbility::CheckCollisions()
 			if (InitialCollisions.Contains(OverlappingCharacter))
 				continue;
 
-			if (!NoFraction)
+			if (!NoFaction)
 			{
 				if (Caster == nullptr)
 				{

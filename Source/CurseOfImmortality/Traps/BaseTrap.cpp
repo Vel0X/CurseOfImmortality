@@ -82,10 +82,11 @@ void ABaseTrap::CheckCollisions()
 
 void ABaseTrap::FireProjectile(FVector SpawnLocation, FRotator SpawnRotation)
 {
+	// UE_LOG(LogTemp,Warning,TEXT("Fire"))
 	ATrapProjectile* AbilityInstance = Cast<ATrapProjectile>(GetWorld()->SpawnActor(
 		ProjectileSpecification->Class,
 		&SpawnLocation, &SpawnRotation));
 	if (!AbilityInstance) { return; }
-	AbilityInstance->NoFraction = true;
+	AbilityInstance->NoFaction = true;
 	AbilityInstance->InitializeAbility(nullptr, 1, nullptr);
 }
