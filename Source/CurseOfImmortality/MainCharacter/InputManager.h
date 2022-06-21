@@ -55,6 +55,8 @@ protected:
 	float MoveX = 0;
 	float MoveY = 0;
 
+	bool Stopped = false;
+
 	TArray<InputAction> InputBuffer;
 	
 	UPROPERTY(EditAnywhere)

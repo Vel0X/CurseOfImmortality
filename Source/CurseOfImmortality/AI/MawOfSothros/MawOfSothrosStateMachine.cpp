@@ -70,7 +70,7 @@ void UMawOfSothrosStateMachine::Move(float Speed) const
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Maw StateMachine")); }
 
 	const FVector MoveDir(SelfRef->GetActorForwardVector());
-	SelfRef->MovementComponent->SetDirection(MoveDir, Speed);
+	SelfRef->MovementComponent->SetDirection(MoveDir, Speed, false);
 }
 
 void UMawOfSothrosStateMachine::FocusOnPlayer(const float DeltaTime, const float Speed) const
