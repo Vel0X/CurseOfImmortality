@@ -68,17 +68,8 @@ void ABaseAbility::CheckCollisions()
 					{
 						//auto Loc = Info.OverlapInfo.Location;
 						//UE_LOG(LogTemp, Warning, TEXT("L %f, %f, %f"), Loc.X, Loc.Y, Loc.Z);
-						if(DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter))
-						{
-							if(HitVfx)
-							{
-								const FVector SpawnLocation =CharacterHitbox->GetComponentLocation();
-
-								const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
-								DetachedParticleActor->InitializeParticleActor(SpawnLocation, HitVfx, nullptr, 0.8f);
-							}
+						if(DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter, CharacterHitbox))
 							OnCharacterHit(OverlappingCharacter);
-						}
 					}
 				}
 
@@ -105,11 +96,11 @@ void ABaseAbility::CheckCollisions()
 		{
 			if(DestroyOnEnemyHit)
 			{
-				if(HitVfx)
+				if(DestructionVfx)
 				{
 					const FVector SpawnLocation = GetActorLocation();
 					const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
-					DetachedParticleActor->InitializeParticleActor(SpawnLocation, HitVfx, nullptr, 0.8f);
+					DetachedParticleActor->InitializeParticleActor(SpawnLocation, DestructionVfx, nullptr, 0.8f);
 				}
 				DestroyAbility();
 			}
@@ -281,7 +272,7 @@ void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level, const U
 	DamageComponent->ConvertInterface();
 
 	if(Specification)
-		HitVfx = Specification->HitVfx;
+		DestructionVfx = Specification->DestructionVfx;
 }
 
 void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel)

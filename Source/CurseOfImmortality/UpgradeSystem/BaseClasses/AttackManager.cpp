@@ -497,7 +497,7 @@ void UAttackManager::SpawnFromTemplate(ABaseAbility* Template,const FVector Posi
 	//const FVector Location = FVector::Zero();
 	FActorSpawnParameters Parameters = FActorSpawnParameters();
 	Parameters.Template = Template;
-	ABaseAbility* AbilityInstance = static_cast<ABaseAbility*>(GetWorld()->SpawnActor(Template->GetClass(), &Position, &Rotator, Parameters));
+	ABaseAbility* AbilityInstance = Cast<ABaseAbility>(GetWorld()->SpawnActor(Template->GetClass(), &Position, &Rotator, Parameters));
 	AbilityInstance->SetActorLocation(Position);
 	AbilityInstance->SetActorRotation(Rotator);
 	AbilityInstance->OnAbilityCreation();

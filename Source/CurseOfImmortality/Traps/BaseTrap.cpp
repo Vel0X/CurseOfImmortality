@@ -5,6 +5,7 @@
 
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "CurseOfImmortality/BaseClasses/Damage/DamageComponent.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseAbilities/Fireball.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseAbilities/TrapProjectile.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
@@ -83,10 +84,6 @@ void ABaseTrap::CheckCollisions()
 void ABaseTrap::FireProjectile(FVector SpawnLocation, FRotator SpawnRotation)
 {
 	// UE_LOG(LogTemp,Warning,TEXT("Fire"))
-	ATrapProjectile* AbilityInstance = Cast<ATrapProjectile>(GetWorld()->SpawnActor(
-		ProjectileSpecification->Class,
-		&SpawnLocation, &SpawnRotation));
-	if (!AbilityInstance) { return; }
+	ABaseAbility* AbilityInstance = FPersistentWorldManager::ObjectFactory->SpawnAbility(TrapProjectile, SpawnLocation, SpawnRotation, nullptr);
 	AbilityInstance->NoFaction = true;
-	AbilityInstance->InitializeAbility(nullptr, 1, nullptr);
 }

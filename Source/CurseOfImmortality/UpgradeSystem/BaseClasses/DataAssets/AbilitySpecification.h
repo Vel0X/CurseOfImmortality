@@ -29,7 +29,7 @@ public:
 	TEnumAsByte<EAbilityType> AbilityType;
 
 	UPROPERTY(EditAnywhere)
-	UNiagaraSystem* HitVfx;
+	UNiagaraSystem* DestructionVfx;
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ABaseAbility> Class;

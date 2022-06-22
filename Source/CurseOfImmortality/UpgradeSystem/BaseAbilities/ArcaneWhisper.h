@@ -15,6 +15,9 @@ class CURSEOFIMMORTALITY_API AArcaneWhisper final : public ARangedAbility
 	GENERATED_BODY()
 
 public:
+	AArcaneWhisper();
+
+	
 	virtual void BeginPlay() override;
 	virtual void AfterInitialization() override;
 	virtual void OnAbilityCreation() override;
@@ -27,7 +30,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float BounceRange = 2000;
 
-	bool bDelayedAfterInit = false;
 	UPROPERTY(EditAnywhere)
-	FVector SpawnLocation = FVector::Zero();
+	UNiagaraComponent* ParticleSystem;
+	
+	bool DelayedInitPending = false;
 };

@@ -65,7 +65,7 @@ protected:
 	float RemainingAbilityLifetime;
 
 	UPROPERTY()
-	UNiagaraSystem* HitVfx;
+	UNiagaraSystem* DestructionVfx;
 
 private:
 	FScriptDelegate OverlapDelegate;

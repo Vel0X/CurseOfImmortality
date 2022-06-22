@@ -6,6 +6,15 @@
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 static TArray<AActor*> HitActors;
+static FVector SpawnLocation = FVector::ZeroVector;
+
+AArcaneWhisper::AArcaneWhisper()
+{
+	RootComponent = CreateDefaultSubobject<USceneComponent>("RootComponent");
+
+	ParticleSystem = CreateDefaultSubobject<UNiagaraComponent>("Vfx");
+	ParticleSystem->SetupAttachment(RootComponent);
+}
 
 void AArcaneWhisper::BeginPlay()
 {
@@ -16,6 +25,8 @@ void AArcaneWhisper::InitializeAbility(ABaseCharacter* _Caster, int Level, const
 {
 	Super::InitializeAbility(_Caster, Level, Specification);
 	HitActors.Empty();
+	SpawnLocation = FVector::ZeroVector;
+	DestroyOnEnemyHit = false;
 }
 
 
@@ -34,9 +45,10 @@ void AArcaneWhisper::OnAbilityCreation()
 
 	int ClosestIndex = -1;
 	float ClosestDistance = 1000000.0f;
+	const FVector ActorLocation = GetActorLocation();
 	for (int i = 0; i < Enemies.Num(); ++i)
 	{
-		if(Enemies[i] == nullptr)
+		if(!Enemies[i])
 		{
 			UE_LOG(LogTemp, Warning, TEXT("ENEMY WAS NULL"));
 			continue;
@@ -45,7 +57,7 @@ void AArcaneWhisper::OnAbilityCreation()
 		if(HitActors.Contains(Enemies[i]))
 			continue;
 		
-		const float Distance = FVector::Distance(Enemies[i]->GetActorLocation(), GetActorLocation());
+		const float Distance = FVector::Distance(Enemies[i]->GetActorLocation(), ActorLocation);
 
 		if(Distance > BounceRange)
 			continue;
@@ -60,11 +72,11 @@ void AArcaneWhisper::OnAbilityCreation()
 	if(ClosestIndex != -1)
 	{
 		Target = Enemies[ClosestIndex];
-		DamageComponent->DirectCharacterHit(0, Target);
 		HitActors.Add(Target);
 	}
 
 	SpawnLocation = FVector::Zero();
+	DelayedInitPending = true;
 }
 
 
@@ -72,33 +84,28 @@ void AArcaneWhisper::OnAbilityCreation()
 void AArcaneWhisper::AfterInitialization()
 {
 	Super::AfterInitialization();
-	bDelayedAfterInit = true;
 }
 
 void AArcaneWhisper::Tick(float DeltaSeconds)
 {
 
 	Super::Tick(DeltaSeconds);
-	if(bDelayedAfterInit)
+
+	//Hit the Target in the first active Tick. This needs to happen because the ability can not be destroyed on its creation.
+	if(DelayedInitPending)
 	{
 		if(Target)
 		{
-			TArray<UNiagaraComponent*> NiagaraComponents;
-			GetComponents<UNiagaraComponent>(NiagaraComponents);
-			if(NiagaraComponents.Num() > 0)
-			{
-				NiagaraComponents[0]->SetNiagaraVariableVec3("User.Target", Target->GetAttachmentLocation(CenterPoint)->GetComponentLocation());
-			}
-			CanInteract = true;
-			DestroyOnEnemyHit = false;
+			ParticleSystem->SetNiagaraVariableVec3("User.Target", Target->GetAttachmentLocation(CenterPoint)->GetComponentLocation());
 			SpawnLocation = Target->GetAttachmentLocation(CenterPoint)->GetComponentLocation();
+			DamageComponent->DirectCharacterHit(0, Target);
 			OnCharacterHit(Target);
 		}
 		else
 		{
 			Destroy(); //regular Destroy, as the Ability basically has not even spawned yet
 		}
-		bDelayedAfterInit = false;
+		DelayedInitPending = false;
 	}
 }
 

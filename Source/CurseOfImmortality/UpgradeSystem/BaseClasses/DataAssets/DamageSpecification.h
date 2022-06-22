@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraSystem.h"
 #include "CurseOfImmortality/BaseClasses/Damage/DamageFormula.h"
 #include "DamageSpecification.generated.h"
 
@@ -29,6 +30,9 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UDamageObject> Class;
+
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* HitVfx;
 
 	/** In which time interval damage will be dealt */
 	UPROPERTY(EditAnywhere, Category="LingeringDamageObjectSettings")
