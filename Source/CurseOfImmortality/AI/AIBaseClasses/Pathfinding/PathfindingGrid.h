@@ -96,6 +96,7 @@ struct FPfNode
 	FPfNode* CameFrom;
 	int H = 0, G = 0, S = 0, StaticHeat = 0, DynamicHeat = 0;
 	bool IsWalkable = true;
+	bool SpawnArea = false;
 };
 
 UCLASS()
@@ -112,6 +113,7 @@ public:
 
 	void PrintGrid();
 	void ToggleWalkable(int X, int Y);
+	void ToggleSpawnArea(int X, int Y);
 
 	UFUNCTION(BlueprintCallable)
 	void GenerateNavmesh();
@@ -143,4 +145,3 @@ public:
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<ECollisionChannel> DynamicTraceChanel;
 };
-

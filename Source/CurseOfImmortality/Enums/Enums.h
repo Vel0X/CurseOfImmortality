@@ -54,6 +54,8 @@ enum EFaction
 UENUM()
 enum EEnemy
 {
+	Base,
+	WeakDeprived,
 	Deprived,
 	Stormcaller,
 	MawOfSothros

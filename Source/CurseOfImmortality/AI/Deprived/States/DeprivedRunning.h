@@ -22,9 +22,7 @@ public:
 
 	virtual void OnStateUpdate(float DeltaTime) override;
 
-private:
-	void FollowPath(float DeltaTime);
-	
+private:	
 	TArray<FVector> Path;
 	
 	int PathIndex = 0;

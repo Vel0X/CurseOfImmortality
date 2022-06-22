@@ -6,7 +6,7 @@
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 static TArray<AActor*> HitActors;
-static FVector SpawnLocation = FVector::ZeroVector;
+static FVector ArcaneSpawnLocation = FVector::ZeroVector;
 
 AArcaneWhisper::AArcaneWhisper()
 {
@@ -25,7 +25,7 @@ void AArcaneWhisper::InitializeAbility(ABaseCharacter* _Caster, int Level, const
 {
 	Super::InitializeAbility(_Caster, Level, Specification);
 	HitActors.Empty();
-	SpawnLocation = FVector::ZeroVector;
+	ArcaneSpawnLocation = FVector::ZeroVector;
 	DestroyOnEnemyHit = false;
 }
 
@@ -35,8 +35,8 @@ void AArcaneWhisper::OnAbilityCreation()
 {
 	Super::OnAbilityCreation();
 	
-	if(SpawnLocation != FVector::ZeroVector)
-		SetActorLocation(SpawnLocation);
+	if(ArcaneSpawnLocation != FVector::ZeroVector)
+		SetActorLocation(ArcaneSpawnLocation);
 	
 	SetActorRotation(FRotator::ZeroRotator);
 	Target = nullptr;
@@ -75,7 +75,7 @@ void AArcaneWhisper::OnAbilityCreation()
 		HitActors.Add(Target);
 	}
 
-	SpawnLocation = FVector::Zero();
+	ArcaneSpawnLocation = FVector::Zero();
 	DelayedInitPending = true;
 }
 
@@ -97,7 +97,7 @@ void AArcaneWhisper::Tick(float DeltaSeconds)
 		if(Target)
 		{
 			ParticleSystem->SetNiagaraVariableVec3("User.Target", Target->GetAttachmentLocation(CenterPoint)->GetComponentLocation());
-			SpawnLocation = Target->GetAttachmentLocation(CenterPoint)->GetComponentLocation();
+			ArcaneSpawnLocation = Target->GetAttachmentLocation(CenterPoint)->GetComponentLocation();
 			DamageComponent->DirectCharacterHit(0, Target);
 			OnCharacterHit(Target);
 		}
