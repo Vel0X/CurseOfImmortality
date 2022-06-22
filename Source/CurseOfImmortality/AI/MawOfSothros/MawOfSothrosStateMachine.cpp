@@ -17,8 +17,8 @@
 
 UMawOfSothrosStateMachine::UMawOfSothrosStateMachine()
 {
-	RangedAttackTypes.Add(FAttackType(VomitState, 100));
-	RangedAttackTypes.Add(FAttackType(ChargeAttackState, 100));
+	// RangedAttackTypes.Add(FAttackType(VomitState, 100));
+	// RangedAttackTypes.Add(FAttackType(ChargeAttackState, 100));
 	RangedAttackTypes.Add(FAttackType(LaserState, 100));
 
 	MeleeAttackTypes.Add(FAttackType(GroundSlamState, 100));
@@ -65,12 +65,12 @@ void UMawOfSothrosStateMachine::TickComponent(float DeltaTime, ELevelTick TickTy
 	}
 }
 
-void UMawOfSothrosStateMachine::Move(float Speed, float DeltaTime)
+void UMawOfSothrosStateMachine::Move(float Speed) const
 {
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Maw StateMachine")); }
 
 	const FVector MoveDir(SelfRef->GetActorForwardVector());
-	SelfRef->MovementComponent->SetDirection(MoveDir, Speed);
+	SelfRef->MovementComponent->SetDirection(MoveDir, Speed, false);
 }
 
 void UMawOfSothrosStateMachine::FocusOnPlayer(const float DeltaTime, const float Speed) const

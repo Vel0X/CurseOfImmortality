@@ -15,6 +15,8 @@ void UStormCallerAttack::OnStateEnter(UStateMachine* StateMachine)
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
 
+	SelfRef->CurrentAttackCoolDown = FMath::FRandRange(0.f, SelfRef->AttackCoolDown);
+
 	SelfRef->Attack = true;
 	if (Verbose)
 	{
@@ -33,7 +35,7 @@ void UStormCallerAttack::OnStateUpdate(float DeltaTime)
 
 	if (WaitForAnimation)
 	{
-		if (SelfRef->CurrentAttackCoolDown <= 0)
+		if (SelfRef->CurrentAttackCoolDown <= 0.f)
 		{
 			SelfRef->StormCast->StartAbility(SelfRef->AbilitySpecification, SelfRef);
 			SelfRef->CurrentAttackCoolDown = SelfRef->AttackCoolDown;

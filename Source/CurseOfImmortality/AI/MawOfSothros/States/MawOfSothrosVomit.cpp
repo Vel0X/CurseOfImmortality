@@ -63,14 +63,14 @@ void UMawOfSothrosVomit::OnStateUpdate(float DeltaTime)
 				SelfRef->SeaOfDarknessSpecification->Class,
 				&SpawnLocation, &FRotator::ZeroRotator));
 			if (!AbilityInstance) { return; }
-			AbilityInstance->InitializeAbility(SelfRef, 1);
+			AbilityInstance->InitializeAbility(SelfRef, 1, SelfRef->SeaOfDarknessSpecification);
 
 			SpawnLocation = SelfRef->PuddleUpperSpawnLocation->GetComponentLocation();
 			AbilityInstance = Cast<ASeaOfDarkness>(SelfRef->GetWorld()->SpawnActor(
 				SelfRef->SeaOfDarknessSpecification->Class,
 				&SpawnLocation, &FRotator::ZeroRotator));
 			if (!AbilityInstance) { return; }
-			AbilityInstance->InitializeAbility(SelfRef, 1);
+			AbilityInstance->InitializeAbility(SelfRef, 1, SelfRef->SeaOfDarknessSpecification);
 		}
 		SpawnFrequency -= DeltaTime;
 	}

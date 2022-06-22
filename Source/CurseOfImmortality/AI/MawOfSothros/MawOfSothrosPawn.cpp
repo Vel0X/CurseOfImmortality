@@ -112,7 +112,7 @@ void AMawOfSothrosPawn::TriggerMawSlam(FName SocketName)
 		                       &SpawnLocation,
 		                       &FRotator::ZeroRotator));
 
-	AbilityInstance->InitializeAbility(this, 1);
+	AbilityInstance->InitializeAbility(this, 1, MawSlamSpecification);
 }
 
 void AMawOfSothrosPawn::ToggleLaser()
@@ -129,5 +129,5 @@ void AMawOfSothrosPawn::TriggerTailSweep()
 		TailSweepSpecification->Class,
 		&SpawnLocation, &FRotator::ZeroRotator));
 	if (!AbilityInstance) { return; }
-	AbilityInstance->InitializeAbility(this, 1);
+	AbilityInstance->InitializeAbility(this, 1, TailSweepSpecification);
 }

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraSystem.h"
 #include "UpgradeSpecification.h"
 #include "Engine/DataAsset.h"
 #include "AbilitySpecification.generated.h"
@@ -26,6 +27,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EAbilityType> AbilityType;
+
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* HitVfx;
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ABaseAbility> Class;

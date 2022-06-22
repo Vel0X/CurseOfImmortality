@@ -32,10 +32,16 @@ void ASoundManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ASoundManager::PlaySFX(const FString& Name)
+void ASoundManager::Play2DSound(const FString& Name)
 {
 	if(FPersistentWorldManager::GetControlFlag(SFX))
-		PlaySFXImpl(Name);
+		PlaySoundImpl(Name);
+}
+
+void ASoundManager::PlaySoundLocated(const FVector& Position, const FString& Name)
+{
+	if(FPersistentWorldManager::GetControlFlag(SFX))
+		PlaySoundLocatedImpl(Position, Name);
 }
 
 void ASoundManager::PlaySoundAttached(const USceneComponent* Component, const FString& Name)

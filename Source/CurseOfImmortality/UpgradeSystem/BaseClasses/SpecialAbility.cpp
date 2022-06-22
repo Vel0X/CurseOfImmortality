@@ -3,9 +3,9 @@
 #include "SpecialAbility.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 
-void ASpecialAbility::InitializeAbility(ABaseCharacter* _Caster, int Level)
+void ASpecialAbility::InitializeAbility(ABaseCharacter* _Caster, int Level, const UAbilitySpecification* AbilitySpecification)
 {
-	Super::InitializeAbility(_Caster, Level);
+	Super::InitializeAbility(_Caster, Level, AbilitySpecification);
 	Parent = _Caster->GetAttachmentLocation(AttachmentPoint);
 }
 

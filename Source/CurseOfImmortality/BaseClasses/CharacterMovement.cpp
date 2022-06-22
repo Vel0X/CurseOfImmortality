@@ -2,14 +2,11 @@
 
 
 #include "CharacterMovement.h"
-
-#include <algorithm>
-
 #include "BaseCharacter.h"
 #include "VectorTypes.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/BaseEnemyPawn.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/MainCharacter/InputManager.h"
-#include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 
 
 // Sets default values for this component's properties
@@ -32,22 +29,25 @@ void UCharacterMovement::BeginPlay()
 
 // Called every frame
 void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
-									   FActorComponentTickFunction* ThisTickFunction)
+                                       FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	
-	if(Rotating)
+
+	if (Rotating)
 	{
-		FRotator NextRotator = FMath::RInterpTo(GetOwner()->GetActorRotation(), GoalRotation,DeltaTime,23);
+		FRotator NextRotator = FMath::RInterpTo(GetOwner()->GetActorRotation(), GoalRotation, DeltaTime, 23);
 		CurrentTimeToRotate -= DeltaTime;
-		GetOwner()->SetActorRotation(NextRotator);
+		if (!Cast<ABaseEnemyPawn>(GetOwner()))
+		{
+			GetOwner()->SetActorRotation(NextRotator);
+		}
 		if (CurrentTimeToRotate <= 0)
 		{
 			Rotating = false;
 		}
 	}
-	
+
 	if (DirectionSet)
 	{
 		if (Direction.Length() < 0.3)
@@ -62,9 +62,9 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 			SpeedDep = 1;
 		}
 		Direction.Normalize();
-		
-		SmoothRotation(Direction.Rotation(),0.15);
-		
+
+		SmoothRotation(Direction.Rotation(), 0.15);
+
 		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
 		{
 			if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
@@ -76,72 +76,71 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 		{
 			Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = CurrentSpeed * SpeedDep;
 		}
-		
-		MoveWithCorrection(Direction, DeltaTime, Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed);
-		
+
+		if (!MoveWithoutCorrection)
+		{
+			MoveWithCorrection(Direction, DeltaTime, Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed);
+		} else
+		{
+			Direction.Z = 0;
+			GetOwner()->AddActorWorldOffset(Direction * DeltaTime * Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed, false);
+		}
 		DirectionSet = false;
 	}
 }
 
 
-void UCharacterMovement::SetDirection(FVector MoveInput, float MoveSpeed)
+void UCharacterMovement::SetDirection(FVector MoveInput, float MoveSpeed, bool IgnoreWalls)
 {
-	if (!(MoveInput.IsZero() && Direction.IsZero()))
-	{
-		Direction = MoveInput;
-		CurrentSpeed = MoveSpeed;
-		DirectionSet = true;
-	}
-	else
-	{
-		if (Cast<APlayerCharacter>(GetOwner()) != nullptr)
-		{
-			if (Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction == InputAction::Running)
-			//TODO Maybe do better
-			{
-				Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed = 0;
-				Cast<APlayerCharacter>(GetOwner())->InputManager->LastAction = InputAction::NoAction;
-			}
-		}
-	}
+
+	Direction = MoveInput;
+	CurrentSpeed = MoveSpeed;
+	DirectionSet = true;
+	MoveWithoutCorrection = IgnoreWalls;
 }
 
-void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, float DeltaTime, float Speed)
+void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, const float DeltaTime, const float Speed) const
 {
-	FHitResult* Result = new FHitResult();
+	//Reset Z to 0 for safety
+	DirectionToMove.Z = 0;
+	DirectionToMove.Normalize();
+	
+	FHitResult Result = FHitResult();
 	AActor* Owner = GetOwner();
-	auto CapsuleCol = Cast<ABaseCharacter>(Owner)->CapsuleCollision;
-	auto CapsuleLocBeforeMove = CapsuleCol->GetComponentLocation();
-	CapsuleCol->AddWorldOffset(DirectionToMove * DeltaTime * Speed, true, Result);
+	const auto CapsuleCol = Cast<ABaseCharacter>(Owner)->CapsuleCollision;
+	const auto CapsuleLocBeforeMove = CapsuleCol->GetComponentLocation();
+	CapsuleCol->AddWorldOffset(DirectionToMove * DeltaTime * Speed, true, &Result);
 	CapsuleCol->SetWorldLocation(CapsuleLocBeforeMove);
 
-	if(Result != nullptr)
+	if (Result.GetActor() != Owner && Result.GetActor())
 	{
-		if (Result->GetActor()!= Owner && Result->GetActor()!= nullptr)
-		{
-			FVector UndesiredMotion = Result->ImpactNormal * (FVector::DotProduct(DirectionToMove, Result->ImpactNormal));
+		FVector CorrectedImpactNormal = Result.ImpactNormal;
+		CorrectedImpactNormal.Z = 0;
+		CorrectedImpactNormal.Normalize();
+		const FVector UndesiredMotion = CorrectedImpactNormal * FVector::DotProduct(DirectionToMove, CorrectedImpactNormal);
 
-			CapsuleCol->AddWorldOffset((DirectionToMove-UndesiredMotion) * DeltaTime * Speed, true, Result);
-			CapsuleCol->SetWorldLocation(CapsuleLocBeforeMove);
-			if(Result != nullptr)
-			{
-				if (Result->GetActor()!= Owner && Result->GetActor()!= nullptr)
-				{
-					FVector UndesiredMotion2 = Result->ImpactNormal * (FVector::DotProduct(DirectionToMove-UndesiredMotion, Result->ImpactNormal));
-					Owner->AddActorWorldOffset((DirectionToMove-UndesiredMotion - UndesiredMotion2) * DeltaTime * Speed, false);
-				}else
-				{
-					Owner->AddActorWorldOffset((DirectionToMove-UndesiredMotion) * DeltaTime * Speed, false);
-				}
-			}
+		CapsuleCol->AddWorldOffset((DirectionToMove - UndesiredMotion) * DeltaTime * Speed, true, &Result);
+		CapsuleCol->SetWorldLocation(CapsuleLocBeforeMove);
+
+		if (Result.GetActor() != Owner && Result.GetActor())
+		{
+			CorrectedImpactNormal = Result.ImpactNormal;
+			CorrectedImpactNormal.Z = 0;
+			CorrectedImpactNormal.Normalize();
+			
+			const FVector UndesiredMotion2 = CorrectedImpactNormal * FVector::DotProduct(DirectionToMove - UndesiredMotion, CorrectedImpactNormal);
+			Owner->AddActorWorldOffset(
+				(DirectionToMove - UndesiredMotion - UndesiredMotion2) * DeltaTime * Speed, false);
 		}
 		else
 		{
-			Owner->AddActorWorldOffset(DirectionToMove * DeltaTime * Speed, false);
+			Owner->AddActorWorldOffset((DirectionToMove - UndesiredMotion) * DeltaTime * Speed, false);
 		}
 	}
-
-	delete Result;
+	else
+	{
+		Owner->AddActorWorldOffset(DirectionToMove * DeltaTime * Speed, false);
+	}
 }
 
 void UCharacterMovement::SmoothRotation(FRotator Rotation, float Time)
@@ -151,4 +150,3 @@ void UCharacterMovement::SmoothRotation(FRotator Rotation, float Time)
 	TimeToRotate = Time;
 	CurrentTimeToRotate = Time;
 }
-

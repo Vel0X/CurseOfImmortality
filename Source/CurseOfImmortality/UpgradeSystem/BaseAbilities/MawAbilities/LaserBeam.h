@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CurseOfImmortality/UpgradeSystem/BaseClasses/SpecialAbility.h"
+#include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
 #include "LaserBeam.generated.h"
 
 class UNiagaraComponent;
 UCLASS()
-class CURSEOFIMMORTALITY_API ALaserBeam : public ASpecialAbility
+class CURSEOFIMMORTALITY_API ALaserBeam : public ABaseAbility
 {
 	GENERATED_BODY()
 

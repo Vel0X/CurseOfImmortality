@@ -7,6 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SphereComponent.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "CurseOfImmortality/BaseClasses/Damage/DamageComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -31,17 +32,18 @@ public:
 	virtual ~APlayerCharacter() override;
 
 protected:
-	
 	virtual void Setup() override;
 	void SetupInputComponent();
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
-	
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnDeath() override;
-	
+
 	void RotateToClosestEnemy();
+
+	UFUNCTION(BlueprintCallable)
+	int GetDeprivedCount();
 
 	//Cooldowns
 	UPROPERTY(EditAnywhere, Category="Time")
@@ -49,10 +51,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Time")
 	float MeleeFollowUpTime = 0.5;
-	
+
 	UPROPERTY(EditAnywhere, Category="Stats")
 	float DashSpeed = 4000;
-	
+
 	float CurrentAnimationDuration;
 	float CurrentDashCooldown;
 	float CurrentMeleeFollowUpTime;
@@ -65,27 +67,29 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float MovementSpeedWhileAttacking = 300;
-	
-	UPROPERTY(EditAnywhere)
-		USkeletalMeshComponent* SkeletalMesh;
-	UPROPERTY(EditAnywhere)
-		USpringArmComponent* SpringArm;
-	UPROPERTY(EditAnywhere)
-		UCameraComponent* PlayerCamera;
-	UPROPERTY(EditAnywhere)
-		UInputManager* InputManager;
-	UPROPERTY(EditAnywhere)
-		UAttackManager* AttackManager;
-	UPROPERTY(EditAnywhere)
-		UPlayerCharacterStateMachine* StateMachine;
-	UPROPERTY(EditAnywhere)
-		UPlayerAnim* PlayerAnim;
 
 	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent* Weapon;
+	USkeletalMeshComponent* SkeletalMesh;
+	UPROPERTY(EditAnywhere)
+	USpringArmComponent* SpringArm;
+	UPROPERTY(EditAnywhere)
+	UCameraComponent* PlayerCamera;
+	UPROPERTY(EditAnywhere)
+	USphereComponent* SoundSphere;
+	UPROPERTY(EditAnywhere)
+	UInputManager* InputManager;
+	UPROPERTY(EditAnywhere)
+	UAttackManager* AttackManager;
+	UPROPERTY(EditAnywhere)
+	UPlayerCharacterStateMachine* StateMachine;
+	UPROPERTY(EditAnywhere)
+	UPlayerAnim* PlayerAnim;
 
 	UPROPERTY(EditAnywhere)
-		UMaterialInstance* WeaponMaterial;
+	UStaticMeshComponent* Weapon;
+
+	UPROPERTY(EditAnywhere)
+	UMaterialInstance* WeaponMaterial;
 
 	UPROPERTY()
 	UMaterialInstanceDynamic* WeaponMaterialInst;

@@ -24,14 +24,21 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void PlaySFX(const FString& Name);
+	UFUNCTION(BlueprintCallable)
+	void Play2DSound(const FString& Name);
+
+	UFUNCTION(BlueprintCallable)
+	void PlaySoundLocated(const FVector& Position, const FString& Name);
+
+	UFUNCTION(BlueprintCallable)
 	void PlaySoundAttached(const USceneComponent* Component, const FString& Name);
 	
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
-	void PlaySFXImpl(const FString& Name);
+	void PlaySoundImpl(const FString& Name);
 
-	
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlaySoundLocatedImpl(const FVector& Position, const FString& Name);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlaySoundAttachedImpl(const USceneComponent* Component, const FString& Name);

@@ -444,7 +444,7 @@ void UAttackManager::SpawnAbility(FActiveAbility& Ability, FVector Position, FRo
 		UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned!"));
 		return;
 	}
-	AbilityInstance->InitializeAbility(Owner, Ability.Level);
+	AbilityInstance->InitializeAbility(Owner, Ability.Level, Ability.Specification);
 	AbilityInstance->OnAbilityCreation();
 	//AbilityInstance->AbilityType
 

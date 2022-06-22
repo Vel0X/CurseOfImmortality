@@ -41,34 +41,35 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 
 	const FVector PlayerLocation = Player->GetActorLocation();
 
-	FVector OwnLocation(SelfRef->GetActorLocation());
-	FVector RightVectorSelf(SelfRef->GetActorRightVector());
-	FVector LeftVectorSelf(RightVectorSelf.operator-());
-	FVector RightVectorPlayer(Player->GetActorRightVector());
-	FVector LeftVectorPlayer(RightVectorPlayer.operator-());
-	FVector StartPointLeft(LeftVectorSelf * SelfRef->CapsuleCollision->GetUnscaledCapsuleRadius() + OwnLocation);
-	FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleCollision->GetUnscaledCapsuleRadius() + PlayerLocation);
-	FVector StartPointRight(RightVectorSelf * SelfRef->CapsuleCollision->GetUnscaledCapsuleRadius() + OwnLocation);
+	// FVector OwnLocation(SelfRef->GetActorLocation());
+	// FVector RightVectorSelf(SelfRef->GetActorRightVector());
+	// FVector LeftVectorSelf(RightVectorSelf.operator-());
+	// FVector RightVectorPlayer(Player->GetActorRightVector());
+	// FVector LeftVectorPlayer(RightVectorPlayer.operator-());
+	// FVector StartPointLeft(LeftVectorSelf * SelfRef->CapsuleCollision->GetUnscaledCapsuleRadius() + OwnLocation);
+	// FVector EndPointLeft(LeftVectorPlayer * Player->CapsuleCollision->GetUnscaledCapsuleRadius() + PlayerLocation);
+	// FVector StartPointRight(RightVectorSelf * SelfRef->CapsuleCollision->GetUnscaledCapsuleRadius() + OwnLocation);
 
 	FHitResult HitMid;
-	FHitResult HitLeft;
-	FHitResult HitRight;
+	// FHitResult HitLeft;
+	// FHitResult HitRight;
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(Player);
 	CollisionParams.AddIgnoredActor(SelfRef);
 
-	
-	Controller->GetWorld()->LineTraceSingleByChannel(HitMid, SelfRef->GetActorLocation(), Player->GetActorLocation(),
-	                                                 ECC_GameTraceChannel3, CollisionParams);
-	Controller->GetWorld()->LineTraceSingleByChannel(HitLeft, StartPointLeft, EndPointLeft,
-	                                                 ECC_Pawn, CollisionParams);
-	Controller->GetWorld()->LineTraceSingleByChannel(HitRight, StartPointRight, EndPointLeft,
-	                                                 ECC_Pawn, CollisionParams);
+	FVector Start = SelfRef->GetActorLocation();
+	Start.Z += 20;
+	FVector End = Player->GetActorLocation();
+	End.Z += 20;
 
-	if (HitMid.GetActor())
-	{
-		//UE_LOG(LogTemp, Error, TEXT("%s"), *HitMid.GetActor()->GetName());
-	}
+	Controller->GetWorld()->LineTraceSingleByChannel(HitMid, Start, End, ECC_GameTraceChannel3, CollisionParams);
+
+	// DrawDebugLine(SelfRef->GetWorld(), SelfRef->CapsuleCollision->GetComponentLocation(),
+	//               Player->CapsuleCollision->GetComponentLocation(), FColor::Red);
+	// if (HitMid.GetActor())
+	// {
+	// 	UE_LOG(LogTemp, Error, TEXT("%s"), *HitMid.ToString());
+	// }
 
 	if (HitMid.bBlockingHit)
 	{
@@ -92,32 +93,48 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	}
 	else
 	{
-		Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime);
-		Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[EStats::Movespeed], DeltaTime);
-		if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
+		Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[Movespeed], DeltaTime);
+		if (!SelfRef->WeakDeprived)
 		{
-			Controller->Transition(Controller->NormalAttack, Controller);
-		}
-		else if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistJumpAttack)
-		{
-			if (SelfRef->CurrentJumpAttackCoolDown <= 0.f)
+			if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistFrenziedAttack)
 			{
-				SelfRef->CurrentJumpAttackCoolDown = SelfRef->JumpAttackCoolDown;
-				Controller->Transition(Controller->JumpAttack, Controller);
+				if (SelfRef->CurrentFrenziedAttackCoolDown <= 0.f)
+				{
+					SelfRef->CurrentFrenziedAttackCoolDown = SelfRef->FrenziedAttackCoolDown;
+					Controller->Transition(Controller->FrenziedAttack, Controller);
+					NoAttackChosen = false;
+				}
+			}
+			else if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistJumpAttack)
+			{
+				if (SelfRef->CurrentJumpAttackCoolDown <= 0.f)
+				{
+					SelfRef->CurrentJumpAttackCoolDown = SelfRef->JumpAttackCoolDown;
+					Controller->Transition(Controller->JumpAttack, Controller);
+					NoAttackChosen = false;
+				}
+			}
+		}
+		if (NoAttackChosen)
+		{
+			if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
+			{
+				Controller->Transition(Controller->NormalAttack, Controller);
 			}
 		}
 	}
 	PathfindingTimer -= DeltaTime;
+	NoAttackChosen = true;
 }
 
 void UDeprivedRunning::FollowPath(float DeltaTime)
 {
-	Controller->MoveToTarget(Path[PathIndex], SelfRef->Stats[EStats::Movespeed], DeltaTime);
 	FVector L(SelfRef->GetActorLocation());
 	L.Z = 0;
-	Controller->FocusOnLocation(Path[PathIndex], DeltaTime);
 
-	if (FVector::Dist(Path[PathIndex], L) < 50.f)
+	Controller->MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime, 90.f);
+
+	if (FVector::Dist(Path[PathIndex], L) < 200.f)
 	{
 		if (PathIndex < Path.Num() - 1)
 			PathIndex++;

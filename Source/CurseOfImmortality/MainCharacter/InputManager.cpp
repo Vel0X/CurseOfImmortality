@@ -67,8 +67,28 @@ void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 		if (MoveX != 0 && LastAction == InputAction::NoAction || MoveY != 0 && LastAction == InputAction::NoAction)
 		{
 			LastAction = InputAction::Running;
+			Move();
+			Stopped = false;
+		} else
+		{
+			if (MoveX != 0 || MoveY != 0)
+			{
+				Move();
+				Stopped = false;
+			} else
+			{
+				//To stop only once unless reset
+				if(!Stopped)
+				{
+					if(MoveX == 0 && MoveY == 0)
+					{
+						Move();
+						Stopped = true;
+						LastAction = InputAction::NoAction;
+					}
+				}
+			}
 		}
-		Move();
 	}
 	
 	if (Player->CurrentDashCooldown > 0)
@@ -172,12 +192,12 @@ void UInputManager::Move()
 				GetOwner()->SetActorRotation(MoveInput.Rotation());
 				MoveInput = GetOwner()->GetActorForwardVector();
 				MovementComponent->SetDirection(MoveInput, Player->
-						MovementSpeedWhileAttacking);
+						MovementSpeedWhileAttacking, false);
 			}
 		
 		}else
 		{
-			MovementComponent->SetDirection(MoveInput, Player->Stats[Movespeed]);
+			MovementComponent->SetDirection(MoveInput, Player->Stats[Movespeed], false);
 		}
 	}
 }

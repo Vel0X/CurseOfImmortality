@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/Enums/Enums.h"
+#include "DataAssets/AbilitySpecification.h"
 #include "GameFramework/Actor.h"
 #include "BaseAbility.generated.h"
 
@@ -29,11 +30,10 @@ protected:
 
 public:
 	void CheckCollisions();
-
 	void OnCharacterHit(ABaseCharacter* OverlappingCharacter);
 	virtual void Tick(float DeltaTime) override;
 	virtual void DestroyAbility();
-	virtual void InitializeAbility(ABaseCharacter* _Caster, int Level);
+	virtual void InitializeAbility(ABaseCharacter* _Caster, int Level, const UAbilitySpecification* Specification);
 	virtual void AfterInitialization();
 
 	UPROPERTY(EditAnywhere)
@@ -46,6 +46,7 @@ public:
 	void ResetLifetime();
 	bool DestroyOnEnemyHit = false;
 	bool CanInteract = false;
+	bool NoFaction = false;
 	UPROPERTY(EditAnywhere)
 	float RelativeSize = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -62,6 +63,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TArray<UBaseUpgrade*> UpgradeStack;
 	float RemainingAbilityLifetime;
+
+	UPROPERTY()
+	UNiagaraSystem* HitVfx;
 
 private:
 	FScriptDelegate OverlapDelegate;

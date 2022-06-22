@@ -8,8 +8,6 @@
 
 UDamageComponent::UDamageComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
@@ -19,18 +17,18 @@ void UDamageComponent::BeginPlay()
 }
 
 void UDamageComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-	FActorComponentTickFunction* ThisTickFunction)
+                                     FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	for (const auto Tuple : DamagingHitboxes)
 	{
-		if(Tuple.Value != nullptr)
+		if (Tuple.Value != nullptr)
 		{
 			Tuple.Value->Tick(DeltaTime);
 		}
 		else
 		{
-			if(FPersistentWorldManager::GetLogLevel(DamageComponent))
+			if (FPersistentWorldManager::GetLogLevel(DamageComponent))
 				UE_LOG(LogTemp, Warning, TEXT("DamageObject is null (Tick)"));
 		}
 	}
@@ -38,84 +36,61 @@ void UDamageComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UDamageComponent::ConvertInterface()
 {
-
 	//convert all the HitboxReferences into actual component references and initialize all the DamageObjects using the ObjectFactory and the DamageSpecification
 	for (int i = 0; i < DamagingHitboxReferences.Num(); ++i)
 	{
 		const auto Component = DamagingHitboxReferences[i].GetComponent(GetOwner());
-		if(Component == nullptr)
+		if (Component == nullptr)
 		{
-			if(FPersistentWorldManager::GetLogLevel(DamageComponent))
-				UE_LOG(LogTemp, Warning, TEXT("%s is not the name of a component on this actor!"), *DamagingHitboxReferences[i].ComponentProperty.ToString());
+			if (FPersistentWorldManager::GetLogLevel(DamageComponent))
+				UE_LOG(LogTemp, Warning, TEXT("%s is not the name of a component on this actor!"),
+			       *DamagingHitboxReferences[i].ComponentProperty.ToString());
 			continue;
 		}
 
-		auto Primitive = static_cast<UPrimitiveComponent*>(Component);
+		auto Primitive = Cast<UPrimitiveComponent>(Component);
 
-		if(Primitive == nullptr)
+		if (Primitive == nullptr)
 		{
-			if(FPersistentWorldManager::GetLogLevel(DamageComponent))
+			if (FPersistentWorldManager::GetLogLevel(DamageComponent))
 				UE_LOG(LogTemp, Warning, TEXT("%s does not reference a Primitive Component"));
 			continue;
 		}
-		auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(DamagingHitboxDamageSpecifications[i]);
-
-		ABaseAbility* OwningAbility = Cast<ABaseAbility>(GetOwner());
-		if(OwningAbility != nullptr)
-		{
-			DamageObject->DamagingAbility = OwningAbility;
-			DamageObject->OwningChar = OwningAbility->Caster;
-		}
-		else
-		{
-			ABaseCharacter* OwningChar = Cast<ABaseCharacter>(GetOwner());
-			DamageObject->OwningChar = OwningChar;
-		}
-		
+		auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(
+			DamagingHitboxDamageSpecifications[i]);
+		SetDamageObjectOwner(DamageObject);
 		DamagingHitboxes.Add(Primitive, DamageObject);
 	}
 
-	if(FPersistentWorldManager::GetLogLevel(DamageComponent))
-		UE_LOG(LogTemp, Warning, TEXT("Converted %i of %i References to DamagingComponents"), DamagingHitboxes.Num(), DamagingHitboxReferences.Num());
+	if (FPersistentWorldManager::GetLogLevel(DamageComponent))
+		UE_LOG(LogTemp, Warning, TEXT("Converted %i of %i References to DamagingComponents"), DamagingHitboxes.Num(),
+	       DamagingHitboxReferences.Num());
 
 	for (int i = 0; i < DirectDamageSpecifications.Num(); ++i)
 	{
 		auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(DirectDamageSpecifications[i]);
-
-		ABaseAbility* OwningAbility = Cast<ABaseAbility>(GetOwner());
-		if(OwningAbility != nullptr)
-		{
-			DamageObject->DamagingAbility = OwningAbility;
-			DamageObject->OwningChar = OwningAbility->Caster;
-		}
-		else
-		{
-			ABaseCharacter* OwningChar = Cast<ABaseCharacter>(GetOwner());
-			DamageObject->OwningChar = OwningChar;
-		}
-		
+		SetDamageObjectOwner(DamageObject);
 		DirectDamageObjects.Add(DamageObject);
 	}
 }
 
 bool UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter)
 {
-	if(!DamagingHitboxes.Contains(DamageComponentOverlap))
+	if (!DamagingHitboxes.Contains(DamageComponentOverlap))
 	{
-		if(FPersistentWorldManager::GetLogLevel(DamageComponent))
+		if (FPersistentWorldManager::GetLogLevel(DamageComponent))
 			UE_LOG(LogTemp, Warning, TEXT("The Hitbox is not contained"));
 		return false;
 	}
 
-	if(DamagingHitboxes[DamageComponentOverlap] == nullptr)
+	if (DamagingHitboxes[DamageComponentOverlap] == nullptr)
 	{
-		if(FPersistentWorldManager::GetLogLevel(DamageComponent))
+		if (FPersistentWorldManager::GetLogLevel(DamageComponent))
 			UE_LOG(LogTemp, Warning, TEXT("DamageComponent is null!"));
 		return false;
 	}
 
 	return DamagingHitboxes[DamageComponentOverlap]->DealDamage(HitCharacter);
-	//HitCharacter->TakeDmg(DamagingComponents[DamageComponentOverlap]->Damage, nullptr, nullptr, true);
 }
 
 void UDamageComponent::DirectCharacterHit(int Index, ABaseCharacter* HitCharacter)
@@ -123,40 +98,121 @@ void UDamageComponent::DirectCharacterHit(int Index, ABaseCharacter* HitCharacte
 	DirectDamageObjects[Index]->DealDamage(HitCharacter);
 }
 
-void UDamageComponent::SetupDamageComponent(UPrimitiveComponent* Component, UDamageObject* DamageObject)
+void UDamageComponent::SetupDamagingComponentByDamageObject(UPrimitiveComponent* Component, UDamageObject* DamageObject)
 {
-	/*
-	if(DamagingComponents.Contains(Component))
+	SetDamageObjectOwner(DamageObject);
+	if (!DamagingHitboxes.Contains(Component))
 	{
-		DamagingComponents[Component] = DamageObject;
+		UE_LOG(LogTemp, Error, TEXT("Damaging Hitboxes does not contain DamageComponent"));
+		return;
 	}
-	else
+
+	DamagingHitboxes[Component] = DamageObject;
+}
+
+void UDamageComponent::SetupDamagingComponentByDamageSpecification(UPrimitiveComponent* Component,
+                                                                   UDamageSpecification* DamageSpecification)
+{
+	auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(DamageSpecification);
+	SetDamageObjectOwner(DamageObject);
+
+	if (!DamagingHitboxes.Contains(Component))
 	{
-		DamagingComponents.Add(Component, DamageObject);
+		UE_LOG(LogTemp, Error, TEXT("Damaging Hitboxes does not contain DamageComponent"));
+		return;
 	}
-	*/
+
+	DamagingHitboxes[Component] = DamageObject;
+}
+
+void UDamageComponent::SetupDamagingComponentByIndexAndDamageSpecification(int Index,
+                                                                           UDamageSpecification* DamageSpecification)
+{
+	TArray<UPrimitiveComponent*> Keys;
+	DamagingHitboxes.GetKeys(Keys);
+
+	if (Index >= Keys.Num() || Index < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Index into DamagingHitboxes was out of Bounds"));
+		return;
+	}
+
+	auto DamageObject = FPersistentWorldManager::ObjectFactory->GetDamageObject(DamageSpecification);
+	SetDamageObjectOwner(DamageObject);
+
+	DamagingHitboxes[Keys[Index]] = DamageObject;
 }
 
 void UDamageComponent::ResetAllHitCharacters()
 {
 	for (auto Tuple : DamagingHitboxes)
 	{
-		if(Tuple.Value != nullptr)
+		if (Tuple.Value != nullptr)
 		{
-			Tuple.Value->HitCharacters.Empty();			
+			Tuple.Value->HitCharacters.Empty();
 		}
 	}
 }
 
+void UDamageComponent::ResetHitCharactersForHitbox(UPrimitiveComponent* Hitbox)
+{
+	if (DamagingHitboxes.Contains(Hitbox))
+	{
+		DamagingHitboxes[Hitbox]->HitCharacters.Empty();
+	}
+}
+
+void UDamageComponent::ResetHitCharactersForHitboxByIndex(int Index)
+{
+	TArray<UPrimitiveComponent*> Keys;
+	DamagingHitboxes.GetKeys(Keys);
+
+	if (Index >= Keys.Num() || Index < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Index into DamagingHitboxes was out of Bounds"));
+		return;
+	}
+
+	DamagingHitboxes[Keys[Index]]->HitCharacters.Empty();
+}
+
 void UDamageComponent::ToggleHitbox(UPrimitiveComponent* Hitbox)
 {
-	if(DamagingHitboxes.Contains(Hitbox))
+	if (DamagingHitboxes.Contains(Hitbox))
 	{
 		Hitbox->SetGenerateOverlapEvents(!Hitbox->GetGenerateOverlapEvents());
 	}
 	else
 	{
-		if(FPersistentWorldManager::GetLogLevel(DamageComponent))
-			UE_LOG(LogTemp, Warning, TEXT("Toggled Hitbox, that is not registered in DamageComponent!"));
+		UE_LOG(LogTemp, Error, TEXT("Tried to toggle Hitbox that is not registered in DamageComponent!"));
+	}
+}
+
+void UDamageComponent::ToggleHitboxByIndex(int Index)
+{
+	TArray<UPrimitiveComponent*> Keys;
+	DamagingHitboxes.GetKeys(Keys);
+
+	if (Index >= Keys.Num() || Index < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Index into DamagingHitboxes was out of Bounds"));
+		return;
+	}
+
+	Keys[Index]->SetGenerateOverlapEvents(!Keys[Index]->GetGenerateOverlapEvents());
+}
+
+void UDamageComponent::SetDamageObjectOwner(UDamageObject* DamageObject) const
+{
+	ABaseAbility* OwningAbility = Cast<ABaseAbility>(GetOwner());
+	if (OwningAbility != nullptr)
+	{
+		DamageObject->DamagingAbility = OwningAbility;
+		DamageObject->OwningChar = OwningAbility->Caster;
+	}
+	else
+	{
+		ABaseCharacter* OwningChar = Cast<ABaseCharacter>(GetOwner());
+		DamageObject->OwningChar = OwningChar;
 	}
 }

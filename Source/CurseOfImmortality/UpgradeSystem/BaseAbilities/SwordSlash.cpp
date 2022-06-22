@@ -16,7 +16,7 @@ ASwordSlash::ASwordSlash()
 	ParticleSystem = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Trail"));
 	ParticleSystem->SetupAttachment(RootComponent);
 
-	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
+	Collision = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Collision"));
 	Collision->SetupAttachment(RootComponent);
 }
 

@@ -20,9 +20,4 @@ public:
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
-
-	UPROPERTY(BlueprintReadWrite)
-	bool LeftHandCanAttack = true;
-	UPROPERTY(BlueprintReadWrite)
-	bool RightHandCanAttack = true;
 };

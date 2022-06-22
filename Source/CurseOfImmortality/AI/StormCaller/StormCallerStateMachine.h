@@ -22,7 +22,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	void FocusOnPlayer();
+	void FocusOnPlayer(float DeltaTime);
 
 	//States
 	UPROPERTY()

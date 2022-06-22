@@ -59,7 +59,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	UAbilitySpecification* SeaOfDarknessSpecification;
 	UPROPERTY(EditDefaultsOnly)
-	UAbilitySpecification* LavaCrackSpecification;
+	UAbilitySpecification* LaserBeamSpecification;
 	UPROPERTY(EditDefaultsOnly)
 	UAbilitySpecification* MawSlamSpecification;
 	UPROPERTY(EditDefaultsOnly)
@@ -71,6 +71,9 @@ public:
 
 	bool SpawnPuddle;
 	bool LaserOn;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool AnimationStart; 
 
 	//Stats
 	UPROPERTY(EditAnywhere, Category="ChargeAttack")

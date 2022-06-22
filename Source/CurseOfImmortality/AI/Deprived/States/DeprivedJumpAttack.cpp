@@ -3,11 +3,10 @@
 
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedJumpAttack.h"
 
-#include <string>
-
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
+#include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -39,7 +38,6 @@ void UDeprivedJumpAttack::OnStateExit()
 	}
 
 	Controller->GetSelfRef()->Jump = false;
-	// Controller->GetSelfRef()->CapsuleComponent->SetCollisionProfileName(TEXT("Character"));
 
 	LocationSet = false;
 
@@ -65,29 +63,6 @@ void UDeprivedJumpAttack::OnStateUpdate(float DeltaTime)
 	}
 }
 
-void UDeprivedJumpAttack::SetLocation()
-{
-	// PlayerLocation = Player->GetActorLocation();
-	// FVector PlayerForwardDir(
-	// 	Player->GetActorForwardVector() * (SelfRef->PlayerForwardVector * (Player->CurrentMovementSpeed / Player->
-	// 		Stats[EStats::Movespeed])) +
-	// 	PlayerLocation);
-	// OwnLocation = SelfRef->GetActorLocation();
-	//
-	// JumpDestination = PlayerForwardDir - OwnLocation;
-	// JumpDestination.Normalize();
-	// JumpDestination = JumpDestination * SelfRef->DistAfterPlayer + PlayerForwardDir;
-	//
-	// if (Verbose)
-	// {
-	// 	DrawDebugLine(Controller->GetWorld(), PlayerLocation, PlayerForwardDir, FColor::Red, true, 10);
-	// 	DrawDebugLine(Controller->GetWorld(), OwnLocation, PlayerForwardDir, FColor::Green, true, 10);
-	// 	DrawDebugLine(Controller->GetWorld(), PlayerForwardDir, JumpDestination,
-	// 	              FColor::Blue, true, 10);
-	// }
-	LocationSet = true;
-}
-
 void UDeprivedJumpAttack::Jump(float DeltaTime) const
 {
 	const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
@@ -95,10 +70,7 @@ void UDeprivedJumpAttack::Jump(float DeltaTime) const
 	if (LocationSet)
 	{
 		Animation->GetCurveValue(FName("MovementSpeed"), CurveValue);
-		SelfRef->SetActorLocation(
-			SelfRef->GetActorLocation() + SelfRef->GetActorForwardVector() * SelfRef->JumpAttackSpeed *
-			DeltaTime
-		);
+		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), SelfRef->JumpAttackSpeed, false);
 	}
 	else
 	{

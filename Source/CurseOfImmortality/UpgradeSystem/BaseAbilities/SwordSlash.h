@@ -21,5 +21,5 @@ public:
 	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* ParticleSystem;
 	UPROPERTY(EditAnywhere)
-	USphereComponent* Collision;
+	UStaticMeshComponent* Collision;
 };

@@ -5,6 +5,7 @@
 
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
+#include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
@@ -49,6 +50,6 @@ void UDeprivedFeast::OnStateUpdate(float DeltaTime)
 	}
 	else
 	{
-		Controller->MoveToTarget(Player->GetActorLocation(), SelfRef->CurrentMovementSpeed, DeltaTime);
+		Controller->MoveToTarget(FeastLocation, SelfRef->Stats[Movespeed], DeltaTime);
 	}
 }
