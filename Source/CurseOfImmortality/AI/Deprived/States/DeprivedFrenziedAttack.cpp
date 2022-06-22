@@ -50,17 +50,17 @@ void UDeprivedFrenziedAttack::OnStateUpdate(float DeltaTime)
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) > SelfRef->MinDistFrenziedAttack)
 	{
-		if (Controller->CheckLineOfSight(Player->GetActorLocation()).bBlockingHit)
+		if (Controller->CheckLineOfSight(Player->GetActorLocation()))
 		{
 			if (PathfindingTimer <= 0)
 			{
 				Controller->FindPathToPlayer(Path);
 				PathIndex = 0;
-				PathfindingTimer = 0.5f;
+				PathfindingTimer = 1.f;
 			}
 			if (!Path.IsEmpty())
 			{
-				if (Controller->FollowPath(Path, DeltaTime, PathIndex, 720.f))
+				if (Controller->FollowPath(Path, DeltaTime, PathIndex, 360.f, CurveValue))
 				{
 					PathIndex++;
 				}

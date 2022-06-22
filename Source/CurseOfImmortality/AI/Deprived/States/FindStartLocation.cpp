@@ -3,6 +3,8 @@
 
 #include "CurseOfImmortality/AI/Deprived/States/FindStartLocation.h"
 
+#include <filesystem>
+
 #include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
@@ -35,6 +37,7 @@ void UFindStartLocation::OnStateExit()
 	}
 }
 
+
 void UFindStartLocation::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
@@ -45,7 +48,7 @@ void UFindStartLocation::OnStateUpdate(float DeltaTime)
 	}
 	else
 	{
-		if (Cast<ABaseEnemyPawn>(Controller->CheckLineOfSight(Player->GetActorLocation()).GetActor()))
+		if (Cast<ABaseEnemyPawn>(Controller->GetHitsInLine(Path[PathIndex])[0].GetActor()))
 		{
 			if (PathfindingTimer <= 0)
 			{

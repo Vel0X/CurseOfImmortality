@@ -41,7 +41,7 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 
 	const FVector PlayerLocation = Player->GetActorLocation();
 
-	if (Controller->CheckLineOfSight(PlayerLocation).bBlockingHit)
+	if (Controller->CheckLineOfSight(PlayerLocation))
 	{
 		if (PathfindingTimer <= 0)
 		{
@@ -92,8 +92,4 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 	}
 	PathfindingTimer -= DeltaTime;
 	NoAttackChosen = true;
-}
-
-void UDeprivedRunning::FollowPath(float DeltaTime)
-{
 }

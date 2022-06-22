@@ -83,7 +83,14 @@ void APathfindingGrid::Tick(float DeltaSeconds)
 				}
 				else
 				{
-					Color = FColor(255, 0, 50, 80);
+					if (GetValue(x, y).SpawnArea)
+					{
+						Color = FColor(0, 0, 255, 80);
+					}
+					else
+					{
+						Color = FColor(255, 0, 50, 80);
+					}
 				}
 				DrawDebugSolidBox(GetWorld(), WorldPosition, FVector(CellSize * 0.5f, CellSize * 0.5f, 0.1f), Color,
 				                  false);
@@ -321,6 +328,7 @@ void APathfindingGrid::GenerateNavmesh()
 			FVector WorldPosition;
 			GetWorldPositionFromCoordinates(x, y, WorldPosition);
 			bool HitB = false;
+			bool Spawn = false;
 			for (int i = 0; i < Offsets.Num(); ++i)
 			{
 				FHitResult Hit;
@@ -332,6 +340,13 @@ void APathfindingGrid::GenerateNavmesh()
 					                         CollisionQuery))
 				{
 					HitB = true;
+				}
+			}
+			if (Spawn)
+			{
+				if (GetValue(x, y).SpawnArea)
+				{
+					ToggleSpawnArea(x, y);
 				}
 			}
 			if (HitB)
@@ -375,6 +390,12 @@ void APathfindingGrid::ToggleWalkable(int X, int Y)
 {
 	FPfNode* Node = &GetValue(X, Y);
 	Node->IsWalkable = !Node->IsWalkable;
+}
+
+void APathfindingGrid::ToggleSpawnArea(int X, int Y)
+{
+	FPfNode* Node = &GetValue(X, Y);
+	Node->SpawnArea = !Node->SpawnArea;
 }
 
 bool APathfindingGrid::CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path, const bool Verbose) const

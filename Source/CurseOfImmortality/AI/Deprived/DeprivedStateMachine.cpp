@@ -7,7 +7,6 @@
 #include "DeprivedPawn.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
-#include "Components/CapsuleComponent.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/State.h"
 #include "States/DeprivedHitPlayer.h"
 #include "States/DeprivedIdle.h"
@@ -57,29 +56,69 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	SelfRef->CurrentFrenziedAttackCoolDown -= DeltaTime;
 }
 
-FHitResult UDeprivedStateMachine::CheckLineOfSight(FVector Target)
+TArray<FHitResult> UDeprivedStateMachine::GetHitsInLine(FVector Target) const
 {
-	FHitResult Hit;
+	FVector MidStart(SelfRef->GetActorLocation());
+	MidStart.Z = 20;
+	FVector RightStart(SelfRef->GetActorRightVector() * Offset + SelfRef->GetActorLocation());
+	RightStart.Z = 20;
+	FVector LeftStart(SelfRef->GetActorRightVector().operator-() * Offset + SelfRef->GetActorLocation());
+	LeftStart.Z = 20;
+	FVector MidEnd(Target);
+	MidEnd.Z = 20;
+	FVector RightEnd(RightStart + SelfRef->GetActorForwardVector() * Offset);
+	RightEnd.Z = 20;
+	FVector LeftEnd(LeftStart + SelfRef->GetActorForwardVector() * Offset);
+	LeftEnd.Z = 20;
+
+	FHitResult HitMid;
+	FHitResult HitLeft;
+	FHitResult HitRight;
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(Player);
 	CollisionParams.AddIgnoredActor(SelfRef);
 
-	FVector Start = SelfRef->GetActorLocation();
-	Start.Z += 20;
-	FVector End = Target;
-	End.Z += 20;
+	// DrawDebugLine(GetWorld(), LeftStart, LeftEnd, FColor::Red);
+	// DrawDebugLine(GetWorld(), RightStart, RightEnd, FColor::Green);
+	// DrawDebugLine(GetWorld(), MidStart, MidEnd, FColor::Blue);
+	
+	GetWorld()->LineTraceSingleByChannel(HitMid, MidStart, MidEnd, ECC_GameTraceChannel3, CollisionParams);
+	GetWorld()->LineTraceSingleByChannel(HitLeft, LeftStart, LeftEnd, ECC_GameTraceChannel3, CollisionParams);
+	GetWorld()->LineTraceSingleByChannel(HitRight, RightStart, RightEnd, ECC_GameTraceChannel3, CollisionParams);
+	
+	TArray<FHitResult> Hits;
+	
+	Hits.Add(HitMid);
+	Hits.Add(HitLeft);
+	Hits.Add(HitRight);
 
-	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel3, CollisionParams);
-
-	return Hit;
+	return Hits;
 }
+
+bool UDeprivedStateMachine::CheckLineOfSight(FVector Target) const
+{
+	TArray Hits(GetHitsInLine(Target));
+
+	bool Blocking = false;
+
+	for (FHitResult Hit : Hits)
+	{
+		if (Hit.bBlockingHit)
+		{
+			Blocking = true;
+		}
+	}
+
+	return Blocking;
+}
+
 
 void UDeprivedStateMachine::FindPathToPlayer(TArray<FVector>& Path) const
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
 
-	if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, true))
+	if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, false))
 	{
 		Path.Empty();
 		UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
@@ -97,7 +136,7 @@ void UDeprivedStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& Rando
 	{
 		Grid->GetWorldPositionFromCoordinates(EndNode->X, EndNode->Y, RandomLocation);
 
-		if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), RandomLocation, Path, true))
+		if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), RandomLocation, Path, false))
 		{
 			Path.Empty();
 			UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
@@ -110,12 +149,12 @@ void UDeprivedStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& Rando
 	}
 }
 
-bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotaionSpeed) const
+bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed, float CurveValue) const
 {
 	FVector L(SelfRef->GetActorLocation());
 	L.Z = 0;
 
-	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed], DeltaTime, RotaionSpeed);
+	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed);
 
 	if (FVector::Dist(Path[PathIndex], L) < 100.f)
 	{
