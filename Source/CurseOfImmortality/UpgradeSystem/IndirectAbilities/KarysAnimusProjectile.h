@@ -41,6 +41,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	float RotationSpeed = 30.0f;
 	UPROPERTY()
-	AActor* Target;
+	USceneComponent* Target;
 };
 

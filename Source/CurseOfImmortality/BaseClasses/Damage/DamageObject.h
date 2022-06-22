@@ -39,5 +39,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	ABaseAbility* DamagingAbility;
 
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* HitVfx;
+
 	float TickInterval;
 };

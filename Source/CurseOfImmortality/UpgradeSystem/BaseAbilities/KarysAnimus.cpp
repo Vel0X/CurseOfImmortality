@@ -3,6 +3,8 @@
 
 #include "KarysAnimus.h"
 
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
+
 
 // Sets default values
 AKarysAnimus::AKarysAnimus()
@@ -47,11 +49,7 @@ void AKarysAnimus::Tick(float DeltaTime)
 		{
 			const FVector Location = GetActorLocation();
 			const FRotator Rotation = FRotator(0);
-			ABaseAbility* Projectile = Cast<ABaseAbility>(GetWorld()->SpawnActor(ProjectileClass, &Location, &Rotation));
-			if(Projectile != nullptr)
-			{
-				//Projectile->InitializeAbility(Caster,AbilityLevel);
-			}
+			FPersistentWorldManager::ObjectFactory->SpawnAbility(KarysAnimusProjectile, Location, Rotation, Caster);
 		}	
 		
 		TimeUntilNextSpawn = SpawnInterval;

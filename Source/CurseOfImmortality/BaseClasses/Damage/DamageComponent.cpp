@@ -5,6 +5,7 @@
 
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
+#include "CurseOfImmortality/UpgradeSystem/Utility/DetachedParticleActor.h"
 
 UDamageComponent::UDamageComponent()
 {
@@ -74,7 +75,7 @@ void UDamageComponent::ConvertInterface()
 	}
 }
 
-bool UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter)
+bool UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponentOverlap, ABaseCharacter* HitCharacter, UPrimitiveComponent* BodyHitbox)
 {
 	if (!DamagingHitboxes.Contains(DamageComponentOverlap))
 	{
@@ -90,7 +91,16 @@ bool UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponent
 		return false;
 	}
 
-	return DamagingHitboxes[DamageComponentOverlap]->DealDamage(HitCharacter);
+	auto DamageObject = DamagingHitboxes[DamageComponentOverlap];
+	bool Hit = DamageObject->DealDamage(HitCharacter);
+	if(Hit && BodyHitbox && DamageObject->HitVfx)
+	{
+		const FVector SpawnLocation =BodyHitbox->GetComponentLocation();
+
+		const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+		DetachedParticleActor->InitializeParticleActor(SpawnLocation, DamageObject->HitVfx, nullptr, 0.8f);
+	}
+	return Hit;
 }
 
 void UDamageComponent::DirectCharacterHit(int Index, ABaseCharacter* HitCharacter)

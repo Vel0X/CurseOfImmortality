@@ -53,7 +53,7 @@ void AKarysAnimusProjectile::Tick(float DeltaSeconds)
 		}
 		return;
 	}
-	FVector Direction = Target->GetActorLocation() - GetActorLocation();
+	FVector Direction = Target->GetComponentLocation() - GetActorLocation();
 	Direction.Normalize();
 	//Direction * DeltaSeconds *
 
@@ -85,7 +85,7 @@ bool AKarysAnimusProjectile::GetTarget()
 
 	if(ClosestIndex != -1)
 	{
-		Target = Enemies[ClosestIndex];
+		Target = Enemies[ClosestIndex]->GetAttachmentLocation(CenterPoint);
 		return true;
 
 	}

@@ -11,6 +11,7 @@ void UDamageObject::SetupDamageObject(const UDamageSpecification* Specification)
 	Formulas = Specification->DamageFormulas;
 	Damage = Specification->Damage;
 	TickInterval = Specification->HitTimer;
+	HitVfx = Specification->HitVfx;
 }
 
 bool UDamageObject::DealDamage(ABaseCharacter* Character)

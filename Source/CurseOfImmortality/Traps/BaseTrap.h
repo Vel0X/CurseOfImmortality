@@ -27,10 +27,7 @@ public:
 
 	void InitializeAbility();
 	void CheckCollisions();
-
-	UPROPERTY(EditDefaultsOnly)
-	UAbilitySpecification* ProjectileSpecification;
-
+	
 	UPROPERTY()
 	ABaseCharacter* Test;
 	
