@@ -81,13 +81,13 @@ TArray<FHitResult> UDeprivedStateMachine::GetHitsInLine(FVector Target) const
 	// DrawDebugLine(GetWorld(), LeftStart, LeftEnd, FColor::Red);
 	// DrawDebugLine(GetWorld(), RightStart, RightEnd, FColor::Green);
 	// DrawDebugLine(GetWorld(), MidStart, MidEnd, FColor::Blue);
-	
+
 	GetWorld()->LineTraceSingleByChannel(HitMid, MidStart, MidEnd, ECC_GameTraceChannel3, CollisionParams);
 	GetWorld()->LineTraceSingleByChannel(HitLeft, LeftStart, LeftEnd, ECC_GameTraceChannel3, CollisionParams);
 	GetWorld()->LineTraceSingleByChannel(HitRight, RightStart, RightEnd, ECC_GameTraceChannel3, CollisionParams);
-	
+
 	TArray<FHitResult> Hits;
-	
+
 	Hits.Add(HitMid);
 	Hits.Add(HitLeft);
 	Hits.Add(HitRight);
@@ -132,7 +132,7 @@ void UDeprivedStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& Rando
 
 	FPfNode* EndNode = Grid->GetRandomNodeInNavMesh();
 
-	if (EndNode->IsWalkable)
+	if (EndNode->IsWalkable && !EndNode->SpawnArea)
 	{
 		Grid->GetWorldPositionFromCoordinates(EndNode->X, EndNode->Y, RandomLocation);
 
@@ -149,7 +149,8 @@ void UDeprivedStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& Rando
 	}
 }
 
-bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed, float CurveValue) const
+bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed,
+                                       float CurveValue) const
 {
 	FVector L(SelfRef->GetActorLocation());
 	L.Z = 0;

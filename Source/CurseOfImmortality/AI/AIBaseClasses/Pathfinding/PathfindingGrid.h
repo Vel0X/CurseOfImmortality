@@ -120,7 +120,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GenerateStaticHeatMap();
 	UFUNCTION(BlueprintCallable)
-	void GenerateDynamicHeatMap();
+	void GenerateDynamicHeatMap(float DeltaTime);
 
 	bool GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path, bool Verbose = false);
 	bool GetPathWorldSpace(FVector Start, FVector End, TArray<FVector>& WorldSpacePath, bool Verbose = false);
@@ -135,6 +135,9 @@ public:
 
 	TArray<FVector> ConvertPathToWorldSpace(const TArray<FPfNode*>& Path, bool Verbose = false) const;
 
+	TArray<FVector> Offsets;
+	const float QuarterCellSize = CellSize / 2.5f;
+	float Delay;
 
 	UPROPERTY(EditAnywhere)
 	float CellSize = 100.0f;
