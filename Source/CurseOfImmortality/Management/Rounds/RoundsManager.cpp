@@ -13,13 +13,9 @@ ARoundsManager::ARoundsManager()
 
 void ARoundsManager::BeginPlay()
 {
-	UE_LOG(LogTemp, Error, TEXT("BeginPlay"));
 	Super::BeginPlay();
 
-	if(FPersistentWorldManager::GetControlFlag(AutomaticRoundIncrement) || AutoRoundIncrement)
-	{
-		StartRound(CurrentRoundIndex);
-	}
+
 }
 
 void ARoundsManager::Restart()
@@ -59,6 +55,17 @@ void ARoundsManager::PostInitializeComponents()
 
 void ARoundsManager::Tick(float DeltaTime)
 {
+	if(InitializationPending > 0)
+		--InitializationPending;
+	
+	if(InitializationPending == 0)
+	{
+		InitializationPending = -1;
+		if(FPersistentWorldManager::GetControlFlag(AutomaticRoundIncrement) || AutoRoundIncrement)
+		{
+			StartRound(CurrentRoundIndex);
+		}
+	}
 	Super::Tick(DeltaTime);
 	if(ActiveRound != nullptr)
 	{

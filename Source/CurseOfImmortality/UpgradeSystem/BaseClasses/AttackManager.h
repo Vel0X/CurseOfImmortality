@@ -14,20 +14,12 @@ class UUpgradeSpecification;
 class UAbilitySpecification;
 
 
-USTRUCT(BlueprintType)
-struct FDisplayInformation
+UCLASS()
+class UDisplayInformation : public UObject
 {
 	GENERATED_BODY()
 
-	FDisplayInformation(): DisplayName(""), Image(nullptr)
-	{
-	}
-
-	FDisplayInformation(const FString DisplayName, const FText Application, const FText Description, UTexture* Image)
-		:DisplayName(DisplayName), Application(Application), Description(Description), Image(Image)
-	{
-	}
-	
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString DisplayName;
 
@@ -39,7 +31,9 @@ struct FDisplayInformation
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UTexture* Image;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int Level = 1;
 };
 
 USTRUCT()
@@ -97,18 +91,22 @@ USTRUCT()
 struct FPooledEntry
 {
 	GENERATED_BODY()
-	FPooledEntry(): Name(), Type(false), Weight(0)
+	FPooledEntry(): Name(), CurrentLevel(0), Type(false), Weight(0)
 	{
 	}
 
-	FPooledEntry(const TEnumAsByte<EUpgradeName>& Name, const bool bType, const int Weight)
+	FPooledEntry(const TEnumAsByte<EUpgradeName>& Name, const int CurrentLevel, const bool bType, const int Weight)
 		:  Name(Name),
+		CurrentLevel(CurrentLevel),
 		  Type(bType),
 		  Weight(Weight)
 	{
 	}
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EUpgradeName> Name;
+
+	UPROPERTY(EditAnywhere)
+	int CurrentLevel;
 
 	UPROPERTY(EditAnywhere)
 	bool Type; //false = Ability, true = Upgrade
@@ -157,7 +155,16 @@ public:
 	void PickThreeFromPool(bool Verbose = false);
 
 	UFUNCTION(BlueprintCallable)
-	TArray<FDisplayInformation> GetDisplayInformation();
+	TArray<UDisplayInformation*> GetUpgradeDisplayInformation();
+
+	void AddDisplayInformation(TArray<UDisplayInformation*>& List, FString Name, FText Application, FText Description, UTexture2D* Texture, int Level) const;
+
+	UFUNCTION(BlueprintCallable)
+	void GetActivesDisplayInformation(TMap<TEnumAsByte<EAbilityType>, UDisplayInformation*>& ActiveBaseAbilities, TArray<UDisplayInformation*>& ActiveUpgrades);
+
+	static FText GetAbilityApplication(EAbilityType Type);
+
+	static FText GetUpgradeApplication(EAbilityType Type);
 
 	UFUNCTION(BlueprintCallable, Category="AttackManager")
 	void GetUpgrade(int Index);
