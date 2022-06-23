@@ -98,20 +98,26 @@ void UAttackManager::UpdateAbilityPool()
 		}
 		int Weight = 100;
 		bool TypeFound = false; //does the player already have an ability of that type?
-		bool AbilityPresent = false; //is the ability already present at it's max level?
-
+		bool AbilityMaxed = false; //is the ability already present at it's max level?
+		int AbilityLevel = 0;
 		if(ActiveAbilities.Contains(PossibleAbility->AbilityType))
 		{
 			TypeFound = true;
 
 			const auto ActiveAbility = ActiveAbilities[PossibleAbility->AbilityType];
 			
-			if(ActiveAbility.Specification->AbilityName == PossibleAbilityName && ActiveAbility.Level == ActiveAbility.Specification->MaxLevel)
-				AbilityPresent = true;
+			if(ActiveAbility.Specification->AbilityName == PossibleAbilityName)
+			{
+				AbilityLevel = ActiveAbility.Level;
+				if(ActiveAbility.Level == ActiveAbility.Specification->MaxLevel)
+				{
+					AbilityMaxed = true;
+				}
+			} 
 
 		}
 		
-		if(AbilityPresent)
+		if(AbilityMaxed)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Ability %s present at max Level"), *PossibleAbility->DisplayName);
 			continue;
@@ -121,7 +127,7 @@ void UAttackManager::UpdateAbilityPool()
 		{
 			Weight = 20;
 		}
-		Pool.Add(FPooledEntry(PossibleAbilityName, false, Weight));
+		Pool.Add(FPooledEntry(PossibleAbilityName, AbilityLevel, false, Weight));
 		//pool the ability with the appropriate weight
 	}
 	
@@ -154,16 +160,22 @@ void UAttackManager::UpdateAbilityPool()
 		
 		
 		bool Restricted = false;
-		bool UpgradePresent = false;
+		bool UpgradeMaxed = false;
+		int UpgradeLevel = 0;
 		
 		for (const auto BTuple : ActiveUpgrades)
 		{
 			const auto ActiveUpgradeName = BTuple.Key;
 			const auto ActiveUpgrade = BTuple.Value;
-			if(ActiveUpgradeName == PossibleUpgradeName && ActiveUpgrade.Level == ActiveUpgrade.Specification->MaxLevel)
+			if(ActiveUpgradeName == PossibleUpgradeName)
 			{
-				UpgradePresent = true;
-				break;
+				UpgradeLevel = ActiveUpgrade.Level;
+				if(ActiveUpgrade.Level == ActiveUpgrade.Specification->MaxLevel)
+				{
+					UpgradeMaxed = true;
+					break;
+				}
+
 			}
 			if(PossibleUpgrade->Restrictions.Contains(ActiveUpgradeName))
 			{
@@ -172,11 +184,11 @@ void UAttackManager::UpdateAbilityPool()
 			}
 		}
 
-		if(Restricted || UpgradePresent)
+		if(Restricted || UpgradeMaxed)
 			continue;
 		
 
-		Pool.Add(FPooledEntry(PossibleUpgradeName, true, Weight));
+		Pool.Add(FPooledEntry(PossibleUpgradeName, UpgradeLevel, true, Weight));
 	}
 	
 	//UE_LOG(LogTemp, Warning, TEXT("PoolSize %d"), Pool.Num());
@@ -237,16 +249,15 @@ void UAttackManager::PickThreeFromPool(bool Verbose)
 			}
 		}
 	}
-	
 }
 
-TArray<FDisplayInformation> UAttackManager::GetDisplayInformation()
+TArray<UDisplayInformation*> UAttackManager::GetUpgradeDisplayInformation()
 {
-	TArray<FDisplayInformation> DisplayInformation;
+	TArray<UDisplayInformation*> DisplayInformation;
 	//Pool[SelectedPoolEntries[0]].Name;
 	for (int i = 0; i < SelectedPoolEntries.Num(); ++i)
 	{
-		auto Entry = Pool[SelectedPoolEntries[i]];
+		const auto Entry = Pool[SelectedPoolEntries[i]];
 		if(Entry.Type)
 		{
 			const auto Spec = PossibleUpgrades->PossibleUpgradeAbilities[Entry.Name];
@@ -256,26 +267,8 @@ TArray<FDisplayInformation> UAttackManager::GetDisplayInformation()
 				continue;
 			}
 
-			FText Application = FText();
-			//Application
-			switch(Spec->Application)
-			{
-			case None:
-				Application = Application.FromString("Upgrade");
-				break;
-			case Melee:
-				Application = Application.FromString("Melee Only Upgrade");
-				break;
-			case Ranged:
-				Application = Application.FromString("Ranged Only Upgrade");
-				break;
-			case Special:
-				Application = Application.FromString("Special Only Upgrade");
-				break;
-			default: ;
-			}
-			
-			DisplayInformation.Add(FDisplayInformation(Spec->DisplayName, Application, Spec->Description, Spec->Image));
+			const FText Application = GetUpgradeApplication(Spec->Application);
+			AddDisplayInformation(DisplayInformation, Spec->DisplayName, Application, Spec->Description, Spec->Image, Entry.CurrentLevel);
 		}
 		else
 		{
@@ -286,26 +279,91 @@ TArray<FDisplayInformation> UAttackManager::GetDisplayInformation()
 				continue;
 			}
 
-			FText Application = FText();
-			//Application
-			switch(Spec->AbilityType)
-			{
-			case Melee:
-				Application = Application.FromString("Melee Base Ability");
-				break;
-			case Ranged:
-				Application = Application.FromString("Ranged Base Ability");
-				break;
-			case Special:
-				Application = Application.FromString("Special Base Ability");
-				break;
-			default: ;
-			}
-			
-			DisplayInformation.Add(FDisplayInformation(Spec->DisplayName, Application, Spec->Description, Spec->Image));
+			const FText Application = GetAbilityApplication(Spec->AbilityType);
+			AddDisplayInformation(DisplayInformation, Spec->DisplayName, Application, Spec->Description, Spec->Image, Entry.CurrentLevel);
 		}
 	}
 	return DisplayInformation;
+}
+
+void UAttackManager::AddDisplayInformation(TArray<UDisplayInformation*>& List, FString Name, const FText Application,
+                                           const FText Description, UTexture2D* Texture, const int Level) const
+{
+	const auto DisplayInfo = NewObject<UDisplayInformation>();
+	DisplayInfo->DisplayName = Name;
+	DisplayInfo->Application = Application;
+	DisplayInfo->Description = Description;
+	DisplayInfo->Image = Texture;
+	DisplayInfo->Level = Level;
+	List.Add(DisplayInfo);
+}
+
+void UAttackManager::GetActivesDisplayInformation(
+	TMap<TEnumAsByte<EAbilityType>, UDisplayInformation*>& ActiveBaseAbilitiesDisplayInfo,
+	TArray<UDisplayInformation*>& ActiveUpgradeDisplayInfo)
+{
+	for (const auto Tuple : ActiveAbilities)
+	{
+		auto Type = Tuple.Key;
+		const auto ActiveAbility = Tuple.Value;
+		const auto Spec = ActiveAbility.Specification;
+		if(Spec == nullptr)
+		{
+			ActiveBaseAbilitiesDisplayInfo.Add(Type, nullptr);
+			continue;
+		}
+		const FText Application = GetUpgradeApplication(Spec->AbilityType);
+
+		auto DisplayInfo = NewObject<UDisplayInformation>();
+		DisplayInfo->DisplayName = Spec->DisplayName;
+		DisplayInfo->Application = Application;
+		DisplayInfo->Description = Spec->Description;
+		DisplayInfo->Image = Spec->Image;
+		DisplayInfo->Level = ActiveAbility.Level;
+		ActiveBaseAbilitiesDisplayInfo.Add(Type, DisplayInfo);
+	}
+
+	for (const auto Tuple : ActiveUpgrades)
+	{
+		const auto ActiveUpgrade = Tuple.Value;
+		const auto Spec = ActiveUpgrade.Specification;
+		const FText Application = GetUpgradeApplication(Spec->Application);
+		AddDisplayInformation(ActiveUpgradeDisplayInfo, Spec->DisplayName, Application, Spec->Description, Spec->Image, ActiveUpgrade.Level);
+	}
+}
+
+FText UAttackManager::GetAbilityApplication(const EAbilityType Type)
+{
+	FText Application = FText();
+	//Application
+	switch(Type)
+	{
+	case Melee:
+		return Application.FromString("Melee Base Ability");
+	case Ranged:
+		return Application.FromString("Ranged Base Ability");
+	case Special:
+		return Application.FromString("Special Base Ability");
+	default: return Application;
+	}
+}
+
+FText UAttackManager::GetUpgradeApplication(const EAbilityType Type)
+{
+	FText Application = FText();
+	//Application
+	switch(Type)
+	{
+	case None:
+		return Application.FromString("Upgrade");
+	case Melee:
+		return Application.FromString("Melee Only Upgrade");
+	case Ranged:
+		return Application.FromString("Ranged Only Upgrade");
+	case Special:
+		return Application.FromString("Special Only Upgrade");
+	default: return Application;
+	}
 }
 
 void UAttackManager::GetUpgrade(const int Index)
