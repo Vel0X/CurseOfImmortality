@@ -139,9 +139,7 @@ public:
 	static FPfNode* GetLowestCostNode(TArray<FPfNode*>& OpenList);
 
 	TArray<FVector> ConvertPathToWorldSpace(const TArray<FPfNode*>& Path, bool Verbose = false) const;
-
-	TArray<FVector> Offsets;
-	const float QuarterCellSize = CellSize / 2.5f;
+	
 	float Delay;
 
 	UPROPERTY(EditAnywhere)

@@ -17,16 +17,6 @@ APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(86, 65) //86 65
 			SetValue(x, y, FPfNode(x, y));
 		}
 	}
-
-	Offsets.Add(FVector::Zero());
-	Offsets.Add(FVector(QuarterCellSize, 0, 0));
-	Offsets.Add(FVector(-QuarterCellSize, 0, 0));
-	Offsets.Add(FVector(0, QuarterCellSize, 0));
-	Offsets.Add(FVector(0, -QuarterCellSize, 0));
-	Offsets.Add(FVector(QuarterCellSize, QuarterCellSize, 0));
-	Offsets.Add(FVector(-QuarterCellSize, -QuarterCellSize, 0));
-	Offsets.Add(FVector(QuarterCellSize, -QuarterCellSize, 0));
-	Offsets.Add(FVector(-QuarterCellSize, QuarterCellSize, 0));
 }
 
 void APathfindingGrid::Print()
@@ -261,48 +251,55 @@ void APathfindingGrid::GenerateDynamicHeatMap(float DeltaTime)
 			for (int y = 0; y < Height; ++y)
 			{
 				GetValue(x, y).DynamicHeat = 0.f;
-				FVector WorldPosition;
-				GetWorldPositionFromCoordinates(x, y, WorldPosition);
-				bool Heat = false;
-				for (int i = 0; i < Offsets.Num(); ++i)
+				// 	FVector WorldPosition;
+				// 	GetWorldPositionFromCoordinates(x, y, WorldPosition);
+				// 	bool Heat = false;
+				// 	for (int i = 0; i < Offsets.Num(); ++i)
+				// 	{
+				// 		FHitResult Hit;
+				// 		FVector OffsetWorldPosition = WorldPosition + Offsets[i];
+				// 		FVector StartPosition = OffsetWorldPosition + FVector(0, 0, 10000);
+				// 		FCollisionQueryParams CollisionQuery = FCollisionQueryParams();
+				// 		if (GetWorld()->
+				// 			LineTraceSingleByChannel(Hit, StartPosition, OffsetWorldPosition, ECC_GameTraceChannel9,
+				// 			                         CollisionQuery))
+				// 		{
+				// 			if (!Cast<APlayerCharacter>(Hit.GetActor()))
+				// 			{
+				// 			}
+				// 			Heat = true;
+				// 		}
+				// 	}
+				// 	if (Heat)
+				// 	{
+				// 		GetValue(x, y).DynamicHeat = 10.f;
+				// 		TArray Neighbors(GetNeighbors(x, y));
+				// 		for (FPfNode* Neighbor : Neighbors)
+				// 		{
+				// 			Neighbor->DynamicHeat = 5.f;
+				// 		}
+				// 	}
+				// }
+			}
+			TArray Enemies(FPersistentWorldManager::GetEnemies());
+
+			for (ABaseCharacter* Enemy : Enemies)
+			{
+				int X, Y;
+				if (GetCoordinatesFromWorldPosition(Enemy->GetActorLocation(), X, Y))
 				{
-					FHitResult Hit;
-					FVector OffsetWorldPosition = WorldPosition + Offsets[i];
-					FVector StartPosition = OffsetWorldPosition + FVector(0, 0, 10000);
-					FCollisionQueryParams CollisionQuery = FCollisionQueryParams();
-					if (GetWorld()->
-						LineTraceSingleByChannel(Hit, StartPosition, OffsetWorldPosition, ECC_GameTraceChannel9,
-						                         CollisionQuery))
+					GetValue(X, Y).DynamicHeat = 10.f;
+					TArray Neighbors(GetNeighbors(X, Y));
+					for (FPfNode* Neighbor : Neighbors)
 					{
-						Heat = true;
+						Neighbor->DynamicHeat = 5.f;
 					}
-				}
-				if (Heat)
-				{
-					GetValue(x, y).DynamicHeat = 10.f;
 				}
 			}
 		}
 		Delay = 0.5f;
 	}
-
 	Delay -= DeltaTime;
-	
-	TArray Enemies(FPersistentWorldManager::GetEnemies());
-
-	for (ABaseCharacter* Enemy : Enemies)
-	{
-		int X, Y;
-		if (GetCoordinatesFromWorldPosition(Enemy->GetActorLocation(), X, Y))
-		{
-			GetValue(X, Y).DynamicHeat += 25.f;
-			TArray Neighbors(GetNeighbors(X, Y));
-			for (FPfNode* Neighbor : Neighbors)
-			{
-				Neighbor->DynamicHeat += 5.f;
-			}
-		}
-	}
 }
 
 void APathfindingGrid::GenerateStaticHeatMap()
@@ -339,6 +336,19 @@ void APathfindingGrid::GenerateStaticHeatMap()
 
 void APathfindingGrid::GenerateNavmesh()
 {
+	TArray<FVector> Offsets;
+	const float QuarterCellSize = CellSize / 2.5f;
+
+	Offsets.Add(FVector::Zero());
+	Offsets.Add(FVector(QuarterCellSize, 0, 0));
+	Offsets.Add(FVector(-QuarterCellSize, 0, 0));
+	Offsets.Add(FVector(0, QuarterCellSize, 0));
+	Offsets.Add(FVector(0, -QuarterCellSize, 0));
+	Offsets.Add(FVector(QuarterCellSize, QuarterCellSize, 0));
+	Offsets.Add(FVector(-QuarterCellSize, -QuarterCellSize, 0));
+	Offsets.Add(FVector(QuarterCellSize, -QuarterCellSize, 0));
+	Offsets.Add(FVector(-QuarterCellSize, QuarterCellSize, 0));
+
 	for (int x = 0; x < Width; ++x)
 	{
 		for (int y = 0; y < Height; ++y)
@@ -359,6 +369,7 @@ void APathfindingGrid::GenerateNavmesh()
 					                         CollisionQuery))
 				{
 					HitB = true;
+					break;
 				}
 				if (GetWorld()->
 					LineTraceSingleByChannel(Hit, StartPosition, OffsetWorldPosition, ECC_GameTraceChannel7,

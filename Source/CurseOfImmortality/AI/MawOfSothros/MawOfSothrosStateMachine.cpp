@@ -4,6 +4,7 @@
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosStateMachine.h"
 
 #include "MawOfSothrosPawn.h"
+#include "NiagaraComponent.h"
 #include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "States/MawOfSothrosBaseState.h"
@@ -17,8 +18,8 @@
 
 UMawOfSothrosStateMachine::UMawOfSothrosStateMachine()
 {
-	// RangedAttackTypes.Add(FAttackType(VomitState, 100));
-	// RangedAttackTypes.Add(FAttackType(ChargeAttackState, 100));
+	RangedAttackTypes.Add(FAttackType(VomitState, 100));
+	RangedAttackTypes.Add(FAttackType(ChargeAttackState, 100));
 	RangedAttackTypes.Add(FAttackType(LaserState, 100));
 
 	MeleeAttackTypes.Add(FAttackType(GroundSlamState, 100));
@@ -62,6 +63,11 @@ void UMawOfSothrosStateMachine::TickComponent(float DeltaTime, ELevelTick TickTy
 	if (!SelfRef->Dead)
 	{
 		CurrentState->OnStateUpdate(DeltaTime);
+	}
+	else
+	{
+		SelfRef->Beam->SetVisibility(false);
+		SelfRef->MawSmoke->Deactivate();
 	}
 }
 

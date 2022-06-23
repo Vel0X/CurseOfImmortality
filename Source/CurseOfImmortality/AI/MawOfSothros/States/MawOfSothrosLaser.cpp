@@ -55,6 +55,7 @@ void UMawOfSothrosLaser::OnStateUpdate(float DeltaTime)
 	}
 	else
 	{
+		if(!AbilityInstance){return;}
 		AbilityInstance->ParticleSystem->Deactivate();
 		Controller->Transition(Controller->Idle, Controller);
 	}

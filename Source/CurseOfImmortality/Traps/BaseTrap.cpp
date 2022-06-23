@@ -31,7 +31,7 @@ void ABaseTrap::BeginPlay()
 void ABaseTrap::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
 	CheckCollisions();
 }
 
@@ -84,6 +84,7 @@ void ABaseTrap::CheckCollisions()
 void ABaseTrap::FireProjectile(FVector SpawnLocation, FRotator SpawnRotation)
 {
 	// UE_LOG(LogTemp,Warning,TEXT("Fire"))
-	ABaseAbility* AbilityInstance = FPersistentWorldManager::ObjectFactory->SpawnAbility(TrapProjectile, SpawnLocation, SpawnRotation, nullptr);
+	ABaseAbility* AbilityInstance = FPersistentWorldManager::ObjectFactory->SpawnAbility(
+		TrapProjectile, SpawnLocation, SpawnRotation, nullptr);
 	AbilityInstance->NoFaction = true;
 }
