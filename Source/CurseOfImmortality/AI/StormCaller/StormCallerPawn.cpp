@@ -6,6 +6,7 @@
 #include "StormCallerStateMachine.h"
 #include "Components/CapsuleComponent.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/RandomAOEAbility.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 AStormCallerPawn::AStormCallerPawn()
 {
@@ -26,9 +27,22 @@ void AStormCallerPawn::OnDeath()
 
 bool AStormCallerPawn::GetSpawnPosition(FVector& Position, FRotator& Rotation)
 {
-	const float X = FMath::FRandRange(-900.0f, 900.0f);
-	const float Y = FMath::FRandRange(-900.0f, 900.0f);
-	Position = FVector(X,Y, 0.0f);
-	SetActorLocation(Position);
-	return true;
+	FVector PlayerPosition = FPersistentWorldManager::PlayerCharacter->GetActorLocation();
+	for (int i = 0; i < 100; ++i)
+	{
+		const auto Node = FPersistentWorldManager::PathfindingGrid->GetRandomNodeInNavMesh();
+		if(!Node->IsWalkable ||Node->GetCombinedHeat() > 5 || Node->SpawnArea)
+			continue;
+		
+		FVector SpawnPosition = FVector::ZeroVector;
+		if(FPersistentWorldManager::PathfindingGrid->GetWorldPositionFromCoordinates(Node->X, Node->Y, SpawnPosition))
+		{
+			if(FVector::Distance(PlayerPosition, SpawnPosition) > 2000.0f)
+			{
+				SetActorLocation(SpawnPosition);
+				return true;
+			}
+		}
+	}
+	return false;
 }

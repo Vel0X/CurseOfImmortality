@@ -310,16 +310,16 @@ void APathfindingGrid::GenerateStaticHeatMap()
 void APathfindingGrid::GenerateNavmesh()
 {
 	TArray<FVector> Offsets;
-	const float QuarterCellSize = CellSize / 2.5f;
+	const float Offset = CellSize / 2.5f;
 	Offsets.Add(FVector::Zero());
-	Offsets.Add(FVector(QuarterCellSize, 0, 0));
-	Offsets.Add(FVector(-QuarterCellSize, 0, 0));
-	Offsets.Add(FVector(0, QuarterCellSize, 0));
-	Offsets.Add(FVector(0, -QuarterCellSize, 0));
-	Offsets.Add(FVector(QuarterCellSize, QuarterCellSize, 0));
-	Offsets.Add(FVector(-QuarterCellSize, -QuarterCellSize, 0));
-	Offsets.Add(FVector(QuarterCellSize, -QuarterCellSize, 0));
-	Offsets.Add(FVector(-QuarterCellSize, QuarterCellSize, 0));
+	Offsets.Add(FVector(Offset, 0, 0));
+	Offsets.Add(FVector(-Offset, 0, 0));
+	Offsets.Add(FVector(0, Offset, 0));
+	Offsets.Add(FVector(0, -Offset, 0));
+	Offsets.Add(FVector(Offset, Offset, 0));
+	Offsets.Add(FVector(-Offset, -Offset, 0));
+	Offsets.Add(FVector(Offset, -Offset, 0));
+	Offsets.Add(FVector(-Offset, Offset, 0));
 
 	for (int x = 0; x < Width; ++x)
 	{

@@ -92,6 +92,11 @@ struct FPfNode
 		CameFrom = nullptr;
 	}
 
+	int GetCombinedHeat() const
+	{
+		return StaticHeat + DynamicHeat;
+	}
+
 	int X = 0, Y = 0;
 	FPfNode* CameFrom;
 	int H = 0, G = 0, S = 0, StaticHeat = 0, DynamicHeat = 0;
@@ -131,7 +136,7 @@ public:
 	int CalculateDistance(int StartX, int StartY, int EndX, int EndY) const;
 
 	FPfNode* GetRandomNodeInNavMesh();
-	FPfNode* GetLowestCostNode(TArray<FPfNode*>& OpenList);
+	static FPfNode* GetLowestCostNode(TArray<FPfNode*>& OpenList);
 
 	TArray<FVector> ConvertPathToWorldSpace(const TArray<FPfNode*>& Path, bool Verbose = false) const;
 

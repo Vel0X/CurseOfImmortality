@@ -47,6 +47,8 @@ public:
 	 */
 	void StartRound(const int Index);
 
+	int InitializationPending = 3;
+
 	UFUNCTION(BlueprintCallable)
 	void EndCurrentRound();
 	
