@@ -54,5 +54,5 @@ void UPlayerCharacterDash::OnStateUpdate(float DeltaTime)
 		SelfRef->InputManager->LastAction = InputAction::NoAction;
 		Controller->Transition(Controller->Idle, Controller);
 	}
-	SelfRef->MovementComponent->MoveWithCorrection(SelfRef->GetActorForwardVector(), DeltaTime, SelfRef->DashSpeed);
+	SelfRef->MovementComponent->MoveWithCorrection(SelfRef->GetActorForwardVector(), DeltaTime, SelfRef->DashSpeed, true);
 }

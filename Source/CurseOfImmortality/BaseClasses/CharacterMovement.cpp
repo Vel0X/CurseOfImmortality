@@ -79,7 +79,7 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 
 		if (!MoveWithoutCorrection)
 		{
-			MoveWithCorrection(Direction, DeltaTime, Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed);
+			MoveWithCorrection(Direction, DeltaTime, Cast<ABaseCharacter>(GetOwner())->CurrentMovementSpeed, MoveThroughCharacters);
 		} else
 		{
 			Direction.Z = 0;
@@ -90,16 +90,17 @@ void UCharacterMovement::TickComponent(float DeltaTime, ELevelTick TickType,
 }
 
 
-void UCharacterMovement::SetDirection(FVector MoveInput, float MoveSpeed, bool IgnoreWalls)
+void UCharacterMovement::SetDirection(FVector MoveInput, float MoveSpeed, bool IgnoreAllCol, bool IgnoreCharacters)
 {
 
 	Direction = MoveInput;
 	CurrentSpeed = MoveSpeed;
 	DirectionSet = true;
-	MoveWithoutCorrection = IgnoreWalls;
+	MoveWithoutCorrection = IgnoreAllCol;
+	MoveThroughCharacters = IgnoreCharacters;
 }
 
-void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, const float DeltaTime, const float Speed) const
+void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, const float DeltaTime, const float Speed, const bool IgnoreCharacters ) const
 {
 	//Reset Z to 0 for safety
 	DirectionToMove.Z = 0;
@@ -112,6 +113,14 @@ void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, const float
 	CapsuleCol->AddWorldOffset(DirectionToMove * DeltaTime * Speed, true, &Result);
 	CapsuleCol->SetWorldLocation(CapsuleLocBeforeMove);
 
+	if (IgnoreCharacters)
+	{
+		if (Cast<ABaseCharacter>(Result.GetActor()) != nullptr)
+		{
+			Owner->AddActorWorldOffset(DirectionToMove * DeltaTime * Speed, false);
+			return;
+		}
+	}
 	if (Result.GetActor() != Owner && Result.GetActor())
 	{
 		FVector CorrectedImpactNormal = Result.ImpactNormal;

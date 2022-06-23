@@ -77,6 +77,8 @@ public:
 	FVector MoveInput;
 
 	InputAction LastAction;
+
+	bool MoveLock = false;
 };
 
 
