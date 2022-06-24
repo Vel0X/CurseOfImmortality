@@ -18,13 +18,6 @@ AStormCallerPawn::AStormCallerPawn()
 	StormCast = CreateDefaultSubobject<URandomAOEAbility>("Storm Call");
 }
 
-void AStormCallerPawn::OnDeath()
-{
-	Super::OnDeath();
-	StateMachine->DestroyComponent();
-	//CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
-}
-
 bool AStormCallerPawn::GetSpawnPosition(FVector& Position, FRotator& Rotation)
 {
 	FVector PlayerPosition = FPersistentWorldManager::PlayerCharacter->GetActorLocation();

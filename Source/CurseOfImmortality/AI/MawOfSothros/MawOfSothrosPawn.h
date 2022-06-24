@@ -29,6 +29,7 @@ public:
 	void ToggleArmDamage();
 	UFUNCTION(BlueprintCallable)
 	void ToggleHeadDamage();
+	virtual bool GetSpawnPosition(FVector& Position, FRotator& Rotation) override;
 
 	//AbilityTrigger
 	UFUNCTION(BlueprintCallable)

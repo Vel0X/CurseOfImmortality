@@ -4,7 +4,6 @@
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 
 #include "NiagaraComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
@@ -28,13 +27,6 @@ ADeprivedPawn::ADeprivedPawn()
 	StateMachine = CreateDefaultSubobject<UDeprivedStateMachine>("StateMachine");
 	
 	CurrentRecoverDuration = RecoverDuration;
-}
-
-void ADeprivedPawn::OnDeath()
-{
-	Super::OnDeath();
-	StateMachine->DestroyComponent();
-	//CapsuleComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
 void ADeprivedPawn::ToggleJumpAttackDamage()

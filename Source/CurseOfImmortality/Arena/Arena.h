@@ -43,6 +43,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	USceneComponent* PlayerSpawnPosition;
+	
+	UPROPERTY(EditAnywhere)
+	USceneComponent* MawSpawnPosition;
 
 	UPROPERTY(EditAnywhere)
 	TArray<ADestructibleObject*> DestructibleObjects;
