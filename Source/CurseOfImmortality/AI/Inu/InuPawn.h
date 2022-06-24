@@ -19,8 +19,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FireProjectile();
 
-	UPROPERTY(EditAnywhere)
-	UAbilitySpecification* AbilitySpecification;
+	virtual void BeginPlay() override;
 
 	//Sates
 	UPROPERTY(BlueprintReadWrite)
@@ -29,6 +28,9 @@ public:
 	bool RangedAttack = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool Running = false;
+
+	UPROPERTY(EditAnywhere)
+	USceneComponent* ProjectileLocation;
 
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* Mesh;
@@ -40,11 +42,11 @@ public:
 	float CurrentAttackCoolDown;
 
 	//Ranges
-	float TriggerRange = 1200.f;
+	float TriggerRange = 1000.f;
 	UPROPERTY(EditAnywhere, Category="Ranges")
-	float MinRange = 800.f;
+	float MinRange = 600.f;
 	UPROPERTY(EditAnywhere, Category="Ranges")
-	float MaxRange = 1100.f;
+	float MaxRange = 800.f;
 	UPROPERTY(EditAnywhere, Category="Ranges")
 	float AttackRange;
 };

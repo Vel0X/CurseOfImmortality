@@ -6,9 +6,11 @@
 #include "InuPawn.h"
 #include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
+#include "States/InuFindStartLocation.h"
 #include "States/InuIdleState.h"
 #include "States/InuRangedAttack.h"
 #include "States/InuRunningState.h"
+#include "States/InuRetreatState.h"
 
 void UInuStateMachine::BeginPlay()
 {
@@ -21,6 +23,8 @@ void UInuStateMachine::BeginPlay()
 	Idle = NewObject<UInuIdleState>();
 	RangedAttack = NewObject<UInuRangedAttack>();
 	Running = NewObject<UInuRunningState>();
+	FindStartLocation = NewObject<UInuFindStartLocation>();
+	Retreat = NewObject<UInuRetreatState>();
 }
 
 void UInuStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
@@ -31,7 +35,7 @@ void UInuStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	if (!Player)
 	{
 		Player = FPersistentWorldManager::PlayerCharacter;
-		CurrentState = Idle;
+		CurrentState = FindStartLocation;
 		CurrentState->OnStateEnter(this);
 	}
 	if (!SelfRef->Dead)
@@ -61,13 +65,24 @@ void UInuStateMachine::FocusOnPlayer(float DeltaTime) const
 	const FVector Target = PlayerLocation - SelfRef->GetActorLocation();
 
 	const FRotator LookAtRotation(
-		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 100.f).Rotation());
+		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, 180.f).Rotation());
 	SelfRef->SetActorRotation(LookAtRotation);
 }
 
 bool UInuStateMachine::CheckLineOfSight(FVector Target) const
 {
+	FVector Start(SelfRef->GetActorLocation());
+	Start.Z = 20;
+	Target.Z = 20;
+
 	FHitResult Hit;
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(Player);
+	CollisionParams.AddIgnoredActor(SelfRef);
+
+	// DrawDebugLine(GetWorld(), LeftStart, LeftEnd, FColor::Red);
+
+	GetWorld()->LineTraceSingleByChannel(Hit, Start, Target, ECC_GameTraceChannel3, CollisionParams);
 
 	return Hit.bBlockingHit;
 }

@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/AI/Inu/States/InuBaseState.h"
-#include "InuFindStartLocation.generated.h"
+#include "InuRetreatState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API UInuFindStartLocation : public UInuBaseState
+class CURSEOFIMMORTALITY_API UInuRetreatState : public UInuBaseState
 {
 	GENERATED_BODY()
 
@@ -18,8 +18,6 @@ class CURSEOFIMMORTALITY_API UInuFindStartLocation : public UInuBaseState
 	virtual void OnStateExit() override;
 	virtual void OnStateUpdate(float DeltaTime) override;
 
-	TArray<FVector> Path;
-	FVector RandomLocation;
-	int PathIndex = 0;
-	float PathfindingTimer;
+	FVector RetreatLocation;
+	float Duration = 2.f;	
 };

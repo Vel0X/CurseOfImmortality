@@ -3,16 +3,29 @@
 
 #include "CurseOfImmortality/AI/Inu/InuPawn.h"
 
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
+
 AInuPawn::AInuPawn()
 {
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh");
 	Mesh->SetupAttachment(RootComponent);
 
-	StateMachine = CreateDefaultSubobject<UInuStateMachine>("StateMachine");
+	ProjectileLocation = CreateDefaultSubobject<USceneComponent>("ProjectileLocation");
+	ProjectileLocation->SetupAttachment(Mesh, "HeadSocket");
 
-	AttackRange = FMath::FRandRange(MinRange, MaxRange);
+
+	StateMachine = CreateDefaultSubobject<UInuStateMachine>("StateMachine");
 }
 
 void AInuPawn::FireProjectile()
 {
+	FPersistentWorldManager::ObjectFactory->SpawnAbility(
+		InuProjectile, ProjectileLocation->GetComponentLocation(), GetActorRotation(), this);
+}
+
+void AInuPawn::BeginPlay()
+{
+	Super::BeginPlay();
+
+	AttackRange = FMath::FRandRange(MinRange, MaxRange);
 }

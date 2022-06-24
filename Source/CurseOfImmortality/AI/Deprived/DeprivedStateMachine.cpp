@@ -19,10 +19,6 @@
 #include "States/DeprivedFrenziedAttack.h"
 #include "States/FindStartLocation.h"
 
-UDeprivedStateMachine::UDeprivedStateMachine()
-{
-}
-
 void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
                                           FActorComponentTickFunction* ThisTickFunction)
 {

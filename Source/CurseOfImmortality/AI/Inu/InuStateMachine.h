@@ -33,10 +33,14 @@ public:
 	//States
 	UPROPERTY()
 	UState* Idle;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	UState* Running;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	UState* RangedAttack;
+	UPROPERTY()
+	UState* FindStartLocation;
+	UPROPERTY()
+	UState* Retreat;
 
 	//Getter
 	AInuPawn* GetSelfRef() const;

@@ -19,7 +19,7 @@ void UInuRunningState::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef->Running = true;
 	if (FPersistentWorldManager::GetLogLevel(InuStateMachine))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Idle State Entered"))
+		UE_LOG(LogTemp, Warning, TEXT("Running State Entered"))
 	}
 }
 
@@ -30,7 +30,7 @@ void UInuRunningState::OnStateExit()
 	SelfRef->Running = false;
 	if (FPersistentWorldManager::GetLogLevel(InuStateMachine))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Idle State Entered"))
+		UE_LOG(LogTemp, Warning, TEXT("Running State Exit"))
 	}
 }
 

@@ -18,8 +18,6 @@ class CURSEOFIMMORTALITY_API UDeprivedStateMachine : public UStateMachine
 {
 	GENERATED_BODY()
 public:
-	UDeprivedStateMachine();
-
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -65,9 +63,7 @@ public:
 	APlayerCharacter* GetPlayer() const;
 
 protected:
-	virtual void BeginPlay() override;
-
-private:
+	virtual void BeginPlay() override; 
 	//References
 	UPROPERTY()
 	ADeprivedPawn* SelfRef;
