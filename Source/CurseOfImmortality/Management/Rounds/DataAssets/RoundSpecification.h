@@ -32,7 +32,10 @@ public:
 	 * the percentage of the powerlevel, that gets filled up with assortments. The Rest will then be filled up by single enemies
 	 */
 	UPROPERTY(EditAnywhere)
-	float AssortmentRatio; 
+	float AssortmentRatio;
+
+	UPROPERTY(EditAnywhere)
+	bool ObstaclesEnabled;
 
 
 	/**

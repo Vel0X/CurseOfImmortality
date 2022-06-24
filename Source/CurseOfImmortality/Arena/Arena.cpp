@@ -40,6 +40,19 @@ void AArena::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AArena::DisableAllObstacles()
+{
+	for (const auto Trap : Traps)
+	{
+		Trap->DisableTrap();
+	}
+
+	for (const auto Destructible : DestructibleObjects)
+	{
+		Destructible->DisableObject();
+	}
+}
+
 //maybe use an array for gates, but might be tricky, since the gates are components
 USceneComponent* AArena::GetRandomGate() const
 {

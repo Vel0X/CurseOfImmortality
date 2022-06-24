@@ -2,3 +2,11 @@
 
 
 #include "CurseOfImmortality/BaseClasses/DestructibleObject.h"
+
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
+
+void ADestructibleObject::BeginPlay()
+{
+	Super::BeginPlay();
+	FPersistentWorldManager::Arena->DestructibleObjects.Add(this);
+}

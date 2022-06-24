@@ -57,7 +57,7 @@ void ADetachedParticleActor::InitializeParticleActor(UNiagaraComponent* Particle
 	}
 }
 
-void ADetachedParticleActor::InitializeParticleActor(FVector SpawnLocation, UNiagaraSystem* ParticleSystem, AActor* _FollowParent,
+UNiagaraComponent* ADetachedParticleActor::InitializeParticleActor(FVector SpawnLocation, UNiagaraSystem* ParticleSystem, AActor* _FollowParent,
 	float ManualDestructionTime)
 {
 	RemainingLifetime = ManualDestructionTime == -1 ? 5.0f : ManualDestructionTime;
@@ -67,19 +67,21 @@ void ADetachedParticleActor::InitializeParticleActor(FVector SpawnLocation, UNia
 	if(!ParticleSystem)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Particlesystem was null when trying to attach to DetachedParticleActor"));
-		return;
+		return nullptr;
 	}
-	UNiagaraComponent* NewComp = NewObject<UNiagaraComponent>(this);
-	NewComp->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
-	NewComp->RegisterComponent();
-	NewComp->SetAsset(ParticleSystem);
-	NewComp->SetWorldLocation(SpawnLocation);
-	NewComp->Activate();
+	UNiagaraComponent* ParticleSystemComponent = NewObject<UNiagaraComponent>(this);
+	ParticleSystemComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	ParticleSystemComponent->RegisterComponent();
+	ParticleSystemComponent->SetAsset(ParticleSystem);
+	ParticleSystemComponent->SetWorldLocation(SpawnLocation);
+	ParticleSystemComponent->Activate();
 	//Vfx->Deactivate();
 
 	if(_FollowParent != nullptr)
 	{
 		FollowParent = _FollowParent;
 	}
+
+	return ParticleSystemComponent;
 }
 

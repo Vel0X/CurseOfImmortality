@@ -12,6 +12,8 @@ class CURSEOFIMMORTALITY_API ADestructibleObject : public AActor
 	GENERATED_BODY()
 
 public:
+	virtual void BeginPlay() override;
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void DisableObject();
 };

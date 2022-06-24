@@ -25,7 +25,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void InitializeAbility();
+	void InitializeTrap();
 	void CheckCollisions();
 
 	UFUNCTION(BlueprintImplementableEvent)

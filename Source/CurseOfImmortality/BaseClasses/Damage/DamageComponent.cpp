@@ -91,15 +91,33 @@ bool UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponent
 		return false;
 	}
 
-	auto DamageObject = DamagingHitboxes[DamageComponentOverlap];
-	bool Hit = DamageObject->DealDamage(HitCharacter);
-	if(Hit && BodyHitbox && DamageObject->HitVfx)
+
+	const auto DamageObject = DamagingHitboxes[DamageComponentOverlap];
+	const bool Hit = DamageObject->DealDamage(HitCharacter);
+
+	//if something was hit and the DamageObject has a HitVFX, then spawn the HitVFX
+	if(Hit && BodyHitbox)
 	{
 		const FVector SpawnLocation =BodyHitbox->GetComponentLocation();
+		FVector FountainAngle = SpawnLocation - DamageComponentOverlap->GetComponentLocation();
+		FountainAngle.Normalize();
+		
+		if(DamageObject->HitVfx)
+		{
+			const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+			const auto ParticleSystemComponent = DetachedParticleActor->InitializeParticleActor(SpawnLocation, DamageObject->HitVfx, nullptr, 0.8f);
+			ParticleSystemComponent->SetVectorParameter("user.fountainup", FountainAngle);
+		}
 
-		const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
-		DetachedParticleActor->InitializeParticleActor(SpawnLocation, DamageObject->HitVfx, nullptr, 0.8f);
+		if(HitCharacter->Blood)
+		{
+			const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+			const auto ParticleSystemComponent = DetachedParticleActor->InitializeParticleActor(SpawnLocation, HitCharacter->Blood, nullptr, 0.8f);
+			ParticleSystemComponent->SetVectorParameter("user.fountainup", FountainAngle);			
+		}
 	}
+
+
 	return Hit;
 }
 

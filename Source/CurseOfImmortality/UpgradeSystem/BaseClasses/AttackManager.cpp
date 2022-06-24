@@ -70,6 +70,12 @@ bool UAttackManager::CheckCooldown(const EAbilityType Ability)
 {
 	//const auto CD= ActiveAbilities[Ability].CurrentCooldown;
 	//UE_LOG(LogTemp, Warning, TEXT("cd %f"), CD);
+	if(!ActiveAbilities.Contains(Ability))
+		return false;
+
+	if(!ActiveAbilities[Ability].Specification)
+		return false;
+	
 	return ActiveAbilities[Ability].CurrentCooldown <= 0.0f;
 }
 
@@ -100,7 +106,7 @@ void UAttackManager::UpdateAbilityPool()
 		bool TypeFound = false; //does the player already have an ability of that type?
 		bool AbilityMaxed = false; //is the ability already present at it's max level?
 		int AbilityLevel = 0;
-		if(ActiveAbilities.Contains(PossibleAbility->AbilityType))
+		if(ActiveAbilities.Contains(PossibleAbility->AbilityType) && ActiveAbilities[PossibleAbility->AbilityType].Specification)
 		{
 			TypeFound = true;
 
@@ -419,6 +425,10 @@ void UAttackManager::GetUpgrade(const int Index)
 		for(const auto Tuple : ActiveAbilities)
 		{
 			const auto ActiveAbility = Tuple.Value;
+
+			if(!ActiveAbility.Specification)
+				continue;
+
 			if(ActiveAbility.Specification->AbilityName == Entry.Name)
 			{
 				if(ActiveAbility.Level >= ActiveAbility.Specification->MaxLevel)
@@ -442,13 +452,17 @@ void UAttackManager::GetUpgrade(const int Index)
 			{
 				UE_LOG(LogTemp, Error, TEXT("Ability Type was ill defined in Ability"));
 			}
-
 		}
 		else
 		{
 			if(PossibleUpgrades->PossibleBaseAbilities.Contains(Entry.Name))
 			{
-				ActiveAbilities.Add(PossibleUpgrades->PossibleBaseAbilities[Entry.Name]->AbilityType, FActiveAbility(PossibleUpgrades->PossibleBaseAbilities[Entry.Name], 1));
+				const auto Key = PossibleUpgrades->PossibleBaseAbilities[Entry.Name]->AbilityType;
+				const auto Ability = FActiveAbility(PossibleUpgrades->PossibleBaseAbilities[Entry.Name], 1);
+				if(ActiveAbilities.Contains(Key))
+					ActiveAbilities[Key] = Ability;
+				else
+					ActiveAbilities.Add(Key, Ability);
 			}
 			else
 			{

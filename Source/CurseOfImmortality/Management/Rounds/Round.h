@@ -62,6 +62,7 @@ public:
 	/**
 	 * Sum up the powerlevel of all the currently active powerlevel
 	 */
+	UFUNCTION(BlueprintCallable)
 	int CalculateRemainingPowerLevel();
 
 	UPROPERTY(EditAnywhere)

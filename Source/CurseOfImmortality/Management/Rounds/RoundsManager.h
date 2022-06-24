@@ -57,7 +57,7 @@ public:
 	 */
 	void OnEnemyDied(ABaseEnemyPawn* Enemy) const;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	URound* ActiveRound;
 
 	int CurrentRoundIndex = 0;

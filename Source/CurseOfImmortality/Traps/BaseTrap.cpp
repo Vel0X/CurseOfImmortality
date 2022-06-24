@@ -23,8 +23,8 @@ ABaseTrap::ABaseTrap()
 void ABaseTrap::BeginPlay()
 {
 	Super::BeginPlay();
-
-	InitializeAbility();
+	FPersistentWorldManager::Arena->Traps.Add(this);
+	InitializeTrap();
 }
 
 // Called every frame
@@ -35,7 +35,7 @@ void ABaseTrap::Tick(float DeltaTime)
 	CheckCollisions();
 }
 
-void ABaseTrap::InitializeAbility()
+void ABaseTrap::InitializeTrap()
 {
 	//get all the colliders and store them in an array
 	TArray<UActorComponent*> HBs;

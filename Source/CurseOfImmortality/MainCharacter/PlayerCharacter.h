@@ -40,6 +40,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnDeath() override;
 
+	UFUNCTION(BlueprintCallable)
+	int CalculateCurrentPowerLevel();
+
 	void RotateToClosestEnemy();
 
 	UFUNCTION(BlueprintCallable)

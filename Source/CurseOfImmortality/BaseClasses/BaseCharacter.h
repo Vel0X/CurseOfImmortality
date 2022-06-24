@@ -117,6 +117,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UBaseStatSpecification* BaseStats;
 
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* Blood;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TMap<TEnumAsByte<EStats>, float> Stats;
 

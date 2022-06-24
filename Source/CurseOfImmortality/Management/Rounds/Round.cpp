@@ -98,6 +98,15 @@ void URound::BeginRound()
 	RoundPowerLevel = CurrentPowerLevel;
 	SpawnsRemaining = true;
 	RoundOngoing = true;
+
+	if(Specification->ObstaclesEnabled)
+	{
+		
+	}
+	else
+	{
+		FPersistentWorldManager::Arena->DisableAllObstacles();
+	}
 	
 	if(FPersistentWorldManager::GetLogLevel(Round))
 	{
@@ -191,7 +200,7 @@ int URound::CalculateRemainingPowerLevel()
 	//sum all enemies that are valid and alive
 	for (const auto Enemy : ActiveEnemies)
 	{
-		if(Enemy != nullptr && !Enemy->Dead)
+		if(Enemy && !Enemy->Dead)
 		{
 			RemainingPowerLevel += Enemy->PowerLevel;
 		}

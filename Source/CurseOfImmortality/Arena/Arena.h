@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CurseOfImmortality/BaseClasses/DestructibleObject.h"
+#include "CurseOfImmortality/Traps/BaseTrap.h"
 #include "GameFramework/Actor.h"
 #include "Arena.generated.h"
 
@@ -16,6 +18,8 @@ public:
 	virtual void PostInitializeComponents() override;
 
 	virtual void BeginPlay() override;
+
+	void DisableAllObstacles();
 
 	USceneComponent* GetRandomGate() const;
 
@@ -39,4 +43,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	USceneComponent* PlayerSpawnPosition;
+
+	UPROPERTY(EditAnywhere)
+	TArray<ADestructibleObject*> DestructibleObjects;
+
+	UPROPERTY(EditAnywhere)
+	TArray<ABaseTrap*> Traps;
 };

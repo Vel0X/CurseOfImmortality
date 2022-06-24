@@ -2,10 +2,8 @@
 
 
 #include "PlayerCharacter.h"
-
 #include "PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
-#include "CurseOfImmortality/AI/Deprived/States/DeprivedFrenziedAttack.h"
 #include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/AttackManager.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
@@ -71,6 +69,28 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::OnDeath()
 {
 	Super::OnDeath();
+}
+
+int APlayerCharacter::CalculateCurrentPowerLevel()
+{
+	//Upgrade PowerLevel: 100 - 200 - 300
+	//Ability PowerLevel: 200 - 300 - 400
+	//Health as Multiplier
+
+	int PowerLevel = 0;
+	for (const auto Tuple : AttackManager->ActiveAbilities)
+	{
+		PowerLevel += Tuple.Value.Level == 0 ? 0 : 100 + (Tuple.Value.Level * 100);
+	}
+
+	for (const auto Tuple : AttackManager->ActiveUpgrades)
+	{
+		PowerLevel += Tuple.Value.Level * 100;
+	}
+
+	const float Percentage = CurrentHealth / Stats[Health];
+	PowerLevel = PowerLevel * Percentage;
+	return PowerLevel;
 }
 
 void APlayerCharacter::RotateToClosestEnemy()
