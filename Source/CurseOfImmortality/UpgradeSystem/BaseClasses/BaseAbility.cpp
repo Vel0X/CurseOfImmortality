@@ -129,6 +129,7 @@ void ABaseAbility::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	RemainingAbilityLifetime -= DeltaTime;
+
 	if (RemainingAbilityLifetime <= 0.0f)
 	{
 		DestroyAbility();
@@ -242,7 +243,14 @@ void ABaseAbility::DestroyAbility()
 	
 		}
 		*/
+	if(!GetWorld())
+	{
+		UE_LOG(LogTemp, Error, TEXT("wordl null????"));
+		return;
+	}
+
 	Destroy();
+
 }
 
 void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level, const UAbilitySpecification* Specification)
