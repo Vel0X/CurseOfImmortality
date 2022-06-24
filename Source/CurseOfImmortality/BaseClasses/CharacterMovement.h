@@ -28,9 +28,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetDirection(FVector MoveInput, float MoveSpeed, bool IgnoreWalls);
+	void SetDirection(FVector MoveInput, float MoveSpeed, bool IgnoreAllCol, bool IgnoreCharacters);
 
-	void MoveWithCorrection(FVector DirectionToMove, float DeltaTime, float Speed) const;
+	void MoveWithCorrection(FVector DirectionToMove, float DeltaTime, float Speed, bool IgnoreCharacters) const;
 
 	void SmoothRotation(FRotator Rotation, float Time);
 	
@@ -38,5 +38,6 @@ public:
 	bool DirectionSet;
 	float CurrentSpeed;
 	bool MoveWithoutCorrection = false;
+	bool MoveThroughCharacters = false;
 	bool Rotating = false;
 };

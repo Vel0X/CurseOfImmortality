@@ -14,7 +14,7 @@ class UUpgradeSpecification;
 class UAbilitySpecification;
 
 
-UCLASS()
+UCLASS(BlueprintType)
 class UDisplayInformation : public UObject
 {
 	GENERATED_BODY()

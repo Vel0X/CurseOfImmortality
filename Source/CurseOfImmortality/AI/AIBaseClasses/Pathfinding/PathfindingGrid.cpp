@@ -6,7 +6,7 @@
 #include <CurseOfImmortality/Management/PersistentWorldManager.h>
 
 
-APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(86, 65)
+APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(86, 65) //86 65
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -68,11 +68,11 @@ void APathfindingGrid::Tick(float DeltaSeconds)
 					{
 						Color = FColor(255, 255, 0, 80);
 					}
-					else if (GetValue(x, y).StaticHeat >= 6)
+					else if (GetValue(x, y).StaticHeat >= 6 || GetValue(x, y).DynamicHeat >= 6)
 					{
 						Color = FColor(128, 255, 0, 80);
 					}
-					else if (GetValue(x, y).StaticHeat >= 3)
+					else if (GetValue(x, y).StaticHeat >= 3 || GetValue(x, y).DynamicHeat >= 3)
 					{
 						Color = FColor(0, 255, 0, 80);
 					}
@@ -83,14 +83,7 @@ void APathfindingGrid::Tick(float DeltaSeconds)
 				}
 				else
 				{
-					if (GetValue(x, y).SpawnArea)
-					{
-						Color = FColor(0, 0, 255, 80);
-					}
-					else
-					{
-						Color = FColor(255, 0, 50, 80);
-					}
+					Color = FColor(255, 0, 50, 80);
 				}
 				DrawDebugSolidBox(GetWorld(), WorldPosition, FVector(CellSize * 0.5f, CellSize * 0.5f, 0.1f), Color,
 				                  false);
@@ -249,30 +242,64 @@ FPfNode* APathfindingGrid::GetRandomNodeInNavMesh()
 	return RandomNode;
 }
 
-void APathfindingGrid::GenerateDynamicHeatMap()
+void APathfindingGrid::GenerateDynamicHeatMap(float DeltaTime)
 {
-	for (int x = 0; x < Width; ++x)
+	if (Delay <= 0)
 	{
-		for (int y = 0; y < Height; ++y)
+		for (int x = 0; x < Width; ++x)
 		{
-			GetValue(x, y).DynamicHeat = 0.f;
-		}
-	}
-	TArray Enemies(FPersistentWorldManager::GetEnemies());
-
-	for (ABaseCharacter* Enemy : Enemies)
-	{
-		int X, Y;
-		if (GetCoordinatesFromWorldPosition(Enemy->GetActorLocation(), X, Y))
-		{
-			GetValue(X, Y).DynamicHeat += 25.f;
-			TArray Neighbors(GetNeighbors(X, Y));
-			for (FPfNode* Neighbor : Neighbors)
+			for (int y = 0; y < Height; ++y)
 			{
-				Neighbor->DynamicHeat += 5.f;
+				GetValue(x, y).DynamicHeat = 0.f;
+				// 	FVector WorldPosition;
+				// 	GetWorldPositionFromCoordinates(x, y, WorldPosition);
+				// 	bool Heat = false;
+				// 	for (int i = 0; i < Offsets.Num(); ++i)
+				// 	{
+				// 		FHitResult Hit;
+				// 		FVector OffsetWorldPosition = WorldPosition + Offsets[i];
+				// 		FVector StartPosition = OffsetWorldPosition + FVector(0, 0, 10000);
+				// 		FCollisionQueryParams CollisionQuery = FCollisionQueryParams();
+				// 		if (GetWorld()->
+				// 			LineTraceSingleByChannel(Hit, StartPosition, OffsetWorldPosition, ECC_GameTraceChannel9,
+				// 			                         CollisionQuery))
+				// 		{
+				// 			if (!Cast<APlayerCharacter>(Hit.GetActor()))
+				// 			{
+				// 			}
+				// 			Heat = true;
+				// 		}
+				// 	}
+				// 	if (Heat)
+				// 	{
+				// 		GetValue(x, y).DynamicHeat = 10.f;
+				// 		TArray Neighbors(GetNeighbors(x, y));
+				// 		for (FPfNode* Neighbor : Neighbors)
+				// 		{
+				// 			Neighbor->DynamicHeat = 5.f;
+				// 		}
+				// 	}
+				// }
+			}
+			TArray Enemies(FPersistentWorldManager::GetEnemies());
+
+			for (ABaseCharacter* Enemy : Enemies)
+			{
+				int X, Y;
+				if (GetCoordinatesFromWorldPosition(Enemy->GetActorLocation(), X, Y))
+				{
+					GetValue(X, Y).DynamicHeat = 10.f;
+					TArray Neighbors(GetNeighbors(X, Y));
+					for (FPfNode* Neighbor : Neighbors)
+					{
+						Neighbor->DynamicHeat = 5.f;
+					}
+				}
 			}
 		}
+		Delay = 0.5f;
 	}
+	Delay -= DeltaTime;
 }
 
 void APathfindingGrid::GenerateStaticHeatMap()
@@ -310,16 +337,17 @@ void APathfindingGrid::GenerateStaticHeatMap()
 void APathfindingGrid::GenerateNavmesh()
 {
 	TArray<FVector> Offsets;
-	const float Offset = CellSize / 2.5f;
+	const float QuarterCellSize = CellSize / 2.5f;
+
 	Offsets.Add(FVector::Zero());
-	Offsets.Add(FVector(Offset, 0, 0));
-	Offsets.Add(FVector(-Offset, 0, 0));
-	Offsets.Add(FVector(0, Offset, 0));
-	Offsets.Add(FVector(0, -Offset, 0));
-	Offsets.Add(FVector(Offset, Offset, 0));
-	Offsets.Add(FVector(-Offset, -Offset, 0));
-	Offsets.Add(FVector(Offset, -Offset, 0));
-	Offsets.Add(FVector(-Offset, Offset, 0));
+	Offsets.Add(FVector(QuarterCellSize, 0, 0));
+	Offsets.Add(FVector(-QuarterCellSize, 0, 0));
+	Offsets.Add(FVector(0, QuarterCellSize, 0));
+	Offsets.Add(FVector(0, -QuarterCellSize, 0));
+	Offsets.Add(FVector(QuarterCellSize, QuarterCellSize, 0));
+	Offsets.Add(FVector(-QuarterCellSize, -QuarterCellSize, 0));
+	Offsets.Add(FVector(QuarterCellSize, -QuarterCellSize, 0));
+	Offsets.Add(FVector(-QuarterCellSize, QuarterCellSize, 0));
 
 	for (int x = 0; x < Width; ++x)
 	{
@@ -329,6 +357,7 @@ void APathfindingGrid::GenerateNavmesh()
 			GetWorldPositionFromCoordinates(x, y, WorldPosition);
 			bool HitB = false;
 			bool Spawn = false;
+			bool Heat = false;
 			for (int i = 0; i < Offsets.Num(); ++i)
 			{
 				FHitResult Hit;
@@ -340,13 +369,19 @@ void APathfindingGrid::GenerateNavmesh()
 					                         CollisionQuery))
 				{
 					HitB = true;
+					break;
 				}
-			}
-			if (Spawn)
-			{
-				if (GetValue(x, y).SpawnArea)
+				if (GetWorld()->
+					LineTraceSingleByChannel(Hit, StartPosition, OffsetWorldPosition, ECC_GameTraceChannel7,
+					                         CollisionQuery))
 				{
-					ToggleSpawnArea(x, y);
+					Heat = true;
+				}
+				if (GetWorld()->
+					LineTraceSingleByChannel(Hit, StartPosition, OffsetWorldPosition, ECC_GameTraceChannel10,
+					                         CollisionQuery))
+				{
+					Spawn = true;
 				}
 			}
 			if (HitB)
@@ -354,6 +389,20 @@ void APathfindingGrid::GenerateNavmesh()
 				if (GetValue(x, y).IsWalkable)
 				{
 					ToggleWalkable(x, y);
+				}
+			}
+			if (Heat)
+			{
+				if (GetValue(x, y).IsWalkable)
+				{
+					GetValue(x, y).StaticHeat = 10.f;
+				}
+			}
+			if (Spawn)
+			{
+				if (GetValue(x, y).IsWalkable && !GetValue(x, y).SpawnArea)
+				{
+					ToggleSpawnArea(x, y);
 				}
 			}
 		}
@@ -416,7 +465,6 @@ bool APathfindingGrid::CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path, c
 			UE_LOG(LogTemp, Warning, TEXT("(%i|%i)"), Node->X, Node->Y);
 		}
 	}
-
 	return true;
 }
 

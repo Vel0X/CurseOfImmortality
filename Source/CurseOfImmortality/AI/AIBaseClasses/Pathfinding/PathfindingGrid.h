@@ -125,7 +125,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GenerateStaticHeatMap();
 	UFUNCTION(BlueprintCallable)
-	void GenerateDynamicHeatMap();
+	void GenerateDynamicHeatMap(float DeltaTime);
 
 	bool GetPath(int StartX, int StartY, int EndX, int EndY, TArray<FPfNode*>& Path, bool Verbose = false);
 	bool GetPathWorldSpace(FVector Start, FVector End, TArray<FVector>& WorldSpacePath, bool Verbose = false);
@@ -139,7 +139,8 @@ public:
 	static FPfNode* GetLowestCostNode(TArray<FPfNode*>& OpenList);
 
 	TArray<FVector> ConvertPathToWorldSpace(const TArray<FPfNode*>& Path, bool Verbose = false) const;
-
+	
+	float Delay;
 
 	UPROPERTY(EditAnywhere)
 	float CellSize = 100.0f;

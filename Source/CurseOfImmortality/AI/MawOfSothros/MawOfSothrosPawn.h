@@ -66,14 +66,14 @@ public:
 	UAbilitySpecification* TailSweepSpecification;
 
 	UPROPERTY(EditAnywhere)
-	float AttackCooldown = 2.f;
+	float AttackCooldown = 0.5f;
 	float CurrentAttackCooldown;
 
 	bool SpawnPuddle;
 	bool LaserOn;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool AnimationStart; 
+	bool AnimationStart;
 
 	//Stats
 	UPROPERTY(EditAnywhere, Category="ChargeAttack")

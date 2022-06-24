@@ -3,12 +3,8 @@
 
 #include "CurseOfImmortality/AI/Deprived/States/FindStartLocation.h"
 
-#include <filesystem>
-
-#include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
-#include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UFindStartLocation::OnStateEnter(UStateMachine* StateMachine)
@@ -87,7 +83,7 @@ void UFindStartLocation::OnStateUpdate(float DeltaTime)
 		{
 			Controller->Transition(Controller->Running, Controller);
 		}
-		if (FVector::Dist(OwnLocation, RandomLocation) < 50.f)
+		if (FVector::Dist(OwnLocation, RandomLocation) < 150.f)
 		{
 			Controller->Transition(Controller->Idle, Controller);
 		}

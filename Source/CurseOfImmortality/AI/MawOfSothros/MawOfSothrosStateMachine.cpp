@@ -4,6 +4,7 @@
 #include "CurseOfImmortality/AI/MawOfSothros/MawOfSothrosStateMachine.h"
 
 #include "MawOfSothrosPawn.h"
+#include "NiagaraComponent.h"
 #include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "States/MawOfSothrosBaseState.h"
@@ -17,8 +18,8 @@
 
 UMawOfSothrosStateMachine::UMawOfSothrosStateMachine()
 {
-	// RangedAttackTypes.Add(FAttackType(VomitState, 100));
-	// RangedAttackTypes.Add(FAttackType(ChargeAttackState, 100));
+	RangedAttackTypes.Add(FAttackType(VomitState, 100));
+	RangedAttackTypes.Add(FAttackType(ChargeAttackState, 100));
 	RangedAttackTypes.Add(FAttackType(LaserState, 100));
 
 	MeleeAttackTypes.Add(FAttackType(GroundSlamState, 100));
@@ -63,6 +64,11 @@ void UMawOfSothrosStateMachine::TickComponent(float DeltaTime, ELevelTick TickTy
 	{
 		CurrentState->OnStateUpdate(DeltaTime);
 	}
+	else
+	{
+		SelfRef->Beam->SetVisibility(false);
+		SelfRef->MawSmoke->Deactivate();
+	}
 }
 
 void UMawOfSothrosStateMachine::Move(float Speed) const
@@ -70,7 +76,7 @@ void UMawOfSothrosStateMachine::Move(float Speed) const
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Maw StateMachine")); }
 
 	const FVector MoveDir(SelfRef->GetActorForwardVector());
-	SelfRef->MovementComponent->SetDirection(MoveDir, Speed, false);
+	SelfRef->MovementComponent->SetDirection(MoveDir, Speed, false, false);
 }
 
 void UMawOfSothrosStateMachine::FocusOnPlayer(const float DeltaTime, const float Speed) const

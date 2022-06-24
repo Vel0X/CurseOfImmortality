@@ -61,35 +61,39 @@ void UInputManager::BeginPlay()
 void UInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
-	if(Player->PlayerAnim->Idle || Player->PlayerAnim->Melee || Player->PlayerAnim->Running)
+
+	if(!MoveLock)
 	{
-		if (MoveX != 0 && LastAction == InputAction::NoAction || MoveY != 0 && LastAction == InputAction::NoAction)
+		if(Player->PlayerAnim->Idle || Player->PlayerAnim->Melee || Player->PlayerAnim->Running)
 		{
-			LastAction = InputAction::Running;
-			Move();
-			Stopped = false;
-		} else
-		{
-			if (MoveX != 0 || MoveY != 0)
+			if (MoveX != 0 && LastAction == InputAction::NoAction || MoveY != 0 && LastAction == InputAction::NoAction)
 			{
+				LastAction = InputAction::Running;
 				Move();
 				Stopped = false;
 			} else
 			{
-				//To stop only once unless reset
-				if(!Stopped)
+				if (MoveX != 0 || MoveY != 0)
 				{
-					if(MoveX == 0 && MoveY == 0)
+					Move();
+					Stopped = false;
+				} else
+				{
+					//To stop only once unless reset
+					if(!Stopped)
 					{
-						Move();
-						Stopped = true;
-						LastAction = InputAction::NoAction;
+						if(MoveX == 0 && MoveY == 0)
+						{
+							Move();
+							Stopped = true;
+							LastAction = InputAction::NoAction;
+						}
 					}
 				}
 			}
 		}
 	}
+	
 	
 	if (Player->CurrentDashCooldown > 0)
 	{
@@ -192,12 +196,12 @@ void UInputManager::Move()
 				GetOwner()->SetActorRotation(MoveInput.Rotation());
 				MoveInput = GetOwner()->GetActorForwardVector();
 				MovementComponent->SetDirection(MoveInput, Player->
-						MovementSpeedWhileAttacking, false);
+						MovementSpeedWhileAttacking, false, false);
 			}
 		
 		}else
 		{
-			MovementComponent->SetDirection(MoveInput, Player->Stats[Movespeed], false);
+			MovementComponent->SetDirection(MoveInput, Player->Stats[Movespeed], false, false);
 		}
 	}
 }
@@ -250,7 +254,11 @@ void UInputManager::DoAction(InputAction _InputAction)
 	    {
 	    	if(Player->PlayerAnim->AnimationFinished)
 	    	{
+	    		MoveLock = true;
+	    		Player->MovementComponent->DirectionSet = false;
+	    		Player->MovementComponent->Rotating = false;
 	    		Player->RotateToClosestEnemy();
+	    		
 	    		LastAction = InputAction::RangedAbility;
 	    		//Player->AttackManager->OnKeyPressed(Ranged, Player->SkeletalMesh->GetSocketLocation("LeftHandSocket"));
 	    		//UE_LOG(LogTemp, Display, TEXT("Used Ranged"));

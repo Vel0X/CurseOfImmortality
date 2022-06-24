@@ -12,8 +12,8 @@ UCLASS()
 class CURSEOFIMMORTALITY_API ABaseTrap : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ABaseTrap();
 
@@ -21,19 +21,22 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	void InitializeAbility();
 	void CheckCollisions();
-	
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void DisableTrap();
+
 	UPROPERTY()
 	ABaseCharacter* Test;
-	
+
 	UFUNCTION(BlueprintCallable)
 	void FireProjectile(FVector SpawnLocation, FRotator SpawnRotation);
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UDamageComponent* DamageComponent;
 

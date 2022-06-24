@@ -28,6 +28,7 @@ void UPlayerCharacterRanged::OnStateEnter(UStateMachine* StateMachine)
 void UPlayerCharacterRanged::OnStateExit()
 {
 	Super::OnStateExit();
+	SelfRef->InputManager->MoveLock = false;
 	SelfRef->PlayerAnim->Ranged = false;
 	if (Verbose)
 	{
