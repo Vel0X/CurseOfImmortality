@@ -26,13 +26,14 @@ AArena::AArena()
 	LargeGate->SetupAttachment(RootComponent);
 	PlayerSpawnPosition = CreateDefaultSubobject<USceneComponent>("PlayerSpawnPosition");
 	PlayerSpawnPosition->SetupAttachment(RootComponent);
+	MawSpawnPosition = CreateDefaultSubobject<USceneComponent>("MawSpawnPosition");
+	MawSpawnPosition->SetupAttachment(RootComponent);
 }
 
 void AArena::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	FPersistentWorldManager::Arena = this;
-
 }
 
 void AArena::BeginPlay()
@@ -56,7 +57,7 @@ void AArena::DisableAllObstacles()
 //maybe use an array for gates, but might be tricky, since the gates are components
 USceneComponent* AArena::GetRandomGate() const
 {
-	switch (FMath::RandRange(0,4))
+	switch (FMath::RandRange(0, 4))
 	{
 	case 0:
 		return Gate1;
@@ -73,4 +74,3 @@ USceneComponent* AArena::GetRandomGate() const
 
 	return nullptr;
 }
-

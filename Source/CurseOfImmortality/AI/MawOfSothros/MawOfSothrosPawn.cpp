@@ -104,6 +104,16 @@ void AMawOfSothrosPawn::ToggleHeadDamage()
 	DamageComponent->ResetAllHitCharacters();
 }
 
+bool AMawOfSothrosPawn::GetSpawnPosition(FVector& Position, FRotator& Rotation)
+{
+	USceneComponent* Gate = FPersistentWorldManager::Arena->MawSpawnPosition;
+	Position = Gate->GetComponentLocation();
+	Rotation = Gate->GetComponentRotation();
+	SetActorLocation(Position);
+	SetActorRotation(Rotation);
+	return true;
+}
+
 void AMawOfSothrosPawn::TriggerMawSlam(FName SocketName)
 {
 	const FVector SpawnLocation = Mesh->GetSocketLocation(SocketName);
