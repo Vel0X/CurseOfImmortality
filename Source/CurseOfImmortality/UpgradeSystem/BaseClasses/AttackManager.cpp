@@ -566,6 +566,10 @@ void UAttackManager::SpawnFromTemplate(ABaseAbility* Template) const
 
 void UAttackManager::SpawnFromTemplate(ABaseAbility* Template,const FVector Position, const FRotator Rotator) const
 {
+	if(Template->IsPendingKillPending() || !IsValid(Template))
+	{
+		return;
+	}
 	//const FVector Location = FVector::Zero();
 	FActorSpawnParameters Parameters = FActorSpawnParameters();
 	Parameters.Template = Template;

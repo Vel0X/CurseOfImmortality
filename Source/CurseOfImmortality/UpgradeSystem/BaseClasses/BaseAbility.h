@@ -51,7 +51,7 @@ public:
 	float RelativeSize = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int AbilityLevel = 1;
-
+	
 	int AbilityHandle = -1;
 
 	UPROPERTY(EditAnywhere)

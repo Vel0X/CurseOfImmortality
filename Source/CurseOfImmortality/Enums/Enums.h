@@ -102,7 +102,8 @@ enum EUpgradeName
 	LavaCrack,
 	TailSweep,
 	TrailExplosion,
-	TrapProjectile
+	TrapProjectile,
+	InuProjectile
 };
 
 UENUM()
