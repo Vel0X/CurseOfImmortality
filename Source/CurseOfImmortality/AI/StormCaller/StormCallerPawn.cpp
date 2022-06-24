@@ -4,7 +4,6 @@
 #include "CurseOfImmortality/AI/StormCaller/StormCallerPawn.h"
 
 #include "StormCallerStateMachine.h"
-#include "Components/CapsuleComponent.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/RandomAOEAbility.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 

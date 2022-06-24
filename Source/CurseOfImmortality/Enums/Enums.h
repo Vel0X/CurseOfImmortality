@@ -126,6 +126,8 @@ enum ELog
 	PlayerStateMachine,
 	MawStateMachine,
 	DeprivedStateMachine,
+	StormCallerStateMachine,
+	InuStateMachine,
 	DamageComponent,
 	Buff
 };

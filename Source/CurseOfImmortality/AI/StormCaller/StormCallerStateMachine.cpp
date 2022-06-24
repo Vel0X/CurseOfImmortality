@@ -5,15 +5,9 @@
 
 #include "StormCallerPawn.h"
 #include "Kismet/GameplayStatics.h"
-#include "Components/CapsuleComponent.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "States/StormCallerAttack.h"
 #include "States/StormCallerIdle.h"
-
-UStormCallerStateMachine::UStormCallerStateMachine()
-{
-}
-
 void UStormCallerStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
                                              FActorComponentTickFunction* ThisTickFunction)
 {
@@ -28,7 +22,6 @@ void UStormCallerStateMachine::TickComponent(float DeltaTime, ELevelTick TickTyp
 	if (!SelfRef->Dead)
 	{
 		CurrentState->OnStateUpdate(DeltaTime);
-		FocusOnPlayer(DeltaTime);
 		SelfRef->CurrentAttackCoolDown -= DeltaTime;
 	}
 }

@@ -68,10 +68,6 @@ public:
 
 	//Base Stats
 	UPROPERTY(EditDefaultsOnly, Category="Base Stats")
-	float DamageJumpAttack = 50.f;
-	UPROPERTY(EditDefaultsOnly, Category="Base Stats")
-	float DamageFrenziedAttack = 10.f;
-	UPROPERTY(EditDefaultsOnly, Category="Base Stats")
 	float FrenziedAttackCoolDown = 10.f;
 	float CurrentFrenziedAttackCoolDown;
 	
@@ -81,15 +77,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Jump Attack")
 	float DistJumpAttack = 800.f;
 	UPROPERTY(EditDefaultsOnly, Category="Jump Attack")
-	float DistAfterPlayer = 200.f;
-	UPROPERTY(EditDefaultsOnly, Category="Jump Attack")
-	float PlayerForwardVector = 300.f;
-	UPROPERTY(EditDefaultsOnly, Category="Jump Attack")
 	float JumpAttackCoolDown = 5.f;
 	float CurrentJumpAttackCoolDown;
 
 	//Cool Downs and Durations
-	UPROPERTY(EditDefaultsOnly, Category="time")
+	UPROPERTY(EditDefaultsOnly, Category="Time")
 	float RecoverDuration = 2.f;
 	float CurrentRecoverDuration;
 

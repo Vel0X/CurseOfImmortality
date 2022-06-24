@@ -6,6 +6,7 @@
 #include "CurseOfImmortality/AI/AIBaseClasses/RandomAOEAbility.h"
 #include "CurseOfImmortality/AI/StormCaller/StormCallerPawn.h"
 #include "CurseOfImmortality/AI/StormCaller/StormCallerStateMachine.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UStormCallerAttack::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -18,7 +19,8 @@ void UStormCallerAttack::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef->CurrentAttackCoolDown = FMath::FRandRange(0.f, SelfRef->AttackCoolDown);
 
 	SelfRef->Attack = true;
-	if (Verbose)
+
+	if (FPersistentWorldManager::GetLogLevel(StormCallerStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Attack State Entered"))
 	}

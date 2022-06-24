@@ -4,6 +4,7 @@
 #include "CurseOfImmortality/AI/StormCaller/States/StormCallerIdle.h"
 #include "CurseOfImmortality/AI/StormCaller/StormCallerPawn.h"
 #include "CurseOfImmortality/AI/StormCaller/StormCallerStateMachine.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UStormCallerIdle::OnStateEnter(UStateMachine* StateMachine)
 {
@@ -14,7 +15,7 @@ void UStormCallerIdle::OnStateEnter(UStateMachine* StateMachine)
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->Idle = true;
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(StormCallerStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Idle State Entered"))
 	}
@@ -24,7 +25,7 @@ void UStormCallerIdle::OnStateExit()
 {
 	Super::OnStateExit();
 	SelfRef->Idle = false;
-	if (Verbose)
+	if (FPersistentWorldManager::GetLogLevel(StormCallerStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Exit Idle State"))
 	}
@@ -33,7 +34,7 @@ void UStormCallerIdle::OnStateExit()
 void UStormCallerIdle::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
-	
+
 	const FVector PlayerLocation = Player->GetActorLocation();
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->AwakeRange)

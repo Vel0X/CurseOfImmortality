@@ -17,8 +17,6 @@ class CURSEOFIMMORTALITY_API UStormCallerStateMachine : public UStateMachine
 	GENERATED_BODY()
 
 public:
-	UStormCallerStateMachine();
-
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 

@@ -26,7 +26,7 @@ public:
 		return Enemies;
 	}
 
-	
+
 	static TArray<ABaseCharacter*> GetFriendly()
 	{
 		return Friendly;
@@ -91,7 +91,7 @@ public:
 			return ReturnIfControlflagsContains("music");
 		default: ;
 		}
-			
+
 		return false;
 	}
 
@@ -122,6 +122,12 @@ public:
 
 		case DeprivedStateMachine:
 			return ReturnIfContains("deprived");
+
+		case StormCallerStateMachine:
+			return ReturnIfContains("stormcallerstatemachine");
+
+		case InuStateMachine:
+			return ReturnIfContains("inustatemachine");
 			
 		case Buff:
 			return ReturnIfContains("buff");

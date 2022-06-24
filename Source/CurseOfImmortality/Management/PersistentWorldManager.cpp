@@ -16,7 +16,9 @@ TMap<FString, bool> FPersistentWorldManager::Logs = {
 	{"playerstatemachine", false},
 	{"mawstatemachine", false},
 	{"damagecomponent", false},
-	{"deprived", false},
+	{"deprivedstatemachine", false},
+	{"stormcallerstatemachine", false},
+	{"inustatemachine", false},
 	{"buff", false}
 };
 
