@@ -61,7 +61,7 @@ void UTrapManagerCopmonent::ChooseRandomDowngrade()
 		switch (rnd)
 		{
 		case 1:
-			if(arrowLvl < 3)
+			if(arrowLvl < 0)
 			{
 				arrowLvl++;
 				UpgradeTrapsOfType(ETrapTypes::Arrows);
@@ -69,7 +69,7 @@ void UTrapManagerCopmonent::ChooseRandomDowngrade()
 			} 			
 			break;
 		case 2:
-			if(spikesLvl < 3)
+			if(spikesLvl < 0)
 			{
 				spikesLvl++;
 				UpgradeTrapsOfType(ETrapTypes::Spikes);
@@ -77,7 +77,7 @@ void UTrapManagerCopmonent::ChooseRandomDowngrade()
 			}
 			break;
 		case 3:
-			if(sawLvl < 3)
+			if(sawLvl < 0)
 			{
 				sawLvl++;
 				UpgradeTrapsOfType(ETrapTypes::Saws);
@@ -85,7 +85,7 @@ void UTrapManagerCopmonent::ChooseRandomDowngrade()
 			}
 			break;
 		case 4:
-			if(turretLvl < 3)
+			if(turretLvl < 0)
 			{
 				turretLvl++;
 				UpgradeTrapsOfType(ETrapTypes::Turrets);
