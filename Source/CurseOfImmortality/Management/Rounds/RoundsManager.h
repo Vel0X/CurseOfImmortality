@@ -36,7 +36,7 @@ public:
 	
 	/**
 	 * Tick the ActiveRound and check wether its over or not. If it is and AutomaticRoundIncrement is active, try to start the next round
-	 */
+	 */	
 	virtual void Tick(float DeltaTime) override;
 
 	/**
