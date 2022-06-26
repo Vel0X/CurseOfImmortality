@@ -21,7 +21,7 @@ void UTrapComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TrapIsActive = true;
+	TrapIsActive = false;
 	
 }
 
@@ -39,10 +39,13 @@ void UTrapComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		{
 			if(FPersistentWorldManager::TrapManager != nullptr)
 			{
-				UE_LOG(LogTemp, Display, TEXT("No Trapmanager"));
-				FPersistentWorldManager::TrapManager -> ActivateTrapsOfType.AddDynamic(this, &UTrapComponent::CheckActivation);
+				UE_LOG(LogTemp, Display, TEXT("worked"));
+				FPersistentWorldManager::TrapManager -> UpgradeTraptype.AddDynamic(this, &UTrapComponent::CheckActivation);
 				FPersistentWorldManager::TrapManager -> DeactivateTrapsOfType.AddDynamic(this, &UTrapComponent::CheckDeactivation);
 				TimerDone = true;
+			} else
+			{
+				UE_LOG(LogTemp, Display, TEXT("Failed Trap"));
 			}
 		}	
 	}
@@ -50,8 +53,10 @@ void UTrapComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 void UTrapComponent::CheckActivation(TEnumAsByte<ETrapTypes> OtherTrapType, int prio)
 {
-	if(OtherTrapType == TrapType && prio <= Prio || OtherTrapType == ETrapTypes::All )
+	UE_LOG(LogTemp, Display, TEXT("Check Trap"));
+	if(OtherTrapType == TrapType && prio >= Prio || OtherTrapType == ETrapTypes::All )
 	{
+		UE_LOG(LogTemp, Display, TEXT("Activate Trap"));
 		TrapIsActive = true;
 	}
 }

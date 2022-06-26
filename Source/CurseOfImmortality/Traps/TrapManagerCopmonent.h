@@ -25,10 +25,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	int spikesLvl;
-	int arrowLvl;
-	int turretLvl;
-	int sawLvl;
+
 
 public:	
 	// Called every frame
@@ -41,5 +38,8 @@ public:
 	void ChooseRandomDowngrade();
 	int GetLvl(TEnumAsByte<ETrapTypes> Type);
 	
-		
+	int spikesLvl;
+	int arrowLvl;
+	int turretLvl;
+	int sawLvl;
 };

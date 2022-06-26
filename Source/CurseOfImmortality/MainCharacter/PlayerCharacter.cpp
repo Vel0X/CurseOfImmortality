@@ -69,6 +69,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::OnDeath()
 {
 	Super::OnDeath();
+	FPersistentWorldManager::GameMode->ShowDeathScreen();
 }
 
 int APlayerCharacter::CalculateCurrentPowerLevel()
@@ -96,16 +97,18 @@ int APlayerCharacter::CalculateCurrentPowerLevel()
 void APlayerCharacter::RotateToClosestEnemy()
 {
 	TArray<ABaseCharacter*> AllEnemies = FPersistentWorldManager::GetEnemies();
-	float ClosestDistance = 1200.0f;
+	float ClosestDistance = 17000.0f;
 	float MaxDistance = 1200.0f;
 	ABaseCharacter* ClosestActor = this;
 	for (ABaseCharacter* Enemy : AllEnemies)
 	{
 		float DotProduct = FVector::DotProduct(GetActorForwardVector(), (Enemy->GetActorLocation() - GetActorLocation()).GetSafeNormal());
 		float Angle = FMath::RadiansToDegrees(UKismetMathLibrary::Acos(DotProduct));
-		if (Angle < 125 && Angle > -125 && MaxDistance > (GetActorLocation() - Enemy->GetActorLocation()).Length())
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *Enemy->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("%f"), ((Angle * 100)/125) * ((((Enemy->GetActorLocation() - GetActorLocation()).Length() * 100) / MaxDistance)*1.7) );
+		if (Angle < 125 && Angle > -125 && MaxDistance > (Enemy->GetActorLocation() - GetActorLocation()).Length())
 		{
-			if (Angle < ClosestDistance)
+			if (((Angle * 100)/125) * ((((Enemy->GetActorLocation() - GetActorLocation()).Length() * 100) / MaxDistance)*1.7) < ClosestDistance)
 			{
 				FHitResult HResult;
 				FCollisionQueryParams Params;
@@ -114,25 +117,10 @@ void APlayerCharacter::RotateToClosestEnemy()
 														  Enemy->CenterAttachmentPoint->GetComponentLocation(), ECollisionChannel::ECC_Visibility,
 														  Params, FCollisionResponseParams()))
 				{
-					ClosestDistance = Angle;
+					ClosestDistance = ((Angle * 100)/125) * ((((Enemy->GetActorLocation() - GetActorLocation()).Length() * 100) / MaxDistance)*1.7);
 					ClosestActor = Enemy;
 				}
 			}
-			/*if ((UKismetMathLibrary::Sin(Angle) * (GetActorLocation() - Enemy->GetActorLocation()).Length()) <
-				ClosestDistance)
-			{
-				FHitResult HResult;
-				FCollisionQueryParams Params;
-				Params.AddIgnoredActor(GetOwner());
-				if (!GetWorld()->LineTraceSingleByChannel(HResult, CenterAttachmentPoint->GetComponentLocation(),
-				                                          Enemy->CenterAttachmentPoint->GetComponentLocation(), ECollisionChannel::ECC_Visibility,
-				                                          Params, FCollisionResponseParams()))
-				{
-					ClosestDistance = UKismetMathLibrary::Sin(Angle) * (GetActorLocation() - Enemy->GetActorLocation()).
-						Length();
-					ClosestActor = Enemy;
-				}
-			}*/
 		}
 	}
 	if (ClosestActor != this)

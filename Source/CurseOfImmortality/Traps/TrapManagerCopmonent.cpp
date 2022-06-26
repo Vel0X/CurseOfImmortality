@@ -57,37 +57,36 @@ void UTrapManagerCopmonent::ChooseRandomDowngrade()
 	for (int i = 0; i < 1000; i++)
 	{
 		int rnd = FMath::RandRange(1,4);
-
 		switch (rnd)
 		{
 		case 1:
-			if(arrowLvl < 0)
+			if(this->arrowLvl < 1)
 			{
-				arrowLvl++;
+				this->arrowLvl++;
 				UpgradeTrapsOfType(ETrapTypes::Arrows);
 				return;
 			} 			
 			break;
 		case 2:
-			if(spikesLvl < 0)
+			if(this->spikesLvl < 1)
 			{
-				spikesLvl++;
+				this->spikesLvl++;
 				UpgradeTrapsOfType(ETrapTypes::Spikes);
 				return;
 			}
 			break;
 		case 3:
-			if(sawLvl < 0)
+			if(this->sawLvl < 1)
 			{
-				sawLvl++;
+				this->sawLvl++;
 				UpgradeTrapsOfType(ETrapTypes::Saws);
 				return;
 			}
 			break;
 		case 4:
-			if(turretLvl < 0)
+			if(this->turretLvl < 1)
 			{
-				turretLvl++;
+				this->turretLvl++;
 				UpgradeTrapsOfType(ETrapTypes::Turrets);
 				return;
 			}

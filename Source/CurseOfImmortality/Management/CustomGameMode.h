@@ -27,6 +27,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowUpgradeMenu();
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowDeathScreen();
 
 /////////////////////////////////////////////////////////////////////
 ///-------------------WORLD MANAGER INTERFACE---------------------///

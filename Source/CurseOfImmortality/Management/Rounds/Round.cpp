@@ -183,6 +183,7 @@ void URound::EndRound()
 	const FVector L = FPersistentWorldManager::Arena->PlayerSpawnPosition->GetComponentLocation();
 	const auto Player = FPersistentWorldManager::PlayerCharacter;
 	Player->SetActorLocation(L);
+	FPersistentWorldManager::TrapManager ->ChooseRandomDowngrade();
 	Player->Heal(50.0f);
 }
 

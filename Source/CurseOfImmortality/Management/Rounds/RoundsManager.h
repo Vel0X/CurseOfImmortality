@@ -32,6 +32,7 @@ protected:
 
 public:
 
+    UFUNCTION(BlueprintCallable)
 	void Restart();
 	
 	/**
