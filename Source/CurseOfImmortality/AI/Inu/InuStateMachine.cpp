@@ -4,6 +4,7 @@
 #include "CurseOfImmortality/AI/Inu/InuStateMachine.h"
 
 #include "InuPawn.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "States/InuFindStartLocation.h"

@@ -3,27 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DeprivedBaseState.h"
-#include "FindStartLocation.generated.h"
+#include "CurseOfImmortality/AI/Moloch/States/MolochBaseState.h"
+#include "MolochWalking.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API UFindStartLocation : public UDeprivedBaseState
+class CURSEOFIMMORTALITY_API UMolochWalking : public UMolochBaseState
 {
 	GENERATED_BODY()
 
-public:
 	virtual void OnStateEnter(UStateMachine* StateMachine) override;
-
 	virtual void OnStateExit() override;
-
 	virtual void OnStateUpdate(float DeltaTime) override;
-	
-private:
+
 	TArray<FVector> Path;
-	FVector RandomLocation;
+
 	int PathIndex = 0;
-	float PathfindingTimer;
+	float PathfindingTimer = 0.f;
 };

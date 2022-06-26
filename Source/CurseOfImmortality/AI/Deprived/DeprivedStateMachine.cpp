@@ -8,6 +8,7 @@
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/State.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "States/DeprivedHitPlayer.h"
 #include "States/DeprivedIdle.h"
 #include "States/DeprivedJumpAttack.h"
@@ -50,6 +51,25 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	}
 	SelfRef->CurrentJumpAttackCoolDown -= DeltaTime;
 	SelfRef->CurrentFrenziedAttackCoolDown -= DeltaTime;
+}
+
+void UDeprivedStateMachine::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//Initialise References
+	SelfRef = Cast<ADeprivedPawn>(GetOwner());
+
+	//Initialise States
+	Idle = NewObject<UDeprivedIdle>();
+	Running = NewObject<UDeprivedRunning>();
+	JumpAttack = NewObject<UDeprivedJumpAttack>();
+	HitPlayer = NewObject<UDeprivedHitPlayer>();
+	Recover = NewObject<UDeprivedRecover>();
+	NormalAttack = NewObject<UDeprivedNormalAttack>();
+	FrenziedAttack = NewObject<UDeprivedFrenziedAttack>();
+	Feast = NewObject<UDeprivedFeast>();
+	FindStartLocation = NewObject<UFindStartLocation>();
 }
 
 TArray<FHitResult> UDeprivedStateMachine::GetHitsInLine(FVector Target) const
@@ -117,7 +137,7 @@ void UDeprivedStateMachine::FindPathToPlayer(TArray<FVector>& Path) const
 	if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, false))
 	{
 		Path.Empty();
-		UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
+		// UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
 	}
 }
 
@@ -135,12 +155,12 @@ void UDeprivedStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& Rando
 		if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), RandomLocation, Path, false))
 		{
 			Path.Empty();
-			UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
+			// UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Node is not Walkable"));
+		// UE_LOG(LogTemp, Error, TEXT("Node is not Walkable"));
 		Path.Empty();
 	}
 }
@@ -160,25 +180,6 @@ bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, in
 	}
 
 	return false;
-}
-
-void UDeprivedStateMachine::BeginPlay()
-{
-	Super::BeginPlay();
-
-	//Initialise References
-	SelfRef = Cast<ADeprivedPawn>(GetOwner());
-
-	//Initialise States
-	Idle = NewObject<UDeprivedIdle>();
-	Running = NewObject<UDeprivedRunning>();
-	JumpAttack = NewObject<UDeprivedJumpAttack>();
-	HitPlayer = NewObject<UDeprivedHitPlayer>();
-	Recover = NewObject<UDeprivedRecover>();
-	NormalAttack = NewObject<UDeprivedNormalAttack>();
-	FrenziedAttack = NewObject<UDeprivedFrenziedAttack>();
-	Feast = NewObject<UDeprivedFeast>();
-	FindStartLocation = NewObject<UFindStartLocation>();
 }
 
 void UDeprivedStateMachine::MoveToTarget(FVector Target, const float MovementSpeed, const float DeltaTime,
@@ -229,17 +230,4 @@ APlayerCharacter* UDeprivedStateMachine::GetPlayer() const
 		UE_LOG(LogTemp, Error, TEXT("No Player in Deprived StateMachine"))
 	}
 	return Player;
-}
-
-float UDeprivedStateMachine::CalculateAngleBetweenVectors(FVector VectorOne, FVector VectorTwo) const
-{
-	VectorOne.Normalize();
-	VectorTwo.Normalize();
-
-	const float DotProduct = FVector::DotProduct(VectorOne, VectorTwo);
-
-	const float Angle = FMath::Acos(DotProduct);
-	float AngleInDegree = FMath::RadiansToDegrees(Angle);
-
-	return AngleInDegree;
 }

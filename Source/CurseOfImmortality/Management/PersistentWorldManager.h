@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "CustomGameMode.h"
 #include "ObjectFactory.h"
-#include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/Arena/Arena.h"
 #include "CurseOfImmortality/BaseClasses/SoundManager.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
@@ -126,6 +125,9 @@ public:
 		case StormCallerStateMachine:
 			return ReturnIfContains("stormcallerstatemachine");
 
+		case MolochStateMachine:
+			return ReturnIfContains("molochstatemachine");
+			
 		case InuStateMachine:
 			return ReturnIfContains("inustatemachine");
 			

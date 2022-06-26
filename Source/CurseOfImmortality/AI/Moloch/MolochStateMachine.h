@@ -4,68 +4,58 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/StateMachine.h"
-#include "DeprivedStateMachine.generated.h"
+#include "MolochStateMachine.generated.h"
 
+class AMolochPawn;
 class APlayerCharacter;
-class ADeprivedPawn;
-class UDeprivedRunning;
-class UDeprivedIdle;
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API UDeprivedStateMachine : public UStateMachine
+class CURSEOFIMMORTALITY_API UMolochStateMachine : public UStateMachine
 {
 	GENERATED_BODY()
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
+							   FActorComponentTickFunction* ThisTickFunction) override;
 
 	TArray<FHitResult> GetHitsInLine(FVector Target) const;
 	bool CheckLineOfSight(FVector Target) const;
 	void FindPathToPlayer(TArray<FVector>& Path) const;
 	void FindRandomPath(TArray<FVector>& Path, FVector& RandomLocation) const;
-	bool FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed = 360.f,
-	                float CurveValue = 1.f) const;
+	bool FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed = 90.f,
+					float CurveValue = 1.f) const;
 
 	void MoveToTarget(const FVector Target, const float MovementSpeed, const float DeltaTime,
-	                  const float RotationSpeed = 360.f) const;
+					  const float RotationSpeed = 90.f) const;
 
-	void FocusOnLocation(FVector Location, float DeltaTime, float RotationSpeed = 180.f) const;
+	void FocusOnLocation(FVector Location, float DeltaTime, float RotationSpeed = 90.f) const;
 
 	//States
 	UPROPERTY()
 	UState* Idle;
 	UPROPERTY()
-	UState* Running;
+	UState* Walking;
 	UPROPERTY(BlueprintReadOnly)
-	UState* JumpAttack;
+	UState* ChargeAttack;
 	UPROPERTY()
-	UState* Recover;
+	UState* NormalAttack;
 	UPROPERTY()
 	UState* HitPlayer;
 	UPROPERTY(BlueprintReadOnly)
-	UState* NormalAttack;
+	UState* HitWall;
 	UPROPERTY(BlueprintReadOnly)
-	UState* FrenziedAttack;
-	UPROPERTY()
 	UState* FindStartLocation;
-	UPROPERTY()
-	UState* Feast;
-
-	bool StateChanged;
-
-	FVector LastLocation;
 
 	//Getter
-	ADeprivedPawn* GetSelfRef() const;
+	AMolochPawn* GetSelfRef() const;
 	APlayerCharacter* GetPlayer() const;
 
 protected:
 	virtual void BeginPlay() override; 
 	//References
 	UPROPERTY()
-	ADeprivedPawn* SelfRef;
+	AMolochPawn* SelfRef;
 	UPROPERTY()
 	APlayerCharacter* Player;
 
