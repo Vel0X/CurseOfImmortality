@@ -43,6 +43,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int CalculateCurrentPowerLevel();
 
+	void Respawn();
+	
 	void RotateToClosestEnemy();
 
 	UFUNCTION(BlueprintCallable)

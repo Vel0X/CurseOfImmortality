@@ -24,6 +24,12 @@ ADeprivedPawn::ADeprivedPawn()
 	AttackSphereRight = CreateDefaultSubobject<USphereComponent>("AttackSphereRight");
 	AttackSphereRight->SetupAttachment(Mesh, "RightHandSocket");
 
+	HandGlowLeft = CreateDefaultSubobject<UNiagaraComponent>("HandGlowLeft");
+	HandGlowLeft->SetupAttachment(Mesh, "LeftHandSocket");
+
+	HandGlowRight = CreateDefaultSubobject<UNiagaraComponent>("HandGlowRight");
+	HandGlowRight->SetupAttachment(Mesh, "RightHandSocket");
+	
 	StateMachine = CreateDefaultSubobject<UDeprivedStateMachine>("StateMachine");
 	
 	CurrentRecoverDuration = RecoverDuration;
