@@ -146,7 +146,6 @@ void URound::RoundTick(float DeltaTime)
 		StageTime = 0.0f;
 
 		SpawnEnemies();
-		FPersistentWorldManager::Arena
 		if(CurrentStage >= Specification->Stages)
 		{
 			//end the Round
