@@ -31,7 +31,13 @@ public:
 	bool HitPlayer = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool HitWall = false;
-
+	UPROPERTY(BlueprintReadWrite)
+	bool Stomping = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool Kick = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool PrepareCharge = false;
+	
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -46,4 +52,10 @@ public:
 	//Ranges
 	UPROPERTY(EditAnywhere)
 	float TriggerRange = 1000.f;
+	UPROPERTY(EditAnywhere)
+	float ChargeRange = 500.f;
+	UPROPERTY(EditAnywhere)
+	float AttackRange = 100.f;
+
+	bool AnimationEnd;
 };

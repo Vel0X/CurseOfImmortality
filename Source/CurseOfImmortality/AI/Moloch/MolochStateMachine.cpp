@@ -13,6 +13,7 @@
 #include "States/MolochHitWall.h"
 #include "States/MolochIdle.h"
 #include "States/MolochNormalAttack.h"
+#include "States/MolochPrepareCharge.h"
 #include "States/MolochWalking.h"
 
 void UMolochStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
@@ -50,6 +51,9 @@ void UMolochStateMachine::BeginPlay()
 	HitPlayer = NewObject<UMolochHitPlayer>();
 	HitWall = NewObject<UMolochHitWall>();
 	FindStartLocation = NewObject<UMolochFindStartLocation>();
+	Stomping = NewObject<UMolochFindStartLocation>();
+	Kick = NewObject<UMolochFindStartLocation>();
+	PrepareCharge = NewObject<UMolochPrepareCharge>();
 }
 
 TArray<FHitResult> UMolochStateMachine::GetHitsInLine(FVector Target) const
@@ -58,7 +62,8 @@ TArray<FHitResult> UMolochStateMachine::GetHitsInLine(FVector Target) const
 	MidStart.Z = 100;
 	FVector RightStart(SelfRef->GetActorRightVector() * Offset + SelfRef->HeadLocation->GetComponentLocation());
 	RightStart.Z = 100;
-	FVector LeftStart(SelfRef->GetActorRightVector().operator-() * Offset + SelfRef->HeadLocation->GetComponentLocation());
+	FVector LeftStart(
+		SelfRef->GetActorRightVector().operator-() * Offset + SelfRef->HeadLocation->GetComponentLocation());
 	LeftStart.Z = 100;
 	FVector MidEnd(Target);
 	MidEnd.Z = 100;
@@ -113,7 +118,8 @@ void UMolochStateMachine::FindPathToPlayer(TArray<FVector>& Path) const
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
 
-	if (!Grid->GetPathWorldSpace(SelfRef->HeadLocation->GetComponentLocation(), Player->GetActorLocation(), Path, false))
+	if (!Grid->GetPathWorldSpace(SelfRef->HeadLocation->GetComponentLocation(), Player->GetActorLocation(), Path,
+	                             false))
 	{
 		Path.Empty();
 		UE_LOG(LogTemp, Error, TEXT("Path is Missing"));
@@ -157,7 +163,6 @@ bool UMolochStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int 
 		if (PathIndex < Path.Num() - 1)
 			return true;
 	}
-
 	return false;
 }
 
@@ -179,6 +184,19 @@ void UMolochStateMachine::FocusOnLocation(FVector Location, float DeltaTime, flo
 		FMath::VInterpNormalRotationTo(SelfRef->GetActorForwardVector(), Target, DeltaTime, RotationSpeed).Rotation());
 	const FRotator ZeroedRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
 	SelfRef->SetActorRotation(ZeroedRotation);
+}
+
+float UMolochStateMachine::CalculateAngleBetweenVectors(FVector VectorOne, FVector VectorTwo) const
+{
+	VectorOne.Normalize();
+	VectorTwo.Normalize();
+
+	const float DotProduct = FVector::DotProduct(VectorOne, VectorTwo);
+
+	const float Angle = FMath::Acos(DotProduct);
+	const float AngleInDegree = FMath::RadiansToDegrees(Angle);
+
+	return AngleInDegree;
 }
 
 AMolochPawn* UMolochStateMachine::GetSelfRef() const

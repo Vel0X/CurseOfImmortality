@@ -15,6 +15,8 @@ void UMolochNormalAttack::OnStateEnter(UStateMachine* StateMachine)
 	
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
+
+	SelfRef->AnimationEnd = false;
 	
 	SelfRef->NormalAttack = true;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
@@ -37,4 +39,9 @@ void UMolochNormalAttack::OnStateExit()
 void UMolochNormalAttack::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
+
+	if (SelfRef->AnimationEnd)
+	{
+		Controller->Transition(Controller->Walking, Controller);
+	}
 }

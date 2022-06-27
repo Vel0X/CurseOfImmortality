@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CurseOfImmortality/AI/Moloch/States/MolochStomping.h"
+#include "CurseOfImmortality/AI/Moloch/States/MolochKick.h"
 
 #include "CurseOfImmortality/AI/Moloch/MolochPawn.h"
 #include "CurseOfImmortality/AI/Moloch/MolochStateMachine.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
-void UMolochStomping::OnStateEnter(UStateMachine* StateMachine)
+void UMolochKick::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
 
@@ -18,25 +18,25 @@ void UMolochStomping::OnStateEnter(UStateMachine* StateMachine)
 
 	SelfRef->AnimationEnd = false;
 
-	SelfRef->Stomping = true;
+	SelfRef->Kick = true;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Stomping State Entered"))
+		UE_LOG(LogTemp, Warning, TEXT("Kick State Entered"))
 	}
 }
 
-void UMolochStomping::OnStateExit()
+void UMolochKick::OnStateExit()
 {
 	Super::OnStateExit();
 
-	SelfRef->Stomping = false;
+	SelfRef->Kick = false;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Walking State Exit"))
+		UE_LOG(LogTemp, Warning, TEXT("Kick State Exit"))
 	}
 }
 
-void UMolochStomping::OnStateUpdate(float DeltaTime)
+void UMolochKick::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 

@@ -38,7 +38,10 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	const FVector PlayerLocation = Player->GetActorLocation();
+	FVector OwnLocation = SelfRef->HeadLocation->GetComponentLocation();
+	FVector PlayerLocation = Player->GetActorLocation();
+	OwnLocation.Z = 0;
+	PlayerLocation.Z = 0;
 
 	if (Controller->CheckLineOfSight(PlayerLocation))
 	{
@@ -62,8 +65,37 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 	}
 	else
 	{
+		if (FVector::Dist(PlayerLocation, OwnLocation) >= SelfRef->ChargeRange)
+		{
+			if (SelfRef->CurrentChargeAttackCoolDown <= 0.f)
+			{
+				Controller->Transition(Controller->ChargeAttack, Controller);
+			}
+			else
+			{
+				Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[Movespeed], DeltaTime);
+			}
+		}
+		else
+		{
+			if (FVector::Dist(PlayerLocation, OwnLocation) >= SelfRef->AttackRange)
+			{
+				if (Controller->CalculateAngleBetweenVectors(OwnLocation, PlayerLocation) <= 40.f)
+				{
+					Controller->Transition(Controller->NormalAttack, Controller);
+				}
+				else if (Controller->CalculateAngleBetweenVectors(OwnLocation, PlayerLocation) >= 140.f)
+				{
+					Controller->Transition(Controller->Kick, Controller);
+				}
+				else
+				{
+					Controller->Transition(Controller->Stomping, Controller);
+				}
+			}
+		}
 		Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[Movespeed], DeltaTime);
 	}
-	
+
 	PathfindingTimer -= DeltaTime;
 }

@@ -14,4 +14,7 @@ class CURSEOFIMMORTALITY_API UMolochStomping : public UMolochBaseState
 {
 	GENERATED_BODY()
 	
+	virtual void OnStateEnter(UStateMachine* StateMachine) override;
+	virtual void OnStateExit() override;
+	virtual void OnStateUpdate(float DeltaTime) override;
 };

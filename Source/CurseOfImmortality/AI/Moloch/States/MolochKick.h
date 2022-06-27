@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/AI/Moloch/States/MolochBaseState.h"
-#include "MolochPrepareCharge.generated.h"
+#include "MolochKick.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API UMolochPrepareCharge : public UMolochBaseState
+class CURSEOFIMMORTALITY_API UMolochKick : public UMolochBaseState
 {
 	GENERATED_BODY()
 	
