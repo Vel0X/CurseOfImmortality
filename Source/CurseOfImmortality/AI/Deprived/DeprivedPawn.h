@@ -63,6 +63,10 @@ public:
 	USphereComponent* AttackSphereLeft;
 	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* AttackSphereRight;
+	UPROPERTY(EditDefaultsOnly)
+	UNiagaraComponent* HandGlowLeft;
+	UPROPERTY(EditDefaultsOnly)
+	UNiagaraComponent* HandGlowRight;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UDeprivedStateMachine* StateMachine;
 
