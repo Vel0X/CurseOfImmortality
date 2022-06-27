@@ -146,7 +146,7 @@ void URound::RoundTick(float DeltaTime)
 		StageTime = 0.0f;
 
 		SpawnEnemies();
-		
+		FPersistentWorldManager::Arena
 		if(CurrentStage >= Specification->Stages)
 		{
 			//end the Round
@@ -183,7 +183,7 @@ void URound::EndRound()
 	const FVector L = FPersistentWorldManager::Arena->PlayerSpawnPosition->GetComponentLocation();
 	const auto Player = FPersistentWorldManager::PlayerCharacter;
 	Player->SetActorLocation(L);
-	FPersistentWorldManager::TrapManager ->ChooseRandomDowngrade();
+	FPersistentWorldManager::TrapManager -> ChooseRandomDowngrade();
 	Player->Heal(50.0f);
 }
 

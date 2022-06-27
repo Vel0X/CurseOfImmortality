@@ -68,7 +68,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 void APlayerCharacter::OnDeath()
 {
-	Super::OnDeath();
+	Dead = true;
 	FPersistentWorldManager::GameMode->ShowDeathScreen();
 }
 
@@ -94,6 +94,12 @@ int APlayerCharacter::CalculateCurrentPowerLevel()
 	return PowerLevel;
 }
 
+void APlayerCharacter::Respawn()
+{
+	Dead = false;
+	CurrentHealth = Stats[Health];
+}
+
 void APlayerCharacter::RotateToClosestEnemy()
 {
 	TArray<ABaseCharacter*> AllEnemies = FPersistentWorldManager::GetEnemies();
@@ -104,8 +110,6 @@ void APlayerCharacter::RotateToClosestEnemy()
 	{
 		float DotProduct = FVector::DotProduct(GetActorForwardVector(), (Enemy->GetActorLocation() - GetActorLocation()).GetSafeNormal());
 		float Angle = FMath::RadiansToDegrees(UKismetMathLibrary::Acos(DotProduct));
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *Enemy->GetName());
-		UE_LOG(LogTemp, Warning, TEXT("%f"), ((Angle * 100)/125) * ((((Enemy->GetActorLocation() - GetActorLocation()).Length() * 100) / MaxDistance)*1.7) );
 		if (Angle < 125 && Angle > -125 && MaxDistance > (Enemy->GetActorLocation() - GetActorLocation()).Length())
 		{
 			if (((Angle * 100)/125) * ((((Enemy->GetActorLocation() - GetActorLocation()).Length() * 100) / MaxDistance)*1.7) < ClosestDistance)

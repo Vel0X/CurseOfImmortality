@@ -23,7 +23,8 @@ void ARoundsManager::Restart()
 	if(ActiveRound != nullptr)
 		ActiveRound->EndRound(); //clear all the enemies from the current round
 
-	CurrentRoundIndex = 0;
+	CurrentRoundIndex = -1;
+	FPersistentWorldManager::PlayerCharacter->Respawn();
 }
 
 
