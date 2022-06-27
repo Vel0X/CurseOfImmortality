@@ -69,7 +69,8 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 		{
 			if (SelfRef->CurrentChargeAttackCoolDown <= 0.f)
 			{
-				Controller->Transition(Controller->ChargeAttack, Controller);
+				Controller->Transition(Controller->PrepareCharge, Controller);
+				SelfRef->CurrentChargeAttackCoolDown = SelfRef->ChargeAttackCoolDown;
 			}
 			else
 			{
@@ -78,7 +79,9 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 		}
 		else
 		{
-			if (FVector::Dist(PlayerLocation, OwnLocation) >= SelfRef->AttackRange)
+			UE_LOG(LogTemp, Warning, TEXT("Angle: %f"),
+			       Controller->CalculateAngleBetweenVectors(OwnLocation, PlayerLocation))
+			if (FVector::Dist(PlayerLocation, OwnLocation) <= SelfRef->AttackRange)
 			{
 				if (Controller->CalculateAngleBetweenVectors(OwnLocation, PlayerLocation) <= 40.f)
 				{

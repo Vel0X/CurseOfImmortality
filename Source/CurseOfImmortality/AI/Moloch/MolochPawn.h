@@ -18,6 +18,9 @@ class CURSEOFIMMORTALITY_API AMolochPawn : public ABaseEnemyPawn
 public:
 	AMolochPawn();
 
+	UFUNCTION(BlueprintCallable)
+	void ToggleChargeAttack();
+
 	//Sates
 	UPROPERTY(BlueprintReadWrite)
 	bool Idle = false;
@@ -45,17 +48,23 @@ public:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* HeadLocation;
 
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* HeadAttack;
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* BodyCollision;
+
 	UPROPERTY(EditAnywhere, Category="Base Stats")
-	float ChargeAttackCoolDown = 0.5f;
+	float ChargeAttackCoolDown = 10.f;
 	float CurrentChargeAttackCoolDown;
 
 	//Ranges
 	UPROPERTY(EditAnywhere)
 	float TriggerRange = 1000.f;
 	UPROPERTY(EditAnywhere)
-	float ChargeRange = 500.f;
+	float ChargeRange = 800.f;
 	UPROPERTY(EditAnywhere)
-	float AttackRange = 100.f;
-
+	float AttackRange = 200.f;
+	
+	UPROPERTY(BlueprintReadWrite)
 	bool AnimationEnd;
 };

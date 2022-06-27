@@ -17,4 +17,6 @@ class CURSEOFIMMORTALITY_API UMolochHitPlayer : public UMolochBaseState
 	virtual void OnStateEnter(UStateMachine* StateMachine) override;
 	virtual void OnStateExit() override;
 	virtual void OnStateUpdate(float DeltaTime) override;
+
+	FVector TargetLocation;
 };

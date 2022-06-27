@@ -40,6 +40,8 @@ void UMolochPrepareCharge::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
+	Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime, 90.f);
+
 	if (SelfRef->AnimationEnd)
 	{
 		Controller->Transition(Controller->ChargeAttack, Controller);

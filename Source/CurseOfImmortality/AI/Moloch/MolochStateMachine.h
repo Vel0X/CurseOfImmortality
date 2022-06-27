@@ -27,7 +27,7 @@ public:
 	                float CurveValue = 1.f) const;
 
 	void MoveToTarget(const FVector Target, const float MovementSpeed, const float DeltaTime,
-	                  const float RotationSpeed = 90.f) const;
+	                  const float RotationSpeed = 90.f, bool IgnoreAllCol = false, bool IgnorePawns = false) const;
 
 	void FocusOnLocation(FVector Location, float DeltaTime, float RotationSpeed = 90.f) const;
 	float CalculateAngleBetweenVectors(FVector VectorOne, FVector VectorTwo) const;

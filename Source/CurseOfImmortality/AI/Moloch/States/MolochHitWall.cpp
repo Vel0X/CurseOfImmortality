@@ -15,8 +15,10 @@ void UMolochHitWall::OnStateEnter(UStateMachine* StateMachine)
 	
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
+
+	SelfRef->AnimationEnd = false;
 	
-	SelfRef->HitPlayer = true;
+	SelfRef->HitWall = true;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("HitWall State Entered"))
@@ -27,7 +29,7 @@ void UMolochHitWall::OnStateExit()
 {
 	Super::OnStateExit();
 	
-	SelfRef->HitPlayer = false;
+	SelfRef->HitWall = false;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("HitWall State Exit"))
@@ -37,4 +39,9 @@ void UMolochHitWall::OnStateExit()
 void UMolochHitWall::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
+
+	if (SelfRef->AnimationEnd)
+	{
+		Controller->Transition(Controller->Walking, Controller);
+	}
 }

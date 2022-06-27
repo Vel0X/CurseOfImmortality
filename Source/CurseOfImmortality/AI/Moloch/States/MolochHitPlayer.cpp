@@ -12,10 +12,17 @@ void UMolochHitPlayer::OnStateEnter(UStateMachine* StateMachine)
 	Super::OnStateEnter(StateMachine);
 
 	Controller = Cast<UMolochStateMachine>(StateMachine);
-	
+
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
-	
+
+	SelfRef->AnimationEnd = false;
+
+	const FVector Scale(2, 2, 2);
+	SelfRef->HeadAttack->SetWorldScale3D(Scale);
+
+	TargetLocation = FVector::ZeroVector;
+
 	SelfRef->HitPlayer = true;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
@@ -26,7 +33,10 @@ void UMolochHitPlayer::OnStateEnter(UStateMachine* StateMachine)
 void UMolochHitPlayer::OnStateExit()
 {
 	Super::OnStateExit();
-	
+
+	const FVector Scale(1, 1, 1);
+	SelfRef->HeadAttack->SetWorldScale3D(Scale);
+
 	SelfRef->HitPlayer = false;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
@@ -37,4 +47,25 @@ void UMolochHitPlayer::OnStateExit()
 void UMolochHitPlayer::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
+
+	if (TargetLocation.IsZero())
+	{
+		TargetLocation = SelfRef->HeadLocation->GetComponentLocation() + SelfRef->GetActorForwardVector() * 10000.f;
+
+		DrawDebugLine(SelfRef->GetWorld(), SelfRef->HeadLocation->GetComponentLocation(), TargetLocation, FColor::Red,
+		              true);
+	}
+
+	float MovementCurve;
+
+	const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
+	Animation->GetCurveValue(FName("Speed"), MovementCurve);
+
+	Controller->MoveToTarget(TargetLocation, 1600.f * MovementCurve, DeltaTime, 720.f, false, true);
+
+
+	if (SelfRef->AnimationEnd)
+	{
+		Controller->Transition(Controller->Walking, Controller);
+	}
 }
