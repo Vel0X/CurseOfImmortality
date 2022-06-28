@@ -59,7 +59,7 @@ void UTrapComponent::CheckActivation(TEnumAsByte<ETrapTypes> OtherTrapType, int 
 	//UE_LOG(LogTemp, Display, TEXT("Check Trap"));
 	if(OtherTrapType == TrapType && prio >= Prio || OtherTrapType == ETrapTypes::All )
 	{
-		//UE_LOG(LogTemp, Display, TEXT("Activate Trap"));
+		//UE_LOG(LogTemp, Display, TEXT("%s"), *GetOwner()->GetName());
 		TrapIsActive = true;
 	}
 }
