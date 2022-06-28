@@ -291,6 +291,9 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: %s Health is at %f Max Health %f"), *DisplayName, CurrentHealth,
 	       Stats[EStats::Health]);
 
+	if(HitSound != "")
+		FPersistentWorldManager::SoundManager->PlaySoundLocated(CenterAttachmentPoint->GetComponentLocation(), HitSound);
+	
 	if (CurrentHealth <= 0.0f)
 	{
 		OnDeath();

@@ -57,6 +57,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool IgnoreInitialCollisions = false;
 
+	//Sound Keys
+	FString CastSound;
+	FString EnemyHitSound;
+	FString WallHitSound;
+
 	UPROPERTY(EditAnywhere)
 	UDamageComponent* DamageComponent;
 protected:

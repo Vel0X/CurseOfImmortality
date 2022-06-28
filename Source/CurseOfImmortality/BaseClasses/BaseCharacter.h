@@ -123,6 +123,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	UNiagaraSystem* LesserBlood; //for lingering DamageObjects (and Dot Effects)
 
+	UPROPERTY(EditAnywhere)
+	FString HitSound = "";
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TMap<TEnumAsByte<EStats>, float> Stats;
 

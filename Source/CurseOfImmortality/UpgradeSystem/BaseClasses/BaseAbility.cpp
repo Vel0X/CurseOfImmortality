@@ -8,6 +8,7 @@
 #include "Components/ShapeComponent.h"
 #include "CurseOfImmortality/BaseClasses/BaseCharacter.h"
 #include "CurseOfImmortality/BaseClasses/Damage/DamageComponent.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/Utility/DetachedParticleActor.h"
 #include "Niagara/Public/NiagaraComponent.h"
 
@@ -69,7 +70,12 @@ void ABaseAbility::CheckCollisions()
 						//auto Loc = Info.OverlapInfo.Location;
 						//UE_LOG(LogTemp, Warning, TEXT("L %f, %f, %f"), Loc.X, Loc.Y, Loc.Z);
 						if(DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter, CharacterHitbox))
+						{
 							OnCharacterHit(OverlappingCharacter);
+
+							if(EnemyHitSound != "")
+								FPersistentWorldManager::SoundManager->PlaySoundLocated(GetActorLocation(), EnemyHitSound);
+						}
 					}
 				}
 
@@ -96,6 +102,9 @@ void ABaseAbility::CheckCollisions()
 		{
 			if(DestroyOnEnemyHit)
 			{
+				if(WallHitSound != "")
+					FPersistentWorldManager::SoundManager->PlaySoundLocated(GetActorLocation(), WallHitSound);
+				
 				if(DestructionVfx)
 				{
 					const FVector SpawnLocation = GetActorLocation();
@@ -280,7 +289,15 @@ void ABaseAbility::InitializeAbility(ABaseCharacter* _Caster, int Level, const U
 	DamageComponent->ConvertInterface();
 
 	if(Specification)
+	{
 		DestructionVfx = Specification->DestructionVfx;
+		CastSound = Specification->CastSound;
+		EnemyHitSound = Specification->EnemyHitSound;
+		WallHitSound = Specification->WallHitSound;
+
+		if(CastSound != "")
+			FPersistentWorldManager::SoundManager->PlaySoundLocated(GetActorLocation(), CastSound);
+	}
 }
 
 void ABaseAbility::AddUpgrade(const TSubclassOf<UBaseUpgrade>& Class, int UpgradeLevel)

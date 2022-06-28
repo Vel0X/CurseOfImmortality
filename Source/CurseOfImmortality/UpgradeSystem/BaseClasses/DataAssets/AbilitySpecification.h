@@ -23,6 +23,15 @@ public:
 	FString DisplayName;
 	
 	UPROPERTY(EditAnywhere)
+	FString CastSound;
+		
+	UPROPERTY(EditAnywhere)
+	FString EnemyHitSound;
+		
+	UPROPERTY(EditAnywhere)
+	FString WallHitSound;
+	
+	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EUpgradeName> AbilityName;
 
 	UPROPERTY(EditAnywhere)
