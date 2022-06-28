@@ -18,3 +18,24 @@ ADolomarsWrath::ADolomarsWrath()
 	Collider = CreateDefaultSubobject<USphereComponent>("SphereCollider");
 	Collider->SetupAttachment(RootComponent);
 }
+
+void ADolomarsWrath::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	CurrentScale = FMath::FInterpTo(CurrentScale, 1, DeltaSeconds, 5.f);
+	FVector Scale(CurrentScale);
+	RootComponent->SetWorldScale3D(Scale);
+
+	if (Active)
+	{
+		Collider->SetGenerateOverlapEvents(false);
+		DamageDuration -= DeltaSeconds;
+	}
+	if (Duration <= 0.f && !Active)
+	{
+		Collider->SetGenerateOverlapEvents(true);
+		Active = true;
+	}
+	Duration -= DeltaSeconds;
+}

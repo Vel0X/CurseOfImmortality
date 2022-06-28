@@ -12,8 +12,10 @@
 #include "States/MolochHitPlayer.h"
 #include "States/MolochHitWall.h"
 #include "States/MolochIdle.h"
+#include "States/MolochKick.h"
 #include "States/MolochNormalAttack.h"
 #include "States/MolochPrepareCharge.h"
+#include "States/MolochStomping.h"
 #include "States/MolochWalking.h"
 
 void UMolochStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
@@ -51,8 +53,8 @@ void UMolochStateMachine::BeginPlay()
 	HitPlayer = NewObject<UMolochHitPlayer>();
 	HitWall = NewObject<UMolochHitWall>();
 	FindStartLocation = NewObject<UMolochFindStartLocation>();
-	Stomping = NewObject<UMolochFindStartLocation>();
-	Kick = NewObject<UMolochFindStartLocation>();
+	Stomping = NewObject<UMolochStomping>();
+	Kick = NewObject<UMolochKick>();
 	PrepareCharge = NewObject<UMolochPrepareCharge>();
 }
 

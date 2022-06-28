@@ -242,6 +242,20 @@ FPfNode* APathfindingGrid::GetRandomNodeInNavMesh()
 	return RandomNode;
 }
 
+bool APathfindingGrid::CoordinatesWalkable(FVector Target)
+{
+	int X, Y;
+
+	if (GetCoordinatesFromWorldPosition(Target, X, Y))
+	{
+		if (GetValue(X, Y).IsWalkable)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void APathfindingGrid::GenerateDynamicHeatMap(float DeltaTime)
 {
 	if (Delay <= 0)

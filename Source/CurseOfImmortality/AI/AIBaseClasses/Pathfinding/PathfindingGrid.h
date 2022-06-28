@@ -132,7 +132,8 @@ public:
 	bool CalculatePath(FPfNode* EndNode, TArray<FPfNode*>& Path, bool Verbose = false) const;
 	bool GetCoordinatesFromWorldPosition(const FVector WorldPosition, int& X, int& Y) const;
 	bool GetWorldPositionFromCoordinates(const int X, const int Y, FVector& WorldPosition) const;
-
+	bool CoordinatesWalkable(FVector Target);
+	
 	int CalculateDistance(int StartX, int StartY, int EndX, int EndY) const;
 
 	FPfNode* GetRandomNodeInNavMesh();

@@ -38,10 +38,19 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	FVector OwnLocation = SelfRef->HeadLocation->GetComponentLocation();
+	FVector HeadLocation = SelfRef->HeadLocation->GetComponentLocation();
+	FVector MidLocation = SelfRef->GetActorLocation();
+	FVector BackLocation = SelfRef->BackLocation->GetComponentLocation();
 	FVector PlayerLocation = Player->GetActorLocation();
-	OwnLocation.Z = 0;
+	HeadLocation.Z = 0;
+	MidLocation.Z = 0;
+	BackLocation.Z = 0;
 	PlayerLocation.Z = 0;
+
+	FVector Dir = PlayerLocation - HeadLocation;
+	FVector Forward = SelfRef->GetActorForwardVector();
+	Dir.Z = 0;
+	Forward.Z = 0;
 
 	if (Controller->CheckLineOfSight(PlayerLocation))
 	{
@@ -65,7 +74,7 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 	}
 	else
 	{
-		if (FVector::Dist(PlayerLocation, OwnLocation) >= SelfRef->ChargeRange)
+		if (FVector::Dist(PlayerLocation, HeadLocation) >= SelfRef->ChargeRange)
 		{
 			if (SelfRef->CurrentChargeAttackCoolDown <= 0.f)
 			{
@@ -79,19 +88,26 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Angle: %f"),
-			       Controller->CalculateAngleBetweenVectors(OwnLocation, PlayerLocation))
-			if (FVector::Dist(PlayerLocation, OwnLocation) <= SelfRef->AttackRange)
+			if (Controller->CalculateAngleBetweenVectors(Dir, Forward) <= 40.f)
 			{
-				if (Controller->CalculateAngleBetweenVectors(OwnLocation, PlayerLocation) <= 40.f)
+				UE_LOG(LogTemp, Error, TEXT("NormalAttack: %f"), FVector::Dist(PlayerLocation, HeadLocation))
+				if (FVector::Dist(PlayerLocation, HeadLocation) <= SelfRef->AttackRange)
 				{
 					Controller->Transition(Controller->NormalAttack, Controller);
 				}
-				else if (Controller->CalculateAngleBetweenVectors(OwnLocation, PlayerLocation) >= 140.f)
+			}
+			else if (Controller->CalculateAngleBetweenVectors(Dir, Forward) >= 160.f)
+			{
+				UE_LOG(LogTemp, Error, TEXT("Kick: %f"), FVector::Dist(PlayerLocation, BackLocation))
+				if (FVector::Dist(PlayerLocation, BackLocation) <= SelfRef->AttackRange)
 				{
 					Controller->Transition(Controller->Kick, Controller);
 				}
-				else
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Stomping: %f"), FVector::Dist(PlayerLocation, MidLocation))
+				if (FVector::Dist(PlayerLocation, MidLocation) <= SelfRef->AttackRange)
 				{
 					Controller->Transition(Controller->Stomping, Controller);
 				}

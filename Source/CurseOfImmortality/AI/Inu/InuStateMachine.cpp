@@ -7,6 +7,7 @@
 #include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
+#include "CurseOfImmortality/UpgradeSystem/Utility/DetachedParticleActor.h"
 #include "States/InuFindStartLocation.h"
 #include "States/InuIdleState.h"
 #include "States/InuRangedAttack.h"
@@ -43,6 +44,12 @@ void UInuStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	{
 		CurrentState->OnStateUpdate(DeltaTime);
 		SelfRef->CurrentAttackCoolDown -= DeltaTime;
+	}
+	else
+	{
+		auto Actor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+		Actor->InitializeParticleActor(SelfRef->CenterAttachmentPoint->GetComponentLocation(), SelfRef->DeathParticle);
+		SelfRef->Destroy();
 	}
 }
 

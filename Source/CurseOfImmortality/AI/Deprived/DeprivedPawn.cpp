@@ -20,7 +20,7 @@ ADeprivedPawn::ADeprivedPawn()
 
 	AttackSphereLeft = CreateDefaultSubobject<USphereComponent>("AttackSphereLeft");
 	AttackSphereLeft->SetupAttachment(Mesh, "LeftHandSocket");
-	
+
 	AttackSphereRight = CreateDefaultSubobject<USphereComponent>("AttackSphereRight");
 	AttackSphereRight->SetupAttachment(Mesh, "RightHandSocket");
 
@@ -29,9 +29,9 @@ ADeprivedPawn::ADeprivedPawn()
 
 	HandGlowRight = CreateDefaultSubobject<UNiagaraComponent>("HandGlowRight");
 	HandGlowRight->SetupAttachment(Mesh, "RightHandSocket");
-	
+
 	StateMachine = CreateDefaultSubobject<UDeprivedStateMachine>("StateMachine");
-	
+
 	CurrentRecoverDuration = RecoverDuration;
 }
 
@@ -51,4 +51,10 @@ void ADeprivedPawn::ToggleRightHand()
 {
 	AttackSphereRight->SetGenerateOverlapEvents(!AttackSphereRight->GetGenerateOverlapEvents());
 	DamageComponent->ResetAllHitCharacters();
+}
+
+void ADeprivedPawn::ToggleHandVFX()
+{
+	HandGlowLeft->SetActive(!HandGlowLeft->IsActive());
+	HandGlowRight->SetActive(!HandGlowRight->IsActive());
 }
