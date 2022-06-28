@@ -130,7 +130,7 @@ void ABaseCharacter::CheckCollisions()
 				{
 					if (DamageHitbox->IsOverlappingComponent(CharacterHitbox))
 					{
-						DamageComponent->OnCharacterHit(DamageHitbox, OverlappingCharacter);
+						DamageComponent->OnCharacterHit(DamageHitbox, OverlappingCharacter, CharacterHitbox);
 					}
 				}
 			}

@@ -118,7 +118,10 @@ public:
 	UBaseStatSpecification* BaseStats;
 
 	UPROPERTY(EditAnywhere)
-	UNiagaraSystem* Blood;
+	UNiagaraSystem* Blood; //for regular DamageObjects
+
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* LesserBlood; //for lingering DamageObjects (and Dot Effects)
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TMap<TEnumAsByte<EStats>, float> Stats;

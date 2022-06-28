@@ -3,6 +3,7 @@
 
 #include "DamageComponent.h"
 
+#include "LingeringDamageObject.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
 #include "CurseOfImmortality/UpgradeSystem/Utility/DetachedParticleActor.h"
@@ -108,12 +109,23 @@ bool UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponent
 			const auto ParticleSystemComponent = DetachedParticleActor->InitializeParticleActor(SpawnLocation, DamageObject->HitVfx, nullptr, 0.8f);
 			ParticleSystemComponent->SetVectorParameter("user.fountainup", FountainAngle);
 		}
-
-		if(HitCharacter->Blood)
+		if (DamageObject->GetClass()->IsChildOf(ULingeringDamageObject::StaticClass()))
 		{
-			const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
-			const auto ParticleSystemComponent = DetachedParticleActor->InitializeParticleActor(SpawnLocation, HitCharacter->Blood, nullptr, 0.8f);
-			ParticleSystemComponent->SetVectorParameter("user.fountainup", FountainAngle);			
+			if(HitCharacter->LesserBlood)
+			{
+				const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+				const auto ParticleSystemComponent = DetachedParticleActor->InitializeParticleActor(SpawnLocation, HitCharacter->LesserBlood, nullptr, 0.8f);
+				ParticleSystemComponent->SetVectorParameter("user.fountainup", FountainAngle);	
+			}
+		}
+		else
+		{
+			if (HitCharacter->Blood)
+			{
+				const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+				const auto ParticleSystemComponent = DetachedParticleActor->InitializeParticleActor(SpawnLocation, HitCharacter->Blood, nullptr, 0.8f);
+				ParticleSystemComponent->SetVectorParameter("user.fountainup", FountainAngle);		
+			}
 		}
 	}
 
