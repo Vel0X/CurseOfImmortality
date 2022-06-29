@@ -153,6 +153,11 @@ ABaseEnemyPawn* AObjectFactory::SpawnEnemy(const EEnemy Character, const FVector
 	}
 
 	ABaseEnemyPawn* CharacterInstance = Cast<ABaseEnemyPawn>(GetWorld()->SpawnActor(Specification->Class, &Location, &Rotation));
+	if(!CharacterInstance)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Character could not be spawned"));
+		return nullptr;
+	}
 	CharacterInstance->Init(Specification);
 	return CharacterInstance;
 }

@@ -80,6 +80,7 @@ void ARoundsManager::Tick(float DeltaTime)
 			if(FPersistentWorldManager::GetControlFlag(AutomaticRoundIncrement) || AutoRoundIncrement)
 			{
 				CurrentRoundIndex++;
+				UE_LOG(LogTemp, Error, TEXT("RI %i"), CurrentRoundIndex);
 				StartRound(CurrentRoundIndex);
 			}
 		}

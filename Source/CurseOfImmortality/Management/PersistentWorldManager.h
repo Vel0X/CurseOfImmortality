@@ -5,6 +5,7 @@
 #include "CurseOfImmortality/BaseClasses/SoundManager.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "CurseOfImmortality/Traps/TrapManagerCopmonent.h"
+#include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "Rounds/RoundsManager.h"
 
 class FPersistentWorldManager

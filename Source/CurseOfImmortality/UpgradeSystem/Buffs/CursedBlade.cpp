@@ -14,13 +14,13 @@ void UCursedBlade::InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharac
 	switch(Level)
 	{
 	case 1:
-		DamageAmount = 100.0f;
+		DamageAmount = 40.0f;
 		break;
 	case 2:
-		DamageAmount = 200.0f;
+		DamageAmount = 80.0f;
 		break;
 	case 3:
-		DamageAmount = 300.0f;
+		DamageAmount = 120.0f;
 		break;
 	default: ;
 	}
