@@ -76,10 +76,13 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 	{
 		if (FVector::Dist(PlayerLocation, HeadLocation) >= SelfRef->ChargeRange)
 		{
+			UE_LOG(LogTemp, Error, TEXT("%f"), SelfRef->CurrentChargeAttackCoolDown);
+
 			if (SelfRef->CurrentChargeAttackCoolDown <= 0.f)
 			{
+				UE_LOG(LogTemp, Error, TEXT("true"));
+
 				Controller->Transition(Controller->PrepareCharge, Controller);
-				SelfRef->CurrentChargeAttackCoolDown = SelfRef->ChargeAttackCoolDown;
 			}
 			else
 			{
@@ -90,7 +93,6 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 		{
 			if (Controller->CalculateAngleBetweenVectors(Dir, Forward) <= 40.f)
 			{
-				UE_LOG(LogTemp, Error, TEXT("NormalAttack: %f"), FVector::Dist(PlayerLocation, HeadLocation))
 				if (FVector::Dist(PlayerLocation, HeadLocation) <= SelfRef->AttackRange)
 				{
 					Controller->Transition(Controller->NormalAttack, Controller);
@@ -98,7 +100,6 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 			}
 			else if (Controller->CalculateAngleBetweenVectors(Dir, Forward) >= 160.f)
 			{
-				UE_LOG(LogTemp, Error, TEXT("Kick: %f"), FVector::Dist(PlayerLocation, BackLocation))
 				if (FVector::Dist(PlayerLocation, BackLocation) <= SelfRef->AttackRange)
 				{
 					Controller->Transition(Controller->Kick, Controller);
@@ -106,7 +107,6 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 			}
 			else
 			{
-				UE_LOG(LogTemp, Error, TEXT("Stomping: %f"), FVector::Dist(PlayerLocation, MidLocation))
 				if (FVector::Dist(PlayerLocation, MidLocation) <= SelfRef->AttackRange)
 				{
 					Controller->Transition(Controller->Stomping, Controller);

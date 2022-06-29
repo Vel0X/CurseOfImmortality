@@ -27,6 +27,8 @@ void UMolochChargeAttack::OnStateExit()
 {
 	Super::OnStateExit();
 
+	SelfRef->CurrentChargeAttackCoolDown = SelfRef->ChargeAttackCoolDown;
+
 	SelfRef->ChargedAttack = false;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{

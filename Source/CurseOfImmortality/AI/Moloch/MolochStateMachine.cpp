@@ -35,7 +35,10 @@ void UMolochStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	{
 		CurrentState->OnStateUpdate(DeltaTime);
 	}
+
+	UE_LOG(LogTemp, Error, TEXT("%f"), SelfRef->CurrentChargeAttackCoolDown);
 	SelfRef->CurrentChargeAttackCoolDown -= DeltaTime;
+	SelfRef->CurrentAttackDelay -= DeltaTime;
 }
 
 void UMolochStateMachine::BeginPlay()

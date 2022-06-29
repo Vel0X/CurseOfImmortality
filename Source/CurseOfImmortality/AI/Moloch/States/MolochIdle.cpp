@@ -38,8 +38,10 @@ void UMolochIdle::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	if (FVector::Dist(SelfRef->HeadLocation->GetComponentLocation(), Player->GetActorLocation()) <= SelfRef->TriggerRange)
+	if (FVector::Dist(SelfRef->HeadLocation->GetComponentLocation(), Player->GetActorLocation()) <= SelfRef->
+		TriggerRange)
 	{
+		SelfRef->CurrentChargeAttackCoolDown = FMath::FRandRange(0.f, SelfRef->ChargeAttackCoolDown);
 		Controller->Transition(Controller->Walking, Controller);
 	}
 }

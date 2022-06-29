@@ -307,11 +307,11 @@ void APathfindingGrid::GenerateDynamicHeatMap(float DeltaTime)
 				int X, Y;
 				if (GetCoordinatesFromWorldPosition(Enemy->GetActorLocation(), X, Y))
 				{
-					GetValue(X, Y).DynamicHeat = 10.f;
+					GetValue(X, Y).DynamicHeat += 10.f;
 					TArray Neighbors(GetNeighbors(X, Y));
 					for (FPfNode* Neighbor : Neighbors)
 					{
-						Neighbor->DynamicHeat = 5.f;
+						Neighbor->DynamicHeat += 5.f;
 					}
 				}
 			}

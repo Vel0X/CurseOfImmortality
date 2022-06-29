@@ -21,6 +21,8 @@ AMolochPawn::AMolochPawn()
 
 	HeadAttack = CreateDefaultSubobject<UCapsuleComponent>("HeadAttack");
 	HeadAttack->SetupAttachment(Mesh, "HeadSocket");
+	BackAttack = CreateDefaultSubobject<UCapsuleComponent>("BackAttack");
+	BackAttack->SetupAttachment(Mesh, "BackAttackSocket");
 
 	BodyCollision = CreateDefaultSubobject<UCapsuleComponent>("BodyCollision");
 	BodyCollision->SetupAttachment(RootComponent);
@@ -30,6 +32,10 @@ void AMolochPawn::ToggleChargeAttack()
 {
 	DamageComponent->ResetAllHitCharacters();
 	HeadAttack->SetGenerateOverlapEvents(!HeadAttack->GetGenerateOverlapEvents());
+}
 
-	UE_LOG(LogTemp, Error, TEXT("Toggle"));
+void AMolochPawn::ToggleKick()
+{
+	DamageComponent->ResetAllHitCharacters();
+	BackAttack->SetGenerateOverlapEvents(!BackAttack->GetGenerateOverlapEvents());
 }

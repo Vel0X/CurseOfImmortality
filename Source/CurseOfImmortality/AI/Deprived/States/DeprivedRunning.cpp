@@ -3,7 +3,6 @@
 
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedRunning.h"
 
-#include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
@@ -41,57 +40,23 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 
 	const FVector PlayerLocation = Player->GetActorLocation();
 
-	if (Controller->CheckLineOfSight(PlayerLocation))
+	if (Controller->CheckLineOfSight(PlayerLocation) && !(FVector::Dist(SelfRef->GetActorLocation(), PlayerLocation) <=
+		100.f))
 	{
-		if (!(FVector::Dist(SelfRef->GetActorLocation(), PlayerLocation) <= 100.f))
+		if (PathfindingTimer <= 0)
 		{
-			if (PathfindingTimer <= 0)
-			{
-				Controller->FindPathToPlayer(Path);
-				PathIndex = 0;
-				PathfindingTimer = 0.5f;
-			}
-			if (!Path.IsEmpty())
-			{
-				if (Controller->FollowPath(Path, DeltaTime, PathIndex))
-				{
-					PathIndex++;
-				}
-			}
-			PathfindingTimer -= DeltaTime;
+			Controller->FindPathToPlayer(Path);
+			PathIndex = 0;
+			PathfindingTimer = 1.f;
 		}
-		else
+		if (!Path.IsEmpty())
 		{
-			Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[Movespeed], DeltaTime);
-			if (!SelfRef->WeakDeprived)
+			if (Controller->FollowPath(Path, DeltaTime, PathIndex))
 			{
-				if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistFrenziedAttack)
-				{
-					if (SelfRef->CurrentFrenziedAttackCoolDown <= 0.f)
-					{
-						SelfRef->CurrentFrenziedAttackCoolDown = SelfRef->FrenziedAttackCoolDown;
-						Controller->Transition(Controller->FrenziedAttack, Controller);
-						NoAttackChosen = false;
-					}
-				}
-				else if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistJumpAttack)
-				{
-					if (SelfRef->CurrentJumpAttackCoolDown <= 0.f)
-					{
-						SelfRef->CurrentJumpAttackCoolDown = SelfRef->JumpAttackCoolDown;
-						Controller->Transition(Controller->JumpAttack, Controller);
-						NoAttackChosen = false;
-					}
-				}
-			}
-			if (NoAttackChosen)
-			{
-				if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
-				{
-					Controller->Transition(Controller->NormalAttack, Controller);
-				}
+				PathIndex++;
 			}
 		}
+		PathfindingTimer -= DeltaTime;
 	}
 	else
 	{

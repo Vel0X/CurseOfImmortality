@@ -24,6 +24,7 @@ void UMolochHitPlayer::OnStateEnter(UStateMachine* StateMachine)
 	TargetLocation = FVector::ZeroVector;
 
 	SelfRef->HitPlayer = true;
+
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("HitPlayer State Entered"))
@@ -47,7 +48,7 @@ void UMolochHitPlayer::OnStateExit()
 void UMolochHitPlayer::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
-
+	
 	if (TargetLocation.IsZero())
 	{
 		TargetLocation = SelfRef->HeadLocation->GetComponentLocation() + SelfRef->GetActorForwardVector() * 10000.f;

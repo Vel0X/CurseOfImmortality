@@ -20,6 +20,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ToggleChargeAttack();
+	UFUNCTION(BlueprintCallable)
+	void ToggleKick();
 
 	//Sates
 	UPROPERTY(BlueprintReadWrite)
@@ -40,7 +42,7 @@ public:
 	bool Kick = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool PrepareCharge = false;
-	
+
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -49,15 +51,20 @@ public:
 	USceneComponent* HeadLocation;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* BackLocation;
-	
+
 	UPROPERTY(EditAnywhere)
 	UCapsuleComponent* HeadAttack;
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* BackAttack;
 	UPROPERTY(EditAnywhere)
 	UCapsuleComponent* BodyCollision;
 
 	UPROPERTY(EditAnywhere, Category="Base Stats")
-	float ChargeAttackCoolDown = 20.f;
+	float ChargeAttackCoolDown = 10.f;
 	float CurrentChargeAttackCoolDown;
+	UPROPERTY(EditAnywhere, Category="Base Stats")
+	float AttackDelay = 1.f;
+	float CurrentAttackDelay = 0.f;
 
 	//Ranges
 	UPROPERTY(EditAnywhere)
@@ -66,7 +73,7 @@ public:
 	float ChargeRange = 800.f;
 	UPROPERTY(EditAnywhere)
 	float AttackRange = 300.f;
-	
+
 	UPROPERTY(BlueprintReadWrite)
 	bool AnimationEnd;
 };

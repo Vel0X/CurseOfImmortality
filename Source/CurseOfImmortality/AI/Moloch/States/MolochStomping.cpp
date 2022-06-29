@@ -47,7 +47,12 @@ void UMolochStomping::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
 
-	Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime, 360.f);
+	float Curve;
+
+	const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
+	Animation->GetCurveValue(FName("Rotation"), Curve);
+
+	Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime, 180.f * Curve);
 
 	if (SelfRef->AnimationEnd)
 	{

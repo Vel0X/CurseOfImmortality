@@ -10,14 +10,14 @@
 void UMolochNormalAttack::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
-	
+
 	Controller = Cast<UMolochStateMachine>(StateMachine);
-	
+
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
 
 	SelfRef->AnimationEnd = false;
-	
+
 	SelfRef->NormalAttack = true;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
@@ -28,7 +28,7 @@ void UMolochNormalAttack::OnStateEnter(UStateMachine* StateMachine)
 void UMolochNormalAttack::OnStateExit()
 {
 	Super::OnStateExit();
-	
+
 	SelfRef->NormalAttack = false;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
@@ -39,6 +39,8 @@ void UMolochNormalAttack::OnStateExit()
 void UMolochNormalAttack::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
+
+	Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime, 90.f);
 
 	if (SelfRef->AnimationEnd)
 	{

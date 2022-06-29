@@ -81,6 +81,7 @@ void UMolochFindStartLocation::OnStateUpdate(float DeltaTime)
 
 		if (FVector::Dist(OwnLocation, PlayerLocation) < SelfRef->TriggerRange)
 		{
+			SelfRef->CurrentChargeAttackCoolDown = FMath::FRandRange(0.f, SelfRef->ChargeAttackCoolDown);
 			Controller->Transition(Controller->Walking, Controller);
 		}
 		if (FVector::Dist(OwnLocation, RandomLocation) < 150.f)
