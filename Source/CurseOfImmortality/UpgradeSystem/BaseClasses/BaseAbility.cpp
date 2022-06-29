@@ -161,8 +161,10 @@ void ABaseAbility::Tick(float DeltaTime)
 		{
 			if (OverlappingActor->GetClass()->IsChildOf(ABaseCharacter::StaticClass()))
 			{
-				ABaseCharacter* OverlappingCharacter = static_cast<ABaseCharacter*>(OverlappingActor);
+				ABaseCharacter* OverlappingCharacter = Cast<ABaseCharacter>(OverlappingActor);
 
+				OnHitNotify(OverlappingCharacter);
+				
 				if (Caster == nullptr)
 				{
 					UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
@@ -193,6 +195,11 @@ void ABaseAbility::Tick(float DeltaTime)
 
 	CheckCollisions();
 }
+
+void ABaseAbility::OnHitNotify(ABaseCharacter* HitCharacter)
+{
+}
+
 
 void ABaseAbility::AfterInitialization()
 {

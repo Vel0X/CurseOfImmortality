@@ -32,6 +32,7 @@ public:
 	void CheckCollisions();
 	void OnCharacterHit(ABaseCharacter* OverlappingCharacter);
 	virtual void Tick(float DeltaTime) override;
+	virtual void OnHitNotify(ABaseCharacter* HitCharacter);
 	virtual void DestroyAbility();
 	virtual void InitializeAbility(ABaseCharacter* _Caster, int Level, const UAbilitySpecification* Specification);
 	virtual void AfterInitialization();
