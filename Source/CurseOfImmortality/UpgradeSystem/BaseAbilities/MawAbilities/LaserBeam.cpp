@@ -24,6 +24,8 @@ void ALaserBeam::BeginPlay()
 {
 	Super::BeginPlay();
 	Handle = FMath::Rand();
+	FPersistentWorldManager::SoundManager->PlaySoundAttached(RootComponent, "Laser");
+
 	//PositionLastFrame = GetActorLocation();
 }
 
