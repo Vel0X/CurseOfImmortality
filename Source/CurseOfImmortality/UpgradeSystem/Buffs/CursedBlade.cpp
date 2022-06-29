@@ -34,7 +34,7 @@ void UCursedBlade::OnBuffBegin()
 void UCursedBlade::OnBuffEnd()
 {
 	Super::OnBuffEnd();
-	DestroyVfx();
+	DestroyVfx(false);
 }
 
 void UCursedBlade::OnTakeDamage(ABaseAbility* Ability)
