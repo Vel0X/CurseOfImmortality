@@ -19,6 +19,7 @@ public:
 	static AArena* Arena;
 	static UTrapManagerCopmonent* TrapManager;
 	static ACustomGameMode* GameMode;
+	static ABaseEnemyPawn* MawOfSothros;
 
 	static TArray<ABaseCharacter*> GetEnemies()
 	{
@@ -163,6 +164,7 @@ public:
 		SoundManager = nullptr;
 		TrapManager = nullptr;
 		GameMode = nullptr;
+		MawOfSothros = nullptr;
 	}
 
 private:

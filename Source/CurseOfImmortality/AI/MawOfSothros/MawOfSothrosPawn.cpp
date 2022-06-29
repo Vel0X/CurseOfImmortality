@@ -68,9 +68,21 @@ AMawOfSothrosPawn::AMawOfSothrosPawn()
 	SmokeDamageSphere->SetupAttachment(Mesh);
 }
 
+void AMawOfSothrosPawn::BeginPlay()
+{
+	Super::BeginPlay();
+	FPersistentWorldManager::MawOfSothros = this;
+}
+
 void AMawOfSothrosPawn::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+}
+
+void AMawOfSothrosPawn::OnDeath()
+{
+	Super::OnDeath();
+	FPersistentWorldManager::MawOfSothros = nullptr;
 }
 
 void AMawOfSothrosPawn::ActivateVomit()

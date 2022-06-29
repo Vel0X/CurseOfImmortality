@@ -7,6 +7,7 @@ APlayerCharacter* FPersistentWorldManager::PlayerCharacter = nullptr;
 AObjectFactory* FPersistentWorldManager::ObjectFactory = nullptr;
 APathfindingGrid* FPersistentWorldManager::PathfindingGrid = nullptr;
 ARoundsManager* FPersistentWorldManager::RoundsManager = nullptr;
+ABaseEnemyPawn* FPersistentWorldManager::MawOfSothros = nullptr;
 AArena* FPersistentWorldManager::Arena = nullptr;
 UTrapManagerCopmonent* FPersistentWorldManager::TrapManager = nullptr;
 TArray<ABaseCharacter*> FPersistentWorldManager::Enemies = TArray<ABaseCharacter*>();
