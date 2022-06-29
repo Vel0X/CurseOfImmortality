@@ -279,6 +279,9 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 {
 	if(Dead)
 		return;
+
+	if(Immune)
+		return;
 	
 	CurrentHealth -= Amount;
 
@@ -324,6 +327,9 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 void ABaseCharacter::TakeDmg(FDamageFormula Formula, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Visual)
 {
 	if(Dead)
+		return;
+	
+	if(Immune)
 		return;
 	
 	const float Scale = Formula.ScaleFactor * Stats[PhysicalDamage];

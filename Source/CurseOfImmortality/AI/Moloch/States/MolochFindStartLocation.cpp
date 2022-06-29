@@ -56,7 +56,7 @@ void UMolochFindStartLocation::OnStateUpdate(float DeltaTime)
 			{
 				if (!Path.IsEmpty())
 				{
-					if (Controller->FollowPath(Path, DeltaTime, PathIndex, true))
+					if (Controller->FollowPath(Path, DeltaTime, PathIndex, 180.f))
 					{
 						PathIndex++;
 					}
@@ -65,7 +65,7 @@ void UMolochFindStartLocation::OnStateUpdate(float DeltaTime)
 		}
 		else
 		{
-			if (Controller->FollowPath(Path, DeltaTime, PathIndex, true))
+			if (Controller->FollowPath(Path, DeltaTime, PathIndex, 180.f))
 			{
 				PathIndex++;
 			}
