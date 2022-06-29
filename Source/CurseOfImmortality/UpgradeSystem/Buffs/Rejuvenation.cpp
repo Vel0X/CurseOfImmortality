@@ -14,6 +14,13 @@ bool URejuvenation::AddBuffStack()
 	return AddedStack;
 }
 
+void URejuvenation::InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter)
+{
+
+	Super::InitializeBuff(Level, _Owner, _Inflicter);
+	ParticleSystemComponent = SetupVfx(CenterPoint);
+}
+
 void URejuvenation::OnBuffTick(float DeltaTime)
 {
 	Super::OnBuffTick(DeltaTime);
@@ -30,3 +37,10 @@ void URejuvenation::OnBuffTick(float DeltaTime)
 	}
 	
 }
+
+void URejuvenation::OnBuffEnd()
+{
+	Super::OnBuffEnd();
+	DestroyVfx();
+}
+

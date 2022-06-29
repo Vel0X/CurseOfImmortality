@@ -106,7 +106,8 @@ enum EUpgradeName
 	TrailExplosion,
 	TrapProjectile,
 	InuProjectile,
-	MolochStomping
+	MolochStomping,
+	Chalice
 };
 
 UENUM()

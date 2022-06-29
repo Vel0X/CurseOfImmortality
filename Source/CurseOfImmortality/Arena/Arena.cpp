@@ -28,6 +28,8 @@ AArena::AArena()
 	PlayerSpawnPosition->SetupAttachment(RootComponent);
 	MawSpawnPosition = CreateDefaultSubobject<USceneComponent>("MawSpawnPosition");
 	MawSpawnPosition->SetupAttachment(RootComponent);
+	ChaliceLocation = CreateDefaultSubobject<USceneComponent>("ChaliceLocation");
+	ChaliceLocation->SetupAttachment(RootComponent);
 }
 
 void AArena::PostInitializeComponents()
@@ -39,6 +41,8 @@ void AArena::PostInitializeComponents()
 void AArena::BeginPlay()
 {
 	Super::BeginPlay();
+	FPersistentWorldManager::ObjectFactory->SpawnAbility(Chalice, ChaliceLocation->GetComponentLocation(), FRotator::ZeroRotator, nullptr);
+	
 }
 
 void AArena::DisableAllObstacles()

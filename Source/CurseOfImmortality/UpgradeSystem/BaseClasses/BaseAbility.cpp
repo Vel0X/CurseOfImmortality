@@ -45,11 +45,13 @@ void ABaseAbility::CheckCollisions()
 			if (InitialCollisions.Contains(OverlappingCharacter))
 				continue;
 
+			OnHitNotify(OverlappingCharacter);
+			
 			if (!NoFaction)
 			{
 				if (Caster == nullptr)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
+					//UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
 					continue;
 				}
 
@@ -163,11 +165,11 @@ void ABaseAbility::Tick(float DeltaTime)
 			{
 				ABaseCharacter* OverlappingCharacter = Cast<ABaseCharacter>(OverlappingActor);
 
-				OnHitNotify(OverlappingCharacter);
+				//OnHitNotify(OverlappingCharacter);
 				
-				if (Caster == nullptr)
+				if (!Caster)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
+					//UE_LOG(LogTemp, Warning, TEXT("CASTER IS NULL"));
 					continue;
 				}
 
