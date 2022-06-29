@@ -119,7 +119,7 @@ void UMolochStateMachine::FindPathToPlayer(TArray<FVector>& Path) const
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
-	if(!Grid)
+	if (!Grid)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Grid in Moloch State Machine"));
 		return;
@@ -137,12 +137,12 @@ void UMolochStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& RandomL
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
-	if(!Grid)
+	if (!Grid)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Grid in Moloch State Machine"));
 		return;
 	}
-	
+
 	FPfNode* EndNode = Grid->GetRandomNodeInNavMesh();
 
 	if (EndNode->IsWalkable && !EndNode->SpawnArea)
@@ -162,13 +162,14 @@ void UMolochStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& RandomL
 	}
 }
 
-bool UMolochStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed,
+bool UMolochStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, bool IgnoreWall,
+                                     float RotationSpeed,
                                      float CurveValue) const
 {
 	FVector L(SelfRef->HeadLocation->GetComponentLocation());
 	L.Z = 0;
 
-	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed);
+	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed, IgnoreWall);
 
 	if (FVector::Dist(Path[PathIndex], L) < 300.f)
 	{
@@ -185,7 +186,8 @@ void UMolochStateMachine::MoveToTarget(FVector Target, const float MovementSpeed
 	FocusOnLocation(Target, DeltaTime, RotationSpeed);
 	Target = Target - SelfRef->HeadLocation->GetComponentLocation();
 	Target.Z = 0;
-	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, IgnoreAllCol, IgnorePawns);
+	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, IgnoreAllCol,
+	                                         IgnorePawns);
 }
 
 void UMolochStateMachine::FocusOnLocation(FVector Location, float DeltaTime, float RotationSpeed) const

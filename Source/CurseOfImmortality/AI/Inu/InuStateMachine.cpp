@@ -143,12 +143,12 @@ void UInuStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& RandomLoca
 }
 
 bool UInuStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed,
-                                  float CurveValue) const
+                                  float CurveValue, bool IgnoreWalls) const
 {
 	FVector L(SelfRef->GetActorLocation());
 	L.Z = 0;
 
-	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed);
+	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed, IgnoreWalls);
 
 	if (FVector::Dist(Path[PathIndex], L) < 100.f)
 	{
@@ -160,13 +160,13 @@ bool UInuStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int Pat
 }
 
 void UInuStateMachine::MoveToTarget(FVector Target, const float MovementSpeed, const float DeltaTime,
-                                    const float RotationSpeed) const
+                                    const float RotationSpeed, bool IgnoreWall) const
 {
 	// Target = SelfRef->GetActorLocation() - Target;
 	FocusOnLocation(Target, DeltaTime, RotationSpeed);
 	Target = Target - SelfRef->GetActorLocation();
 	Target.Z = 0;
-	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, false, false);
+	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, IgnoreWall, false);
 }
 
 void UInuStateMachine::FocusOnLocation(const FVector Location, const float DeltaTime,
