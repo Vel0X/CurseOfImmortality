@@ -265,6 +265,7 @@ void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 	}
 }
 
+
 void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, const bool Visual)
 {
 	CurrentHealth -= Amount;
@@ -306,6 +307,7 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 		Buffs[i]->OnTakeDamage(Ability);
 	}
 }
+
 
 void ABaseCharacter::TakeDmg(FDamageFormula Formula, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Visual)
 {

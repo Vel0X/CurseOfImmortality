@@ -19,48 +19,50 @@ bool UDamageObject::DealDamage(ABaseCharacter* Character)
 	if(HitCharacters.Contains(Character))
 	{
 		return false;
-
 	}
 
-	//check if Handle is contained in DamageReceiverHandle
-	if(DamagingAbility &&
-		DamagingAbility->AbilityHandle != -1 &&
-		Character->DamageReceiverHandleContained(DamagingAbility->AbilityHandle))
-	{
-		return false;
-	}
-	
-	if(ScaleWithAbilityLevel && DamagingAbility)
+	if(OwningChar)
 	{
 		if(Formulas.Num() == 0)
 		{
-			UE_LOG(LogTemp, Error, TEXT("No Formulas were specified for DamageObject"));
+			UE_LOG(LogTemp, Error, TEXT("No Formulas were specified for DamageObject that uses Formulas!"));
 			return false;
 		}
-
-		const int AbilityLevel = DamagingAbility->AbilityLevel;
-		if(Formulas.Num()<AbilityLevel)
+		
+		//if the Damage is from an Ability, scale with the level of the Abilty
+		if(DamagingAbility)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Ability was at Level %i, but only %i Formulas were specified"), AbilityLevel, Formulas.Num());
-			return false;
+			if(DamagingAbility->AbilityHandle != -1 && Character->DamageReceiverHandleContained(DamagingAbility->AbilityHandle))
+			{
+				return false;
+			}
+
+			const int AbilityLevel = DamagingAbility->AbilityLevel;
+			if(Formulas.Num()<AbilityLevel)
+			{
+				UE_LOG(LogTemp, Error, TEXT("Ability was at Level %i, but only %i Formulas were specified"), AbilityLevel, Formulas.Num());
+				return false;
+			}
+
+			const auto [BaseDamage, ScaleFactor, Variation] = Formulas[AbilityLevel-1];
+			const float Amount = (BaseDamage + ScaleFactor * OwningChar->Stats[PhysicalDamage]) * (1 + FMath::FRandRange(-Variation, Variation));
+			Character->TakeDmg(Amount, OwningChar, DamagingAbility, true);
+
+			if(DamagingAbility->AbilityHandle != -1)
+			{
+				const float Expiration = TickInterval - 0.02f;
+				Character->DamageReceiverHandles.Add(FDamageReceiverHandle(DamagingAbility->AbilityHandle, Expiration));
+			}
 		}
-
-		const auto [BaseDamage, ScaleFactor, Variation] = Formulas[AbilityLevel-1];
-		if(!OwningChar)
+		//use the first formula if you can not scale with an Ability
+		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("Owning Char can not be null"));
-			return false;
-		}
-
-		const float Amount = (BaseDamage + ScaleFactor * OwningChar->Stats[PhysicalDamage]) * (1 + FMath::FRandRange(-Variation, Variation));
-		Character->TakeDmg(Amount, OwningChar, DamagingAbility, true);
-
-		if(DamagingAbility->AbilityHandle != -1)
-		{
-			const float Expiration = TickInterval - 0.02f;
-			Character->DamageReceiverHandles.Add(FDamageReceiverHandle(DamagingAbility->AbilityHandle, Expiration));
+			const auto [BaseDamage, ScaleFactor, Variation] = Formulas[0];
+			const float Amount = (BaseDamage + ScaleFactor * OwningChar->Stats[PhysicalDamage]) * (1 + FMath::FRandRange(-Variation, Variation));
+			Character->TakeDmg(Amount, OwningChar, DamagingAbility, true);
 		}
 	}
+	//use flat Damage when no Owner is available
 	else
 	{
 		Character->TakeDmg(Damage, OwningChar, DamagingAbility, true);

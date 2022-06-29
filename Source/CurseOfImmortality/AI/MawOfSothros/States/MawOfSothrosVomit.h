@@ -20,5 +20,7 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosVomit : public UMawOfSothrosBaseState
 
 	virtual void OnStateUpdate(float DeltaTime) override;
 
+	bool A = false;
 	float SpawnFrequency = 0;
+	int Handle = -1;
 };

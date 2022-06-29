@@ -135,7 +135,38 @@ bool UDamageComponent::OnCharacterHit(const UPrimitiveComponent* DamageComponent
 
 void UDamageComponent::DirectCharacterHit(int Index, ABaseCharacter* HitCharacter)
 {
-	DirectDamageObjects[Index]->DealDamage(HitCharacter);
+	const auto DamageObject = DirectDamageObjects[Index];
+	const bool Hit = DamageObject->DealDamage(HitCharacter);
+	const FVector Loc = HitCharacter->CenterAttachmentPoint->GetComponentLocation();
+	if(Hit)
+	{
+		const FVector SpawnLocation = Loc;
+		
+		if(DamageObject->HitVfx)
+		{
+			const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+			const auto ParticleSystemComponent = DetachedParticleActor->InitializeParticleActor(SpawnLocation, DamageObject->HitVfx, nullptr, 0.8f);
+			ParticleSystemComponent->SetVectorParameter("user.fountainup", FVector::UpVector);
+		}
+		if (DamageObject->GetClass()->IsChildOf(ULingeringDamageObject::StaticClass()))
+		{
+			if(HitCharacter->LesserBlood)
+			{
+				const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+				const auto ParticleSystemComponent = DetachedParticleActor->InitializeParticleActor(SpawnLocation, HitCharacter->LesserBlood, nullptr, 0.8f);
+			ParticleSystemComponent->SetVectorParameter("user.fountainup", FVector::UpVector);
+			}
+		}
+		else
+		{
+			if (HitCharacter->Blood)
+			{
+				const auto DetachedParticleActor = GetWorld()->SpawnActor<ADetachedParticleActor>();
+				const auto ParticleSystemComponent = DetachedParticleActor->InitializeParticleActor(SpawnLocation, HitCharacter->Blood, nullptr, 0.8f);
+				ParticleSystemComponent->SetVectorParameter("user.fountainup", FVector::UpVector);		
+			}
+		}
+	}
 }
 
 void UDamageComponent::SetupDamagingComponentByDamageObject(UPrimitiveComponent* Component, UDamageObject* DamageObject)
