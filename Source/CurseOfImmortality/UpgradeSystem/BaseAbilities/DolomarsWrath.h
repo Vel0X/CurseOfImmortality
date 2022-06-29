@@ -17,6 +17,11 @@ class CURSEOFIMMORTALITY_API ADolomarsWrath : public ABaseAbility
 	GENERATED_BODY()
 	// Sets default values for this actor's properties
 	ADolomarsWrath();
+	virtual void Tick(float DeltaSeconds) override;
+
+	float CurrentScale = 0.f;
+
+	bool Active = false;
 
 	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* ParticleSystem;
@@ -24,4 +29,8 @@ class CURSEOFIMMORTALITY_API ADolomarsWrath : public ABaseAbility
 public:
 	UPROPERTY(EditAnywhere)
 	USphereComponent* Collider;
+
+private:
+	float Duration = 0.75f;
+	float DamageDuration = 0.1f;
 };

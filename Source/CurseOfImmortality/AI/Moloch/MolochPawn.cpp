@@ -16,6 +16,8 @@ AMolochPawn::AMolochPawn()
 
 	HeadLocation = CreateDefaultSubobject<USceneComponent>("HeadLocation");
 	HeadLocation->SetupAttachment(RootComponent);
+	BackLocation = CreateDefaultSubobject<USceneComponent>("BackLocation");
+	BackLocation->SetupAttachment(RootComponent);
 
 	HeadAttack = CreateDefaultSubobject<UCapsuleComponent>("HeadAttack");
 	HeadAttack->SetupAttachment(Mesh, "HeadSocket");
@@ -26,9 +28,8 @@ AMolochPawn::AMolochPawn()
 
 void AMolochPawn::ToggleChargeAttack()
 {
+	DamageComponent->ResetAllHitCharacters();
 	HeadAttack->SetGenerateOverlapEvents(!HeadAttack->GetGenerateOverlapEvents());
 
 	UE_LOG(LogTemp, Error, TEXT("Toggle"));
-
-	DamageComponent->ResetAllHitCharacters();
 }

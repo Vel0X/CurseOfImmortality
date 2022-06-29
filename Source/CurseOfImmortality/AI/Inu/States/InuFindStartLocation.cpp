@@ -55,7 +55,7 @@ void UInuFindStartLocation::OnStateUpdate(float DeltaTime)
 			{
 				if (!Path.IsEmpty())
 				{
-					if (Controller->FollowPath(Path, DeltaTime, PathIndex, 500.f))
+					if (Controller->FollowPath(Path, DeltaTime, PathIndex, 500.f, 1.f, true))
 					{
 						PathIndex++;
 					}
@@ -64,7 +64,7 @@ void UInuFindStartLocation::OnStateUpdate(float DeltaTime)
 		}
 		else
 		{
-			if (Controller->FollowPath(Path, DeltaTime, PathIndex, 500.f))
+			if (Controller->FollowPath(Path, DeltaTime, PathIndex, 500., 1.f, true))
 			{
 				PathIndex++;
 			}

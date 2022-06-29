@@ -23,7 +23,8 @@ public:
 	bool CheckLineOfSight(FVector Target) const;
 	void FindPathToPlayer(TArray<FVector>& Path) const;
 	void FindRandomPath(TArray<FVector>& Path, FVector& RandomLocation) const;
-	bool FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed = 90.f,
+	bool FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, bool IgnoreWall = false,
+	                float RotationSpeed = 90.f,
 	                float CurveValue = 1.f) const;
 
 	void MoveToTarget(const FVector Target, const float MovementSpeed, const float DeltaTime,

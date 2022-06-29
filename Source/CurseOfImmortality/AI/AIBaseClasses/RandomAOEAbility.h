@@ -16,15 +16,11 @@ class CURSEOFIMMORTALITY_API URandomAOEAbility : public UActorComponent
 public:
 	void StartAbility(UAbilitySpecification* AbilitySpecification, ABaseCharacter* Caster);
 
+	FVector GetAttackLocation(FVector PlayerLocation) const;
+
 private:
-	UPROPERTY(EditAnywhere)
-	float DamageField = 100.f;
 	UPROPERTY(EditAnywhere)
 	float RangeAroundPlayer = 500.f;
 	UPROPERTY(EditAnywhere)
-	float DamageDuration = 10.f;
-	UPROPERTY(EditAnywhere)
-	float Damage = 10.f;
-	UPROPERTY(EditAnywhere)
-	float Amount = 3.f;
+	float Amount = 1.f;
 };

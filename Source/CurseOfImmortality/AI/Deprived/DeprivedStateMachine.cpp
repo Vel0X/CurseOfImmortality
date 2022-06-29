@@ -5,6 +5,7 @@
 
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "DeprivedPawn.h"
+#include "NiagaraComponent.h"
 #include "CurseOfImmortality/MainCharacter/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/State.h"
@@ -48,6 +49,11 @@ void UDeprivedStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 			LastLocation = Player->GetActorLocation();
 		}
 		CurrentState->OnStateUpdate(DeltaTime);
+	}
+	else
+	{
+		SelfRef->HandGlowLeft->Deactivate();
+		SelfRef->HandGlowRight->Deactivate();
 	}
 	SelfRef->CurrentJumpAttackCoolDown -= DeltaTime;
 	SelfRef->CurrentFrenziedAttackCoolDown -= DeltaTime;
@@ -134,6 +140,12 @@ void UDeprivedStateMachine::FindPathToPlayer(TArray<FVector>& Path) const
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
 
+	if (!Grid)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Grid in Deprived State Machine"));
+		return;
+	}
+
 	if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, false))
 	{
 		Path.Empty();
@@ -145,6 +157,12 @@ void UDeprivedStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& Rando
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
+
+	if (!Grid)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Grid in Deprived State Machine"));
+		return;
+	}
 
 	FPfNode* EndNode = Grid->GetRandomNodeInNavMesh();
 
@@ -166,12 +184,12 @@ void UDeprivedStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& Rando
 }
 
 bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed,
-                                       float CurveValue) const
+                                       float CurveValue, bool IgnoreWalls) const
 {
 	FVector L(SelfRef->GetActorLocation());
 	L.Z = 0;
 
-	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed);
+	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed, IgnoreWalls);
 
 	if (FVector::Dist(Path[PathIndex], L) < 100.f)
 	{
@@ -183,13 +201,13 @@ bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, in
 }
 
 void UDeprivedStateMachine::MoveToTarget(FVector Target, const float MovementSpeed, const float DeltaTime,
-                                         const float RotationSpeed) const
+                                         const float RotationSpeed, bool IgnoreWalls) const
 {
 	// Target = SelfRef->GetActorLocation() - Target;
 	FocusOnLocation(Target, DeltaTime, RotationSpeed);
 	Target = Target - SelfRef->GetActorLocation();
 	Target.Z = 0;
-	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, false, false);
+	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, IgnoreWalls, false);
 }
 
 void UDeprivedStateMachine::FocusOnLocation(const FVector Location, const float DeltaTime,
