@@ -118,7 +118,6 @@ void URound::BeginRound()
 		
 		UE_LOG(LogTemp, Warning, TEXT("Started Round"));
 	}
-
 	SpawnEnemies();
 }
 
@@ -215,6 +214,8 @@ void URound::SpawnEnemies()
 	int CurrentPowerLevel = 0;
 	int CurrentIter = 0;
 	constexpr int MaxIter = 100;
+
+	FPersistentWorldManager::GameMode->GatesDown();
 
 	if(FPersistentWorldManager::GetLogLevel(Round))
 		UE_LOG(LogTemp, Warning, TEXT("Stage Powerlevel %i"), StagePowerLevel);

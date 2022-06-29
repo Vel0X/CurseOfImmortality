@@ -45,7 +45,7 @@ bool UBleed::AddBuffStack()
 void UBleed::OnBuffEnd()
 {
 	Super::OnBuffEnd();
-	DestroyVfx();
+	DestroyVfx(false);
 }
 
 void UBleed::OnBuffTick(float DeltaTime)

@@ -44,9 +44,7 @@ public:
 
 	//Ranges
 	UPROPERTY(EditAnywhere, Category="Ranges")
-	float AwakeRange = 1000.f;
-	UPROPERTY(EditAnywhere, Category="Ranges")
-	float AttackRadius = 800.f;
+	float AwakeRange = 2000.f;
 
 	virtual bool GetSpawnPosition(FVector& Position, FRotator& Rotation) override;
 };

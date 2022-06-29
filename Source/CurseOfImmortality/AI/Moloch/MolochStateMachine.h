@@ -23,12 +23,12 @@ public:
 	bool CheckLineOfSight(FVector Target) const;
 	void FindPathToPlayer(TArray<FVector>& Path) const;
 	void FindRandomPath(TArray<FVector>& Path, FVector& RandomLocation) const;
-	bool FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, bool IgnoreWall = false,
+	bool FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex,
 	                float RotationSpeed = 90.f,
 	                float CurveValue = 1.f) const;
 
 	void MoveToTarget(const FVector Target, const float MovementSpeed, const float DeltaTime,
-	                  const float RotationSpeed = 90.f, bool IgnoreAllCol = false, bool IgnorePawns = false) const;
+	                  const float RotationSpeed = 90.f, bool IgnorePawns = false) const;
 
 	void FocusOnLocation(FVector Location, float DeltaTime, float RotationSpeed = 90.f) const;
 	float CalculateAngleBetweenVectors(FVector VectorOne, FVector VectorTwo) const;

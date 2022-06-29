@@ -98,7 +98,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Distances")
 	float DistFrenziedAttack = 400.f;
 	UPROPERTY(EditDefaultsOnly, Category="Distances")
-	float DistNormalAttack = 100.f;
+	float DistNormalAttack = 200.f;
 	UPROPERTY(EditDefaultsOnly, Category="Distances")
-	float MinDistFrenziedAttack = 50.f;
+	float MinDistFrenziedAttack = 200.f;
 };

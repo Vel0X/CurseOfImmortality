@@ -184,12 +184,12 @@ void UDeprivedStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& Rando
 }
 
 bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed,
-                                       float CurveValue, bool IgnoreWalls) const
+                                       float CurveValue) const
 {
 	FVector L(SelfRef->GetActorLocation());
 	L.Z = 0;
 
-	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed, IgnoreWalls);
+	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed);
 
 	if (FVector::Dist(Path[PathIndex], L) < 100.f)
 	{
@@ -201,13 +201,20 @@ bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, in
 }
 
 void UDeprivedStateMachine::MoveToTarget(FVector Target, const float MovementSpeed, const float DeltaTime,
-                                         const float RotationSpeed, bool IgnoreWalls) const
+                                         const float RotationSpeed) const
 {
 	// Target = SelfRef->GetActorLocation() - Target;
 	FocusOnLocation(Target, DeltaTime, RotationSpeed);
 	Target = Target - SelfRef->GetActorLocation();
 	Target.Z = 0;
-	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, IgnoreWalls, false);
+	if (SelfRef->StartGatePassed)
+	{
+		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, false, false);
+	}
+	else
+	{
+		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, true, false);
+	}
 }
 
 void UDeprivedStateMachine::FocusOnLocation(const FVector Location, const float DeltaTime,
