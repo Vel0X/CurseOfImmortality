@@ -32,7 +32,7 @@ public:
 	virtual void OnBuffEnd();
 	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter);
 	virtual UNiagaraComponent* SetupVfx(EAttachmentPoint AttachmentPoint);
-	virtual void DestroyVfx();
+	virtual void DestroyVfx(bool KeepParticle = true);
 
 	//who inflicted this buff
 	UPROPERTY(EditAnywhere)

@@ -156,7 +156,7 @@ void UAttackManager::UpdateAbilityPool()
 			PrerequisitesMet = true;
 
 		}
-		else if(ActiveAbilities.Contains(PossibleUpgrade->Application))
+		else if(ActiveAbilities.Contains(PossibleUpgrade->Application) && ActiveAbilities[PossibleUpgrade->Application].Specification)
 		{
 			PrerequisitesMet = true;
 		}

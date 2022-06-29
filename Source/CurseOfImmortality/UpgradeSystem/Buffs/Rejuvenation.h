@@ -23,6 +23,6 @@ public:
 private:
 	float TimeUntilNextTick = 0.0f;
 	float TickInterval = 0.3f;
-	float HealAmount = 3.0f;
+	float HealAmount = 6.0f;
 };
 

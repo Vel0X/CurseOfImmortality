@@ -166,11 +166,17 @@ void ABaseCharacter::Setup()
 void ABaseCharacter::OnDeath()
 {
 	//Deactivate all Damage and BodyHitboxes
-	for (auto DamageHitbox : DamageHitboxes)
+	for (const auto DamageHitbox : DamageHitboxes)
 		DamageHitbox->DestroyComponent();
 
-	for (auto BodyHitBox : BodyHitboxes)
+	for (const auto BodyHitBox : BodyHitboxes)
 		BodyHitBox->DestroyComponent();
+
+	for (const auto Buff : Buffs)
+		Buff->OnBuffEnd();
+
+	Buffs.Empty();
+
 
 	DamageHitboxes.Empty();
 	BodyHitboxes.Empty();
@@ -202,6 +208,9 @@ void ABaseCharacter::RecalculateStats()
 
 void ABaseCharacter::AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter, int Level)
 {
+	if(Dead)
+		return;
+	
 	int FoundIndex = -1;
 	for (int i = 0; i < Buffs.Num(); ++i)
 	{
@@ -268,6 +277,9 @@ void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 
 void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, const bool Visual)
 {
+	if(Dead)
+		return;
+	
 	CurrentHealth -= Amount;
 
 	FString Text = "";
@@ -311,6 +323,9 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 
 void ABaseCharacter::TakeDmg(FDamageFormula Formula, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Visual)
 {
+	if(Dead)
+		return;
+	
 	const float Scale = Formula.ScaleFactor * Stats[PhysicalDamage];
 	UE_LOG(LogTemp, Warning, TEXT("Scale %f"), Scale);
 	const float Amount = (Formula.BaseDamage + Scale) * (1 + FMath::FRandRange(-Formula.Variation, Formula.Variation));
@@ -373,11 +388,13 @@ void ABaseCharacter::Heal(float Amount, bool Verbose)
 		CurrentHealth = Stats[EStats::Health];
 	}
 
+	/*
 	if (Verbose)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("After Heal: Char Health is at %f Max Health %f"), CurrentHealth,
 		       Stats[EStats::Health]);
 	}
+	*/
 }
 
 UNiagaraComponent* ABaseCharacter::SetupBuffVfx(UNiagaraSystem* Vfx, const EAttachmentPoint AttachmentPoint,
