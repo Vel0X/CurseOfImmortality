@@ -17,6 +17,7 @@ void UPlayerCharacterDash::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
 
+	FPersistentWorldManager::SoundManager->Play2DSound("Dash");
 	Controller = Cast<UPlayerCharacterStateMachine>(StateMachine);
 	SelfRef = Controller->GetSelfRef();
 	

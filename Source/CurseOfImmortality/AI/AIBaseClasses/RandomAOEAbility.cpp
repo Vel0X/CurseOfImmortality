@@ -30,6 +30,8 @@ void URandomAOEAbility::StartAbility(UAbilitySpecification* AbilitySpecification
 
 		AbilityInstance->InitializeAbility(Caster, 1, AbilitySpecification);
 
+		FPersistentWorldManager::SoundManager->Play2DSound("Thunder");
+
 		if (AbilityInstance == nullptr)
 		{
 			UE_LOG(LogTemp, Error, TEXT("Abiltiy could not be spawned in Random AOE Ability!"));
