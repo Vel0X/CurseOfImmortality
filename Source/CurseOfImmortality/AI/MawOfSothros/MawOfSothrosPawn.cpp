@@ -72,6 +72,8 @@ void AMawOfSothrosPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	FPersistentWorldManager::MawOfSothros = this;
+
+	Immune = true;
 }
 
 void AMawOfSothrosPawn::Tick(float DeltaSeconds)

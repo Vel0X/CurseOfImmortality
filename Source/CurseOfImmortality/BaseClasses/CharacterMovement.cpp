@@ -113,14 +113,14 @@ void UCharacterMovement::MoveWithCorrection(FVector DirectionToMove, const float
 	CapsuleCol->AddWorldOffset(DirectionToMove * DeltaTime * Speed, true, &Result);
 	CapsuleCol->SetWorldLocation(CapsuleLocBeforeMove);
 
-	if (IgnoreCharacters)
-	{
-		if (Cast<ABaseCharacter>(Result.GetActor()) != nullptr)
-		{
-			Owner->AddActorWorldOffset(DirectionToMove * DeltaTime * Speed, false);
-			return;
-		}
-	}
+	// if (IgnoreCharacters)
+	// {
+	// 	if (Cast<ABaseCharacter>(Result.GetActor()) != nullptr)
+	// 	{
+	// 		Owner->AddActorWorldOffset(DirectionToMove * DeltaTime * Speed, false);
+	// 		return;
+	// 	}
+	// }
 	if (Result.GetActor() != Owner && Result.GetActor())
 	{
 		FVector CorrectedImpactNormal = Result.ImpactNormal;

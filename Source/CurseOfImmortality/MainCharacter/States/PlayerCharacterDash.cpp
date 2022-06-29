@@ -27,6 +27,8 @@ void UPlayerCharacterDash::OnStateEnter(UStateMachine* StateMachine)
 	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))
 		UE_LOG(LogTemp, Warning, TEXT("Dash State Entered"))
 
+	SelfRef->Immune = true;
+
 	UNiagaraSystem* Vfx = FPersistentWorldManager::ObjectFactory->Spawnables->DashVFX;
 
 	if(NiagaraComp)
@@ -39,6 +41,8 @@ void UPlayerCharacterDash::OnStateEnter(UStateMachine* StateMachine)
 
 void UPlayerCharacterDash::OnStateExit()
 {
+	SelfRef->Immune = false;
+	
 	Super::OnStateExit();
 	SelfRef->PlayerAnim->Dash = false;
 	if (FPersistentWorldManager::GetLogLevel(PlayerStateMachine))

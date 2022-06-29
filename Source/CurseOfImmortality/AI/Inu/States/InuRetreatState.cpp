@@ -54,10 +54,6 @@ void UInuRetreatState::OnStateUpdate(float DeltaTime)
 			DirectionVector.Normalize();
 
 			RetreatLocation = DirectionVector * 1000.f + OwnLocation;
-
-			DrawDebugLine(SelfRef->GetWorld(), OwnLocation, RetreatLocation,
-			              FColor::Red, true
-			);
 		}
 		else
 		{

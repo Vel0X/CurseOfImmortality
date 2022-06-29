@@ -52,6 +52,7 @@ void UMawOfSothrosStart::OnStateUpdate(float DeltaTime)
 		{
 			SelfRef->MawSmoke->Activate();
 			SelfRef->Mesh->SetVisibility(true);
+			SelfRef->Immune = false;
 		}
 	}
 
