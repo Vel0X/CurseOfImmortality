@@ -19,7 +19,10 @@ class CURSEOFIMMORTALITY_API AMawOfSothrosPawn : public ABaseEnemyPawn
 public:
 	AMawOfSothrosPawn();
 
+	virtual void BeginPlay() override;
 	void Tick(float DeltaSeconds) override;
+
+	virtual void OnDeath() override;
 
 	UFUNCTION(BlueprintCallable)
 	void ActivateVomit();

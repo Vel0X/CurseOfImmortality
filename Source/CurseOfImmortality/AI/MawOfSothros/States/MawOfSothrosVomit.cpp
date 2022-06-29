@@ -13,7 +13,8 @@
 void UMawOfSothrosVomit::OnStateEnter(UStateMachine* StateMachine)
 {
 	Super::OnStateEnter(StateMachine);
-	
+	Handle = FMath::Rand();
+
 	Controller = Cast<UMawOfSothrosStateMachine>(StateMachine);
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
@@ -56,21 +57,38 @@ void UMawOfSothrosVomit::OnStateUpdate(float DeltaTime)
 	{
 		if (SpawnFrequency <= 0)
 		{
-			SpawnFrequency = 0.5f;
+			SpawnFrequency = 0.25f;
+			A = !A;
+			if(A)
+			{
+				FVector SpawnLocation(SelfRef->PuddleLowerSpawnLocation->GetComponentLocation());
+				const auto Instance = FPersistentWorldManager::ObjectFactory->SpawnAbility(SeaOfDarkness, SpawnLocation, FRotator::ZeroRotator, SelfRef);
 
-			FVector SpawnLocation(SelfRef->PuddleLowerSpawnLocation->GetComponentLocation());
+				Instance->AbilityHandle = Handle;
+			}
+			else
+			{
+				FVector SpawnLocation = SelfRef->PuddleUpperSpawnLocation->GetComponentLocation();
+				const auto Instance = FPersistentWorldManager::ObjectFactory->SpawnAbility(SeaOfDarkness, SpawnLocation, FRotator::ZeroRotator, SelfRef);
+
+				Instance->AbilityHandle = Handle;
+			}
+
+	/*
 			ASeaOfDarkness* AbilityInstance = Cast<ASeaOfDarkness>(SelfRef->GetWorld()->SpawnActor(
 				SelfRef->SeaOfDarknessSpecification->Class,
 				&SpawnLocation, &FRotator::ZeroRotator));
 			if (!AbilityInstance) { return; }
 			AbilityInstance->InitializeAbility(SelfRef, 1, SelfRef->SeaOfDarknessSpecification);
+*/
 
-			SpawnLocation = SelfRef->PuddleUpperSpawnLocation->GetComponentLocation();
+/*
 			AbilityInstance = Cast<ASeaOfDarkness>(SelfRef->GetWorld()->SpawnActor(
 				SelfRef->SeaOfDarknessSpecification->Class,
 				&SpawnLocation, &FRotator::ZeroRotator));
 			if (!AbilityInstance) { return; }
 			AbilityInstance->InitializeAbility(SelfRef, 1, SelfRef->SeaOfDarknessSpecification);
+			*/
 		}
 		SpawnFrequency -= DeltaTime;
 	}

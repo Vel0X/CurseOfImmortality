@@ -6,6 +6,7 @@
 #include "GameFramework/GameMode.h"
 #include "CustomGameMode.generated.h"
 
+class ABaseEnemyPawn;
 class UTrapManagerCopmonent;
 class AArena;
 class ASoundManager;
@@ -52,7 +53,8 @@ public:
 	UTrapManagerCopmonent* TrapManager();
 	UFUNCTION(BlueprintCallable)
 	ACustomGameMode* GameMode();
-	
+	UFUNCTION(BlueprintCallable)
+	ABaseEnemyPawn* Maw();
 /////////////////////////////////////////////////////////////////////
 ///-------------------------COMMANDS------------------------------///
 /////////////////////////////////////////////////////////////////////

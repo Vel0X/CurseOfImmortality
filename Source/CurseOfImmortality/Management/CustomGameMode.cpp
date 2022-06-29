@@ -195,3 +195,8 @@ ACustomGameMode* ACustomGameMode::GameMode()
 {	return FPersistentWorldManager::GameMode;
 
 }
+
+ABaseEnemyPawn* ACustomGameMode::Maw()
+{
+	return FPersistentWorldManager::MawOfSothros;
+}
