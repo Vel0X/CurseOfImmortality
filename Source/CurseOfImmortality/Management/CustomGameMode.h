@@ -32,6 +32,8 @@ public:
 	void ShowDeathScreen();
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowCredits();
+	UFUNCTION(BlueprintImplementableEvent)
+	void GatesDown();
 
 /////////////////////////////////////////////////////////////////////
 ///-------------------WORLD MANAGER INTERFACE---------------------///

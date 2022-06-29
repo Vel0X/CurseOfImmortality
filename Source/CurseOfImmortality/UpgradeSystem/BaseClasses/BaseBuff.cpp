@@ -111,7 +111,7 @@ UNiagaraComponent* UBaseBuff::SetupVfx(const EAttachmentPoint AttachmentPoint)
 	return Owner->SetupBuffVfx(ParticleSystem, AttachmentPoint, DefaultHandle);
 }
 
-void UBaseBuff::DestroyVfx()
+void UBaseBuff::DestroyVfx(bool KeepParticle)
 {
-	Owner->RemoveBuffVfx(DefaultHandle);
+	Owner->RemoveBuffVfx(DefaultHandle, KeepParticle);
 }
