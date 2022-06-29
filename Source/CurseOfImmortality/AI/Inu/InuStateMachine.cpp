@@ -123,7 +123,7 @@ void UInuStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& RandomLoca
 		return;
 	}
 
-	FPfNode* EndNode = Grid->GetRandomNodeInNavMesh();
+	const FPfNode* EndNode = Grid->GetRandomNodeInNavMesh();
 
 	if (EndNode->IsWalkable && !EndNode->SpawnArea)
 	{

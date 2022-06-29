@@ -241,8 +241,8 @@ bool APathfindingGrid::GetPathWorldSpace(FVector Start, FVector End, TArray<FVec
 
 FPfNode* APathfindingGrid::GetRandomNodeInNavMesh()
 {
-	const int RandomX = FMath::RandRange(0, Width);
-	const int RandomY = FMath::RandRange(0, Height);
+	const int RandomX = FMath::RandRange(0, Width - 1);
+	const int RandomY = FMath::RandRange(0, Height - 1);
 
 	FPfNode* RandomNode = &GetValue(RandomX, RandomY);
 
@@ -300,7 +300,7 @@ void APathfindingGrid::GenerateDynamicHeatMap(float DeltaTime)
 						}
 						if (GetCoordinatesFromWorldPosition(
 							(Enemy->GetActorLocation() + Enemy->GetActorRightVector() * CellSize) + (Enemy->
-							GetActorForwardVector() * Offset), U, V))
+								GetActorForwardVector() * Offset), U, V))
 						{
 							GetValue(U, V).DynamicHeat += 3.f;
 						}
