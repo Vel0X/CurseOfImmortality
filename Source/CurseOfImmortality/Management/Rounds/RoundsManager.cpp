@@ -104,6 +104,7 @@ void ARoundsManager::StartRound(const int Index)
 	}
 	else
 	{
+		FPersistentWorldManager::GameMode->ShowCredits();
 		UE_LOG(LogTemp, Error, TEXT("Round was NULL"));
 	}
 

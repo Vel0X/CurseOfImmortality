@@ -30,6 +30,8 @@ public:
 	void ShowUpgradeMenu();
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowDeathScreen();
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowCredits();
 
 /////////////////////////////////////////////////////////////////////
 ///-------------------WORLD MANAGER INTERFACE---------------------///
