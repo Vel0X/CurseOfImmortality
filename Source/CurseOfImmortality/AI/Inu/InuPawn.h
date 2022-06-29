@@ -36,6 +36,8 @@ public:
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInuStateMachine* StateMachine;
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* DeathParticle;
 
 	UPROPERTY(EditAnywhere, Category="Base Stats")
 	float AttackCoolDown = 0.5f;

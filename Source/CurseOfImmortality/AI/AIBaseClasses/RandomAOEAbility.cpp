@@ -3,25 +3,21 @@
 
 #include "RandomAOEAbility.h"
 
-#include "AIDamageObject.h"
 #include "Components/SphereComponent.h"
-#include "CurseOfImmortality/AI/StormCaller/StormCallerPawn.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseAbilities/DolomarsWrath.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/AbilitySpecification.h"
 #include "Kismet/GameplayStatics.h"
+#include "Pathfinding/PathfindingGrid.h"
 
 void URandomAOEAbility::StartAbility(UAbilitySpecification* AbilitySpecification, ABaseCharacter* Caster)
 {
-	FVector PlayerLocation = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetPawn()->GetActorLocation();
-	PlayerLocation.Z = 0;
+	const FVector PlayerLocation = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetPawn()->GetActorLocation();
 
 	for (int i = 0; i < Amount; ++i)
 	{
-		const FVector2d RandomPoint = FMath::RandPointInCircle(RangeAroundPlayer);
-		FVector RandomPoint3D(RandomPoint, 0);
-
-		FVector DamageFieldLocation = PlayerLocation + RandomPoint3D;
+		FVector DamageFieldLocation = GetAttackLocation(PlayerLocation);
 
 		if (AbilitySpecification == nullptr)
 		{
@@ -31,7 +27,6 @@ void URandomAOEAbility::StartAbility(UAbilitySpecification* AbilitySpecification
 
 		ADolomarsWrath* AbilityInstance = Cast<ADolomarsWrath>(
 			GetWorld()->SpawnActor(AbilitySpecification->Class, &DamageFieldLocation, &FRotator::ZeroRotator));
-		AbilityInstance->Collider->SetSphereRadius(DamageField);
 
 		AbilityInstance->InitializeAbility(Caster, 1, AbilitySpecification);
 
@@ -41,4 +36,27 @@ void URandomAOEAbility::StartAbility(UAbilitySpecification* AbilitySpecification
 			return;
 		}
 	}
+}
+
+FVector URandomAOEAbility::GetAttackLocation(FVector PlayerLocation) const
+{
+	int Index = 0;
+
+	while (Index <= 10000)
+	{
+		const FVector2d RandomPoint = FMath::RandPointInCircle(RangeAroundPlayer);
+		FVector RandomPoint3D(RandomPoint, PlayerLocation.Z);
+		RandomPoint3D += PlayerLocation;
+
+		APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
+
+		if (Grid->CoordinatesWalkable(RandomPoint3D))
+		{
+			return RandomPoint3D;
+		}
+
+		Index++;
+	}
+
+	return FVector::Zero();
 }

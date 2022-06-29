@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ToggleRightHand();
 
+	UFUNCTION(BlueprintCallable)
+	void ToggleHandVFX();
+
 	UPROPERTY(BlueprintReadWrite)
 	bool AnimationEnd;
 

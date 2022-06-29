@@ -47,14 +47,16 @@ public:
 	UMolochStateMachine* StateMachine;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* HeadLocation;
-
+	UPROPERTY(EditAnywhere)
+	USceneComponent* BackLocation;
+	
 	UPROPERTY(EditAnywhere)
 	UCapsuleComponent* HeadAttack;
 	UPROPERTY(EditAnywhere)
 	UCapsuleComponent* BodyCollision;
 
 	UPROPERTY(EditAnywhere, Category="Base Stats")
-	float ChargeAttackCoolDown = 10.f;
+	float ChargeAttackCoolDown = 20.f;
 	float CurrentChargeAttackCoolDown;
 
 	//Ranges
@@ -63,7 +65,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	float ChargeRange = 800.f;
 	UPROPERTY(EditAnywhere)
-	float AttackRange = 200.f;
+	float AttackRange = 300.f;
 	
 	UPROPERTY(BlueprintReadWrite)
 	bool AnimationEnd;

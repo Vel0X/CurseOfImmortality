@@ -12,8 +12,10 @@
 #include "States/MolochHitPlayer.h"
 #include "States/MolochHitWall.h"
 #include "States/MolochIdle.h"
+#include "States/MolochKick.h"
 #include "States/MolochNormalAttack.h"
 #include "States/MolochPrepareCharge.h"
+#include "States/MolochStomping.h"
 #include "States/MolochWalking.h"
 
 void UMolochStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
@@ -51,8 +53,8 @@ void UMolochStateMachine::BeginPlay()
 	HitPlayer = NewObject<UMolochHitPlayer>();
 	HitWall = NewObject<UMolochHitWall>();
 	FindStartLocation = NewObject<UMolochFindStartLocation>();
-	Stomping = NewObject<UMolochFindStartLocation>();
-	Kick = NewObject<UMolochFindStartLocation>();
+	Stomping = NewObject<UMolochStomping>();
+	Kick = NewObject<UMolochKick>();
 	PrepareCharge = NewObject<UMolochPrepareCharge>();
 }
 
@@ -117,6 +119,11 @@ void UMolochStateMachine::FindPathToPlayer(TArray<FVector>& Path) const
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
+	if (!Grid)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Grid in Moloch State Machine"));
+		return;
+	}
 
 	if (!Grid->GetPathWorldSpace(SelfRef->HeadLocation->GetComponentLocation(), Player->GetActorLocation(), Path,
 	                             false))
@@ -130,6 +137,11 @@ void UMolochStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& RandomL
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
+	if (!Grid)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Grid in Moloch State Machine"));
+		return;
+	}
 
 	FPfNode* EndNode = Grid->GetRandomNodeInNavMesh();
 
@@ -150,13 +162,14 @@ void UMolochStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& RandomL
 	}
 }
 
-bool UMolochStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed,
+bool UMolochStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, bool IgnoreWall,
+                                     float RotationSpeed,
                                      float CurveValue) const
 {
 	FVector L(SelfRef->HeadLocation->GetComponentLocation());
 	L.Z = 0;
 
-	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed);
+	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed, IgnoreWall);
 
 	if (FVector::Dist(Path[PathIndex], L) < 300.f)
 	{
@@ -173,7 +186,8 @@ void UMolochStateMachine::MoveToTarget(FVector Target, const float MovementSpeed
 	FocusOnLocation(Target, DeltaTime, RotationSpeed);
 	Target = Target - SelfRef->HeadLocation->GetComponentLocation();
 	Target.Z = 0;
-	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, IgnoreAllCol, IgnorePawns);
+	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, IgnoreAllCol,
+	                                         IgnorePawns);
 }
 
 void UMolochStateMachine::FocusOnLocation(FVector Location, float DeltaTime, float RotationSpeed) const

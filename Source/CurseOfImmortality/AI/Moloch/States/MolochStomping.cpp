@@ -5,6 +5,7 @@
 
 #include "CurseOfImmortality/AI/Moloch/MolochPawn.h"
 #include "CurseOfImmortality/AI/Moloch/MolochStateMachine.h"
+#include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 void UMolochStomping::OnStateEnter(UStateMachine* StateMachine)
@@ -18,6 +19,8 @@ void UMolochStomping::OnStateEnter(UStateMachine* StateMachine)
 
 	SelfRef->AnimationEnd = false;
 
+	SelfRef->CapsuleCollision->SetCollisionProfileName(TEXT("NoCollision"));
+
 	SelfRef->Stomping = true;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
@@ -29,6 +32,10 @@ void UMolochStomping::OnStateExit()
 {
 	Super::OnStateExit();
 
+	SelfRef->MovementComponent->MoveThroughCharacters = false;
+
+	SelfRef->CapsuleCollision->SetCollisionProfileName(TEXT("Character"));
+
 	SelfRef->Stomping = false;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
@@ -39,6 +46,8 @@ void UMolochStomping::OnStateExit()
 void UMolochStomping::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
+
+	Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime, 360.f);
 
 	if (SelfRef->AnimationEnd)
 	{

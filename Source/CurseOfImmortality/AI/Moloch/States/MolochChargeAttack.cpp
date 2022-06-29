@@ -15,7 +15,7 @@ void UMolochChargeAttack::OnStateEnter(UStateMachine* StateMachine)
 
 	Player = Controller->GetPlayer();
 	SelfRef = Controller->GetSelfRef();
-	
+
 	SelfRef->ChargedAttack = true;
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
@@ -37,8 +37,6 @@ void UMolochChargeAttack::OnStateExit()
 void UMolochChargeAttack::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
-
-	Controller->MoveToTarget(Player->GetActorLocation(), 1200.f, DeltaTime, 180.f, false, true);
 
 	FVector PlayerLocation = Player->GetActorLocation();
 	FVector OwnLocation = SelfRef->HeadLocation->GetComponentLocation();
@@ -81,4 +79,5 @@ void UMolochChargeAttack::OnStateUpdate(float DeltaTime)
 	{
 		Controller->Transition(Controller->HitWall, Controller);
 	}
+	Controller->MoveToTarget(Player->GetActorLocation(), 1200.f, DeltaTime, 180.f, false, true);
 }
