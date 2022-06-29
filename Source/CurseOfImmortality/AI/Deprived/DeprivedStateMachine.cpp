@@ -134,6 +134,12 @@ void UDeprivedStateMachine::FindPathToPlayer(TArray<FVector>& Path) const
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
 
+	if(!Grid)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Grid in Deprived State Machine"));
+		return;
+	}
+
 	if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, false))
 	{
 		Path.Empty();
@@ -145,6 +151,12 @@ void UDeprivedStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& Rando
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
+
+	if(!Grid)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Grid in Deprived State Machine"));
+		return;
+	}
 
 	FPfNode* EndNode = Grid->GetRandomNodeInNavMesh();
 

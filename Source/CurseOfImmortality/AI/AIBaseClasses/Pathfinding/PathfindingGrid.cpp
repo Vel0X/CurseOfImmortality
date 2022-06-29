@@ -19,6 +19,13 @@ APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(86, 65) //86 65
 	}
 }
 
+void APathfindingGrid::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	FPersistentWorldManager::PathfindingGrid = this;
+}
+
 void APathfindingGrid::Print()
 {
 	TBaseGrid<FPfNode>::Print();
@@ -95,8 +102,6 @@ void APathfindingGrid::Tick(float DeltaSeconds)
 void APathfindingGrid::BeginPlay()
 {
 	Super::BeginPlay();
-
-	FPersistentWorldManager::PathfindingGrid = this;
 }
 
 void APathfindingGrid::PrintGrid()

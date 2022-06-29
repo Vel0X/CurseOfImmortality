@@ -100,6 +100,11 @@ void UInuStateMachine::FindPathToPlayer(TArray<FVector>& Path) const
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
+	if(!Grid)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Grid in Inu State Machine"));
+		return;
+	}
 
 	if (!Grid->GetPathWorldSpace(SelfRef->GetActorLocation(), Player->GetActorLocation(), Path, false))
 	{
@@ -112,7 +117,12 @@ void UInuStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& RandomLoca
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
-
+	if(!Grid)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Grid in Inu State Machine"));
+		return;
+	}
+	
 	FPfNode* EndNode = Grid->GetRandomNodeInNavMesh();
 
 	if (EndNode->IsWalkable && !EndNode->SpawnArea)

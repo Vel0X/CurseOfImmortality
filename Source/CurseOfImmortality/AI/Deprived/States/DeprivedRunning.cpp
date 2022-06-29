@@ -1,4 +1,4 @@
-	// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "CurseOfImmortality/AI/Deprived/States/DeprivedRunning.h"
@@ -43,20 +43,55 @@ void UDeprivedRunning::OnStateUpdate(float DeltaTime)
 
 	if (Controller->CheckLineOfSight(PlayerLocation))
 	{
-		if (PathfindingTimer <= 0)
+		if (!(FVector::Dist(SelfRef->GetActorLocation(), PlayerLocation) <= 100.f))
 		{
-			Controller->FindPathToPlayer(Path);
-			PathIndex = 0;
-			PathfindingTimer = 0.5f;
-		}
-		if (!Path.IsEmpty())
-		{
-			if (Controller->FollowPath(Path, DeltaTime, PathIndex))
+			if (PathfindingTimer <= 0)
 			{
-				PathIndex++;
+				Controller->FindPathToPlayer(Path);
+				PathIndex = 0;
+				PathfindingTimer = 0.5f;
+			}
+			if (!Path.IsEmpty())
+			{
+				if (Controller->FollowPath(Path, DeltaTime, PathIndex))
+				{
+					PathIndex++;
+				}
+			}
+			PathfindingTimer -= DeltaTime;
+		}
+		else
+		{
+			Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[Movespeed], DeltaTime);
+			if (!SelfRef->WeakDeprived)
+			{
+				if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistFrenziedAttack)
+				{
+					if (SelfRef->CurrentFrenziedAttackCoolDown <= 0.f)
+					{
+						SelfRef->CurrentFrenziedAttackCoolDown = SelfRef->FrenziedAttackCoolDown;
+						Controller->Transition(Controller->FrenziedAttack, Controller);
+						NoAttackChosen = false;
+					}
+				}
+				else if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistJumpAttack)
+				{
+					if (SelfRef->CurrentJumpAttackCoolDown <= 0.f)
+					{
+						SelfRef->CurrentJumpAttackCoolDown = SelfRef->JumpAttackCoolDown;
+						Controller->Transition(Controller->JumpAttack, Controller);
+						NoAttackChosen = false;
+					}
+				}
+			}
+			if (NoAttackChosen)
+			{
+				if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) < SelfRef->DistNormalAttack)
+				{
+					Controller->Transition(Controller->NormalAttack, Controller);
+				}
 			}
 		}
-		PathfindingTimer -= DeltaTime;
 	}
 	else
 	{

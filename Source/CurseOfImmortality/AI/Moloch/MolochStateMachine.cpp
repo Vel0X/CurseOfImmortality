@@ -119,6 +119,11 @@ void UMolochStateMachine::FindPathToPlayer(TArray<FVector>& Path) const
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
+	if(!Grid)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Grid in Moloch State Machine"));
+		return;
+	}
 
 	if (!Grid->GetPathWorldSpace(SelfRef->HeadLocation->GetComponentLocation(), Player->GetActorLocation(), Path,
 	                             false))
@@ -132,7 +137,12 @@ void UMolochStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& RandomL
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
-
+	if(!Grid)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Grid in Moloch State Machine"));
+		return;
+	}
+	
 	FPfNode* EndNode = Grid->GetRandomNodeInNavMesh();
 
 	if (EndNode->IsWalkable && !EndNode->SpawnArea)

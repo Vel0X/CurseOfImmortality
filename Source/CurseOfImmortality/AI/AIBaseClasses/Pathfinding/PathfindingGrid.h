@@ -111,6 +111,7 @@ class CURSEOFIMMORTALITY_API APathfindingGrid : public AActor, public TBaseGrid<
 
 public:
 	APathfindingGrid();
+	virtual void PostInitializeComponents() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
 	virtual void Print() override;
