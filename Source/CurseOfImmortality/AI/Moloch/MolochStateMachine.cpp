@@ -31,6 +31,15 @@ void UMolochStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	if (!SelfRef) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
 	if (!CurrentState) { UE_LOG(LogTemp, Error, TEXT("No Self Ref in Deprived StateMachine")); }
 
+	if (SelfRef->StartGatePassed)
+	{
+		UE_LOG(LogTemp, Error, TEXT("true"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("false"));
+	}
+
 	if (!SelfRef->Dead)
 	{
 		CurrentState->OnStateUpdate(DeltaTime);

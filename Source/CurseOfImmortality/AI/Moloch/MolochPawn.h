@@ -76,7 +76,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	float TriggerRange = 1000.f;
 	UPROPERTY(EditAnywhere)
-	float ChargeRange = 800.f;
+	float ChargeRange = 600.f;
 	UPROPERTY(EditAnywhere)
 	float AttackRange = 300.f;
 

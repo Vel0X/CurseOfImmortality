@@ -77,5 +77,5 @@ void UMolochChargeAttack::OnStateUpdate(float DeltaTime)
 	{
 		Controller->Transition(Controller->HitWall, Controller);
 	}
-	Controller->MoveToTarget(Player->GetActorLocation(), 1600.f, DeltaTime, 360.f, false, true);
+	Controller->MoveToTarget(Player->GetActorLocation(), 1600.f, DeltaTime, 200.f, false, true);
 }

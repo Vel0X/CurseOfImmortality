@@ -5,8 +5,10 @@
 
 #include <CurseOfImmortality/Management/PersistentWorldManager.h>
 
+#include "CurseOfImmortality/AI/Moloch/MolochPawn.h"
 
-APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(86, 65) //86 65
+
+APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(15, 15) //86 65
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -67,19 +69,19 @@ void APathfindingGrid::Tick(float DeltaSeconds)
 				FColor Color;
 				if (GetValue(x, y).IsWalkable)
 				{
-					if (GetValue(x, y).StaticHeat >= 25 || GetValue(x, y).DynamicHeat >= 25)
+					if (GetValue(x, y).StaticHeat >= 25.f || GetValue(x, y).DynamicHeat >= 25.f)
 					{
 						Color = FColor(255, 128, 0, 80);
 					}
-					else if (GetValue(x, y).StaticHeat >= 12 || GetValue(x, y).DynamicHeat >= 12)
+					else if (GetValue(x, y).StaticHeat >= 12.f || GetValue(x, y).DynamicHeat >= 12.f)
 					{
 						Color = FColor(255, 255, 0, 80);
 					}
-					else if (GetValue(x, y).StaticHeat >= 6 || GetValue(x, y).DynamicHeat >= 6)
+					else if (GetValue(x, y).StaticHeat >= 6.f || GetValue(x, y).DynamicHeat >= 6.f)
 					{
 						Color = FColor(128, 255, 0, 80);
 					}
-					else if (GetValue(x, y).StaticHeat >= 3 || GetValue(x, y).DynamicHeat >= 3)
+					else if (GetValue(x, y).StaticHeat >= 3.f || GetValue(x, y).DynamicHeat >= 3.f)
 					{
 						Color = FColor(0, 255, 0, 80);
 					}
@@ -270,48 +272,57 @@ void APathfindingGrid::GenerateDynamicHeatMap(float DeltaTime)
 			for (int y = 0; y < Height; ++y)
 			{
 				GetValue(x, y).DynamicHeat = 0.f;
-				// 	FVector WorldPosition;
-				// 	GetWorldPositionFromCoordinates(x, y, WorldPosition);
-				// 	bool Heat = false;
-				// 	for (int i = 0; i < Offsets.Num(); ++i)
-				// 	{
-				// 		FHitResult Hit;
-				// 		FVector OffsetWorldPosition = WorldPosition + Offsets[i];
-				// 		FVector StartPosition = OffsetWorldPosition + FVector(0, 0, 10000);
-				// 		FCollisionQueryParams CollisionQuery = FCollisionQueryParams();
-				// 		if (GetWorld()->
-				// 			LineTraceSingleByChannel(Hit, StartPosition, OffsetWorldPosition, ECC_GameTraceChannel9,
-				// 			                         CollisionQuery))
-				// 		{
-				// 			if (!Cast<APlayerCharacter>(Hit.GetActor()))
-				// 			{
-				// 			}
-				// 			Heat = true;
-				// 		}
-				// 	}
-				// 	if (Heat)
-				// 	{
-				// 		GetValue(x, y).DynamicHeat = 10.f;
-				// 		TArray Neighbors(GetNeighbors(x, y));
-				// 		for (FPfNode* Neighbor : Neighbors)
-				// 		{
-				// 			Neighbor->DynamicHeat = 5.f;
-				// 		}
-				// 	}
-				// }
 			}
 			TArray Enemies(FPersistentWorldManager::GetEnemies());
 
 			for (ABaseCharacter* Enemy : Enemies)
 			{
 				int X, Y;
-				if (GetCoordinatesFromWorldPosition(Enemy->GetActorLocation(), X, Y))
+				if (Cast<AMolochPawn>(Enemy))
 				{
-					GetValue(X, Y).DynamicHeat += 10.f;
-					TArray Neighbors(GetNeighbors(X, Y));
-					for (FPfNode* Neighbor : Neighbors)
+					if (GetCoordinatesFromWorldPosition(Enemy->GetActorLocation(), X, Y))
 					{
-						Neighbor->DynamicHeat += 5.f;
+						GetValue(X, Y).DynamicHeat += 25.f;
+						TArray Neighbors(GetNeighbors(X, Y));
+						for (FPfNode* Neighbor : Neighbors)
+						{
+							Neighbor->DynamicHeat += 25.f;
+						}
+					}
+					float Offset = CellSize;
+					for (int i = 0; i < 10; ++i)
+					{
+						int U, V;
+						if (GetCoordinatesFromWorldPosition(
+							Enemy->GetActorLocation() + Enemy->GetActorForwardVector() * Offset, U, V))
+						{
+							GetValue(U, V).DynamicHeat += 3.f;
+						}
+						if (GetCoordinatesFromWorldPosition(
+							(Enemy->GetActorLocation() + Enemy->GetActorRightVector() * CellSize) + (Enemy->
+							GetActorForwardVector() * Offset), U, V))
+						{
+							GetValue(U, V).DynamicHeat += 3.f;
+						}
+						if (GetCoordinatesFromWorldPosition(
+							Enemy->GetActorLocation() + Enemy->GetActorRightVector().operator-() * CellSize + Enemy->
+							GetActorForwardVector() * Offset, U, V))
+						{
+							GetValue(U, V).DynamicHeat += 3.f;
+						}
+						Offset += CellSize;
+					}
+				}
+				else
+				{
+					if (GetCoordinatesFromWorldPosition(Enemy->GetActorLocation(), X, Y))
+					{
+						GetValue(X, Y).DynamicHeat += 10.f;
+						TArray Neighbors(GetNeighbors(X, Y));
+						for (FPfNode* Neighbor : Neighbors)
+						{
+							Neighbor->DynamicHeat += 5.f;
+						}
 					}
 				}
 			}

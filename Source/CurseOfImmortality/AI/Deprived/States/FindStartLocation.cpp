@@ -56,7 +56,7 @@ void UFindStartLocation::OnStateUpdate(float DeltaTime)
 			{
 				if (!Path.IsEmpty())
 				{
-					if (Controller->FollowPath(Path, DeltaTime, PathIndex, 360.f, 1.f, true))
+					if (Controller->FollowPath(Path, DeltaTime, PathIndex, 360.f, 1.f))
 					{
 						PathIndex++;
 					}
@@ -65,7 +65,7 @@ void UFindStartLocation::OnStateUpdate(float DeltaTime)
 		}
 		else
 		{
-			if (Controller->FollowPath(Path, DeltaTime, PathIndex, 360.f, 1.f, true))
+			if (Controller->FollowPath(Path, DeltaTime, PathIndex, 360.f, 1.f))
 			{
 				PathIndex++;
 			}

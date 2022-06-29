@@ -103,7 +103,7 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 			}
 			else
 			{
-				if (FVector::Dist(PlayerLocation, MidLocation) <= SelfRef->AttackRange)
+				if (FVector::Dist(PlayerLocation, MidLocation) <= 600.f)
 				{
 					Controller->Transition(Controller->Stomping, Controller);
 				}

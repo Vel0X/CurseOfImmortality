@@ -23,4 +23,6 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	int PowerLevel;
+
+	bool StartGatePassed = false;
 };
