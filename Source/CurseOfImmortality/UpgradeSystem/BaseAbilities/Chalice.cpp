@@ -4,6 +4,7 @@
 #include "Chalice.h"
 
 #include "NiagaraComponent.h"
+#include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 
 // Sets default values
@@ -43,8 +44,17 @@ void AChalice::Tick(float DeltaTime)
 void AChalice::OnHitNotify(ABaseCharacter* HitCharacter)
 {
 	Super::OnHitNotify(HitCharacter);
+
+	if(HitCharacter != FPersistentWorldManager::PlayerCharacter)
+	{
+		return;
+	}
+	
 	if(CurrentCooldown <= 0.0f)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Get Heal"));
+		const auto RejuvenationInstance = FPersistentWorldManager::ObjectFactory->GetBuff(Rejuvenation);
+		HitCharacter->AddBuff(RejuvenationInstance, HitCharacter, 1);
 		//Add Heal Buff to Player
 		CurrentCooldown = Cooldown;
 		Vfx->Deactivate();

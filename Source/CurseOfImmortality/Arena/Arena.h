@@ -42,6 +42,9 @@ public:
 	USceneComponent* LargeGate;
 
 	UPROPERTY(EditAnywhere)
+	USceneComponent* ChaliceLocation;
+	
+	UPROPERTY(EditAnywhere)
 	USceneComponent* PlayerSpawnPosition;
 	
 	UPROPERTY(EditAnywhere)

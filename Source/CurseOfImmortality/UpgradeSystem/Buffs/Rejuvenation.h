@@ -15,11 +15,14 @@ class CURSEOFIMMORTALITY_API URejuvenation : public UBaseBuff
 	GENERATED_BODY()
 public:
 	virtual bool AddBuffStack() override;
-	
+
+	virtual void InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _Inflicter) override;
 	virtual void OnBuffTick(float DeltaTime) override;
+	virtual void OnBuffEnd() override;
 
 private:
 	float TimeUntilNextTick = 0.0f;
 	float TickInterval = 0.3f;
 	float HealAmount = 3.0f;
 };
+
