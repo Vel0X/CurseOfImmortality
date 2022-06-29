@@ -22,6 +22,10 @@ public:
 	void ToggleChargeAttack();
 	UFUNCTION(BlueprintCallable)
 	void ToggleKick();
+	UFUNCTION(BlueprintCallable)
+	void SpawnStomping();
+	UFUNCTION(BlueprintCallable)
+	void GetLocation();
 
 	//Sates
 	UPROPERTY(BlueprintReadWrite)
@@ -45,13 +49,15 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* Mesh;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UMolochStateMachine* StateMachine;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* HeadLocation;
 	UPROPERTY(EditAnywhere)
 	USceneComponent* BackLocation;
-
+	UPROPERTY(EditAnywhere)
+	USceneComponent* StompLocation;
+	
 	UPROPERTY(EditAnywhere)
 	UCapsuleComponent* HeadAttack;
 	UPROPERTY(EditAnywhere)
@@ -76,4 +82,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool AnimationEnd;
+
+	FVector TargetLocation;
 };

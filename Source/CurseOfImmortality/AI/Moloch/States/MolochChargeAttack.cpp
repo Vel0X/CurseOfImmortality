@@ -54,11 +54,11 @@ void UMolochChargeAttack::OnStateUpdate(float DeltaTime)
 	}
 
 	OwnLocation.Z = 100;
-	FVector Target(OwnLocation + SelfRef->GetActorForwardVector() * 100.f);
+	FVector Target(OwnLocation + SelfRef->GetActorForwardVector() * 150.f);
 	FVector LeftStart(OwnLocation + SelfRef->GetActorRightVector() * 100.f);
-	FVector LeftEnd(LeftStart + SelfRef->GetActorForwardVector() * 100.f);
+	FVector LeftEnd(LeftStart + SelfRef->GetActorForwardVector() * 150.f);
 	FVector RightStart(OwnLocation + SelfRef->GetActorRightVector().operator-() * 100.f);
-	FVector RightEnd(RightStart + SelfRef->GetActorForwardVector() * 100.f);
+	FVector RightEnd(RightStart + SelfRef->GetActorForwardVector() * 150.f);
 
 	FHitResult Hit;
 	FHitResult HitLeft;
@@ -73,13 +73,9 @@ void UMolochChargeAttack::OnStateUpdate(float DeltaTime)
 	SelfRef->GetWorld()->LineTraceSingleByChannel(HitRight, RightStart, RightEnd, ECC_GameTraceChannel11,
 	                                              CollisionParams);
 
-	DrawDebugLine(SelfRef->GetWorld(), OwnLocation, Target, FColor::Purple);
-	DrawDebugLine(SelfRef->GetWorld(), LeftStart, LeftEnd, FColor::Purple);
-	DrawDebugLine(SelfRef->GetWorld(), RightStart, RightEnd, FColor::Purple);
-
 	if (Hit.bBlockingHit || HitLeft.bBlockingHit || HitRight.bBlockingHit)
 	{
 		Controller->Transition(Controller->HitWall, Controller);
 	}
-	Controller->MoveToTarget(Player->GetActorLocation(), 1200.f, DeltaTime, 180.f, false, true);
+	Controller->MoveToTarget(Player->GetActorLocation(), 1600.f, DeltaTime, 360.f, false, true);
 }

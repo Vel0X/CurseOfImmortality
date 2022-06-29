@@ -52,9 +52,6 @@ void UMolochHitPlayer::OnStateUpdate(float DeltaTime)
 	if (TargetLocation.IsZero())
 	{
 		TargetLocation = SelfRef->HeadLocation->GetComponentLocation() + SelfRef->GetActorForwardVector() * 10000.f;
-
-		DrawDebugLine(SelfRef->GetWorld(), SelfRef->HeadLocation->GetComponentLocation(), TargetLocation, FColor::Red,
-		              true);
 	}
 
 	float MovementCurve;
@@ -62,7 +59,7 @@ void UMolochHitPlayer::OnStateUpdate(float DeltaTime)
 	const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
 	Animation->GetCurveValue(FName("Speed"), MovementCurve);
 
-	Controller->MoveToTarget(TargetLocation, 1600.f * MovementCurve, DeltaTime, 720.f, false, true);
+	Controller->MoveToTarget(TargetLocation, 1800.f * MovementCurve, DeltaTime, 720.f, false, true);
 
 
 	if (SelfRef->AnimationEnd)

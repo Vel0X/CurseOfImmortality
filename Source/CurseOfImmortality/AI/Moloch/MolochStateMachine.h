@@ -38,21 +38,21 @@ public:
 	UState* Idle;
 	UPROPERTY()
 	UState* Walking;
-	UPROPERTY(BlueprintReadOnly)
-	UState* ChargeAttack;
 	UPROPERTY()
+	UState* ChargeAttack;
+	UPROPERTY(BlueprintReadOnly)
 	UState* NormalAttack;
 	UPROPERTY()
 	UState* HitPlayer;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	UState* HitWall;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	UState* FindStartLocation;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	UState* Stomping;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	UState* Kick;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY()
 	UState* PrepareCharge;
 
 	//Getter

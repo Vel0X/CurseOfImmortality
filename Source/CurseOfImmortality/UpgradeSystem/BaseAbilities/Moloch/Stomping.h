@@ -1,29 +1,26 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/BaseAbility.h"
-#include "Particles/ParticleSystemComponent.h"
-#include "MawSlam.generated.h"
+#include "Stomping.generated.h"
 
 class USphereComponent;
-class UNiagaraComponent;
 /**
  * 
  */
 UCLASS()
-class CURSEOFIMMORTALITY_API AMawSlam : public ABaseAbility
+class CURSEOFIMMORTALITY_API AStomping : public ABaseAbility
 {
 	GENERATED_BODY()
-	// Sets default values for this actor's properties
-	AMawSlam();
+	AStomping();
 
 	UPROPERTY(EditAnywhere)
 	UNiagaraComponent* ParticleSystem;
 
 	UPROPERTY(EditAnywhere)
-	float DamageWindow = 0.1f;
+	float DamageWindow = 0.25f;
 
 public:
 	virtual void Tick(float DeltaSeconds) override;

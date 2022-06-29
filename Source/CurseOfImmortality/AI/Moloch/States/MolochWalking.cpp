@@ -76,12 +76,8 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 	{
 		if (FVector::Dist(PlayerLocation, HeadLocation) >= SelfRef->ChargeRange)
 		{
-			UE_LOG(LogTemp, Error, TEXT("%f"), SelfRef->CurrentChargeAttackCoolDown);
-
 			if (SelfRef->CurrentChargeAttackCoolDown <= 0.f)
 			{
-				UE_LOG(LogTemp, Error, TEXT("true"));
-
 				Controller->Transition(Controller->PrepareCharge, Controller);
 			}
 			else
@@ -115,6 +111,5 @@ void UMolochWalking::OnStateUpdate(float DeltaTime)
 		}
 		Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[Movespeed], DeltaTime);
 	}
-
 	PathfindingTimer -= DeltaTime;
 }

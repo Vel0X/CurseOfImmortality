@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class CURSEOFIMMORTALITY_API UMolochNormalAttack : public UMolochBaseState
 {
 	GENERATED_BODY()

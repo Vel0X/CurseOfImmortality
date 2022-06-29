@@ -35,8 +35,6 @@ void UMolochStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	{
 		CurrentState->OnStateUpdate(DeltaTime);
 	}
-
-	UE_LOG(LogTemp, Error, TEXT("%f"), SelfRef->CurrentChargeAttackCoolDown);
 	SelfRef->CurrentChargeAttackCoolDown -= DeltaTime;
 	SelfRef->CurrentAttackDelay -= DeltaTime;
 }
@@ -83,10 +81,6 @@ TArray<FHitResult> UMolochStateMachine::GetHitsInLine(FVector Target) const
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(Player);
 	CollisionParams.AddIgnoredActor(SelfRef);
-
-	DrawDebugLine(GetWorld(), LeftStart, LeftEnd, FColor::Red);
-	DrawDebugLine(GetWorld(), RightStart, RightEnd, FColor::Green);
-	DrawDebugLine(GetWorld(), MidStart, MidEnd, FColor::Blue);
 
 	GetWorld()->LineTraceSingleByChannel(HitMid, MidStart, MidEnd, ECC_GameTraceChannel3, CollisionParams);
 	GetWorld()->LineTraceSingleByChannel(HitLeft, LeftStart, LeftEnd, ECC_GameTraceChannel3, CollisionParams);

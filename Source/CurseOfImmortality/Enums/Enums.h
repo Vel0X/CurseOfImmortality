@@ -103,7 +103,8 @@ enum EUpgradeName
 	TailSweep,
 	TrailExplosion,
 	TrapProjectile,
-	InuProjectile
+	InuProjectile,
+	MolochStomping
 };
 
 UENUM()

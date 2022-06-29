@@ -30,6 +30,9 @@ void UMolochNormalAttack::OnStateExit()
 	Super::OnStateExit();
 
 	SelfRef->NormalAttack = false;
+
+	SelfRef->TargetLocation = FVector::Zero();
+
 	if (FPersistentWorldManager::GetLogLevel(MolochStateMachine))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("NormalAttack State Exit"))
@@ -41,6 +44,16 @@ void UMolochNormalAttack::OnStateUpdate(float DeltaTime)
 	Super::OnStateUpdate(DeltaTime);
 
 	Controller->FocusOnLocation(Player->GetActorLocation(), DeltaTime, 90.f);
+
+	if (!SelfRef->TargetLocation.IsZero())
+	{
+		float MovementCurve;
+
+		const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
+		Animation->GetCurveValue(FName("Speed"), MovementCurve);
+
+		Controller->MoveToTarget(SelfRef->TargetLocation, 600.f * MovementCurve, DeltaTime, 720.f, false, true);
+	}
 
 	if (SelfRef->AnimationEnd)
 	{
