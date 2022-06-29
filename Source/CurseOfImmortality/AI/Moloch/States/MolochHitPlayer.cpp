@@ -59,7 +59,7 @@ void UMolochHitPlayer::OnStateUpdate(float DeltaTime)
 	const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
 	Animation->GetCurveValue(FName("Speed"), MovementCurve);
 
-	Controller->MoveToTarget(TargetLocation, 1800.f * MovementCurve, DeltaTime, 720.f, false, true);
+	Controller->MoveToTarget(TargetLocation, 1800.f * MovementCurve, DeltaTime, 720.f, true);
 
 
 	if (SelfRef->AnimationEnd)

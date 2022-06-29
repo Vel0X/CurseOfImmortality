@@ -213,7 +213,6 @@ void UDeprivedStateMachine::MoveToTarget(FVector Target, const float MovementSpe
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("No Grid in Deprived State Machine"));
 		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, true, false);
 	}
 }

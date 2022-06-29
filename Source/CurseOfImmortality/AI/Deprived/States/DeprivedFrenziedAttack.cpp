@@ -50,31 +50,31 @@ void UDeprivedFrenziedAttack::OnStateUpdate(float DeltaTime)
 
 	if (FVector::Dist(PlayerLocation, SelfRef->GetActorLocation()) > SelfRef->MinDistFrenziedAttack)
 	{
-		if (Controller->CheckLineOfSight(Player->GetActorLocation()))
-		{
-			if (PathfindingTimer <= 0)
-			{
-				Controller->FindPathToPlayer(Path);
-				PathIndex = 0;
-				PathfindingTimer = 1.f;
-			}
-			if (!Path.IsEmpty())
-			{
-				if (Controller->FollowPath(Path, DeltaTime, PathIndex, 360.f, CurveValue))
-				{
-					PathIndex++;
-				}
-			}
-			PathfindingTimer -= DeltaTime;
-		}
-		else
-		{
-			if (!Path.IsEmpty())
-			{
-				Path.Empty();
-			}
-			Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[Movespeed] * CurveValue, DeltaTime);
-		}
+		// if (Controller->CheckLineOfSight(Player->GetActorLocation()))
+		// {
+		// 	if (PathfindingTimer <= 0)
+		// 	{
+		// 		Controller->FindPathToPlayer(Path);
+		// 		PathIndex = 0;
+		// 		PathfindingTimer = 1.f;
+		// 	}
+		// 	if (!Path.IsEmpty())
+		// 	{
+		// 		if (Controller->FollowPath(Path, DeltaTime, PathIndex, 360.f, CurveValue))
+		// 		{
+		// 			PathIndex++;
+		// 		}
+		// 	}
+		// 	PathfindingTimer -= DeltaTime;
+		// }
+		// else
+		// {
+		// 	if (!Path.IsEmpty())
+		// 	{
+		// 		Path.Empty();
+		// 	}
+		Controller->MoveToTarget(PlayerLocation, SelfRef->Stats[Movespeed] * CurveValue, DeltaTime);
+		// }
 	}
 	if (SelfRef->AnimationEnd)
 	{

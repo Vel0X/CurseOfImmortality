@@ -52,7 +52,7 @@ void UMolochNormalAttack::OnStateUpdate(float DeltaTime)
 		const UAnimInstance* Animation = SelfRef->Mesh->GetAnimInstance();
 		Animation->GetCurveValue(FName("Speed"), MovementCurve);
 
-		Controller->MoveToTarget(SelfRef->TargetLocation, 600.f * MovementCurve, DeltaTime, 720.f, false, true);
+		Controller->MoveToTarget(SelfRef->TargetLocation, 600.f * MovementCurve, DeltaTime, 720.f, true);
 	}
 
 	if (SelfRef->AnimationEnd)

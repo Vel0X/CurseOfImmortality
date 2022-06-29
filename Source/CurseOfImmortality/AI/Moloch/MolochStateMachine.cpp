@@ -168,14 +168,14 @@ void UMolochStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& RandomL
 	}
 }
 
-bool UMolochStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, bool IgnoreWall,
+bool UMolochStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex,
                                      float RotationSpeed,
                                      float CurveValue) const
 {
 	FVector L(SelfRef->HeadLocation->GetComponentLocation());
 	L.Z = 0;
 
-	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed, IgnoreWall);
+	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed);
 
 	if (FVector::Dist(Path[PathIndex], L) < 300.f)
 	{
@@ -186,14 +186,20 @@ bool UMolochStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int 
 }
 
 void UMolochStateMachine::MoveToTarget(FVector Target, const float MovementSpeed, const float DeltaTime,
-                                       const float RotationSpeed, bool IgnoreAllCol, bool IgnorePawns) const
+                                       const float RotationSpeed, bool IgnorePawns) const
 {
 	// Target = SelfRef->GetActorLocation() - Target;
 	FocusOnLocation(Target, DeltaTime, RotationSpeed);
 	Target = Target - SelfRef->HeadLocation->GetComponentLocation();
 	Target.Z = 0;
-	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, IgnoreAllCol,
-	                                         IgnorePawns);
+	if (SelfRef->StartGatePassed)
+	{
+		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, false, IgnorePawns);
+	}
+	else
+	{
+		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, true, IgnorePawns);
+	}
 }
 
 void UMolochStateMachine::FocusOnLocation(FVector Location, float DeltaTime, float RotationSpeed) const

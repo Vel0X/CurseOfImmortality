@@ -100,7 +100,7 @@ void UInuStateMachine::FindPathToPlayer(TArray<FVector>& Path) const
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
-	if(!Grid)
+	if (!Grid)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Grid in Inu State Machine"));
 		return;
@@ -117,12 +117,12 @@ void UInuStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& RandomLoca
 {
 	Path.Empty();
 	APathfindingGrid* Grid = FPersistentWorldManager::PathfindingGrid;
-	if(!Grid)
+	if (!Grid)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Grid in Inu State Machine"));
 		return;
 	}
-	
+
 	FPfNode* EndNode = Grid->GetRandomNodeInNavMesh();
 
 	if (EndNode->IsWalkable && !EndNode->SpawnArea)
@@ -143,12 +143,12 @@ void UInuStateMachine::FindRandomPath(TArray<FVector>& Path, FVector& RandomLoca
 }
 
 bool UInuStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int PathIndex, float RotationSpeed,
-                                  float CurveValue, bool IgnoreWalls) const
+                                  float CurveValue) const
 {
 	FVector L(SelfRef->GetActorLocation());
 	L.Z = 0;
 
-	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed, IgnoreWalls);
+	MoveToTarget(Path[PathIndex], SelfRef->Stats[Movespeed] * CurveValue, DeltaTime, RotationSpeed);
 
 	if (FVector::Dist(Path[PathIndex], L) < 100.f)
 	{
@@ -160,13 +160,20 @@ bool UInuStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int Pat
 }
 
 void UInuStateMachine::MoveToTarget(FVector Target, const float MovementSpeed, const float DeltaTime,
-                                    const float RotationSpeed, bool IgnoreWall) const
+                                    const float RotationSpeed) const
 {
 	// Target = SelfRef->GetActorLocation() - Target;
 	FocusOnLocation(Target, DeltaTime, RotationSpeed);
 	Target = Target - SelfRef->GetActorLocation();
 	Target.Z = 0;
-	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, IgnoreWall, false);
+	if (SelfRef->StartGatePassed)
+	{
+		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, false, false);
+	}
+	else
+	{
+		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, true, false);
+	}
 }
 
 void UInuStateMachine::FocusOnLocation(const FVector Location, const float DeltaTime,

@@ -8,7 +8,7 @@
 #include "CurseOfImmortality/AI/Moloch/MolochPawn.h"
 
 
-APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(15, 15) //86 65
+APathfindingGrid::APathfindingGrid(): TBaseGrid<FPfNode>(86, 65) //86 65
 {
 	PrimaryActorTick.bCanEverTick = true;
 
