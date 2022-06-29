@@ -59,8 +59,12 @@ TArray<ABaseEnemyPawn*> UStormcallerCircleAssortment::SpawnAssortment()
 
 					FVector ViewDirection = SpawnPosition - CenterPoint;
 					ViewDirection.Normalize();
-					Enemies.Add(FPersistentWorldManager::ObjectFactory->SpawnEnemy(Tuple.Key, SpawnPosition, ViewDirection.Rotation()));
-					break;
+					auto Enemy = FPersistentWorldManager::ObjectFactory->SpawnEnemy(Tuple.Key, SpawnPosition, ViewDirection.Rotation());
+					if(Enemy)
+					{
+						Enemies.Add(Enemy);
+						break;
+					}
 				}
 			}
 		}

@@ -58,7 +58,9 @@ enum EEnemy
 	WeakDeprived,
 	Deprived,
 	Stormcaller,
-	MawOfSothros
+	MawOfSothros,
+	Inu,
+	Moloch
 };
 
 UENUM()

@@ -15,13 +15,13 @@ void UBleed::InitializeBuff(int Level, ABaseCharacter* _Owner, ABaseCharacter* _
 	switch(Level)
 	{
 	case 1:
-		DamageAmount = 5.0f;
+		DamageAmount = 2.0f;
 		break;
 	case 2:
-		DamageAmount = 10.0f;
+		DamageAmount = 3.0f;
 		break;
 	case 3:
-		DamageAmount = 15.0f;
+		DamageAmount = 4.0f;
 		break;
 	default: ;
 	}

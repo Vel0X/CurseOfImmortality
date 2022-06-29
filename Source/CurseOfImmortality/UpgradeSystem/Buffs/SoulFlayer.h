@@ -22,11 +22,11 @@ public:
 
 public:
 	float TickInterval = 0.5f;
-	float DamageAmount = 10.0f;
+	float DamageAmount = 13.0f;
 	float TimeUntilNextTick = 0.0f;
 
 	float DamageIncrease = 5.0f;
 	float MoveSpeedIncrease = 500.0f;
 
-	float HealPercentage = 0.5f;
+	float HealPercentage = 0.25f;
 };
