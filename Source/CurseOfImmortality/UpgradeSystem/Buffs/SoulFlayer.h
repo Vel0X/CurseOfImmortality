@@ -22,7 +22,7 @@ public:
 
 public:
 	float TickInterval = 0.5f;
-	float DamageAmount = 13.0f;
+	float DamageAmount = 7.0f;
 	float TimeUntilNextTick = 0.0f;
 
 	float DamageIncrease = 5.0f;
