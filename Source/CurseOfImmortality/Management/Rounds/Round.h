@@ -65,6 +65,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int CalculateRemainingPowerLevel();
 
+	int GetRemainingEnemies(TArray<ABaseEnemyPawn*>& AliveEnemies);
+
 	UPROPERTY(EditAnywhere)
 	URoundSpecification* Specification;
 

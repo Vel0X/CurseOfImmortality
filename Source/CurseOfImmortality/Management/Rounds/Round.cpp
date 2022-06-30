@@ -207,6 +207,21 @@ int URound::CalculateRemainingPowerLevel()
 	return RemainingPowerLevel;
 }
 
+int URound::GetRemainingEnemies(TArray<ABaseEnemyPawn*>& AliveEnemies)
+{
+	int Count = 0;
+	for (const auto Enemy : ActiveEnemies)
+	{
+		if(Enemy && !Enemy->Dead)
+		{
+			AliveEnemies.Add(Enemy);
+			++Count;
+		}
+	}
+
+	return Count;
+}
+
 
 void URound::SpawnEnemies()
 {

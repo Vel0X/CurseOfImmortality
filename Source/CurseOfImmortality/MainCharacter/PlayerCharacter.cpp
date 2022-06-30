@@ -2,6 +2,8 @@
 
 
 #include "PlayerCharacter.h"
+
+#include "NiagaraComponent.h"
 #include "PlayerCharacterStateMachine.h"
 #include "CurseOfImmortality/AI/Deprived/DeprivedPawn.h"
 #include "CurseOfImmortality/MainCharacter/PlayerAnim.h"
@@ -38,6 +40,8 @@ APlayerCharacter::APlayerCharacter() : ABaseCharacter()
 
 	SoundSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SoundSphere"));
 	SoundSphere->SetupAttachment(RootComponent);
+
+
 }
 
 APlayerCharacter::~APlayerCharacter()
@@ -64,12 +68,18 @@ void APlayerCharacter::Setup()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	AdjustArrow();
 }
 
 void APlayerCharacter::OnDeath()
 {
 	Dead = true;
 	FPersistentWorldManager::GameMode->ShowDeathScreen();
+}
+
+void APlayerCharacter::AdjustArrow()
+{
+	
 }
 
 int APlayerCharacter::CalculateCurrentPowerLevel()

@@ -3,6 +3,7 @@
 
 #include "CurseOfImmortality/AI/Inu/InuPawn.h"
 
+#include "NiagaraComponent.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 
 AInuPawn::AInuPawn()
@@ -13,6 +14,8 @@ AInuPawn::AInuPawn()
 	ProjectileLocation = CreateDefaultSubobject<USceneComponent>("ProjectileLocation");
 	ProjectileLocation->SetupAttachment(Mesh, "HeadSocket");
 
+	Aura = CreateDefaultSubobject<UNiagaraComponent>("Aura");
+	Aura->SetupAttachment(RootComponent);
 
 	StateMachine = CreateDefaultSubobject<UInuStateMachine>("StateMachine");
 }

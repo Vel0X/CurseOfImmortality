@@ -33,6 +33,9 @@ public:
 	USceneComponent* ProjectileLocation;
 
 	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* Aura;
+	
+	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInuStateMachine* StateMachine;
