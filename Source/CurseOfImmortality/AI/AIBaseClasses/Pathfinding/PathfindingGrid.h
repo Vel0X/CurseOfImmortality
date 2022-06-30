@@ -134,14 +134,14 @@ public:
 	bool GetCoordinatesFromWorldPosition(const FVector WorldPosition, int& X, int& Y) const;
 	bool GetWorldPositionFromCoordinates(const int X, const int Y, FVector& WorldPosition) const;
 	bool CoordinatesWalkable(FVector Target);
-	
+
 	int CalculateDistance(int StartX, int StartY, int EndX, int EndY) const;
 
 	FPfNode* GetRandomNodeInNavMesh();
 	static FPfNode* GetLowestCostNode(TArray<FPfNode*>& OpenList);
 
 	TArray<FVector> ConvertPathToWorldSpace(const TArray<FPfNode*>& Path, bool Verbose = false) const;
-	
+
 	float Delay;
 
 	UPROPERTY(EditAnywhere)

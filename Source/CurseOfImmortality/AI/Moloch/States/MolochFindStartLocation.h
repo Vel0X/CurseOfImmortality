@@ -22,4 +22,10 @@ class CURSEOFIMMORTALITY_API UMolochFindStartLocation : public UMolochBaseState
 	FVector RandomLocation;
 	int PathIndex = 0;
 	float PathfindingTimer;
+
+	bool MoveInLocationArrived = false;
+
+	FVector MoveInLocation;
+
+	float WalkInDuration = 1.f;
 };

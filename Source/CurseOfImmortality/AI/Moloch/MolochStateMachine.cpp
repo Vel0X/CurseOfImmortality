@@ -177,20 +177,14 @@ bool UMolochStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, int 
 }
 
 void UMolochStateMachine::MoveToTarget(FVector Target, const float MovementSpeed, const float DeltaTime,
-                                       const float RotationSpeed, bool IgnorePawns) const
+                                       const float RotationSpeed, bool IgnorePawns, bool IgnoreAllCol) const
 {
 	// Target = SelfRef->GetActorLocation() - Target;
 	FocusOnLocation(Target, DeltaTime, RotationSpeed);
 	Target = Target - SelfRef->HeadLocation->GetComponentLocation();
 	Target.Z = 0;
-	if (SelfRef->StartGatePassed)
-	{
-		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, false, IgnorePawns);
-	}
-	else
-	{
-		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, false, IgnorePawns);
-	}
+
+	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, IgnoreAllCol, IgnorePawns);
 }
 
 void UMolochStateMachine::FocusOnLocation(FVector Location, float DeltaTime, float RotationSpeed) const

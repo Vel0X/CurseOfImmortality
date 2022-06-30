@@ -201,20 +201,14 @@ bool UDeprivedStateMachine::FollowPath(TArray<FVector> Path, float DeltaTime, in
 }
 
 void UDeprivedStateMachine::MoveToTarget(FVector Target, const float MovementSpeed, const float DeltaTime,
-                                         const float RotationSpeed) const
+                                         const float RotationSpeed, bool IgnoreAllCol) const
 {
 	// Target = SelfRef->GetActorLocation() - Target;
 	FocusOnLocation(Target, DeltaTime, RotationSpeed);
 	Target = Target - SelfRef->GetActorLocation();
 	Target.Z = 0;
-	if (SelfRef->StartGatePassed)
-	{
-		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, false, false);
-	}
-	else
-	{
-		SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, true, false);
-	}
+
+	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, IgnoreAllCol, false);
 }
 
 void UDeprivedStateMachine::FocusOnLocation(const FVector Location, const float DeltaTime,

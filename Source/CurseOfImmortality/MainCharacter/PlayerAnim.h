@@ -28,7 +28,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Time")
 	float BaseRangedDuration1 = 0.5166665f;
 	UPROPERTY(EditAnywhere, Category="Time")
-	float BaseSpecialDuration1 = 0.5333335f;
+	float BaseSpecialDuration1 = 0.4492752f;
 	UPROPERTY(EditAnywhere, Category="Time")
 	float BaseDashDuration1 = 0.15f;
 	

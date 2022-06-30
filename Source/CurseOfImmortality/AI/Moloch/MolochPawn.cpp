@@ -28,7 +28,7 @@ AMolochPawn::AMolochPawn()
 	BackAttack->SetupAttachment(Mesh, "BackAttackSocket");
 
 	BodyCollision = CreateDefaultSubobject<UCapsuleComponent>("BodyCollision");
-	BodyCollision->SetupAttachment(RootComponent);
+	BodyCollision->SetupAttachment(Mesh, "NeckSocket");
 }
 
 void AMolochPawn::ToggleChargeAttack()
