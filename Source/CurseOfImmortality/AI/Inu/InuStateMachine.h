@@ -41,6 +41,8 @@ public:
 	UState* FindStartLocation;
 	UPROPERTY()
 	UState* Retreat;
+	UPROPERTY()
+	UState* Emerge;
 
 	//Getter
 	AInuPawn* GetSelfRef() const;

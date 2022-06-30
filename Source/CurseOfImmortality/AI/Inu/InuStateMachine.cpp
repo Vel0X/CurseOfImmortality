@@ -8,6 +8,7 @@
 #include "CurseOfImmortality/BaseClasses/CharacterMovement.h"
 #include "CurseOfImmortality/Management/PersistentWorldManager.h"
 #include "CurseOfImmortality/UpgradeSystem/Utility/DetachedParticleActor.h"
+#include "States/InuEmergeState.h"
 #include "States/InuFindStartLocation.h"
 #include "States/InuIdleState.h"
 #include "States/InuRangedAttack.h"
@@ -27,6 +28,7 @@ void UInuStateMachine::BeginPlay()
 	Running = NewObject<UInuRunningState>();
 	FindStartLocation = NewObject<UInuFindStartLocation>();
 	Retreat = NewObject<UInuRetreatState>();
+	Emerge = NewObject<UInuEmergeState>();
 }
 
 void UInuStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
@@ -37,7 +39,16 @@ void UInuStateMachine::TickComponent(float DeltaTime, ELevelTick TickType,
 	if (!Player)
 	{
 		Player = FPersistentWorldManager::PlayerCharacter;
-		CurrentState = FindStartLocation;
+
+		if (SelfRef->SpawnedByMaw)
+		{
+			SelfRef->GetRootComponent()->SetVisibility(false, true);
+			CurrentState = Emerge;
+		}
+		else
+		{
+			CurrentState = FindStartLocation;
+		}
 		CurrentState->OnStateEnter(this);
 	}
 	if (!SelfRef->Dead)
@@ -166,7 +177,7 @@ void UInuStateMachine::MoveToTarget(FVector Target, const float MovementSpeed, c
 	FocusOnLocation(Target, DeltaTime, RotationSpeed);
 	Target = Target - SelfRef->GetActorLocation();
 	Target.Z = 0;
-	
+
 	SelfRef->MovementComponent->SetDirection(SelfRef->GetActorForwardVector(), MovementSpeed, IgnoreAllCol, false);
 }
 
