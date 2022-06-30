@@ -39,6 +39,7 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnDeath() override;
+	void AdjustArrow();
 
 	UFUNCTION(BlueprintCallable)
 	int CalculateCurrentPowerLevel();
@@ -89,6 +90,9 @@ public:
 	UPlayerCharacterStateMachine* StateMachine;
 	UPROPERTY(EditAnywhere)
 	UPlayerAnim* PlayerAnim;
+
+
+
 
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* Weapon;

@@ -1,5 +1,6 @@
 ﻿#include "ObjectFactory.h"
 #include "PersistentWorldManager.h"
+#include "Components/TextRenderComponent.h"
 #include "CurseOfImmortality/BaseClasses/Damage/DamageObject.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/BuffSpecification.h"
 #include "CurseOfImmortality/UpgradeSystem/BaseClasses/DataAssets/DamageSpecification.h"
@@ -219,6 +220,7 @@ ADamageIndicator* AObjectFactory::SpawnDamageIndicator(FString Text, FColor Colo
 	{
 		ADamageIndicator* DamageIndicatorInstance = Cast<ADamageIndicator>(GetWorld()->SpawnActor(Spawnables->DamageIndicator, &Location, &Rotation));
 		DamageIndicatorInstance->SetText(Text, Color);
+		DamageIndicatorInstance->TextComponent->SetTextRenderColor(DamageIndicatorInstance->TextComponent->TextRenderColor);
 		return DamageIndicatorInstance;
 	}
 
