@@ -17,6 +17,11 @@ void ACustomGameMode::SpawnEnemy(int Index, const float X, const float Y, const 
 	FPersistentWorldManager::ObjectFactory->SpawnEnemy(static_cast<EEnemy>(Index), Location, FRotator::ZeroRotator);
 }
 
+void ACustomGameMode::ToggleDoubleUpgrade()
+{
+	 FPersistentWorldManager::TwoUpgradesPerRound = ! FPersistentWorldManager::TwoUpgradesPerRound;
+}
+
 void ACustomGameMode::SpawnEnemyCustomSpawnBehaviour(int Index)
 {
 	FPersistentWorldManager::ObjectFactory->SpawnEnemyCustomSpawnBehaviour(static_cast<EEnemy>(Index));
@@ -149,6 +154,11 @@ void ACustomGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 	FPersistentWorldManager::Clear();
+}
+
+bool ACustomGameMode::TwoUpgrades()
+{
+	return FPersistentWorldManager::TwoUpgradesPerRound;
 }
 
 UAttackManager* ACustomGameMode::AttackManager()

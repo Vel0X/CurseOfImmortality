@@ -73,7 +73,7 @@ void ABaseTrap::CheckCollisions()
 				{
 					if (AbilityHitbox->IsOverlappingComponent(CharacterHitbox))
 					{
-						DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter);
+						DamageComponent->OnCharacterHit(AbilityHitbox, OverlappingCharacter, CharacterHitbox);
 					}
 				}
 			}

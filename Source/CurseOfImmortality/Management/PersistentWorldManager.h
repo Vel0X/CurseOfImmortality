@@ -22,6 +22,8 @@ public:
 	static ACustomGameMode* GameMode;
 	static ABaseEnemyPawn* MawOfSothros;
 
+	static bool TwoUpgradesPerRound;
+
 	static TArray<ABaseCharacter*> GetEnemies()
 	{
 		return Enemies;

@@ -12,6 +12,9 @@ AArena* FPersistentWorldManager::Arena = nullptr;
 UTrapManagerCopmonent* FPersistentWorldManager::TrapManager = nullptr;
 TArray<ABaseCharacter*> FPersistentWorldManager::Enemies = TArray<ABaseCharacter*>();
 TArray<ABaseCharacter*> FPersistentWorldManager::Friendly = TArray<ABaseCharacter*>();
+
+
+bool FPersistentWorldManager::TwoUpgradesPerRound = false;
 TMap<FString, bool> FPersistentWorldManager::Logs = {
 	{"round", false},
 	{"playerstatemachine", false},

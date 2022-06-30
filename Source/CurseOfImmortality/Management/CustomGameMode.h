@@ -38,7 +38,8 @@ public:
 /////////////////////////////////////////////////////////////////////
 ///-------------------WORLD MANAGER INTERFACE---------------------///
 /////////////////////////////////////////////////////////////////////
-
+	UFUNCTION(BlueprintCallable)
+	bool TwoUpgrades();
 	UFUNCTION(BlueprintCallable)
 	UAttackManager* AttackManager();
 	UFUNCTION(BlueprintCallable)
@@ -59,6 +60,10 @@ public:
 	ACustomGameMode* GameMode();
 	UFUNCTION(BlueprintCallable)
 	ABaseEnemyPawn* Maw();
+
+	
+	UPROPERTY(BlueprintReadWrite)
+	bool AdditionalUpgradeRemaining = true;
 /////////////////////////////////////////////////////////////////////
 ///-------------------------COMMANDS------------------------------///
 /////////////////////////////////////////////////////////////////////
@@ -67,6 +72,9 @@ public:
 	UFUNCTION(Exec, Category = ExecFunctions)
 	static void SpawnEnemy(int Index, float X, float Y, float Z);
 
+	UFUNCTION(Exec, Category = ExecFunctions)
+	static void ToggleDoubleUpgrade();
+	
 	UFUNCTION(Exec, Category = ExecFunctions)
 	static void SpawnEnemyCustomSpawnBehaviour(int Index);
 
