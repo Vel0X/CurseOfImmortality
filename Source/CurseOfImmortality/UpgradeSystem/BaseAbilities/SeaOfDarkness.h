@@ -18,6 +18,8 @@ class CURSEOFIMMORTALITY_API ASeaOfDarkness : public ABaseAbility
 	ASeaOfDarkness();
 	virtual void Tick(float DeltaSeconds) override;
 
+	virtual void BeginPlay() override;
+
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* Mesh;
 
@@ -26,5 +28,8 @@ public:
 	USphereComponent* Collider;
 
 private:
+	float Rand;
 	float CurrentScale = 0.f;
+	bool InuSpawned = false;
+	float SpawnDelay = 1.f;
 };
