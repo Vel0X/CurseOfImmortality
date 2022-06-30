@@ -30,7 +30,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void DisableTrap();
-
+	UFUNCTION(BlueprintImplementableEvent)
+	void EnableTrap();
+	
 	UPROPERTY()
 	ABaseCharacter* Test;
 

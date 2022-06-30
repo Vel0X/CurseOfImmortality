@@ -28,7 +28,15 @@ public:
 	bool RangedAttack = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool Running = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool Emerge = false;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool AnimationStart = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool AnimationEnd = false;
+	bool SpawnedByMaw = false;
+	
 	UPROPERTY(EditAnywhere)
 	USceneComponent* ProjectileLocation;
 
