@@ -61,6 +61,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	URound* ActiveRound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int CurrentRoundIndex = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
