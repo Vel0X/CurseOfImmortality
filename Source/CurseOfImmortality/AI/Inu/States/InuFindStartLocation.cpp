@@ -36,55 +36,68 @@ void UInuFindStartLocation::OnStateExit()
 void UInuFindStartLocation::OnStateUpdate(float DeltaTime)
 {
 	Super::OnStateUpdate(DeltaTime);
-
-	if (Path.IsEmpty())
+	
+	FVector PlayerLocation = Player->GetActorLocation();
+	FVector OwnLocation = SelfRef->GetActorLocation();
+	
+	if (MoveInLocationArrived)
 	{
-		Controller->FindRandomPath(Path, RandomLocation);
-	}
-	else
-	{
-		if (Controller->CheckLineOfSight(Path[PathIndex]))
+		if (Path.IsEmpty())
 		{
-			if (PathfindingTimer <= 0)
-			{
-				Controller->FindRandomPath(Path, RandomLocation);
-				PathIndex = 0;
-				PathfindingTimer = 2.f;
-			}
-			else
-			{
-				if (!Path.IsEmpty())
-				{
-					if (Controller->FollowPath(Path, DeltaTime, PathIndex, 500.f))
-					{
-						PathIndex++;
-					}
-				}
-			}
+			Controller->FindRandomPath(Path, RandomLocation);
 		}
 		else
 		{
-			if (Controller->FollowPath(Path, DeltaTime, PathIndex, 500.f))
+			if (Controller->CheckLineOfSight(Path[PathIndex]))
 			{
-				PathIndex++;
+				if (PathfindingTimer <= 0)
+				{
+					Controller->FindRandomPath(Path, RandomLocation);
+					PathIndex = 0;
+					PathfindingTimer = 2.f;
+				}
+				else
+				{
+					if (!Path.IsEmpty())
+					{
+						if (Controller->FollowPath(Path, DeltaTime, PathIndex, 500.f))
+						{
+							PathIndex++;
+						}
+					}
+				}
+			}
+			else
+			{
+				if (Controller->FollowPath(Path, DeltaTime, PathIndex, 500.f))
+				{
+					PathIndex++;
+				}
+			}
+
+			PathfindingTimer -= DeltaTime;
+
+			RandomLocation.Z = 0;
+			PlayerLocation.Z = 0;
+			OwnLocation.Z = 0;
+
+			if (FVector::Dist(OwnLocation, PlayerLocation) < SelfRef->TriggerRange)
+			{
+				Controller->Transition(Controller->Running, Controller);
+			}
+			if (FVector::Dist(OwnLocation, RandomLocation) < 250.f)
+			{
+				Controller->Transition(Controller->Idle, Controller);
 			}
 		}
-
-		PathfindingTimer -= DeltaTime;
-
-		RandomLocation.Z = 0;
-		FVector PlayerLocation = Player->GetActorLocation();
-		FVector OwnLocation = SelfRef->GetActorLocation();
-		PlayerLocation.Z = 0;
-		OwnLocation.Z = 0;
-
-		if (FVector::Dist(OwnLocation, PlayerLocation) < SelfRef->TriggerRange)
+	}
+	else
+	{
+		Controller->MoveToTarget(MoveInLocation, SelfRef->Stats[Movespeed], DeltaTime, 90.f, true);
+		if (WalkInDuration <= 0.f || FVector::Dist(OwnLocation, MoveInLocation) < 150.f)
 		{
-			Controller->Transition(Controller->Running, Controller);
+			MoveInLocationArrived = true;
 		}
-		if (FVector::Dist(OwnLocation, RandomLocation) < 250.f)
-		{
-			Controller->Transition(Controller->Idle, Controller);
-		}
+		WalkInDuration -= DeltaTime;
 	}
 }

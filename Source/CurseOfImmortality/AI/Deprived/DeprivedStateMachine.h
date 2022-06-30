@@ -29,7 +29,7 @@ public:
 	                float CurveValue = 1.f) const;
 
 	void MoveToTarget(const FVector Target, const float MovementSpeed, const float DeltaTime,
-	                  const float RotationSpeed = 360.f) const;
+	                  const float RotationSpeed = 360.f, bool IgnoreAllCol = false) const;
 
 	void FocusOnLocation(FVector Location, float DeltaTime, float RotationSpeed = 180.f) const;
 

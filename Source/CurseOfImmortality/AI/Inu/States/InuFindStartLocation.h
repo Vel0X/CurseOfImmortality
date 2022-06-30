@@ -22,4 +22,10 @@ class CURSEOFIMMORTALITY_API UInuFindStartLocation : public UInuBaseState
 	FVector RandomLocation;
 	int PathIndex = 0;
 	float PathfindingTimer;
+
+	bool MoveInLocationArrived = false;
+
+	FVector MoveInLocation;
+
+	float WalkInDuration = 0.5f;
 };

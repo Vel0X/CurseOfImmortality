@@ -12,18 +12,19 @@ AInvisibleWalls::AInvisibleWalls()
 	CollisionBox->SetupAttachment(RootComponent);
 }
 
-void AInvisibleWalls::BeginPlay()
-{
-	Super::BeginPlay();
-
-	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &AInvisibleWalls::OnOverlapEnd);
-}
-
-void AInvisibleWalls::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-                                   UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	if (ABaseEnemyPawn* Enemy = Cast<ABaseEnemyPawn>(OtherActor))
-	{
-		Enemy->StartGatePassed = true;
-	}
-}
+// void AInvisibleWalls::BeginPlay()
+// {
+// 	Super::BeginPlay();
+//
+// 	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &AInvisibleWalls::OnOverlapEnd);
+// }
+//
+// void AInvisibleWalls::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+//                                    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+// {
+// 	if (ABaseEnemyPawn* Enemy = Cast<ABaseEnemyPawn>(OtherActor))
+// 	{
+// 		UE_LOG(LogTemp, Warning, TEXT("%s"), *Enemy->GetName());
+// 		Enemy->StartGatePassed = true;
+// 	}
+// }

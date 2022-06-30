@@ -20,10 +20,16 @@ public:
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
-	
+
 private:
 	TArray<FVector> Path;
 	FVector RandomLocation;
 	int PathIndex = 0;
 	float PathfindingTimer;
+
+	bool MoveInLocationArrived = false;
+
+	FVector MoveInLocation;
+
+	float WalkInDuration = 1.f;
 };

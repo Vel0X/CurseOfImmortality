@@ -19,8 +19,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	UBoxComponent* CollisionBox;
 
-	virtual void BeginPlay() override;
-
-	UFUNCTION()
-	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	// virtual void BeginPlay() override;
+	//
+	// UFUNCTION()
+	// void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };

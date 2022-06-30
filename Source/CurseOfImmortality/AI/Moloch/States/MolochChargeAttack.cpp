@@ -46,8 +46,6 @@ void UMolochChargeAttack::OnStateUpdate(float DeltaTime)
 	OwnLocation.Z = 0;
 
 	// UE_LOG(LogTemp, Warning, TEXT("%f"), FVector::Dist(PlayerLocation, OwnLocation))
-
-	DrawDebugLine(SelfRef->GetWorld(), PlayerLocation, OwnLocation, FColor::Red);
 	if (FVector::Dist(PlayerLocation, OwnLocation) <= 100.f)
 	{
 		Controller->Transition(Controller->HitPlayer, Controller);
