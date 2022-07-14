@@ -100,4 +100,8 @@ void UInuFindStartLocation::OnStateUpdate(float DeltaTime)
 		}
 		WalkInDuration -= DeltaTime;
 	}
+	if (SelfRef->CurrentHealth < SelfRef->Stats[Health])
+	{
+		Controller->Transition(Controller->Running, Controller);
+	}
 }

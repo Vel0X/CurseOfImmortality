@@ -44,4 +44,8 @@ void UMolochIdle::OnStateUpdate(float DeltaTime)
 		SelfRef->CurrentChargeAttackCoolDown = FMath::FRandRange(0.f, SelfRef->ChargeAttackCoolDown);
 		Controller->Transition(Controller->Walking, Controller);
 	}
+	if (SelfRef->CurrentHealth < SelfRef->Stats[Health])
+	{
+		Controller->Transition(Controller->Walking, Controller);
+	}
 }

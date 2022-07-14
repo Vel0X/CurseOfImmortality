@@ -103,4 +103,8 @@ void UMolochFindStartLocation::OnStateUpdate(float DeltaTime)
 		}
 		WalkInDuration -= DeltaTime;
 	}
+	if (SelfRef->CurrentHealth < SelfRef->Stats[Health])
+	{
+		Controller->Transition(Controller->Walking, Controller);
+	}
 }

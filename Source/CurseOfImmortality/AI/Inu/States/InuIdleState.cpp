@@ -43,4 +43,8 @@ void UInuIdleState::OnStateUpdate(float DeltaTime)
 	{
 		Controller->Transition(Controller->Running, Controller);
 	}
+	if (SelfRef->CurrentHealth < SelfRef->Stats[Health])
+	{
+		Controller->Transition(Controller->Running, Controller);
+	}
 }
