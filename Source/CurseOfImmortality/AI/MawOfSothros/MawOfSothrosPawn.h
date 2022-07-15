@@ -23,7 +23,7 @@ public:
 	void Tick(float DeltaSeconds) override;
 
 	virtual void OnDeath() override;
-
+	
 	UFUNCTION(BlueprintCallable)
 	void ActivateVomit();
 	UFUNCTION(BlueprintCallable)
@@ -32,15 +32,14 @@ public:
 	void ToggleArmDamage();
 	UFUNCTION(BlueprintCallable)
 	void ToggleHeadDamage();
-	virtual bool GetSpawnPosition(FVector& Position, FRotator& Rotation) override;
-
-	//AbilityTrigger
 	UFUNCTION(BlueprintCallable)
 	void TriggerMawSlam(FName SocketName);
 	UFUNCTION(BlueprintCallable)
 	void ToggleLaser();
 	UFUNCTION(BlueprintCallable)
 	void TriggerTailSweep();
+	
+	virtual bool GetSpawnPosition(FVector& Position, FRotator& Rotation) override;	
 
 	//States
 	UPROPERTY(BlueprintReadWrite)

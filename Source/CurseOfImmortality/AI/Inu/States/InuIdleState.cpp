@@ -43,7 +43,7 @@ void UInuIdleState::OnStateUpdate(float DeltaTime)
 	{
 		Controller->Transition(Controller->Running, Controller);
 	}
-	if (SelfRef->CurrentHealth < SelfRef->Stats[Health])
+	if (Cast<APlayerCharacter>(SelfRef->LastDamagingActor))
 	{
 		Controller->Transition(Controller->Running, Controller);
 	}

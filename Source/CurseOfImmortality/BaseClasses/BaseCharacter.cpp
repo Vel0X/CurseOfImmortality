@@ -23,7 +23,7 @@ ABaseCharacter::ABaseCharacter()
 
 	Root = CreateDefaultSubobject<USceneComponent>("RootC");
 	SetRootComponent(Root);
-	
+
 	CapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>("CapsuleCollision");
 	CapsuleCollision->SetupAttachment(RootComponent);
 	MovementComponent = CreateDefaultSubobject<UCharacterMovement>("CharacterMovement");
@@ -77,7 +77,7 @@ void ABaseCharacter::BeginPlay()
 			BodyHitboxes.Add(PrimitiveComponent);
 		}
 	}
-	
+
 	//Add all Damage Hitboxes
 	for (const auto Component : HBs)
 	{
@@ -140,10 +140,10 @@ void ABaseCharacter::CheckCollisions()
 
 void ABaseCharacter::UpdateDamageReceiverHandles(const float DeltaTime)
 {
-	for (int i = DamageReceiverHandles.Num()-1; i >= 0; --i)
+	for (int i = DamageReceiverHandles.Num() - 1; i >= 0; --i)
 	{
 		DamageReceiverHandles[i].Expiration -= DeltaTime;
-		if(DamageReceiverHandles[i].Expiration <= 0.0f)
+		if (DamageReceiverHandles[i].Expiration <= 0.0f)
 			DamageReceiverHandles.RemoveAt(i);
 	}
 }
@@ -152,7 +152,7 @@ bool ABaseCharacter::DamageReceiverHandleContained(const int Handle)
 {
 	for (int i = 0; i < DamageReceiverHandles.Num(); ++i)
 	{
-		if(DamageReceiverHandles[i].Handle == Handle)
+		if (DamageReceiverHandles[i].Handle == Handle)
 			return true;
 	}
 
@@ -208,13 +208,13 @@ void ABaseCharacter::RecalculateStats()
 
 void ABaseCharacter::AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter, int Level)
 {
-	if(Dead)
+	if (Dead)
 		return;
-	
+
 	int FoundIndex = -1;
 	for (int i = 0; i < Buffs.Num(); ++i)
 	{
-		if(Buffs[i]->DisplayName == Buff->DisplayName)
+		if (Buffs[i]->DisplayName == Buff->DisplayName)
 		{
 			FoundIndex = i;
 			break;
@@ -222,52 +222,51 @@ void ABaseCharacter::AddBuff(UBaseBuff* Buff, ABaseCharacter* Inflicter, int Lev
 	}
 
 	//if the Buff is already present...
-	if(FoundIndex != -1)
+	if (FoundIndex != -1)
 	{
 		//if the Buff is not stackable
-		if(!Buff->Stackable)
+		if (!Buff->Stackable)
 		{
 			//if the Buff should renew when it is already present
-			if(Buff->RefreshOnNew)
+			if (Buff->RefreshOnNew)
 			{
 				Buffs[FoundIndex]->InitializeBuff(Level, this, Inflicter);
-				if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
+				if (FPersistentWorldManager::GetLogLevel(ELog::Buff))
 					UE_LOG(LogTemp, Warning, TEXT("%s was already present and was refreshed"), *Buff->DisplayName);
 			}
 			else
 			{
-				if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
+				if (FPersistentWorldManager::GetLogLevel(ELog::Buff))
 					UE_LOG(LogTemp, Warning, TEXT("%s was already present and is not stackable"), *Buff->DisplayName);
 				return;
 			}
 		}
 		const bool AddedStack = Buffs[FoundIndex]->AddBuffStack();
-		if(FPersistentWorldManager::GetLogLevel(ELog::Buff) && AddedStack)
+		if (FPersistentWorldManager::GetLogLevel(ELog::Buff) && AddedStack)
 			UE_LOG(LogTemp, Warning, TEXT("%s was already present with maximum amount of stacks"), *Buff->DisplayName);
 	}
 	//Buff is not already present
 	else
 	{
 		Buffs.Add(Buff);
-		Buff->InitializeBuff(Level,this, Inflicter);
-		if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
+		Buff->InitializeBuff(Level, this, Inflicter);
+		if (FPersistentWorldManager::GetLogLevel(ELog::Buff))
 			UE_LOG(LogTemp, Warning, TEXT("%s was added"), *Buff->DisplayName);
 	}
-	
-	if(Buff->StatModifier)
+
+	if (Buff->StatModifier)
 		RecalculateStats();
-	
 }
 
 void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 {
-	if(Buffs.Contains(Buff))
+	if (Buffs.Contains(Buff))
 	{
-		if(FPersistentWorldManager::GetLogLevel(ELog::Buff))
+		if (FPersistentWorldManager::GetLogLevel(ELog::Buff))
 			UE_LOG(LogTemp, Warning, TEXT("%s was removed"), *Buff->DisplayName);
 		Buffs.Remove(Buff);
 		Buff->OnBuffEnd();
-		if(Buff->StatModifier)
+		if (Buff->StatModifier)
 		{
 			RecalculateStats();
 		}
@@ -277,12 +276,12 @@ void ABaseCharacter::RemoveBuff(UBaseBuff* Buff)
 
 void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility* Ability, const bool Visual)
 {
-	if(Dead)
+	if (Dead)
 		return;
 
-	if(Immune)
+	if (Immune)
 		return;
-	
+
 	CurrentHealth -= Amount;
 
 	FString Text = "";
@@ -301,15 +300,17 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 
 	if (Dealer != nullptr && Dealer != this)
 	{
+		LastDamagingActor = Dealer;
 		Dealer->OnDamageDealt(Amount, this); //Inform the DamageDealer
 	}
 	if (FPersistentWorldManager::GetLogLevel(ELog::DamageComponent))
 		UE_LOG(LogTemp, Warning, TEXT("After Take Damage: %s Health is at %f Max Health %f"), *DisplayName, CurrentHealth,
 	       Stats[EStats::Health]);
 
-	if(HitSound != "")
-		FPersistentWorldManager::SoundManager->PlaySoundLocated(CenterAttachmentPoint->GetComponentLocation(), HitSound);
-	
+	if (HitSound != "")
+		FPersistentWorldManager::SoundManager->
+			PlaySoundLocated(CenterAttachmentPoint->GetComponentLocation(), HitSound);
+
 	if (CurrentHealth <= 0.0f)
 	{
 		OnDeath();
@@ -326,12 +327,12 @@ void ABaseCharacter::TakeDmg(float Amount, ABaseCharacter* Dealer, ABaseAbility*
 
 void ABaseCharacter::TakeDmg(FDamageFormula Formula, ABaseCharacter* Dealer, ABaseAbility* Ability, bool Visual)
 {
-	if(Dead)
+	if (Dead)
 		return;
-	
-	if(Immune)
+
+	if (Immune)
 		return;
-	
+
 	const float Scale = Formula.ScaleFactor * Stats[PhysicalDamage];
 	UE_LOG(LogTemp, Warning, TEXT("Scale %f"), Scale);
 	const float Amount = (Formula.BaseDamage + Scale) * (1 + FMath::FRandRange(-Formula.Variation, Formula.Variation));

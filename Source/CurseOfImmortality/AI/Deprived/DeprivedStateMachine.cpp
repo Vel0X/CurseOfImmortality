@@ -10,7 +10,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/State.h"
 #include "CurseOfImmortality/AI/AIBaseClasses/Pathfinding/PathfindingGrid.h"
-#include "States/DeprivedHitPlayer.h"
 #include "States/DeprivedIdle.h"
 #include "States/DeprivedJumpAttack.h"
 #include "States/DeprivedNormalAttack.h"
@@ -70,7 +69,6 @@ void UDeprivedStateMachine::BeginPlay()
 	Idle = NewObject<UDeprivedIdle>();
 	Running = NewObject<UDeprivedRunning>();
 	JumpAttack = NewObject<UDeprivedJumpAttack>();
-	HitPlayer = NewObject<UDeprivedHitPlayer>();
 	Recover = NewObject<UDeprivedRecover>();
 	NormalAttack = NewObject<UDeprivedNormalAttack>();
 	FrenziedAttack = NewObject<UDeprivedFrenziedAttack>();

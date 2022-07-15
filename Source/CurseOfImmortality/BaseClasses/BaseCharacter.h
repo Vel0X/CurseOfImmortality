@@ -77,6 +77,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	bool Dead;
+	
+	UPROPERTY()
+	AActor* LastDamagingActor = nullptr;
 
 	
 	/**

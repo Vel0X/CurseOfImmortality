@@ -42,8 +42,6 @@ public:
 	UState* JumpAttack;
 	UPROPERTY()
 	UState* Recover;
-	UPROPERTY()
-	UState* HitPlayer;
 	UPROPERTY(BlueprintReadOnly)
 	UState* NormalAttack;
 	UPROPERTY(BlueprintReadOnly)
