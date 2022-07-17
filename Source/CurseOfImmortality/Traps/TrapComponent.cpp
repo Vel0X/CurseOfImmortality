@@ -34,24 +34,6 @@ void UTrapComponent::BeginPlay()
 void UTrapComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	/*if(!TimerDone)
-	{
-		if(Timer >= 0)
-		{
-			Timer -= DeltaTime;
-		}else
-		{
-			if(FPersistentWorldManager::TrapManager != nullptr)
-			{
-				FPersistentWorldManager::TrapManager -> UpgradeTraptype.AddDynamic(this, &UTrapComponent::CheckActivation);
-				FPersistentWorldManager::TrapManager -> DeactivateTrapsOfType.AddDynamic(this, &UTrapComponent::CheckDeactivation);
-				TimerDone = true;
-			} else
-			{
-				UE_LOG(LogTemp, Display, TEXT("Failed Trap"));
-			}
-		}	
-	}*/
 }
 
 void UTrapComponent::CheckActivation(TEnumAsByte<ETrapTypes> OtherTrapType, int prio)
