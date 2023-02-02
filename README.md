@@ -6,7 +6,6 @@ The game has responsive controller controls and fast-paced, mechanically challen
 The project was created during one semester at University for Media (HdM) in Stuttgart.
 Latest Build was created in Unreal Engine Version 5.0.3
 
----
 
 ## Preview
 
@@ -14,13 +13,11 @@ Latest Build was created in Unreal Engine Version 5.0.3
 <img src="./Images/3COI.png"  width="300">
 <img src="./Images/5COI.png"  width="300">
 
----
 
 ## Controls
 
 <img src="./Images/controls.jpg"  width="300">
 
----
 
 ## Credits
 **Sven Walter** <br>
