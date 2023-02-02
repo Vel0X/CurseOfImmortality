@@ -32,17 +32,17 @@ public:
 
 	//States
 	UPROPERTY()
-	UState* Idle;
+	UState* Idle = nullptr;
 	UPROPERTY()
-	UState* Running;
+	UState* Running = nullptr;
 	UPROPERTY()
-	UState* RangedAttack;
+	UState* RangedAttack = nullptr;
 	UPROPERTY()
-	UState* FindStartLocation;
+	UState* FindStartLocation = nullptr;
 	UPROPERTY()
-	UState* Retreat;
+	UState* Retreat = nullptr;
 	UPROPERTY()
-	UState* Emerge;
+	UState* Emerge = nullptr;
 
 	//Getter
 	AInuPawn* GetSelfRef() const;
@@ -54,7 +54,7 @@ protected:
 private:
 	//References
 	UPROPERTY()
-	AInuPawn* SelfRef;
+	AInuPawn* SelfRef = nullptr;
 	UPROPERTY()
-	ABaseCharacter* Player;
+	ABaseCharacter* Player = nullptr;
 };

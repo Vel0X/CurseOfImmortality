@@ -18,6 +18,6 @@ class CURSEOFIMMORTALITY_API UInuRetreatState : public UInuBaseState
 	virtual void OnStateExit() override;
 	virtual void OnStateUpdate(float DeltaTime) override;
 
-	FVector RetreatLocation;
+	FVector RetreatLocation = FVector::Zero();
 	float Duration = 2.f;	
 };

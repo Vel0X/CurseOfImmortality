@@ -22,5 +22,5 @@ class CURSEOFIMMORTALITY_API UStormCallerAttack : public UStormCallerBaseState
 
 public:
 	UPROPERTY(BlueprintReadWrite)
-	bool WaitForAnimation;
+	bool WaitForAnimation = false;
 };

@@ -19,9 +19,9 @@ class CURSEOFIMMORTALITY_API UDeprivedBaseState : public UState
 
 protected:
 	UPROPERTY()
-	ADeprivedPawn* SelfRef;
+	ADeprivedPawn* SelfRef = nullptr;
 	UPROPERTY()
-	APlayerCharacter* Player;
+	APlayerCharacter* Player = nullptr;
 	UPROPERTY()
-	UDeprivedStateMachine* Controller;
+	UDeprivedStateMachine* Controller = nullptr;
 };

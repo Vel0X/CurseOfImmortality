@@ -20,9 +20,9 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosBaseState : public UState
 
 protected:
 	UPROPERTY()
-	AMawOfSothrosPawn* SelfRef;
+	AMawOfSothrosPawn* SelfRef = nullptr;
 	UPROPERTY()
-	APlayerCharacter* Player;
+	APlayerCharacter* Player = nullptr;
 	UPROPERTY()
-	UMawOfSothrosStateMachine* Controller;
+	UMawOfSothrosStateMachine* Controller = nullptr;
 };

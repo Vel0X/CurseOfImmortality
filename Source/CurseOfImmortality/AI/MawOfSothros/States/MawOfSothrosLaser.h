@@ -23,10 +23,9 @@ class CURSEOFIMMORTALITY_API UMawOfSothrosLaser : public UMawOfSothrosBaseState
 	
 	virtual void OnStateUpdate(float DeltaTime) override;
 	
-	FRotator TargetHeadRotation;
+	UPROPERTY()
+	ALaserBeam* AbilityInstance = nullptr;
+	FRotator TargetHeadRotation  = FRotator::ZeroRotator;
 
 	float SpawnFrequency = 0;
-
-	UPROPERTY()
-	ALaserBeam* AbilityInstance;
 };

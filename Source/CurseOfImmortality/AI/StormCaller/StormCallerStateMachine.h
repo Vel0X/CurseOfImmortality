@@ -24,9 +24,9 @@ public:
 
 	//States
 	UPROPERTY()
-	UState* Idle;
+	UState* Idle = nullptr;
 	UPROPERTY(BlueprintReadOnly)
-	UState* Attack;
+	UState* Attack = nullptr;
 
 	//Getter
 	AStormCallerPawn* GetSelfRef() const;
@@ -38,7 +38,7 @@ protected:
 private:
 	//References
 	UPROPERTY()
-	AStormCallerPawn* SelfRef;
+	AStormCallerPawn* SelfRef = nullptr;
 	UPROPERTY()
-	ABaseCharacter* Player;
+	ABaseCharacter* Player = nullptr;
 };

@@ -19,13 +19,10 @@ class CURSEOFIMMORTALITY_API UInuFindStartLocation : public UInuBaseState
 	virtual void OnStateUpdate(float DeltaTime) override;
 
 	TArray<FVector> Path;
-	FVector RandomLocation;
-	int PathIndex = 0;
-	float PathfindingTimer;
-
-	bool MoveInLocationArrived = false;
-
-	FVector MoveInLocation;
-
+	FVector RandomLocation = FVector::Zero();
+	FVector MoveInLocation= FVector::Zero();
+	float PathfindingTimer = 0.5f;
 	float WalkInDuration = 0.5f;
+	int PathIndex = 0;
+	bool MoveInLocationArrived = false;
 };

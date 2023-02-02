@@ -23,13 +23,11 @@ public:
 
 private:
 	TArray<FVector> Path;
-	FVector RandomLocation;
-	int PathIndex = 0;
-	float PathfindingTimer;
+	FVector RandomLocation = FVector::Zero();
+	FVector MoveInLocation = FVector::Zero();
 
-	bool MoveInLocationArrived = false;
-
-	FVector MoveInLocation;
-
+	float PathfindingTimer = 0.f;
 	float WalkInDuration = 1.f;
+	int PathIndex = 0;
+	bool MoveInLocationArrived = false;
 };

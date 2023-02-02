@@ -18,9 +18,9 @@ class CURSEOFIMMORTALITY_API UInuBaseState : public UState
 
 protected:
 	UPROPERTY()
-	AInuPawn* SelfRef;
+	AInuPawn* SelfRef = nullptr;
 	UPROPERTY()
-	ABaseCharacter* Player;
+	ABaseCharacter* Player = nullptr;
 	UPROPERTY()
-	UInuStateMachine* Controller;
+	UInuStateMachine* Controller = nullptr;
 };

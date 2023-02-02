@@ -20,31 +20,29 @@ class CURSEOFIMMORTALITY_API AStormCallerPawn : public ABaseEnemyPawn
 public:
 	AStormCallerPawn();
 
+	virtual bool GetSpawnPosition(FVector& Position, FRotator& Rotation) override;
+
 	UPROPERTY(EditAnywhere)
-	UAbilitySpecification* AbilitySpecification;
+	UAbilitySpecification* AbilitySpecification = nullptr;
+	UPROPERTY(EditAnywhere)
+	USkeletalMeshComponent* Mesh = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UStormCallerStateMachine* StateMachine = nullptr;
+	UPROPERTY(EditAnywhere)
+	URandomAOEAbility* StormCast = nullptr;
+
+	//Base Stats
+	UPROPERTY(EditAnywhere, Category="Base Stats")
+	float AttackCoolDown = 10.f;
+	float CurrentAttackCoolDown = 0.f;
+
+	//Ranges
+	UPROPERTY(EditAnywhere, Category="Ranges")
+	float AwakeRange = 2000.f;
 
 	//Sates
 	UPROPERTY(BlueprintReadWrite)
 	bool Idle = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool Attack = false;
-
-	UPROPERTY(EditAnywhere)
-	USkeletalMeshComponent* Mesh;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UStormCallerStateMachine* StateMachine;
-
-	UPROPERTY(EditAnywhere)
-	URandomAOEAbility* StormCast;
-
-	//Base Stats
-	UPROPERTY(EditAnywhere, Category="Base Stats")
-	float AttackCoolDown = 10.f;
-	float CurrentAttackCoolDown;
-
-	//Ranges
-	UPROPERTY(EditAnywhere, Category="Ranges")
-	float AwakeRange = 2000.f;
-
-	virtual bool GetSpawnPosition(FVector& Position, FRotator& Rotation) override;
 };

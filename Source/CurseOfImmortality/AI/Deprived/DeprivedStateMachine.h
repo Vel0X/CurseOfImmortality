@@ -35,37 +35,37 @@ public:
 
 	//States
 	UPROPERTY()
-	UState* Idle;
+	UState* Idle = nullptr;
 	UPROPERTY()
-	UState* Running;
+	UState* Running = nullptr;
 	UPROPERTY(BlueprintReadOnly)
-	UState* JumpAttack;
+	UState* JumpAttack = nullptr;
 	UPROPERTY()
-	UState* Recover;
+	UState* Recover = nullptr;
 	UPROPERTY(BlueprintReadOnly)
-	UState* NormalAttack;
+	UState* NormalAttack = nullptr;
 	UPROPERTY(BlueprintReadOnly)
-	UState* FrenziedAttack;
+	UState* FrenziedAttack = nullptr;
 	UPROPERTY()
-	UState* FindStartLocation;
+	UState* FindStartLocation = nullptr;
 	UPROPERTY()
-	UState* Feast;
-
-	bool StateChanged;
-
-	FVector LastLocation;
+	UState* Feast = nullptr;
+	
+	FVector LastLocation = FVector::Zero();
+	
+	bool StateChanged = false;
 
 	//Getter
 	ADeprivedPawn* GetSelfRef() const;
 	APlayerCharacter* GetPlayer() const;
 
 protected:
-	virtual void BeginPlay() override; 
+	virtual void BeginPlay() override;
 	//References
 	UPROPERTY()
-	ADeprivedPawn* SelfRef;
+	ADeprivedPawn* SelfRef = nullptr;
 	UPROPERTY()
-	APlayerCharacter* Player;
+	APlayerCharacter* Player = nullptr;
 
 	float Offset = 200.f;
 };

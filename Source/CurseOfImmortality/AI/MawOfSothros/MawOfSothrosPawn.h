@@ -23,7 +23,7 @@ public:
 	void Tick(float DeltaSeconds) override;
 
 	virtual void OnDeath() override;
-	
+
 	UFUNCTION(BlueprintCallable)
 	void ActivateVomit();
 	UFUNCTION(BlueprintCallable)
@@ -38,26 +38,8 @@ public:
 	void ToggleLaser();
 	UFUNCTION(BlueprintCallable)
 	void TriggerTailSweep();
-	
-	virtual bool GetSpawnPosition(FVector& Position, FRotator& Rotation) override;	
 
-	//States
-	UPROPERTY(BlueprintReadWrite)
-	bool Start;
-	UPROPERTY(BlueprintReadWrite)
-	bool Idle;
-	UPROPERTY(BlueprintReadWrite)
-	bool Vomit;
-	UPROPERTY(BlueprintReadWrite)
-	bool TailSweep;
-	UPROPERTY(BlueprintReadWrite)
-	bool ChargeAttack;
-	UPROPERTY(BlueprintReadWrite)
-	bool GroundSlam;
-	UPROPERTY(BlueprintReadWrite)
-	bool Laser;
-	UPROPERTY(BlueprintReadWrite)
-	bool AnimationEnd;
+	virtual bool GetSpawnPosition(FVector& Position, FRotator& Rotation) override;
 
 	UPROPERTY(EditDefaultsOnly)
 	UAbilitySpecification* SeaOfDarknessSpecification;
@@ -68,15 +50,56 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	UAbilitySpecification* TailSweepSpecification;
 
+	//Collisions
+	UPROPERTY(EditDefaultsOnly)
+	USceneComponent* PuddleLowerSpawnLocation = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	USceneComponent* PuddleUpperSpawnLocation = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	USceneComponent* TailSweepLocation = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	UCapsuleComponent* UpperBodyCollision = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	UCapsuleComponent* UpperLeftArmCollision = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	UCapsuleComponent* LowerLeftArmCollision = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	UCapsuleComponent* UpperRightArmCollision = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	UCapsuleComponent* LowerRightArmCollision = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	USphereComponent* HeadCollision = nullptr;
+
+	//Damage
+	UPROPERTY(EditDefaultsOnly)
+	USphereComponent* SmokeDamageSphere = nullptr;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UCapsuleComponent* LeftArmDamageCapsule = nullptr;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UCapsuleComponent* RightArmDamageCapsule = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	USphereComponent* HeadDamageSphere = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UMawOfSothrosStateMachine* StateMachine = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	USkeletalMeshComponent* Mesh = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* Beam = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FRotator HeadRotation = FRotator::ZeroRotator;
+
+	UPROPERTY(EditDefaultsOnly)
+	UNiagaraComponent* MawSmoke = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	UNiagaraComponent* VomitUpperJaw = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	UNiagaraComponent* VomitLowerJaw = nullptr;
+
 	UPROPERTY(EditAnywhere)
 	float AttackCooldown = 0.5f;
-	float CurrentAttackCooldown;
-
-	bool SpawnPuddle;
-	bool LaserOn;
-
-	UPROPERTY(BlueprintReadWrite)
-	bool AnimationStart;
+	float CurrentAttackCooldown = 0.f;
 
 	//Stats
 	UPROPERTY(EditAnywhere, Category="ChargeAttack")
@@ -87,51 +110,28 @@ public:
 	float DistRangedAttack = 1400.f;
 	UPROPERTY(EditAnywhere, Category="Idle")
 	float DistMeleeAttack = 700.f;
+	
+	//States
+	UPROPERTY(BlueprintReadWrite)
+	bool Start = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool Idle = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool Vomit = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool TailSweep = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool ChargeAttack = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool GroundSlam = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool Laser = false;
+	UPROPERTY(BlueprintReadWrite)
+	bool AnimationEnd = false;
 
-	//Collisions
-	UPROPERTY(EditDefaultsOnly)
-	USceneComponent* PuddleLowerSpawnLocation;
-	UPROPERTY(EditDefaultsOnly)
-	USceneComponent* PuddleUpperSpawnLocation;
-	UPROPERTY(EditDefaultsOnly)
-	USceneComponent* TailSweepLocation;
-	UPROPERTY(EditDefaultsOnly)
-	UCapsuleComponent* UpperBodyCollision;
-	UPROPERTY(EditDefaultsOnly)
-	UCapsuleComponent* UpperLeftArmCollision;
-	UPROPERTY(EditDefaultsOnly)
-	UCapsuleComponent* LowerLeftArmCollision;
-	UPROPERTY(EditDefaultsOnly)
-	UCapsuleComponent* UpperRightArmCollision;
-	UPROPERTY(EditDefaultsOnly)
-	UCapsuleComponent* LowerRightArmCollision;
-	UPROPERTY(EditDefaultsOnly)
-	USphereComponent* HeadCollision;
+	UPROPERTY(BlueprintReadWrite)
+	bool AnimationStart;
 
-	//Damage
-	UPROPERTY(EditDefaultsOnly)
-	USphereComponent* SmokeDamageSphere;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	UCapsuleComponent* LeftArmDamageCapsule;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	UCapsuleComponent* RightArmDamageCapsule;
-	UPROPERTY(EditDefaultsOnly)
-	USphereComponent* HeadDamageSphere;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UMawOfSothrosStateMachine* StateMachine;
-	UPROPERTY(EditDefaultsOnly)
-	USkeletalMeshComponent* Mesh;
-	UPROPERTY(EditDefaultsOnly)
-	UStaticMeshComponent* Beam;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FRotator HeadRotation;
-
-	UPROPERTY(EditDefaultsOnly)
-	UNiagaraComponent* MawSmoke;
-	UPROPERTY(EditDefaultsOnly)
-	UNiagaraComponent* VomitUpperJaw;
-	UPROPERTY(EditDefaultsOnly)
-	UNiagaraComponent* VomitLowerJaw;
+	bool SpawnPuddle;
+	bool LaserOn;
 };

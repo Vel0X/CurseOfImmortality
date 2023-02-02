@@ -35,25 +35,25 @@ public:
 
 	//States
 	UPROPERTY()
-	UState* Idle;
+	UState* Idle = nullptr;
 	UPROPERTY()
-	UState* Walking;
+	UState* Walking = nullptr;
 	UPROPERTY()
-	UState* ChargeAttack;
+	UState* ChargeAttack = nullptr;
 	UPROPERTY(BlueprintReadOnly)
-	UState* NormalAttack;
+	UState* NormalAttack = nullptr;
 	UPROPERTY()
-	UState* HitPlayer;
+	UState* HitPlayer = nullptr;
 	UPROPERTY()
-	UState* HitWall;
+	UState* HitWall = nullptr;
 	UPROPERTY()
-	UState* FindStartLocation;
+	UState* FindStartLocation = nullptr;
 	UPROPERTY()
-	UState* Stomping;
+	UState* Stomping = nullptr;
 	UPROPERTY()
-	UState* Kick;
+	UState* Kick = nullptr;
 	UPROPERTY()
-	UState* PrepareCharge;
+	UState* PrepareCharge = nullptr;
 
 	//Getter
 	AMolochPawn* GetSelfRef() const;
@@ -63,9 +63,9 @@ protected:
 	virtual void BeginPlay() override;
 	//References
 	UPROPERTY()
-	AMolochPawn* SelfRef;
+	AMolochPawn* SelfRef = nullptr;
 	UPROPERTY()
-	APlayerCharacter* Player;
+	APlayerCharacter* Player = nullptr;
 
 	float Offset = 200.f;
 };

@@ -18,9 +18,9 @@ class CURSEOFIMMORTALITY_API UStormCallerBaseState : public UState
 
 protected:
 	UPROPERTY()
-	AStormCallerPawn* SelfRef;
+	AStormCallerPawn* SelfRef  = nullptr;
 	UPROPERTY()
-	ABaseCharacter* Player;
+	ABaseCharacter* Player = nullptr;
 	UPROPERTY()
-	UStormCallerStateMachine* Controller;
+	UStormCallerStateMachine* Controller = nullptr;
 };

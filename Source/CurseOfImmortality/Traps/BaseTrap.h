@@ -32,16 +32,11 @@ public:
 	void DisableTrap();
 	UFUNCTION(BlueprintImplementableEvent)
 	void EnableTrap();
-	
-	UPROPERTY()
-	ABaseCharacter* Test;
-
 	UFUNCTION(BlueprintCallable)
 	void FireProjectile(FVector SpawnLocation, FRotator SpawnRotation);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UDamageComponent* DamageComponent;
-
+	UDamageComponent* DamageComponent = nullptr;
 	UPROPERTY(EditAnywhere)
 	TArray<UPrimitiveComponent*> HitBoxes;
 

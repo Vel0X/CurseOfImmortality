@@ -28,14 +28,14 @@ public:
 							   FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	float Duration;
-	float DamageRadius;
-	float Damage;
-	bool NoDot;
-	bool SetupComplete;
+	float Duration = 0.f;
+	float DamageRadius = 0.f;
+	float Damage = 0.f;
+	bool NoDot = false;
+	bool SetupComplete= false;
 
-	FVector SpawnLocation;
+	FVector SpawnLocation = FVector::ZeroVector;
 
 	UPROPERTY()
-	USphereComponent* DamageSphere;
+	USphereComponent* DamageSphere = nullptr;
 };

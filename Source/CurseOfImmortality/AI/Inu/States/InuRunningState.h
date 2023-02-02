@@ -19,7 +19,7 @@ class CURSEOFIMMORTALITY_API UInuRunningState : public UInuBaseState
 	virtual void OnStateUpdate(float DeltaTime) override;
 
 	TArray<FVector> Path;
-
+	
+	float PathfindingTimer = 0.f;
 	int PathIndex = 0;
-	float PathfindingTimer = 0;
 };

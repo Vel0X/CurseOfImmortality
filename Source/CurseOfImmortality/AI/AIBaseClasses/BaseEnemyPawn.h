@@ -22,7 +22,7 @@ public:
 	void Init(const UEnemySpecification* Specification);
 	
 	UPROPERTY(EditAnywhere)
-	int PowerLevel;
+	int PowerLevel = 0;
 
 	bool StartGatePassed = false;
 };

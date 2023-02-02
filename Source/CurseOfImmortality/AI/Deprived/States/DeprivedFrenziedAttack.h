@@ -20,10 +20,9 @@ public:
 	virtual void OnStateExit() override;
 
 	virtual void OnStateUpdate(float DeltaTime) override;
-
-	TArray<FVector> Path;
-	float PathIndex;
-	float PathfindingTimer;
+	
+	float PathIndex = 0.f;
+	float PathfindingTimer = 0.f;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool LeftHandCanAttack = true;

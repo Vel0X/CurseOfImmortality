@@ -27,6 +27,44 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GetLocation();
 
+	UPROPERTY(EditAnywhere)
+	USkeletalMeshComponent* Mesh = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UMolochStateMachine* StateMachine;
+	UPROPERTY(EditAnywhere)
+	USceneComponent* HeadLocation = nullptr;
+	UPROPERTY(EditAnywhere)
+	USceneComponent* BackLocation = nullptr;
+	UPROPERTY(EditAnywhere)
+	USceneComponent* StompLocation = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* HeadAttack = nullptr;
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* BackAttack = nullptr;
+	UPROPERTY(EditAnywhere)
+	UCapsuleComponent* BodyCollision = nullptr;
+
+	FVector TargetLocation = FVector::Zero();
+
+	UPROPERTY(EditAnywhere, Category="Base Stats")
+	float ChargeAttackCoolDown = 10.f;
+	float CurrentChargeAttackCoolDown = 0.f;
+	UPROPERTY(EditAnywhere, Category="Base Stats")
+	float AttackDelay = 1.f;
+	float CurrentAttackDelay = 0.f;
+
+	//Ranges
+	UPROPERTY(EditAnywhere)
+	float TriggerRange = 1000.f;
+	UPROPERTY(EditAnywhere)
+	float ChargeRange = 600.f;
+	UPROPERTY(EditAnywhere)
+	float AttackRange = 300.f;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool AnimationEnd;
+	
 	//Sates
 	UPROPERTY(BlueprintReadWrite)
 	bool Idle = false;
@@ -46,42 +84,4 @@ public:
 	bool Kick = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool PrepareCharge = false;
-
-	UPROPERTY(EditAnywhere)
-	USkeletalMeshComponent* Mesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMolochStateMachine* StateMachine;
-	UPROPERTY(EditAnywhere)
-	USceneComponent* HeadLocation;
-	UPROPERTY(EditAnywhere)
-	USceneComponent* BackLocation;
-	UPROPERTY(EditAnywhere)
-	USceneComponent* StompLocation;
-	
-	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* HeadAttack;
-	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* BackAttack;
-	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* BodyCollision;
-
-	UPROPERTY(EditAnywhere, Category="Base Stats")
-	float ChargeAttackCoolDown = 10.f;
-	float CurrentChargeAttackCoolDown;
-	UPROPERTY(EditAnywhere, Category="Base Stats")
-	float AttackDelay = 1.f;
-	float CurrentAttackDelay = 0.f;
-
-	//Ranges
-	UPROPERTY(EditAnywhere)
-	float TriggerRange = 1000.f;
-	UPROPERTY(EditAnywhere)
-	float ChargeRange = 600.f;
-	UPROPERTY(EditAnywhere)
-	float AttackRange = 300.f;
-
-	UPROPERTY(BlueprintReadWrite)
-	bool AnimationEnd;
-
-	FVector TargetLocation;
 };

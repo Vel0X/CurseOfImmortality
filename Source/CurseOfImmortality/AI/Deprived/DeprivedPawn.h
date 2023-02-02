@@ -59,25 +59,25 @@ public:
 	bool Feast = false;
 
 	UPROPERTY(EditDefaultsOnly)
-	USkeletalMeshComponent* Mesh;
+	USkeletalMeshComponent* Mesh = nullptr;
 	UPROPERTY(EditDefaultsOnly)
-	USphereComponent* JumpAttackSphere;
+	USphereComponent* JumpAttackSphere = nullptr;
 	UPROPERTY(EditDefaultsOnly)
-	USphereComponent* AttackSphereLeft;
+	USphereComponent* AttackSphereLeft = nullptr;
 	UPROPERTY(EditDefaultsOnly)
-	USphereComponent* AttackSphereRight;
+	USphereComponent* AttackSphereRight = nullptr;
 	UPROPERTY(EditDefaultsOnly)
-	UNiagaraComponent* HandGlowLeft;
+	UNiagaraComponent* HandGlowLeft = nullptr;
 	UPROPERTY(EditDefaultsOnly)
-	UNiagaraComponent* HandGlowRight;
+	UNiagaraComponent* HandGlowRight = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UDeprivedStateMachine* StateMachine;
+	UDeprivedStateMachine* StateMachine = nullptr;
 
 	//Base Stats
 	UPROPERTY(EditDefaultsOnly, Category="Base Stats")
 	float FrenziedAttackCoolDown = 10.f;
-	float CurrentFrenziedAttackCoolDown;
-	
+	float CurrentFrenziedAttackCoolDown = 0.f;
+
 	//Jump Attack
 	UPROPERTY(EditDefaultsOnly, Category="Jump Attack")
 	float JumpAttackSpeed = 2000.f;
@@ -85,12 +85,12 @@ public:
 	float DistJumpAttack = 800.f;
 	UPROPERTY(EditDefaultsOnly, Category="Jump Attack")
 	float JumpAttackCoolDown = 5.f;
-	float CurrentJumpAttackCoolDown;
+	float CurrentJumpAttackCoolDown = 0.f;
 
 	//Cool Downs and Durations
 	UPROPERTY(EditDefaultsOnly, Category="Time")
 	float RecoverDuration = 2.f;
-	float CurrentRecoverDuration;
+	float CurrentRecoverDuration = 0.f;
 
 	//Distances for Movement
 	UPROPERTY(EditDefaultsOnly, Category="Distances")

@@ -26,10 +26,10 @@ public:
 	bool LocationSet = false;
 
 private:
-	FVector PlayerLocation;
-	FVector JumpDestination;
-	FVector JumpDir;
-	FVector OwnLocation;
-
 	void Jump(float DeltaTime) const;
+	
+	FVector PlayerLocation = FVector::Zero();
+	FVector JumpDestination = FVector::Zero();
+	FVector JumpDir = FVector::Zero();
+	FVector OwnLocation = FVector::Zero();
 };

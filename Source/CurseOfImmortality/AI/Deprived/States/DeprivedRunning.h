@@ -25,9 +25,7 @@ public:
 private:	
 	TArray<FVector> Path;
 	
-	int PathIndex = 0;
-	
 	float PathfindingTimer = 0.f;
-
+	int PathIndex = 0;
 	bool NoAttackChosen = true;
 };

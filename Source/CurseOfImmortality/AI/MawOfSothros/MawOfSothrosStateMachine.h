@@ -33,8 +33,8 @@ struct FAttackType
 	}
 
 	EMawAttacks Type;
-	int Weight;
-	int CurrentWeight;
+	int Weight = 0;
+	int CurrentWeight = 0;
 
 	void ResetWeight()
 	{
@@ -60,19 +60,19 @@ public:
 
 	//States
 	UPROPERTY()
-	UState* Start;
+	UState* Start = nullptr;
 	UPROPERTY()
-	UState* Idle;
+	UState* Idle = nullptr;
 	UPROPERTY(BlueprintReadOnly)
-	UState* Vomit;
+	UState* Vomit = nullptr;
 	UPROPERTY()
-	UState* GroundSlam;
+	UState* GroundSlam = nullptr;
 	UPROPERTY()
-	UState* ChargeAttack;
+	UState* ChargeAttack = nullptr;
 	UPROPERTY()
-	UState* TailSweep;
+	UState* TailSweep = nullptr;
 	UPROPERTY()
-	UState* Laser;
+	UState* Laser = nullptr;
 
 	TArray<FAttackType> RangedAttackTypes;
 	TArray<FAttackType> MeleeAttackTypes;
@@ -88,7 +88,7 @@ protected:
 private:
 	//References
 	UPROPERTY()
-	AMawOfSothrosPawn* SelfRef;
+	AMawOfSothrosPawn* SelfRef = nullptr;
 	UPROPERTY()
-	APlayerCharacter* Player;
+	APlayerCharacter* Player = nullptr;
 };

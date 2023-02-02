@@ -18,9 +18,9 @@ class CURSEOFIMMORTALITY_API UMolochBaseState : public UState
 	
 protected:
 	UPROPERTY()
-	AMolochPawn* SelfRef;
+	AMolochPawn* SelfRef = nullptr;
 	UPROPERTY()
-	ABaseCharacter* Player;
+	ABaseCharacter* Player = nullptr;
 	UPROPERTY()
-	UMolochStateMachine* Controller;
+	UMolochStateMachine* Controller = nullptr;
 };

@@ -17,5 +17,4 @@ class CURSEOFIMMORTALITY_API UInuEmergeState : public UInuBaseState
 	virtual void OnStateEnter(UStateMachine* StateMachine) override;
 	virtual void OnStateExit() override;
 	virtual void OnStateUpdate(float DeltaTime) override;
-
 };

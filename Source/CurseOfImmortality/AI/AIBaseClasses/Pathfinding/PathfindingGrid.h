@@ -142,7 +142,7 @@ public:
 
 	TArray<FVector> ConvertPathToWorldSpace(const TArray<FPfNode*>& Path, bool Verbose = false) const;
 
-	float Delay;
+	float Delay = 0;
 
 	UPROPERTY(EditAnywhere)
 	float CellSize = 100.0f;

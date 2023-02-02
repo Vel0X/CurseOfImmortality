@@ -20,6 +20,17 @@ public:
 	void FireProjectile();
 
 	virtual void BeginPlay() override;
+	
+	UPROPERTY(EditAnywhere)
+	USceneComponent* ProjectileLocation = nullptr;
+	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* Aura= nullptr;
+	UPROPERTY(EditAnywhere)
+	USkeletalMeshComponent* Mesh= nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UInuStateMachine* StateMachine= nullptr;
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* DeathParticle= nullptr;
 
 	//Sates
 	UPROPERTY(BlueprintReadWrite)
@@ -36,23 +47,10 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool AnimationEnd = false;
 	bool SpawnedByMaw = false;
-	
-	UPROPERTY(EditAnywhere)
-	USceneComponent* ProjectileLocation;
-
-	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* Aura;
-	
-	UPROPERTY(EditAnywhere)
-	USkeletalMeshComponent* Mesh;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UInuStateMachine* StateMachine;
-	UPROPERTY(EditAnywhere)
-	UNiagaraSystem* DeathParticle;
 
 	UPROPERTY(EditAnywhere, Category="Base Stats")
 	float AttackCoolDown = 0.5f;
-	float CurrentAttackCoolDown;
+	float CurrentAttackCoolDown = 0.f;
 
 	//Ranges
 	float TriggerRange = 1000.f;
@@ -61,5 +59,5 @@ public:
 	UPROPERTY(EditAnywhere, Category="Ranges")
 	float MaxRange = 800.f;
 	UPROPERTY(EditAnywhere, Category="Ranges")
-	float AttackRange;
+	float AttackRange = 600.f;
 };

@@ -22,7 +22,7 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY()
-	UState* CurrentState;
+	UState* CurrentState = nullptr;
 
 protected:
 	// Called when the game starts

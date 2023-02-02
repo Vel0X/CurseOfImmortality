@@ -19,13 +19,11 @@ class CURSEOFIMMORTALITY_API UMolochFindStartLocation : public UMolochBaseState
 	virtual void OnStateUpdate(float DeltaTime) override;
 
 	TArray<FVector> Path;
-	FVector RandomLocation;
-	int PathIndex = 0;
-	float PathfindingTimer;
-
-	bool MoveInLocationArrived = false;
-
-	FVector MoveInLocation;
+	FVector RandomLocation = FVector::Zero();
+	FVector MoveInLocation = FVector::Zero();
 
 	float WalkInDuration = 1.f;
+	float PathfindingTimer = 0.f;
+	int PathIndex = 0;
+	bool MoveInLocationArrived = false;
 };
