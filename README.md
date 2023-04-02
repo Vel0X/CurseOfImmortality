@@ -1,6 +1,6 @@
 # CurseOfImmortality
 
-Curse of Immortality is a rogue-lite dungeon crawler in which the player must face various challenges in an arena. The player fights for the survival of humanity as it finds itself in a power struggle between the most powerful forces in the cosmos.
+Curse of Immortality is a rogue-like dungeon crawler in which the player must face various challenges in an arena. The player fights for the survival of humanity as it finds itself in a power struggle between the most powerful forces in the cosmos.
 The game has responsive controller controls and fast-paced, mechanically challenging real-time combat. Additionally, there are options to customize the arena fighter by strengthening his attacks with modular upgrades, allowing for unique builds.
 
 The project was created during one semester at University for Media (HdM) in Stuttgart.
