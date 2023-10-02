@@ -4,7 +4,6 @@ Curse of Immortality is a rogue-lite dungeon crawler in which the player must fa
 The game has responsive controller controls and fast-paced, mechanically challenging real-time combat. Additionally, there are options to customize the arena fighter by strengthening his attacks with modular upgrades, allowing for unique builds.
 
 The project was created during one semester at University for Media (HdM) in Stuttgart.
-Latest Build was created in Unreal Engine Version 5.0.3
 
 ---
 
